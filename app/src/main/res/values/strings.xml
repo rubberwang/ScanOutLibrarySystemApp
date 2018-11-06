@@ -1,3 +1,22 @@
 <resources>
-    <string name="app_name">ShenZhenLiZuoSystemApp</string>
+    <string name="app_name">立卓条码</string>
+    <string name="LogIn">登录</string>
+    <string name="Quit">退出</string>
+    <string name="User">用户</string>
+    <string name="PassWord">密码</string>
+    <string name="User_Name">请输入帐号</string>
+    <string name="Pass_Word">请输入密码</string>
+    <string name="Remember_PassWord">记住密码</string>
+    <string name="Remember_User_Name">记住用户</string>
+    <string name="Setting">设置</string>
+    <string name="LiZhuoCode">立卓条码</string>
+    <string name="SelectProject">请选择项目</string>
+    <string name="Project">项目</string>
+    <string name="TitleToast">提示信息</string>
+    <string name="ExitApp">退出APP</string>
+    <string name="EditIP">请输入服务器IP地址</string>
+    <string name="SaveSetting">保存设置</string>
+    <string name="ServerIPInput">输入服务器IP</string>
+    <string name="Yes">是</string>
+    <string name="No">否</string>
 </resources>
