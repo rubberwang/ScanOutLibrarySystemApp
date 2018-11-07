@@ -24,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -41,6 +42,8 @@ import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Json;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.JsonUitl;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
+import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.ItemData;
+import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
 import cn.shenzhenlizuosystemapp.Common.WebBean.GetProjectResult;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -121,7 +124,7 @@ public class LoginActivity extends BaseActivity {
                         tools.PutStringData("User", UserName_Text, sharedPreferences);
                     }
                 } else {
-                    if (TextUtils.isEmpty(Edit_UserName.getText().toString())){
+                    if (TextUtils.isEmpty(Edit_UserName.getText().toString())) {
                         tools.PutStringData("Paw", "", sharedPreferences);
                         IsPassWord_CB.setChecked(false);
                     }
@@ -160,11 +163,19 @@ public class LoginActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                                    LoginActivity.this, android.R.layout.simple_spinner_item,
-                                    getSpinnerData());
+//                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+//                                    LoginActivity.this, android.R.layout.simple_spinner_item,
+//                                    getSpinnerData());
 
-                            SpinnerProjet.setAdapter(adapter);
+                            List<ItemData> itemData = new ArrayList<>();
+                            for (int i = 0; i < getSpinnerData().size(); i++) {
+                                ItemData itemData1 = new ItemData();
+                                itemData1.setData(getSpinnerData().get(i));
+                                itemData.add(itemData1);
+                            }
+                            LoginAdapter loginAdapter = new LoginAdapter(itemData,LoginActivity.this);
+
+                            SpinnerProjet.setAdapter(loginAdapter);
                         }
                     });
                     Log.i(TAG, result);
