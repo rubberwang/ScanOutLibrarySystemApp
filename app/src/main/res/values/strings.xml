@@ -30,4 +30,5 @@
     <string name="PleaseInputPrinterIP">请输入打印机IP</string>
     <string name="SettingPrintPort">打印机端口号</string>
     <string name="PleaseSettingPrintPort">请输入打印机端口号</string>
+    <string name="Ensure">确定</string>
 </resources>

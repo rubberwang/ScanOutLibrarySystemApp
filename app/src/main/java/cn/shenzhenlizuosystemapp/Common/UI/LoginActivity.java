@@ -95,16 +95,16 @@ public class LoginActivity extends BaseActivity {
                         IsPassWord_CB.setChecked(false);
                     } else {
                         String PassWord_Text = Edit_PassWord.getText().toString();
+                        String UserName_Text = Edit_UserName.getText().toString();
                         tools.PutStringData("Paw", PassWord_Text, sharedPreferences);
+                        tools.PutStringData("User", UserName_Text, sharedPreferences);
                     }
                 } else {
-                    Edit_PassWord.setText(null);
-                    tools.PutStringData("Paw", null, sharedPreferences);
+                    tools.PutStringData("Paw", "", sharedPreferences);
                 }
             }
         });
 
-        sharedPreferences = tools.InitSharedPreferences(this);
         IsUserName_CB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -121,8 +121,11 @@ public class LoginActivity extends BaseActivity {
                         tools.PutStringData("User", UserName_Text, sharedPreferences);
                     }
                 } else {
-                    Edit_UserName.setText(null);
-                    tools.PutStringData("User", null, sharedPreferences);
+                    if (TextUtils.isEmpty(Edit_UserName.getText().toString())){
+                        tools.PutStringData("Paw", "", sharedPreferences);
+                        IsPassWord_CB.setChecked(false);
+                    }
+                    tools.PutStringData("User", "", sharedPreferences);
                 }
             }
         });
@@ -338,12 +341,12 @@ public class LoginActivity extends BaseActivity {
                     case 2: {
                         PD.dismiss();
                         IsNetWork = true;
-                        tools.show(LoginActivity.this, "用户名或密码错误");
+                        tools.ShowDialog(LoginActivity.this, "用户名或密码错误");
                         break;
                     }
                     case 3: {
                         PD.dismiss();
-                        tools.show(LoginActivity.this, "网络连接超时");
+                        tools.ShowDialog(LoginActivity.this, "网络连接超时");
                         break;
                     }
                 }

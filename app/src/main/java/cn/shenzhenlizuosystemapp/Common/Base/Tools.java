@@ -1,13 +1,17 @@
 package cn.shenzhenlizuosystemapp.Common.Base;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,6 +90,38 @@ public class Tools {
         toast.setDuration(Toast.LENGTH_LONG);
         toast.setView(view);
         toast.show();
+    }
+
+    public void ShowDialog(Context context, String msg) {
+        View view = LayoutInflater.from(context).inflate(R.layout.toastdialog_layout, null, false);
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(view);
+
+        TextView Tx_Ensure = view.findViewById(R.id.Tx_Ensure);
+        TextView Tx_Msg = view.findViewById(R.id.tv_message_toast);
+        Tx_Msg.setText(msg);
+
+        Tx_Ensure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        Window dialogWindow = dialog.getWindow();
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        int screenWidth = dm.widthPixels;
+        int screenHeight = dm.heightPixels;
+        ViseLog.i("屏幕宽高" + screenWidth + "  " + screenHeight);
+        if (screenWidth > 900 && screenHeight > 1600) {
+            lp.width = 900; // 宽度
+            lp.height = 600; // 高度
+        } else {
+            lp.width = 420; // 宽度
+            lp.height = 300; // 高度
+        }
+        dialogWindow.setAttributes(lp);
+        dialog.show();
     }
 
     public static float dpToPx(Context context, int dp) {

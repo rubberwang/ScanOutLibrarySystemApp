@@ -14,8 +14,6 @@
 
         <LinearLayout style="@style/AppCustomBar">
 
-          
-            
             <TextView
                 android:id="@+id/BarText"
                 style="@style/AppCustomBarText"
@@ -29,15 +27,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="30dp"
-            android:layout_weight="9"
+            android:layout_weight="1"
+            android:background="@color/toast"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="16"
+            android:background="@color/toast"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="2"
+                android:layout_weight="5"
                 android:orientation="horizontal">
 
                 <View
@@ -47,7 +53,7 @@
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="22dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.6"
                     android:background="@drawable/project" />
@@ -63,13 +69,13 @@
                     android:layout_weight="1.2"
                     android:gravity="center"
                     android:text="@string/Project"
-                    android:textSize="19sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <Spinner
                     android:id="@+id/sp"
                     android:layout_width="0dp"
-                    android:layout_height="43dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:overlapAnchor="false"
                     android:spinnerMode="dropdown"></Spinner>
@@ -85,8 +91,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="10dp"
                 android:layout_weight="2"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5"
                 android:orientation="horizontal">
 
                 <View
@@ -96,7 +109,7 @@
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="22dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.6"
                     android:background="@drawable/login_user" />
@@ -112,19 +125,18 @@
                     android:layout_weight="1.2"
                     android:gravity="center"
                     android:text="@string/User"
-                    android:textSize="19sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/Edit_UserName"
                     android:layout_width="0dp"
-                    android:layout_height="43dp"
-                    android:layout_marginTop="1dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center_vertical"
                     android:hint="@string/User_Name"
                     android:paddingLeft="5dp"
-                    android:textSize="19sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:theme="@style/MyEditText" />
 
@@ -137,8 +149,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="10dp"
                 android:layout_weight="2"
+                android:orientation="horizontal"></LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5"
                 android:orientation="horizontal">
 
                 <View
@@ -148,7 +165,7 @@
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="22dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.6"
                     android:background="@drawable/login_pwd" />
@@ -164,19 +181,19 @@
                     android:layout_weight="1.2"
                     android:gravity="center"
                     android:text="@string/PassWord"
-                    android:textSize="19sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/Edit_PassWord"
                     android:layout_width="0dp"
-                    android:layout_height="43dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center_vertical"
                     android:hint="@string/Pass_Word"
                     android:inputType="textPassword"
                     android:paddingLeft="5dp"
-                    android:textSize="19sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:theme="@style/MyEditText" />
 
@@ -189,7 +206,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_weight="3"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4"
                 android:orientation="horizontal">
 
                 <View
@@ -258,12 +283,12 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1.8" />
+                android:layout_weight="4" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="3"
+                android:layout_weight="6"
                 android:orientation="horizontal">
 
                 <View
@@ -281,7 +306,7 @@
                     android:layout_weight="1.4"
                     android:background="@drawable/edittext_background"
                     android:text="@string/LogIn"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <View
@@ -299,7 +324,7 @@
                     android:layout_weight="1.4"
                     android:background="@drawable/edittext_background"
                     android:text="@string/Quit"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <View
@@ -309,71 +334,80 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="3"
-                android:orientation="horizontal">
+                android:layout_weight="2"
+                android:gravity="center" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="65dp"
-                    android:layout_weight="3" />
 
-                <View
-                    android:id="@+id/Img_Setting"
-                    android:layout_width="0dp"
-                    android:layout_height="65dp"
-                    android:layout_weight="1.4"
-                    android:background="@drawable/setting" />
+        </LinearLayout>
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="65dp"
-                    android:layout_weight="3" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.2"
+            android:background="@color/toast"
+            android:orientation="horizontal">
 
-            </LinearLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.2"
-                android:orientation="horizontal">
+            <View
+                android:id="@+id/Img_Setting"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.4"
+                android:background="@drawable/setting" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="65dp"
-                    android:layout_weight="3" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1.4"
-                    android:gravity="center_horizontal"
-                    android:text="设置"
-                    android:textColor="@color/BarColor"
-                    android:textSize="19sp" />
+        </LinearLayout>
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="65dp"
-                    android:layout_weight="3" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.2"
+            android:background="@color/toast"
+            android:orientation="horizontal">
 
-            </LinearLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.7"
+                android:gravity="center_horizontal"
+                android:text="设置"
+                android:textColor="@color/BarColor"
+                android:textSize="19sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3" />
 
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
-            android:gravity="center" />
+            android:layout_weight="1"
+            android:background="@color/toast" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/BarColor"
+            android:layout_weight="1.5"
+            android:background="@color/Black"
             android:gravity="center"
             android:text="@string/LiZuoAddress"
             android:textColor="@color/White"

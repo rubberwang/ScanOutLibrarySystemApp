@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -15,15 +15,17 @@
 
     <style name="AppCustomBar">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">70dp</item>
+        <item name="android:layout_height">58dp</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:background">@color/BarColor</item>
+        <item name="android:background">@color/Black</item>
     </style>
+    
     <style name="ConventionPercent">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:orientation">vertical</item>
     </style>
+    
     <style name="AppCustomBarBack">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">0.7</item>
