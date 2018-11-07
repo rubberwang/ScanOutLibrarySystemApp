@@ -14,6 +14,8 @@
         <TextView
             android:id="@+id/BarText"
             style="@style/AppCustomBarText"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
             android:text="@string/Setting" />
     </LinearLayout>
 
@@ -38,6 +40,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
+            android:background="@drawable/edittext_normal"
             android:gravity="center_vertical"
             android:hint="@string/EditIP"
             android:paddingLeft="5dp"
@@ -48,7 +51,77 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6" />
+        android:layout_weight="0.5" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.4"
+            android:gravity="center"
+            android:text="@string/InputPrinterIP"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/ET_InputPrinterIP"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:background="@drawable/edittext_normal"
+            android:gravity="center_vertical"
+            android:hint="@string/PleaseInputPrinterIP"
+            android:paddingLeft="5dp"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.4"
+            android:gravity="center"
+            android:text="@string/SettingPrintPort"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/ET_InputPrinterPort"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:background="@drawable/edittext_normal"
+            android:gravity="center_vertical"
+            android:hint="@string/PleaseSettingPrintPort"
+            android:paddingLeft="5dp"
+            android:inputType="number"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4" />
+
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -22,4 +22,12 @@
     <string name="MES">生产作业</string>
     <string name="WMS">物流作业</string>
     <string name="LiZuoAddress">http://www.lzbarcode.com</string>
+    <string name="GetHouse">入库作业</string>
+    <string name="PutHouse">出库作业</string>
+    <string name="Commit">调拨作业</string>
+    <string name="Check">盘点作业</string>
+    <string name="InputPrinterIP">输入打印机IP</string>
+    <string name="PleaseInputPrinterIP">请输入打印机IP</string>
+    <string name="SettingPrintPort">打印机端口号</string>
+    <string name="PleaseSettingPrintPort">请输入打印机端口号</string>
 </resources>

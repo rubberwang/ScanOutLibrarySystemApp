@@ -17,10 +17,13 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">70dp</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:layout_marginTop">8dp</item>
         <item name="android:background">@color/BarColor</item>
     </style>
-
+    <style name="ConventionPercent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
     <style name="AppCustomBarBack">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">0.7</item>
