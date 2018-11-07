@@ -19,4 +19,7 @@
     <string name="ServerIPInput">输入服务器IP</string>
     <string name="Yes">是</string>
     <string name="No">否</string>
+    <string name="MES">生产作业</string>
+    <string name="WMS">物流作业</string>
+    <string name="LiZuoAddress">http://www.lzbarcode.com</string>
 </resources>

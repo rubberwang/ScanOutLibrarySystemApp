@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="160dp"
-    android:layout_height="60dp"
+    android:layout_height="70dp"
     android:background="@color/toast"
     android:orientation="vertical">
 
@@ -65,7 +65,8 @@
             android:gravity="center"
             android:text="@string/No"
             android:textColor="@color/Black"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:layout_marginBottom="4dp"/>
 
         <View
             android:layout_width="0dp"
@@ -81,7 +82,8 @@
             android:gravity="center"
             android:text="@string/Yes"
             android:textColor="@color/Black"
-            android:textSize="13sp" />
+            android:textSize="13sp" 
+            android:layout_marginBottom="4dp"/>
 
         <View
             android:layout_width="0dp"

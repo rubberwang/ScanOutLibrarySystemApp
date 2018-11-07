@@ -9,8 +9,9 @@
     <color name="Black">#000000</color>
     <color name="Lucency">#00000000</color>
     <color name="Thin_Bule">#bbe9fa</color>
-    <color name="toast">#d1cdcd</color>
+    <color name="toast">#EBEBEB</color>
     <color name="ToastRed">#D7020D</color>
     <color name="InfoRelevance">#F2F2F2</color>
     <color name="accomplishColor">#FF6600</color>
+    <color name="tabback">#F7F7F7</color>
 </resources>

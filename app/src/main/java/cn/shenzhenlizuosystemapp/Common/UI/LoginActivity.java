@@ -6,6 +6,7 @@ import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
@@ -72,7 +73,7 @@ public class LoginActivity extends BaseActivity {
     protected int inflateLayout() {
         return R.layout.login_layout;
     }
-    
+
     public void initData() {
         tools = new Tools();
         httpRequest = new WebService();
@@ -330,6 +331,8 @@ public class LoginActivity extends BaseActivity {
                         PD.dismiss();
                         IsNetWork = true;
                         tools.showshort(LoginActivity.this, "登录成功");
+                        startActivity(new Intent(LoginActivity.this, MainTabActivity.class));
+                        ViewManager.getInstance().finishActivity(LoginActivity.this);
                         break;
                     }
                     case 2: {
@@ -381,8 +384,8 @@ public class LoginActivity extends BaseActivity {
             lp.width = 900; // 宽度
             lp.height = 500; // 高度
         } else {
-            lp.width = 400; // 宽度
-            lp.height = 220; // 高度
+            lp.width = 500; // 宽度
+            lp.height = 360; // 高度
         }
         dialogWindow.setAttributes(lp);
         dialog.show();

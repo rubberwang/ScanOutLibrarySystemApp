@@ -13,7 +13,7 @@ public class WebService {
     private static WebService webService;
 
     private static final String urlAddress
-            = "http://192.168.1.133:8090/WebAPI.asmx";
+            = "http://192.168.1.6:809/DBS/WebService/WebAPI.asmx";
 
     public static WebService getSingleton() {
         if (webService == null) {
