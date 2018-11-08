@@ -71,9 +71,11 @@ public class WMS_Fragment extends Fragment {
                 switch (position) {
                     case 0:{
                         startActivity(new Intent(getActivity(), InputNotificationActivity.class));
+                        break;
                     }
                     case 1: {
                         startActivity(new Intent(getActivity(), OutNotificationActivity.class));
+                        break;
                     }
                 }
             }

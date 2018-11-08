@@ -41,7 +41,7 @@ public class InputNotificationActivity extends BaseActivity {
 
     @Override
     protected int inflateLayout() {
-        return R.layout.selectoutlibrary_layout;
+        return R.layout.selectinputlibrary_layout;
     }
 
     @Override

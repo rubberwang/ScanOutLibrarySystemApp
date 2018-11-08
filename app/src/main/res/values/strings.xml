@@ -63,6 +63,7 @@
     <string name="ScanShouldNumber">应发个数</string>
     <string name="ScanYetNumber">已发个数</string>
     <string name="SelectOutLibrary">选择出库通知单</string>
+    <string name="SelectInputLibrary">选择入库通知单</string>
     <string name="CastAbout">搜索</string>
     <string name="BackMainRV">返回总出库单列表</string>
     <string name="SelectGetLibrary">选择入库通知单</string>
