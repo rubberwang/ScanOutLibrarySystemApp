@@ -7,6 +7,7 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
@@ -39,6 +40,7 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
+import cn.shenzhenlizuosystemapp.Common.BroadcastReceiver.ReceiveData_Recevier;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Json;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.JsonUitl;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
@@ -72,6 +74,8 @@ public class LoginActivity extends BaseActivity {
     private Button btnLogin;
     private HashMap<String, String> ProjectNameAndConnectMap;
     private final String TAG = "MainActivity";
+
+   
 
     protected int inflateLayout() {
         return R.layout.login_layout;
@@ -246,10 +250,12 @@ public class LoginActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
         public void ON_RESUME() {
+           
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         public void ON_PAUSE() {
+           
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)

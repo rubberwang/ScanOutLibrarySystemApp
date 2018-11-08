@@ -1,5 +1,6 @@
 package cn.shenzhenlizuosystemapp.Common.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Adapter.WmsRvAdapter;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.WmsSelectData;
+import cn.shenzhenlizuosystemapp.Common.UI.OutLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.ItemDecoration;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -25,8 +27,8 @@ public class WMS_Fragment extends Fragment {
     public static final String ARGS_PAGE = "WMS_Page";
     private RecyclerView Rv_WmsModuleSelect;
     private ArrayList<WmsSelectData> List_wmsSelectData;
-    private String[] Describe = {"入库作业","出库作业","调拨作业","盘点作业"};
-    private int[] R_Img = {R.drawable.gethouse,R.drawable.puthouse,R.drawable.changehouse,R.drawable.pdacheck};
+    private String[] Describe = {"入库作业", "出库作业", "调拨作业", "盘点作业"};
+    private int[] R_Img = {R.drawable.gethouse, R.drawable.puthouse, R.drawable.changehouse, R.drawable.pdacheck};
 
     public static MES_Fragment newInstance() {
         MES_Fragment fragment = new MES_Fragment();
@@ -47,21 +49,33 @@ public class WMS_Fragment extends Fragment {
         InitRecycler();
         return rootView;
     }
-    
-    private void InitRecycler(){
-        for (int i =0 ;i < Describe.length; i++){
+
+    private void InitRecycler() {
+        for (int i = 0; i < Describe.length; i++) {
             WmsSelectData wmsSelectData = new WmsSelectData();
             wmsSelectData.setDescribeStr(Describe[i]);
             wmsSelectData.setR_Img(R_Img[i]);
             List_wmsSelectData.add(wmsSelectData);
         }
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         Rv_WmsModuleSelect.setLayoutManager(gridLayoutManager);
         WmsRvAdapter adapter = new WmsRvAdapter(getActivity(), List_wmsSelectData);
-        Rv_WmsModuleSelect.addItemDecoration(new ItemDecoration(getActivity()));
         Rv_WmsModuleSelect.setItemAnimator(new DefaultItemAnimator());
-        //4.设置适配器
         Rv_WmsModuleSelect.setAdapter(adapter);
+        adapter.setOnItemClickLitener(new WmsRvAdapter.OnItemClickLitener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                switch (position) {
+                    case 1: {
+                        startActivity(new Intent(getActivity(), OutLibraryActivity.class));
+                    }
+                }
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+            }
+        });
     }
 }

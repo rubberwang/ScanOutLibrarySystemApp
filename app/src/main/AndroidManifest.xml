@@ -18,6 +18,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".Common.UI.MainTabActivity"></activity>
+        <activity android:name=".Common.UI.OutLibraryActivity"></activity>
+
+        <receiver android:name=".Common.BroadcastReceiver.ReceiveData_Recevier">
+            <intent-filter>
+                <action android:name="cn.mm.jerryapp"></action>
+            </intent-filter>
+        </receiver>
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
