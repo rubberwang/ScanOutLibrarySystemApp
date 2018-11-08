@@ -27,7 +27,6 @@ public class SearchOutLibraryFragment extends Fragment {
     private static List<OutLibraryBill> selectOutLibraryList;
     private RecyclerView RV_CastAbout;
     private ProgressDialog PD;
-    private RecyclerView RV_InitSelectFull;
     private Tools tools;
     private WebService webService;
 
@@ -42,7 +41,7 @@ public class SearchOutLibraryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.initselectoutlibrary_fragment, container, false);
-        RV_InitSelectFull = view.findViewById(R.id.RV_InitSelectFull);
+        RV_CastAbout = view.findViewById(R.id.RV_InitSelectFull);
         tools = new Tools();
         webService = WebService.getSingleton();
         PD = new ProgressDialog(this.getActivity());

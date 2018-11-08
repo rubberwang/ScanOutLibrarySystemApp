@@ -65,6 +65,7 @@ public class OutNotificationActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 ToLoad(ET_CastAbout.getText().toString());
+                ViseLog.i("搜索内容"+ET_CastAbout.getText().toString());
             }
         });
     }
