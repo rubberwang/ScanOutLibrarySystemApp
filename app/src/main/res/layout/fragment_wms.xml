@@ -14,7 +14,8 @@
             android:id="@+id/BarText"
             style="@style/AppCustomBarText"
             android:gravity="center_vertical"
-            android:paddingLeft="10dp"
+            android:paddingLeft="80dp"
+            android:paddingTop="15dp"
             android:text="@string/WMS" />
     </LinearLayout>
 

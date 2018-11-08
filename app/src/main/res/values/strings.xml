@@ -48,7 +48,7 @@
     <string name="OutLibrary">出库</string>
     <string name="Close">取消</string>
     <string name="ManualOperationInput">手动输入</string>
-    <string name="Time">时间 ：</string>
+    <string name="Time">日期 ：</string>
     <string name="House">仓库：</string>
     <string name="BusType">业务类型：</string>
     <string name="Unit">往来单位：</string>
@@ -62,4 +62,8 @@
     <string name="ScanSpecification">规格</string>
     <string name="ScanShouldNumber">应发个数</string>
     <string name="ScanYetNumber">已发个数</string>
+    <string name="SelectOutLibrary">选择出库通知单</string>
+    <string name="CastAbout">搜索</string>
+    <string name="BackMainRV">返回总出库单列表</string>
+    <string name="SelectGetLibrary">选择入库通知单</string>
 </resources>
