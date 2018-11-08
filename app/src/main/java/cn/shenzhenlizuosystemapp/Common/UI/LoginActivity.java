@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -74,8 +75,18 @@ public class LoginActivity extends BaseActivity {
     private Button btnLogin;
     private HashMap<String, String> ProjectNameAndConnectMap;
     private final String TAG = "MainActivity";
+    private String SelectProjectStr = "";
+    private List<ItemData> itemData;
 
-   
+    private int GetSpinnerPos(String value) {
+        for (int i = 0; i < itemData.size(); i++) {
+            if (itemData.get(i).getData().equals(value)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
 
     protected int inflateLayout() {
         return R.layout.login_layout;
@@ -171,15 +182,31 @@ public class LoginActivity extends BaseActivity {
 //                                    LoginActivity.this, android.R.layout.simple_spinner_item,
 //                                    getSpinnerData());
 
-                            List<ItemData> itemData = new ArrayList<>();
+                            itemData = new ArrayList<>();
                             for (int i = 0; i < getSpinnerData().size(); i++) {
                                 ItemData itemData1 = new ItemData();
                                 itemData1.setData(getSpinnerData().get(i));
                                 itemData.add(itemData1);
                             }
-                            LoginAdapter loginAdapter = new LoginAdapter(itemData,LoginActivity.this);
-
+                            LoginAdapter loginAdapter = new LoginAdapter(itemData, LoginActivity.this);
                             SpinnerProjet.setAdapter(loginAdapter);
+                            SpinnerProjet.setSelection(GetSpinnerPos(tools.GetStringData(sharedPreferences, "Project")));
+                            SpinnerProjet.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view,
+                                                           int position, long id) {
+
+                                    SelectProjectStr = itemData.get(position).getData();
+                                    ViseLog.i("选择值" + SelectProjectStr);
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+                                    // TODO Auto-generated method stub
+
+                                }
+                            });
                         }
                     });
                     Log.i(TAG, result);
@@ -250,12 +277,12 @@ public class LoginActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
         public void ON_RESUME() {
-           
+
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         public void ON_PAUSE() {
-           
+            ThreadStop();
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -264,6 +291,15 @@ public class LoginActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         public void ON_DESTROY() {
+            if (ProjectNameAndConnectMap != null) {
+                ProjectNameAndConnectMap = null;
+            }
+            if (SelectProjectStr != null) {
+                SelectProjectStr = null;
+            }
+            if (itemData != null) {
+                itemData = null;
+            }
         }
     }
 
@@ -302,8 +338,7 @@ public class LoginActivity extends BaseActivity {
             //执行耗时操作
             try {
                 Message msg = new Message();
-                Log.i("MainActivity", "" + SpinnerProjet.getSelectedItem());
-                String string = ProjectNameAndConnectMap.get("DBS|Test");
+                String string = ProjectNameAndConnectMap.get(SelectProjectStr);
                 String Result = httpRequest.LoginIn(User, Paw, string);
                 Gson gson = new Gson();
                 Json student = gson.fromJson(String.valueOf(Result), Json.class);
@@ -348,9 +383,11 @@ public class LoginActivity extends BaseActivity {
             if (handlerMemoryActivity != null) {
                 switch (msg.what) {
                     case 1: {
+                        CheckBoxLogic();
                         PD.dismiss();
                         IsNetWork = true;
                         tools.showshort(LoginActivity.this, "登录成功");
+                        tools.PutStringData("Project", SelectProjectStr, sharedPreferences);
                         startActivity(new Intent(LoginActivity.this, MainTabActivity.class));
                         ViewManager.getInstance().finishActivity(LoginActivity.this);
                         break;
@@ -371,6 +408,10 @@ public class LoginActivity extends BaseActivity {
                 ViseLog.i("没有得到Activity实例不进行操作");
             }
         }
+
+    }
+
+    private void CheckBoxLogic() {
 
     }
 
