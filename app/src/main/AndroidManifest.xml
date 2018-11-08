@@ -19,7 +19,7 @@
         </activity>
         <activity android:name=".Common.UI.MainTabActivity"></activity>
         <activity android:name=".Common.UI.OutLibraryActivity"></activity>
-
+        <activity android:name=".Common.UI.OutNotificationActivity"></activity>
         <receiver android:name=".Common.BroadcastReceiver.ReceiveData_Recevier">
             <intent-filter>
                 <action android:name="cn.mm.jerryapp"></action>

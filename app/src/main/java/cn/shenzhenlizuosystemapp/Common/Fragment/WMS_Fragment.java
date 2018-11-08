@@ -19,6 +19,7 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.Adapter.WmsRvAdapter;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.WmsSelectData;
 import cn.shenzhenlizuosystemapp.Common.UI.OutLibraryActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.OutNotificationActivity;
 import cn.shenzhenlizuosystemapp.Common.View.ItemDecoration;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -68,7 +69,7 @@ public class WMS_Fragment extends Fragment {
             public void onItemClick(View view, int position) {
                 switch (position) {
                     case 1: {
-                        startActivity(new Intent(getActivity(), OutLibraryActivity.class));
+                        startActivity(new Intent(getActivity(), OutNotificationActivity.class));
                     }
                 }
             }
