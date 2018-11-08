@@ -66,7 +66,7 @@
             style="@style/SelectItemText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.2"
+            android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="@string/OutLibraryType"
             android:textSize="12sp" />
@@ -76,16 +76,16 @@
             style="@style/SelectItemContentText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="1.5"
             android:gravity="center_vertical"
-            android:paddingLeft="15dp"
+
             android:textSize="13sp" />
 
         <TextView
             style="@style/SelectItemText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.8"
+            android:layout_weight="1.5"
             android:gravity="center_vertical"
             android:text="@string/OutLibraryTime"
             android:textSize="12sp" />
@@ -95,7 +95,7 @@
             style="@style/SelectItemContentText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="1.5"
             android:gravity="center_vertical"
             android:textSize="13sp" />
     </LinearLayout>

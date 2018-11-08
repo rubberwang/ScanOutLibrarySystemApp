@@ -36,7 +36,7 @@ import cn.shenzhenlizuosystemapp.Common.UI.OutLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
 
-public class SelectOutLibraryFragment extends Fragment {
+public class SelectInputLibraryFragment extends Fragment {
 
     public static final String ARGS_PAGE = "SelectOutLibrary_Page";
    private RecyclerView RV_InitSelectFull;
@@ -45,8 +45,8 @@ public class SelectOutLibraryFragment extends Fragment {
    private ProgressDialog PD;
    private List<OutLibraryBill> outLibraryBills;
 
-    public static SelectOutLibraryFragment newInstance() {
-        SelectOutLibraryFragment fragment = new SelectOutLibraryFragment();
+    public static SelectInputLibraryFragment newInstance() {
+        SelectInputLibraryFragment fragment = new SelectInputLibraryFragment();
         return fragment;
     }
 
@@ -88,7 +88,7 @@ public class SelectOutLibraryFragment extends Fragment {
             String OutBills = "";
             try {
                 InputStream in_withcode = null;
-                OutBills = webService.GetSelectOutListData(ConnectStr.ConnectionToString);
+                OutBills = webService.PutSelectOutListData(ConnectStr.ConnectionToString);
                 ViseLog.i("OutBills = " + OutBills);
                 in_withcode = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
                 outLibraryBills = getOutLibraryFromXMl(in_withcode);

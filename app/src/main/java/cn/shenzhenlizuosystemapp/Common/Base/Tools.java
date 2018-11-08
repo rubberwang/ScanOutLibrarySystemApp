@@ -117,8 +117,8 @@ public class Tools {
             lp.width = 900; // 宽度
             lp.height = 600; // 高度
         } else {
-            lp.width = 420; // 宽度
-            lp.height = 300; // 高度
+            lp.width = 520; // 宽度
+            lp.height = 400; // 高度
         }
         dialogWindow.setAttributes(lp);
         dialog.show();

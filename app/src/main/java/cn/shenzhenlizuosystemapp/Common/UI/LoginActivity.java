@@ -101,6 +101,8 @@ public class LoginActivity extends BaseActivity {
         sharedPreferences = tools.InitSharedPreferences(this);
         DetectionHistoryUser();
         DetectionHistoryUserPwd();
+        foucs();
+
         IsPassWord_CB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -166,6 +168,22 @@ public class LoginActivity extends BaseActivity {
         ProjectNameAndConnectMap = new HashMap();
         GetProject();
     }
+
+    private  void foucs(){
+        String user_name = Edit_UserName.getText().toString();
+        String PwsWord = Edit_PassWord.getText().toString();
+        if ( user_name.equals("")){
+            Edit_UserName.requestFocus();
+        }else {
+            if (TextUtils.isEmpty(PwsWord)){
+                Edit_PassWord.requestFocus();
+            }else {
+                Edit_PassWord.setSelection(PwsWord.length());
+            }
+        }
+
+    }
+
 
     private void GetProject() {
         new Thread(new Runnable() {
@@ -391,7 +409,6 @@ public class LoginActivity extends BaseActivity {
                         tools.showshort(LoginActivity.this, "登录成功");
                         tools.PutStringData("Project", SelectProjectStr, sharedPreferences);
                         startActivity(new Intent(LoginActivity.this, MainTabActivity.class));
-                        ViewManager.getInstance().finishActivity(LoginActivity.this);
                         break;
                     }
                     case 2: {
