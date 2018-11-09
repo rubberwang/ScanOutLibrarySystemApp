@@ -17,10 +17,37 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Common.UI.MainTabActivity"></activity>
-        <activity android:name=".Common.UI.OutLibraryActivity"></activity>
-        <activity android:name=".Common.UI.OutNotificationActivity"></activity>
-        <activity android:name=".Common.UI.InputNotificationActivity"></activity>
+        
+        <activity
+            android:name=".Common.UI.MainTabActivity"
+            android:label="@string/TabPage"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".Common.UI.OutLibraryActivity"
+            android:label="@string/OutLibrary"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".Common.UI.OutNotificationActivity"
+            android:label="@string/SelectOutLibrary"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".Common.UI.InputNotificationActivity"
+            android:label="@string/SelectInputLibrary"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".Common.UI.InputLibraryActivity"
+            android:label="@string/SelectGetLibrary"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <receiver android:name=".Common.BroadcastReceiver.ReceiveData_Recevier">
             <intent-filter>
                 <action android:name="cn.mm.jerryapp"></action>

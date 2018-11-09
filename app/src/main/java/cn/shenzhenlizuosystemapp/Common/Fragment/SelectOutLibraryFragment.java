@@ -116,7 +116,6 @@ public class SelectOutLibraryFragment extends Fragment {
                     adapter.setOnItemClickLitener(new SelectOutFullAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
-
                             startActivity(new Intent(getActivity(),OutLibraryActivity.class));
                         }
 

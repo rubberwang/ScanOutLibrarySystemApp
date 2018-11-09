@@ -73,7 +73,7 @@
     <string name="OutLibraryWarehouse">仓库名称</string>
     <string name="OutLibraryType">出库类型</string>
     <string name="OutLibraryTime">创建时间</string>
-    <string name="UpLoad">加载中</string>
+    <string name="UpLoad">加载中...</string>
     <string name="materID">物料编号</string>
     <string name="nameRoot">品名规格</string>
     <string name="shouldSend">应发数量</string>
@@ -82,4 +82,5 @@
     <string name="thisSend">本次发货</string>
     <string name="noSend">未发数量</string>
     <string name="scanData">扫描数据</string>
+    <string name="TabPage">Tab分页</string>
 </resources>

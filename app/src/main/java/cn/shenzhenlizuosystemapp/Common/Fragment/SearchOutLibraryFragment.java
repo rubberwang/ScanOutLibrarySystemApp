@@ -19,6 +19,8 @@ import cn.shenzhenlizuosystemapp.Common.Adapter.SelectOutFullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
+import cn.shenzhenlizuosystemapp.Common.UI.InputLibraryActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.OutLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -66,7 +68,7 @@ public class SearchOutLibraryFragment extends Fragment {
             adapter.setOnItemClickLitener(new SelectOutFullAdapter.OnItemClickLitener() {
                 @Override
                 public void onItemClick(View view, int position) {
-
+                    startActivity(new Intent(getActivity(),OutLibraryActivity.class));
                 }
 
                 @Override

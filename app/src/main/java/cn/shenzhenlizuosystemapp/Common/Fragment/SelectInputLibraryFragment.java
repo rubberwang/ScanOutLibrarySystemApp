@@ -32,6 +32,8 @@ import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
+import cn.shenzhenlizuosystemapp.Common.UI.InputLibraryActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.InputNotificationActivity;
 import cn.shenzhenlizuosystemapp.Common.UI.OutLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
@@ -116,8 +118,7 @@ public class SelectInputLibraryFragment extends Fragment {
                     adapter.setOnItemClickLitener(new SelectOutFullAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
-
-                            startActivity(new Intent(getActivity(),OutLibraryActivity.class));
+                            startActivity(new Intent(getActivity(),InputLibraryActivity.class));
                         }
 
                         @Override

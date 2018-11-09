@@ -27,7 +27,7 @@
         android:layout_height="0dp"
         android:layout_weight="1.6"
         android:layout_gravity="center_horizontal"
-        android:textColor="#9a9b98"
+        android:textColor="@color/White"
         android:gravity="center"
         android:text="@string/UpLoad"
         android:textSize="12sp" />
