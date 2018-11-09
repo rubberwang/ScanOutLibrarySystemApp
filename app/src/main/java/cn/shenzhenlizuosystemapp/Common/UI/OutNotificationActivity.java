@@ -65,8 +65,6 @@ public class OutNotificationActivity extends BaseActivity {
         Back = $(R.id.Back);
     }
 
-
-
     private void InitClick(){
         TV_CastAbout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,8 +126,7 @@ public class OutNotificationActivity extends BaseActivity {
             @Override
 
             public void onClick(View v) {
-                Intent i = new Intent(OutNotificationActivity.this, MainTabActivity.class);
-                startActivity(i);
+              ViewManager.getInstance().finishActivity(OutNotificationActivity.this);
             }
 
         });
@@ -193,17 +190,5 @@ public class OutNotificationActivity extends BaseActivity {
             PD.setTitle("正在搜索...");
             PD.show();
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        super.onKeyDown(keyCode, event);
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            if(getFragmentManager().getBackStackEntryCount()==0){
-                ViewManager.getInstance().finishActivity(this);
-                return true;
-            }
-        }
-        return true;
     }
 }

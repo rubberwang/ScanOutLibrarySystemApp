@@ -99,8 +99,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:background="@color/Black"
-                    android:layout_marginLeft="100dp"
-                    android:layout_marginRight="20dp"/>
+                    android:layout_marginLeft="150dp"
+                    android:layout_marginRight="34dp"/>
 
             </LinearLayout>
 
@@ -220,7 +220,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2.4"
+                android:layout_weight="2"
                 android:orientation="horizontal">
 
                 <View
@@ -255,6 +255,10 @@
                         android:background="@drawable/checkselect"
                         android:button="@null"/>
                 </LinearLayout>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4" />
 
                 <LinearLayout
                     android:layout_width="0dp"

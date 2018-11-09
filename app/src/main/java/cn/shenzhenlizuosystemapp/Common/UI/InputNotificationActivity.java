@@ -30,14 +30,15 @@ public class InputNotificationActivity extends BaseActivity {
     private ProgressDialog PD;
     private TextView TV_CastAbout;
     private EditText ET_CastAbout;
+    private TextView Back;
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     private LinearLayout LL_BackMainTable;
-   private SelectInputLibraryFragment selectInputLibraryFragment;
-   private List<OutLibraryBill> outLibraryBills;
+    private SelectInputLibraryFragment selectInputLibraryFragment;
+    private List<OutLibraryBill> outLibraryBills;
     private List<OutLibraryBill> SearchResultList;
-   private Tools tools;
+    private Tools tools;
 
     @Override
     protected int inflateLayout() {
@@ -47,7 +48,7 @@ public class InputNotificationActivity extends BaseActivity {
     @Override
     public void initData() {
         SearchResultList = new ArrayList<>();
-        tools  = new Tools();
+        tools = new Tools();
         InitFragment();
         InitClick();
     }
@@ -58,21 +59,28 @@ public class InputNotificationActivity extends BaseActivity {
         PD.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         PD.setCancelable(false);
         LL_BackMainTable = $(R.id.LL_BackMainTable);
-        TV_CastAbout=$(R.id.TV_CastAbout);
+        TV_CastAbout = $(R.id.TV_CastAbout);
         ET_CastAbout = $(R.id.ET_CastAbout);
+        Back = $(R.id.Back);
     }
 
-    private void InitClick(){
+    private void InitClick() {
         TV_CastAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ToLoad(ET_CastAbout.getText().toString());
-                ViseLog.i("搜索内容"+ET_CastAbout.getText().toString());
+                ViseLog.i("搜索内容" + ET_CastAbout.getText().toString());
+            }
+        });
+        Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ViewManager.getInstance().finishActivity(InputNotificationActivity.this);
             }
         });
     }
 
-    private void InitFragment(){
+    private void InitFragment() {
         if (LL_BackMainTable.getVisibility() == View.VISIBLE) {
             LL_BackMainTable.setVisibility(View.GONE);
         }
@@ -180,8 +188,8 @@ public class InputNotificationActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         super.onKeyDown(keyCode, event);
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            if(getFragmentManager().getBackStackEntryCount()==0){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (getFragmentManager().getBackStackEntryCount() == 0) {
                 ViewManager.getInstance().finishActivity(this);
                 return true;
             }
