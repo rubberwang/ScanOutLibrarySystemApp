@@ -34,8 +34,8 @@ public class WMS_Fragment extends Fragment {
 
 
     private ArrayList<WmsSelectData> List_wmsSelectData;
-    private String[] Describe = {"入库作业", "出库作业", "调拨作业", "盘点作业"};
-    private int[] R_Img = {R.drawable.gethouse, R.drawable.puthouse, R.drawable.changehouse, R.drawable.pdacheck};
+    private String[] Describe = {"入库作业", "出库作业", "直接调拨", "盘点作业","入库调拨","出库调拨"};
+    private int[] R_Img = {R.drawable.gethouse, R.drawable.puthouse, R.drawable.changehouse, R.drawable.pdacheck,R.drawable.changeget,R.drawable.changeput};
 
     public static MES_Fragment newInstance() {
         MES_Fragment fragment = new MES_Fragment();

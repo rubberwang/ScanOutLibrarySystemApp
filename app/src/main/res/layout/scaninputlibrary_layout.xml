@@ -17,7 +17,7 @@
             style="@style/AppCustomBarText"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:text="@string/ScanOut" />
+            android:text="@string/ScanInputLibrary" />
 
 
 
@@ -33,7 +33,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.3"
+            android:layout_weight="0.2"
             android:orientation="vertical">
 
             <TextView
@@ -42,7 +42,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/SelectItemYellow"
                 android:gravity="center"
-                android:text="@string/PleaseScan"
+                android:text="@string/PleaseScanInput"
                 android:textColor="@color/Black"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -172,8 +172,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="3dp"
-            android:layout_weight="0.1"
-android:background="@color/Black"
+            android:layout_weight="0.9"
+
             android:orientation="vertical">
 
 
@@ -196,7 +196,7 @@ android:background="@color/Black"
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="3dp"
+                android:layout_margin="3dp"
                 android:layout_weight="1.5"
                 android:background="@drawable/edittext_normal"
                 android:orientation="vertical">
@@ -206,6 +206,11 @@ android:background="@color/Black"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
                     <TextView
                         style="@style/ScanBlueText"
                         android:layout_width="0dp"
@@ -214,22 +219,22 @@ android:background="@color/Black"
                         android:text="@string/OutLibraryScanDetail"
                         android:textColor="@color/Black" />
 
+
                     <TextView
                         android:id="@+id/TV_AlreadyScanSum"
                         style="@style/ScanBlueText"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="2"
+                        android:layout_weight="1"
                         android:textColor="@color/Black" />
 
                     <CheckBox
                         android:id="@+id/IsUserName_CB"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.45"
+                        android:layout_weight="0.5"
                         android:background="@drawable/checkselect"
-                        android:button="@null"
-                        android:layout_margin="3dp"/>
+                        android:button="@null"/>
                     <TextView
                         android:id="@+id/TV_AlreadyScanSum1"
                         style="@style/ScanBlueText"
