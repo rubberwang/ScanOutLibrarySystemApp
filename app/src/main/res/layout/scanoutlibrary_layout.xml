@@ -27,7 +27,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9"
+        android:layout_weight="4.5"
         android:orientation="vertical">
 
         <LinearLayout
@@ -74,13 +74,6 @@
                     android:layout_width="0dp"
                     android:layout_height="45dp"
                     android:layout_weight="5" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
 
                 <TextView
                     style="@style/ScanOutLibraryText"
@@ -95,7 +88,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="5" />
+
             </LinearLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -113,18 +109,8 @@
                 <Spinner
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="4"
-
-                    >
-
+                    android:layout_weight="3">
                 </Spinner>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
 
                 <TextView
                     style="@style/ScanOutLibraryText"
@@ -139,7 +125,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="5" />
+
             </LinearLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -160,6 +149,14 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="5" />
+
+                <TextView
+                    android:id="@+id/TV_Unit1"
+                    style="@style/ScanOutLibraryText"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="8" />
+
             </LinearLayout>
 
         </LinearLayout>
