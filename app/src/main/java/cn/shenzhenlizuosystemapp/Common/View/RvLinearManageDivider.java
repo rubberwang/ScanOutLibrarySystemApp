@@ -1,5 +1,6 @@
 package cn.shenzhenlizuosystemapp.Common.View;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -25,12 +26,16 @@ public class RvLinearManageDivider extends RecyclerView.ItemDecoration {
      * @param context
      * @param orientation 列表方向
      */
+    @SuppressLint("ResourceAsColor")
     public RvLinearManageDivider(Context context, int orientation) {
         if (orientation != LinearLayoutManager.VERTICAL && orientation != LinearLayoutManager.HORIZONTAL) {
             throw new IllegalArgumentException("请输入正确的参数！");
         }
         mOrientation = orientation;
-
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaint.setColor(android.R.color.black);
+        mPaint.setStyle(Paint.Style.FILL);
+        mDividerHeight = 3;
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mDivider = a.getDrawable(0);
         a.recycle();

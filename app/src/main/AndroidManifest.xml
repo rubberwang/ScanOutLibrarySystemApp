@@ -19,8 +19,7 @@
         </activity>
         
         <activity
-            android:name=".Common.UI.MainTabActivity"
-            android:label="@string/TabPage"
+            android:name=".Common.UI.MainTabActivity" 
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
@@ -45,6 +44,12 @@
         <activity
             android:name=".Common.UI.InputLibraryActivity"
             android:label="@string/SelectGetLibrary"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".Common.UI.SettingActivity"
+            android:label="@string/Setting"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 

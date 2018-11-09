@@ -22,14 +22,22 @@
     <LinearLayout
         style="@style/ConventionPercent"
         android:layout_weight="1.5"
-        android:background="@drawable/lizi" />
+        android:background="@color/Hui">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/lizi"
+            android:scaleType="fitXY" 
+            android:layout_margin="3dp"/>
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/Rv_WmsModuleSelect"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3.2">
-        
+
     </android.support.v7.widget.RecyclerView>
 </LinearLayout>
   

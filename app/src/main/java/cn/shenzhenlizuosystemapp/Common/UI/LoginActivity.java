@@ -71,6 +71,7 @@ public class LoginActivity extends BaseActivity {
     private Button LogIn_But;
     private Button Quit_But;
     private ImageView SettingServer_Img;
+    private ImageView Img_Setting;
 
     private Spinner SpinnerProjet;
     private Button btnLogin;
@@ -87,7 +88,7 @@ public class LoginActivity extends BaseActivity {
         }
         return 0;
     }
-    
+
     protected int inflateLayout() {
         return R.layout.login_layout;
     }
@@ -113,7 +114,7 @@ public class LoginActivity extends BaseActivity {
                         tools.show(LoginActivity.this, "请输入用户名 密码后在勾选保存");
                         IsPassWord_CB.setChecked(false);
                     } else {
-                        tools.PutStringData("Paw",  Edit_PassWord.getText().toString(), sharedPreferences);
+                        tools.PutStringData("Paw", Edit_PassWord.getText().toString(), sharedPreferences);
                         tools.PutStringData("User", Edit_UserName.getText().toString(), sharedPreferences);
                     }
                 } else {
@@ -158,6 +159,12 @@ public class LoginActivity extends BaseActivity {
                 IsExitApp();
             }
         });
+        Img_Setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, SettingActivity.class));
+            }
+        });
         ProjectNameAndConnectMap = new HashMap();
         GetProject();
     }
@@ -176,7 +183,7 @@ public class LoginActivity extends BaseActivity {
                 ViseLog.i("密码为空");
             } else {
                 Edit_PassWord.setSelection(Edit_PassWord.getText().toString().length());
-                ViseLog.i("定位到密码edit最后一位"+String.valueOf(Edit_PassWord.getText().toString().length()-1));
+                ViseLog.i("定位到密码edit最后一位" + String.valueOf(Edit_PassWord.getText().toString().length() - 1));
             }
         }
     }
@@ -274,6 +281,7 @@ public class LoginActivity extends BaseActivity {
         Quit_But = $(R.id.Quit_But);
         btnLogin = (Button) findViewById(R.id.LogIn_But);
         SpinnerProjet = (Spinner) findViewById(R.id.sp);
+        Img_Setting = $(R.id.Img_Setting);
     }
 
 
