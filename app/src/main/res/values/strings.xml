@@ -72,4 +72,5 @@
     <string name="OutLibraryWarehouse">仓库名称</string>
     <string name="OutLibraryType">出库类型</string>
     <string name="OutLibraryTime">创建时间</string>
+    <string name="UpLoad">加载中</string>
 </resources>

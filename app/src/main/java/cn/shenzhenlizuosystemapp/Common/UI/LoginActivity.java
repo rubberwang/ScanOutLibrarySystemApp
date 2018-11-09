@@ -64,7 +64,6 @@ public class LoginActivity extends BaseActivity {
     private SharedPreferences sharedPreferences;
 
     private AlertDialog alertDialog;
-    private ProgressDialog PD;
     private EditText Edit_UserName;
     private EditText Edit_PassWord;
     private CheckBox IsUserName_CB;
@@ -88,8 +87,7 @@ public class LoginActivity extends BaseActivity {
         }
         return 0;
     }
-
-
+    
     protected int inflateLayout() {
         return R.layout.login_layout;
     }
@@ -102,7 +100,6 @@ public class LoginActivity extends BaseActivity {
         sharedPreferences = tools.InitSharedPreferences(this);
         DetectionHistoryUser();
         DetectionHistoryUserPwd();
-        foucs();
 
         IsPassWord_CB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -116,10 +113,8 @@ public class LoginActivity extends BaseActivity {
                         tools.show(LoginActivity.this, "请输入用户名 密码后在勾选保存");
                         IsPassWord_CB.setChecked(false);
                     } else {
-                        String PassWord_Text = Edit_PassWord.getText().toString();
-                        String UserName_Text = Edit_UserName.getText().toString();
-                        tools.PutStringData("Paw", PassWord_Text, sharedPreferences);
-                        tools.PutStringData("User", UserName_Text, sharedPreferences);
+                        tools.PutStringData("Paw",  Edit_PassWord.getText().toString(), sharedPreferences);
+                        tools.PutStringData("User", Edit_UserName.getText().toString(), sharedPreferences);
                     }
                 } else {
                     tools.PutStringData("Paw", "", sharedPreferences);
@@ -139,8 +134,7 @@ public class LoginActivity extends BaseActivity {
                         tools.show(LoginActivity.this, "请输入用户名后在勾选保存");
                         IsUserName_CB.setChecked(false);
                     } else {
-                        String UserName_Text = Edit_UserName.getText().toString();
-                        tools.PutStringData("User", UserName_Text, sharedPreferences);
+                        tools.PutStringData("User", Edit_UserName.getText().toString(), sharedPreferences);
                     }
                 } else {
                     if (TextUtils.isEmpty(Edit_UserName.getText().toString())) {
@@ -158,31 +152,33 @@ public class LoginActivity extends BaseActivity {
                 LogInUser();
             }
         });
-
         Quit_But.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IsExitApp();
             }
         });
-
         ProjectNameAndConnectMap = new HashMap();
         GetProject();
     }
 
-    private  void foucs(){
-        String user_name = Edit_UserName.getText().toString();
-        String PwsWord = Edit_PassWord.getText().toString();
-        if ( user_name.equals("")){
+    private void foucs() {
+        if (TextUtils.isEmpty(Edit_UserName.getText().toString())) {
+            Edit_UserName.setFocusable(true);
+            Edit_UserName.setFocusableInTouchMode(true);
             Edit_UserName.requestFocus();
-        }else {
-            if (TextUtils.isEmpty(PwsWord)){
+            ViseLog.i("账户为空");
+        } else {
+            if (TextUtils.isEmpty(Edit_PassWord.getText().toString())) {
+                Edit_PassWord.setFocusable(true);
+                Edit_PassWord.setFocusableInTouchMode(true);
                 Edit_PassWord.requestFocus();
-            }else {
-                Edit_PassWord.setSelection(PwsWord.length());
+                ViseLog.i("密码为空");
+            } else {
+                Edit_PassWord.setSelection(Edit_PassWord.getText().toString().length());
+                ViseLog.i("定位到密码edit最后一位"+String.valueOf(Edit_PassWord.getText().toString().length()-1));
             }
         }
-
     }
 
 
@@ -198,10 +194,6 @@ public class LoginActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-//                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-//                                    LoginActivity.this, android.R.layout.simple_spinner_item,
-//                                    getSpinnerData());
-
                             itemData = new ArrayList<>();
                             for (int i = 0; i < getSpinnerData().size(); i++) {
                                 ItemData itemData1 = new ItemData();
@@ -254,6 +246,7 @@ public class LoginActivity extends BaseActivity {
             IsUserName_CB.setChecked(true);
             Edit_UserName.setText(IS_UserName);
         }
+        foucs();
     }
 
 
@@ -269,12 +262,10 @@ public class LoginActivity extends BaseActivity {
             Edit_PassWord.setText(PassWord);
             ViseLog.i("恢复用户保存的密码");
         }
+        foucs();
     }
 
     public void initView() {
-        PD = new ProgressDialog(this);
-        PD.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        PD.setCancelable(false);
         Edit_UserName = $(R.id.Edit_UserName);
         Edit_PassWord = $(R.id.Edit_PassWord);
         IsUserName_CB = $(R.id.IsUserName_CB);
@@ -297,7 +288,6 @@ public class LoginActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
         public void ON_RESUME() {
-
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
@@ -327,8 +317,7 @@ public class LoginActivity extends BaseActivity {
         if (TextUtils.isEmpty(Edit_UserName.getText().toString()) && TextUtils.isEmpty(Edit_PassWord.getText().toString())) {
             tools.show(LoginActivity.this, "请输入用户名 密码");
         } else {
-            PD.setTitle("正在登录请稍后...");
-            PD.show();
+            tools.ShowProgressDialog("登录中...", this);
             loginSyncThread = new LoginActivity.LoginSyncThread(Edit_UserName.getText().toString(), Edit_PassWord.getText().toString());
             loginSyncThread.start();
             handler.postDelayed(new Runnable() {
@@ -359,7 +348,7 @@ public class LoginActivity extends BaseActivity {
             try {
                 Message msg = new Message();
                 String string = ProjectNameAndConnectMap.get(SelectProjectStr);
-                ConnectStr.ConnectionToString  = string;
+                ConnectStr.ConnectionToString = string;
                 String Result = httpRequest.LoginIn(User, Paw, string);
                 Gson gson = new Gson();
                 Json student = gson.fromJson(String.valueOf(Result), Json.class);
@@ -404,8 +393,8 @@ public class LoginActivity extends BaseActivity {
             if (handlerMemoryActivity != null) {
                 switch (msg.what) {
                     case 1: {
+                        tools.DismissProgressDialog();
                         CheckBoxLogic();
-                        PD.dismiss();
                         IsNetWork = true;
                         tools.showshort(LoginActivity.this, "登录成功");
                         tools.PutStringData("Project", SelectProjectStr, sharedPreferences);
@@ -413,13 +402,13 @@ public class LoginActivity extends BaseActivity {
                         break;
                     }
                     case 2: {
-                        PD.dismiss();
+                        tools.DismissProgressDialog();
                         IsNetWork = true;
                         tools.ShowDialog(LoginActivity.this, "用户名或密码错误");
                         break;
                     }
                     case 3: {
-                        PD.dismiss();
+                        tools.DismissProgressDialog();
                         tools.ShowDialog(LoginActivity.this, "网络连接超时");
                         break;
                     }

@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.vise.log.ViseLog;
 
+import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.R;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -27,6 +28,7 @@ public class Tools {
     private static Toast toast;
     private static Tools mToastUtils;
     public Tools tools;
+    private MyProgressDialog myProgressDialog;
 
     public SharedPreferences InitSharedPreferences(Context context) {
         SharedPreferences sharedPreferences;
@@ -122,6 +124,21 @@ public class Tools {
         }
         dialogWindow.setAttributes(lp);
         dialog.show();
+    }
+
+    public void ShowProgressDialog(String Msg, Context context) {
+        if (myProgressDialog == null) {
+            synchronized (MyProgressDialog.class) {
+                if (myProgressDialog == null) {
+                    myProgressDialog = new MyProgressDialog(context, R.style.CustomDialog, Msg);
+                }
+            }
+        }
+        myProgressDialog.show();
+    }
+
+    public void DismissProgressDialog() {
+        myProgressDialog.dismiss();
     }
 
     public static float dpToPx(Context context, int dp) {
