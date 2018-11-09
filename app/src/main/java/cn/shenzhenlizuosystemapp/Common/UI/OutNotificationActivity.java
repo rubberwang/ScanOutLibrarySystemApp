@@ -1,6 +1,7 @@
 package cn.shenzhenlizuosystemapp.Common.UI;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -21,6 +22,7 @@ import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.Fragment.SearchOutLibraryFragment;
 import cn.shenzhenlizuosystemapp.Common.Fragment.SelectOutLibraryFragment;
+import cn.shenzhenlizuosystemapp.Common.Fragment.WMS_Fragment;
 import cn.shenzhenlizuosystemapp.R;
 
 public class OutNotificationActivity extends BaseActivity {
@@ -28,14 +30,15 @@ public class OutNotificationActivity extends BaseActivity {
     private ProgressDialog PD;
     private TextView TV_CastAbout;
     private EditText ET_CastAbout;
+    private TextView Back;
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     private LinearLayout LL_BackMainTable;
-   private SelectOutLibraryFragment selectOutLibraryFragment;
-   private List<OutLibraryBill> outLibraryBills;
+    private SelectOutLibraryFragment selectOutLibraryFragment;
+    private List<OutLibraryBill> outLibraryBills;
     private List<OutLibraryBill> SearchResultList;
-   private Tools tools;
+    private Tools tools;
 
     @Override
     protected int inflateLayout() {
@@ -48,6 +51,7 @@ public class OutNotificationActivity extends BaseActivity {
         tools  = new Tools();
         InitFragment();
         InitClick();
+        BackFinish();
     }
 
     @Override
@@ -58,7 +62,10 @@ public class OutNotificationActivity extends BaseActivity {
         LL_BackMainTable = $(R.id.LL_BackMainTable);
         TV_CastAbout=$(R.id.TV_CastAbout);
         ET_CastAbout = $(R.id.ET_CastAbout);
+        Back = $(R.id.Back);
     }
+
+
 
     private void InitClick(){
         TV_CastAbout.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +122,18 @@ public class OutNotificationActivity extends BaseActivity {
         return 0;
     }
 
+
+    public void BackFinish() {
+        Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+
+            public void onClick(View v) {
+                Intent i = new Intent(OutNotificationActivity.this, MainTabActivity.class);
+                startActivity(i);
+            }
+
+        });
+    }
 
     public class ToLoadOutLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, Integer> {
 

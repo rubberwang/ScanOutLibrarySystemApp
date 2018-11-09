@@ -45,6 +45,7 @@ import cn.shenzhenlizuosystemapp.Common.BroadcastReceiver.ReceiveData_Recevier;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Json;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.JsonUitl;
+import cn.shenzhenlizuosystemapp.Common.Fragment.WMS_Fragment;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.ItemData;
 import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;

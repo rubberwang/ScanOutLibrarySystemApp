@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,9 @@ public class WMS_Fragment extends Fragment {
 
     public static final String ARGS_PAGE = "WMS_Page";
     private RecyclerView Rv_WmsModuleSelect;
+    private TextView Back;
+
+
     private ArrayList<WmsSelectData> List_wmsSelectData;
     private String[] Describe = {"入库作业", "出库作业", "调拨作业", "盘点作业"};
     private int[] R_Img = {R.drawable.gethouse, R.drawable.puthouse, R.drawable.changehouse, R.drawable.pdacheck};
@@ -47,9 +52,20 @@ public class WMS_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_wms, container, false);
         Rv_WmsModuleSelect = rootView.findViewById(R.id.Rv_WmsModuleSelect);
+        Back = rootView.findViewById(R.id.Back);
         List_wmsSelectData = new ArrayList<>();
         InitRecycler();
+        InitClick();
         return rootView;
+    }
+
+    private void InitClick(){
+        Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                cn.shenzhenlizuosystemapp.Common.Base.ViewManager.getInstance().finishActivity(getActivity());
+            }
+        });
     }
 
     private void InitRecycler() {
