@@ -1,6 +1,7 @@
 package cn.shenzhenlizuosystemapp.Common.Fragment;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import cn.shenzhenlizuosystemapp.Common.Adapter.SelectOutFullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
+import cn.shenzhenlizuosystemapp.Common.UI.InputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -65,7 +67,7 @@ public class SearchInputLibraryFragment extends Fragment {
             adapter.setOnItemClickLitener(new SelectOutFullAdapter.OnItemClickLitener() {
                 @Override
                 public void onItemClick(View view, int position) {
-
+                    startActivity(new Intent(getActivity(),InputLibraryActivity.class));
                 }
 
                 @Override

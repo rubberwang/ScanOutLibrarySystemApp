@@ -191,4 +191,16 @@ public class OutNotificationActivity extends BaseActivity {
             PD.show();
         }
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        super.onKeyDown(keyCode, event);
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            if(getFragmentManager().getBackStackEntryCount()==0){
+                ViewManager.getInstance().finishActivity(this);
+                return true;
+            }
+        }
+        return true;
+    }
 }
