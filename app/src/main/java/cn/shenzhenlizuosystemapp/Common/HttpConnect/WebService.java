@@ -90,5 +90,35 @@ public class WebService {
         return Result;
     }
 
+    public static String SumSelectOutListData(String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetCheckStockNotices");
+        soapObject.addProperty("ConnectionToString", ConnectionToString);
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/GetCheckStockNotices", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
+
+    public static String CommitListData (String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetAdjustStockNotices ");
+        soapObject.addProperty("ConnectionToString", ConnectionToString);
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/GetAdjustStockNotices ", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
+
 }
 

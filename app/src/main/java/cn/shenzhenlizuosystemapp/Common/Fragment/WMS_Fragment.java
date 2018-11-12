@@ -5,25 +5,21 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewManager;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Adapter.WmsRvAdapter;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.WmsSelectData;
 import cn.shenzhenlizuosystemapp.Common.UI.InputNotificationActivity;
-import cn.shenzhenlizuosystemapp.Common.UI.OutLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.UI.OutNotificationActivity;
-import cn.shenzhenlizuosystemapp.Common.View.ItemDecoration;
+import cn.shenzhenlizuosystemapp.Common.UI.CheckNotificationActivity;
 import cn.shenzhenlizuosystemapp.R;
 
 public class WMS_Fragment extends Fragment {
@@ -92,6 +88,9 @@ public class WMS_Fragment extends Fragment {
                     case 1: {
                         startActivity(new Intent(getActivity(), OutNotificationActivity.class));
                         break;
+                    }
+                    case 3: {
+                        startActivity(new Intent(getActivity(),CheckNotificationActivity.class));
                     }
                 }
             }
