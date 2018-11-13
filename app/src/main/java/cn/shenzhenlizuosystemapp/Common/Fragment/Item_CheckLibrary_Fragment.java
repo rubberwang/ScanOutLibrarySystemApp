@@ -15,7 +15,7 @@ import com.vise.log.ViseLog;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.SelectCheckFullAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.SelectCheck_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
@@ -23,7 +23,7 @@ import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.UI.CheckLibraryActivity;
 import cn.shenzhenlizuosystemapp.R;
 
-public class SearchCheckLibraryFragment extends Fragment {
+public class Item_CheckLibrary_Fragment extends Fragment {
 
     private static List<CheckLibraryBill> selectSumLibraryList;
     private RecyclerView RV_CastAbout;
@@ -31,17 +31,17 @@ public class SearchCheckLibraryFragment extends Fragment {
     private Tools tools;
     private WebService webService;
 
-    public static SearchCheckLibraryFragment newInstance(List<CheckLibraryBill> selectOutLibraryData) {
+    public static Item_CheckLibrary_Fragment newInstance(List<CheckLibraryBill> selectOutLibraryData) {
         selectSumLibraryList = new ArrayList<CheckLibraryBill>();
         selectSumLibraryList.clear();
-        SearchCheckLibraryFragment.selectSumLibraryList = selectOutLibraryData;
-        return new SearchCheckLibraryFragment();
+        Item_CheckLibrary_Fragment.selectSumLibraryList = selectOutLibraryData;
+        return new Item_CheckLibrary_Fragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.initselectoutlibrary_fragment, container, false);
+        View view = inflater.inflate(R.layout.init_select_quitlibrary, container, false);
         RV_CastAbout = view.findViewById(R.id.RV_InitSelectFull);
         tools = new Tools();
         webService = WebService.getSingleton();
@@ -62,9 +62,9 @@ public class SearchCheckLibraryFragment extends Fragment {
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             RV_CastAbout.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
             RV_CastAbout.setLayoutManager(layoutManager);
-            SelectCheckFullAdapter adapter = new SelectCheckFullAdapter(getActivity(), selectSumLibraryList);
+            SelectCheck_FullAdapter adapter = new SelectCheck_FullAdapter(getActivity(), selectSumLibraryList);
             RV_CastAbout.setAdapter(adapter);
-            adapter.setOnItemClickLitener(new SelectCheckFullAdapter.OnItemClickLitener() {
+            adapter.setOnItemClickLitener(new SelectCheck_FullAdapter.OnItemClickLitener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     startActivity(new Intent(getActivity(),CheckLibraryActivity.class));

@@ -1,13 +1,10 @@
 package cn.shenzhenlizuosystemapp.Common.UI;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
@@ -20,13 +17,11 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -41,11 +36,9 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
-import cn.shenzhenlizuosystemapp.Common.BroadcastReceiver.ReceiveData_Recevier;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Json;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.JsonUitl;
-import cn.shenzhenlizuosystemapp.Common.Fragment.WMS_Fragment;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.ItemData;
 import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
@@ -433,7 +426,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void IsExitApp() {
-        View view = LayoutInflater.from(LoginActivity.this).inflate(R.layout.exitapp_dialog, null, false);
+        View view = LayoutInflater.from(LoginActivity.this).inflate(R.layout.exit_app, null, false);
         final Dialog dialog = new Dialog(LoginActivity.this);
         dialog.setContentView(view);
         TextView TV_Yes = view.findViewById(R.id.TV_Yes);

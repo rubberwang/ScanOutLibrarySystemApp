@@ -38,7 +38,7 @@ public class LoginAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        view = LayoutInflater.from(context).inflate(R.layout.loginspinner_item, null);
+        view = LayoutInflater.from(context).inflate(R.layout.login_project, null);
         TextView textView = view.findViewById(R.id.TV_SpProject);
         textView.setText(data.get(i).getData());
         return view;

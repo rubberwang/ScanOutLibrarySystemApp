@@ -30,13 +30,13 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".Common.UI.OutNotificationActivity"
+            android:name=".Common.UI.Quit_NotificationActivity"
             android:label="@string/SelectOutLibrary"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".Common.UI.InputNotificationActivity"
+            android:name=".Common.UI.Input_NotificationActivity"
             android:label="@string/SelectInputLibrary"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
@@ -48,7 +48,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".Common.UI.CheckNotificationActivity"
+            android:name=".Common.UI.Check_NotificationActivity"
             android:label="@string/SelectSumLibrary"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />

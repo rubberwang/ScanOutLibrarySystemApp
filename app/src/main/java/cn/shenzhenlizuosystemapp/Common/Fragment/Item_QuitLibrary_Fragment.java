@@ -15,16 +15,15 @@ import com.vise.log.ViseLog;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.SelectOutFullAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.SelectQuit_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.UI.InputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.UI.OutLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
 
-public class SearchOutLibraryFragment extends Fragment {
+public class Item_QuitLibrary_Fragment extends Fragment {
 
     private static List<OutLibraryBill> selectOutLibraryList;
     private RecyclerView RV_CastAbout;
@@ -32,17 +31,17 @@ public class SearchOutLibraryFragment extends Fragment {
     private Tools tools;
     private WebService webService;
 
-    public static SearchOutLibraryFragment newInstance(List<OutLibraryBill> selectOutLibraryData) {
+    public static Item_QuitLibrary_Fragment newInstance(List<OutLibraryBill> selectOutLibraryData) {
         selectOutLibraryList = new ArrayList<OutLibraryBill>();
         selectOutLibraryList.clear();
-        SearchOutLibraryFragment.selectOutLibraryList = selectOutLibraryData;
-        return new SearchOutLibraryFragment();
+        Item_QuitLibrary_Fragment.selectOutLibraryList = selectOutLibraryData;
+        return new Item_QuitLibrary_Fragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.initselectoutlibrary_fragment, container, false);
+        View view = inflater.inflate(R.layout.init_select_quitlibrary, container, false);
         RV_CastAbout = view.findViewById(R.id.RV_InitSelectFull);
         tools = new Tools();
         webService = WebService.getSingleton();
@@ -63,9 +62,9 @@ public class SearchOutLibraryFragment extends Fragment {
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             RV_CastAbout.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
             RV_CastAbout.setLayoutManager(layoutManager);
-            SelectOutFullAdapter adapter = new SelectOutFullAdapter(getActivity(), selectOutLibraryList);
+            SelectQuit_FullAdapter adapter = new SelectQuit_FullAdapter(getActivity(), selectOutLibraryList);
             RV_CastAbout.setAdapter(adapter);
-            adapter.setOnItemClickLitener(new SelectOutFullAdapter.OnItemClickLitener() {
+            adapter.setOnItemClickLitener(new SelectQuit_FullAdapter.OnItemClickLitener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     startActivity(new Intent(getActivity(),OutLibraryActivity.class));

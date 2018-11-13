@@ -15,11 +15,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.WmsRvAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.Wms_RvAdapter;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.WmsSelectData;
-import cn.shenzhenlizuosystemapp.Common.UI.InputNotificationActivity;
-import cn.shenzhenlizuosystemapp.Common.UI.OutNotificationActivity;
-import cn.shenzhenlizuosystemapp.Common.UI.CheckNotificationActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.Input_NotificationActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.Quit_NotificationActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.Check_NotificationActivity;
 import cn.shenzhenlizuosystemapp.R;
 
 public class WMS_Fragment extends Fragment {
@@ -74,23 +74,23 @@ public class WMS_Fragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         Rv_WmsModuleSelect.setLayoutManager(gridLayoutManager);
-        WmsRvAdapter adapter = new WmsRvAdapter(getActivity(), List_wmsSelectData);
+        Wms_RvAdapter adapter = new Wms_RvAdapter(getActivity(), List_wmsSelectData);
         Rv_WmsModuleSelect.setItemAnimator(new DefaultItemAnimator());
         Rv_WmsModuleSelect.setAdapter(adapter);
-        adapter.setOnItemClickLitener(new WmsRvAdapter.OnItemClickLitener() {
+        adapter.setOnItemClickLitener(new Wms_RvAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
                 switch (position) {
                     case 0:{
-                        startActivity(new Intent(getActivity(), InputNotificationActivity.class));
+                        startActivity(new Intent(getActivity(), Input_NotificationActivity.class));
                         break;
                     }
                     case 1: {
-                        startActivity(new Intent(getActivity(), OutNotificationActivity.class));
+                        startActivity(new Intent(getActivity(), Quit_NotificationActivity.class));
                         break;
                     }
                     case 3: {
-                        startActivity(new Intent(getActivity(),CheckNotificationActivity.class));
+                        startActivity(new Intent(getActivity(),Check_NotificationActivity.class));
                     }
                 }
             }

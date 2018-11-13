@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.vise.log.ViseLog;
@@ -40,6 +41,10 @@ public class InputLibraryActivity extends BaseActivity {
 
     private TextView Back;
     private TextView TV_DeliverGoodsNumber;
+    private TextView TV_Time;
+    private Spinner TV_house;
+    private TextView TV_BusType;
+    private TextView TV_Unit;
     private String FGUID = "";
 
     private InputLibraryObServer inputLibraryObServer;
@@ -47,7 +52,7 @@ public class InputLibraryActivity extends BaseActivity {
 
     @Override
     protected int inflateLayout() {
-        return R.layout.scaninputlibrary_layout;
+        return R.layout.scaning_input_layout;
     }
 
     @Override
@@ -66,6 +71,10 @@ public class InputLibraryActivity extends BaseActivity {
     public void initView() {
         Back = $(R.id.Back);
         TV_DeliverGoodsNumber = $(R.id.TV_DeliverGoodsNumber);
+        TV_Time = $(R.id.TV_Time);
+        TV_house = $(R.id.TV_house);
+        TV_BusType = $(R.id.TV_BusType);
+        TV_Unit = $(R.id.TV_Unit);
     }
 
     public void BackFinish() {
@@ -146,6 +155,10 @@ public class InputLibraryActivity extends BaseActivity {
             try {
                 if (result.size() >= 0) {
                     TV_DeliverGoodsNumber.setText(result.get(0).getFCode());
+                    TV_Time.setText(result.get(0).getFDate());
+                    //TV_house.setDropDownHorizontalOffset(result.get(0).getFStock_Name());
+                    TV_BusType.setText(result.get(0).getFTransactionType_Name());
+                    TV_Unit.setText(result.get(0).getFPartner_Name());
                 }
             } catch (Exception e) {
                 ViseLog.d("Select适配RV数据错误" + e);

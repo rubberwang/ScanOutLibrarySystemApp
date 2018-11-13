@@ -14,14 +14,14 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.WmsSelectData;
 import cn.shenzhenlizuosystemapp.R;
 
-public class WmsRvAdapter  extends RecyclerView.Adapter {
+public class Wms_RvAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private List<WmsSelectData> datas;
-    private WmsRvAdapter.OnItemClickLitener mOnItemClickLitener;
+    private Wms_RvAdapter.OnItemClickLitener mOnItemClickLitener;
     private int selected = -1;
 
-    public WmsRvAdapter(Context context, List<WmsSelectData> data) {
+    public Wms_RvAdapter(Context context, List<WmsSelectData> data) {
         this.context = context;
         this.datas = data;
     }
@@ -32,7 +32,7 @@ public class WmsRvAdapter  extends RecyclerView.Adapter {
         void onItemLongClick(View view, int position);
     }
 
-    public void setOnItemClickLitener(WmsRvAdapter.OnItemClickLitener mOnItemClickLitener) {
+    public void setOnItemClickLitener(Wms_RvAdapter.OnItemClickLitener mOnItemClickLitener) {
         this.mOnItemClickLitener = mOnItemClickLitener;
     }
 
@@ -40,7 +40,7 @@ public class WmsRvAdapter  extends RecyclerView.Adapter {
     @Override
     //重写onCreateViewHolder方法，返回一个自定义的ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        WmsRvAdapter.ViewHoders viewHoders = new WmsRvAdapter.ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.wms_selectitem, parent, false));
+        Wms_RvAdapter.ViewHoders viewHoders = new Wms_RvAdapter.ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.wms, parent, false));
         return viewHoders;
     }
 
@@ -49,8 +49,8 @@ public class WmsRvAdapter  extends RecyclerView.Adapter {
     //填充onCreateViewHolder方法返回的holder中的控件
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
-            ((WmsRvAdapter.ViewHoders) holder).SelectRvItemImg.setImageResource(datas.get(position).getR_Img());
-            ((WmsRvAdapter.ViewHoders) holder).SelectRvItemTv.setText(datas.get(position).getDescribeStr());
+            ((Wms_RvAdapter.ViewHoders) holder).SelectRvItemImg.setImageResource(datas.get(position).getR_Img());
+            ((Wms_RvAdapter.ViewHoders) holder).SelectRvItemTv.setText(datas.get(position).getDescribeStr());
             if (mOnItemClickLitener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

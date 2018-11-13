@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResultRvAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResult_RvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.EventBusScanDataMsg;
@@ -29,14 +29,14 @@ public class CheckLibraryActivity extends BaseActivity {
 
     private TextView Back;
     private RecyclerView RV_GetInfoTable;
-    private ScanResultRvAdapter scanResultRvAdapter;
+    private ScanResult_RvAdapter scanResultRvAdapter;
 
     private OutLibraryObServer outLibraryObServer;
     private List<ScanResultData> scanResultData;
 
     @Override
     protected int inflateLayout() {
-        return R.layout.scansumlibrary_layout;
+        return R.layout.checkwork_layout;
     }
 
     @Override
@@ -60,9 +60,9 @@ public class CheckLibraryActivity extends BaseActivity {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
         RV_GetInfoTable.setLayoutManager(layoutManager);
-        scanResultRvAdapter = new ScanResultRvAdapter(this, scanResultData);
+        scanResultRvAdapter = new ScanResult_RvAdapter(this, scanResultData);
         RV_GetInfoTable.setAdapter(scanResultRvAdapter);
-        scanResultRvAdapter.setOnItemClickLitener(new ScanResultRvAdapter.OnItemClickLitener() {
+        scanResultRvAdapter.setOnItemClickLitener(new ScanResult_RvAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
 

@@ -27,7 +27,7 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.SelectCheckFullAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.SelectCheck_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckLibraryBill;
@@ -36,7 +36,7 @@ import cn.shenzhenlizuosystemapp.Common.UI.CheckLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
 
-public class SelectCheckLibraryFragment extends Fragment {
+public class Select_CheckLibrary_Fragment extends Fragment {
 
     public static final String ARGS_PAGE = "SelectOutLibrary_Page";
    private RecyclerView RV_InitSelectFull;
@@ -45,8 +45,8 @@ public class SelectCheckLibraryFragment extends Fragment {
    private ProgressDialog PD;
    private List<CheckLibraryBill> outLibraryBills;
 
-    public static SelectCheckLibraryFragment newInstance() {
-        SelectCheckLibraryFragment fragment = new SelectCheckLibraryFragment();
+    public static Select_CheckLibrary_Fragment newInstance() {
+        Select_CheckLibrary_Fragment fragment = new Select_CheckLibrary_Fragment();
         return fragment;
     }
 
@@ -58,7 +58,7 @@ public class SelectCheckLibraryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.initselectoutlibrary_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.init_select_quitlibrary, container, false);
         RV_InitSelectFull = rootView.findViewById(R.id.RV_InitSelectFull);
         tools = new Tools();
         webService = WebService.getSingleton();
@@ -111,9 +111,9 @@ public class SelectCheckLibraryFragment extends Fragment {
                     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     recyclerView.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
                     recyclerView.setLayoutManager(layoutManager);
-                    SelectCheckFullAdapter adapter = new SelectCheckFullAdapter(getActivity(), result);
+                    SelectCheck_FullAdapter adapter = new SelectCheck_FullAdapter(getActivity(), result);
                     recyclerView.setAdapter(adapter);
-                    adapter.setOnItemClickLitener(new SelectCheckFullAdapter.OnItemClickLitener() {
+                    adapter.setOnItemClickLitener(new SelectCheck_FullAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
                             startActivity(new Intent(getActivity(),CheckLibraryActivity.class));

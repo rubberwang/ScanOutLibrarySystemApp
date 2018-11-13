@@ -43,7 +43,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 
     public View getTabView(int position) {
         TabItemInfo itemInfo = mTabItems.get(position);
-        View view = LayoutInflater.from(mContext).inflate(R.layout.custom_view_tab_item, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.quit_frame, null);
         TextView tv = (TextView) view.findViewById(R.id.tab_text);
         tv.setText(itemInfo.getNameResource());
         ImageView img = (ImageView) view.findViewById(R.id.tab_image);

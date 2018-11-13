@@ -27,16 +27,16 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.SelectOutFullAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.SelectQuit_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.UI.OutLibraryActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.InputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
 
-public class SelectOutLibraryFragment extends Fragment {
+public class Select_InputLibrary_Fragment extends Fragment {
 
     public static final String ARGS_PAGE = "SelectOutLibrary_Page";
    private RecyclerView RV_InitSelectFull;
@@ -45,8 +45,8 @@ public class SelectOutLibraryFragment extends Fragment {
    private ProgressDialog PD;
    private List<OutLibraryBill> outLibraryBills;
 
-    public static SelectOutLibraryFragment newInstance() {
-        SelectOutLibraryFragment fragment = new SelectOutLibraryFragment();
+    public static Select_InputLibrary_Fragment newInstance() {
+        Select_InputLibrary_Fragment fragment = new Select_InputLibrary_Fragment();
         return fragment;
     }
 
@@ -58,7 +58,7 @@ public class SelectOutLibraryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.initselectoutlibrary_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.init_select_quitlibrary, container, false);
         RV_InitSelectFull = rootView.findViewById(R.id.RV_InitSelectFull);
         tools = new Tools();
         webService = WebService.getSingleton();
@@ -88,7 +88,7 @@ public class SelectOutLibraryFragment extends Fragment {
             String OutBills = "";
             try {
                 InputStream in_withcode = null;
-                OutBills = webService.GetSelectOutListData(ConnectStr.ConnectionToString);
+                OutBills = webService.PutSelectOutListData(ConnectStr.ConnectionToString);
                 ViseLog.i("OutBills = " + OutBills);
                 in_withcode = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
                 outLibraryBills = getOutLibraryFromXMl(in_withcode);
@@ -111,12 +111,15 @@ public class SelectOutLibraryFragment extends Fragment {
                     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     recyclerView.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
                     recyclerView.setLayoutManager(layoutManager);
-                    SelectOutFullAdapter adapter = new SelectOutFullAdapter(getActivity(), result);
+                    SelectQuit_FullAdapter adapter = new SelectQuit_FullAdapter(getActivity(), result);
                     recyclerView.setAdapter(adapter);
-                    adapter.setOnItemClickLitener(new SelectOutFullAdapter.OnItemClickLitener() {
+                    adapter.setOnItemClickLitener(new SelectQuit_FullAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
-                            startActivity(new Intent(getActivity(),OutLibraryActivity.class));
+                            Intent intent = new Intent(getActivity(),InputLibraryActivity.class);
+                            intent.putExtra("FGUID",result.get(position).getFGuid());
+                            ViseLog.i("FGUID"+result.get(position).getFGuid());
+                            startActivity(intent);
                         }
 
                         @Override

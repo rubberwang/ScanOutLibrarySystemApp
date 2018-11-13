@@ -68,6 +68,9 @@
     <string name="SelectOutLibrary">选择出库通知单</string>
     <string name="SelectInputLibrary">选择入库通知单</string>
     <string name="SelectSumLibrary">选择盘点通知单</string>
+    <string name="CommitLibrary">直接调拨通知单</string>
+    <string name="InputCommitLibrary">出库调拨通知单</string>
+    <string name="GetCommitLibrary">入库调拨通知单</string>
     <string name="CastAbout">搜索</string>
     <string name="BackMainRV">返回总出库单列表</string>
     <string name="SelectGetLibrary">选择入库通知单</string>
@@ -76,6 +79,10 @@
     <string name="OutLibraryWarehouse">仓库名称:</string>
     <string name="OutLibraryType">出库类型:</string>
     <string name="OutLibraryTime">创建时间:</string>
+    <string name="CommitStyle">调拨方式:</string>
+    <string name="InputWareHouse">入库仓库:</string>
+    <string name="OutWareHouse">出库仓库:</string>
+    <string name="DirectCommit">直接调拨</string>
     <string name="UpLoad">加载中</string>
     <string name="materID">物料编号:</string>
     <string name="nameRoot">品名规格:</string>

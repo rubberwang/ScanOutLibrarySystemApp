@@ -1,17 +1,11 @@
 package cn.shenzhenlizuosystemapp.Common.UI;
 
-import android.app.ProgressDialog;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.vise.log.ViseLog;
@@ -23,11 +17,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResultRvAdapter;
-import cn.shenzhenlizuosystemapp.Common.Adapter.SelectOutFullAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResult_RvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
-import cn.shenzhenlizuosystemapp.Common.BroadcastReceiver.ReceiveData_Recevier;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.EventBusScanDataMsg;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
@@ -37,14 +29,14 @@ public class OutLibraryActivity extends BaseActivity {
 
     private TextView Back;
     private RecyclerView RV_GetInfoTable;
-    private ScanResultRvAdapter scanResultRvAdapter;
+    private ScanResult_RvAdapter scanResultRvAdapter;
 
     private OutLibraryObServer outLibraryObServer;
     private List<ScanResultData> scanResultData;
 
     @Override
     protected int inflateLayout() {
-        return R.layout.scanoutlibrary_layout;
+        return R.layout.scaning_quit_layout;
     }
 
     @Override
@@ -68,9 +60,9 @@ public class OutLibraryActivity extends BaseActivity {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
         RV_GetInfoTable.setLayoutManager(layoutManager);
-        scanResultRvAdapter = new ScanResultRvAdapter(this, scanResultData);
+        scanResultRvAdapter = new ScanResult_RvAdapter(this, scanResultData);
         RV_GetInfoTable.setAdapter(scanResultRvAdapter);
-        scanResultRvAdapter.setOnItemClickLitener(new ScanResultRvAdapter.OnItemClickLitener() {
+        scanResultRvAdapter.setOnItemClickLitener(new ScanResult_RvAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
 

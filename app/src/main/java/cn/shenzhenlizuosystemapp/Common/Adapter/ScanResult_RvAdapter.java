@@ -10,18 +10,17 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
 import cn.shenzhenlizuosystemapp.R;
 
-public class ScanResultRvAdapter extends RecyclerView.Adapter {
+public class ScanResult_RvAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private List<ScanResultData> datas;
-    private ScanResultRvAdapter.OnItemClickLitener mOnItemClickLitener;
+    private ScanResult_RvAdapter.OnItemClickLitener mOnItemClickLitener;
     private int selected = -1;
 
-    public ScanResultRvAdapter(Context context, List<ScanResultData> data) {
+    public ScanResult_RvAdapter(Context context, List<ScanResultData> data) {
         this.context = context;
         this.datas = data;
     }
@@ -32,14 +31,14 @@ public class ScanResultRvAdapter extends RecyclerView.Adapter {
         void onItemLongClick(View view, int position);
     }
 
-    public void setOnItemClickLitener(ScanResultRvAdapter.OnItemClickLitener mOnItemClickLitener) {
+    public void setOnItemClickLitener(ScanResult_RvAdapter.OnItemClickLitener mOnItemClickLitener) {
         this.mOnItemClickLitener = mOnItemClickLitener;
     }
 
     @Override
     //重写onCreateViewHolder方法，返回一个自定义的ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ScanResultRvAdapter.ViewHoders viewHoders = new ScanResultRvAdapter.ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.get_result_rv_item_full, parent, false));
+        ScanResult_RvAdapter.ViewHoders viewHoders = new ScanResult_RvAdapter.ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.scaning_result_item, parent, false));
         return viewHoders;
     }
 
@@ -48,7 +47,7 @@ public class ScanResultRvAdapter extends RecyclerView.Adapter {
     //填充onCreateViewHolder方法返回的holder中的控件
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
-            ((ScanResultRvAdapter.ViewHoders) holder).TV_scanData.setText(datas.get(position).getScanData());
+            ((ScanResult_RvAdapter.ViewHoders) holder).TV_scanData.setText(datas.get(position).getScanData());
             if (mOnItemClickLitener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

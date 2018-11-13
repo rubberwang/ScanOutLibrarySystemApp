@@ -19,11 +19,11 @@ import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckLibraryBill;
-import cn.shenzhenlizuosystemapp.Common.Fragment.SearchCheckLibraryFragment;
-import cn.shenzhenlizuosystemapp.Common.Fragment.SelectCheckLibraryFragment;
+import cn.shenzhenlizuosystemapp.Common.Fragment.Item_CheckLibrary_Fragment;
+import cn.shenzhenlizuosystemapp.Common.Fragment.Select_CheckLibrary_Fragment;
 import cn.shenzhenlizuosystemapp.R;
 
-public class CheckNotificationActivity extends BaseActivity {
+public class Check_NotificationActivity extends BaseActivity {
 
     private ProgressDialog PD;
     private TextView TV_CastAbout;
@@ -33,14 +33,14 @@ public class CheckNotificationActivity extends BaseActivity {
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     private LinearLayout LL_BackMainTable;
-    private SelectCheckLibraryFragment selectCheckLibraryFragment;
+    private Select_CheckLibrary_Fragment selectCheckLibraryFragment;
     private List<CheckLibraryBill> outLibraryBills;
     private List<CheckLibraryBill> SearchResultList;
     private Tools tools;
 
     @Override
     protected int inflateLayout() {
-        return R.layout.selectlistsumlibrary_layout;
+        return R.layout.select_checklibrary_layout;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class CheckNotificationActivity extends BaseActivity {
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ViewManager.getInstance().finishActivity(CheckNotificationActivity.this);
+                ViewManager.getInstance().finishActivity(Check_NotificationActivity.this);
             }
         });
     }
@@ -82,7 +82,7 @@ public class CheckNotificationActivity extends BaseActivity {
         if (LL_BackMainTable.getVisibility() == View.VISIBLE) {
             LL_BackMainTable.setVisibility(View.GONE);
         }
-        selectCheckLibraryFragment = SelectCheckLibraryFragment.newInstance();
+        selectCheckLibraryFragment = Select_CheckLibrary_Fragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.F_SelectSum, selectCheckLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
     }
@@ -150,7 +150,7 @@ public class CheckNotificationActivity extends BaseActivity {
             try {
                 PD.dismiss();
                 if (result == 1) {
-                    SearchCheckLibraryFragment searchInputLibraryFragment = SearchCheckLibraryFragment.newInstance(SearchResultList);
+                    Item_CheckLibrary_Fragment searchInputLibraryFragment = Item_CheckLibrary_Fragment.newInstance(SearchResultList);
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction().replace(R.id.F_SelectOut, searchInputLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                     LL_BackMainTable.setVisibility(View.VISIBLE);
@@ -163,12 +163,12 @@ public class CheckNotificationActivity extends BaseActivity {
                     });
                     ViseLog.d("搜索成功");
                 } else {
-                    tools.showshort(CheckNotificationActivity.this, "搜索错误请重新搜索");
+                    tools.showshort(Check_NotificationActivity.this, "搜索错误请重新搜索");
                     ViseLog.d("搜索失败");
                 }
             } catch (Exception e) {
                 ViseLog.d("搜索错误" + e);
-                tools.showshort(CheckNotificationActivity.this, "搜索错误请重新搜索");
+                tools.showshort(Check_NotificationActivity.this, "搜索错误请重新搜索");
             }
             ViseLog.i("搜索结果" + result);
         }

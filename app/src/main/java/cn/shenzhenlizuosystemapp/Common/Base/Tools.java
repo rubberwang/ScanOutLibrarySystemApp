@@ -1,11 +1,8 @@
 package cn.shenzhenlizuosystemapp.Common.Base;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -61,7 +58,7 @@ public class Tools {
     public void show(Context context, String msg) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         assert layoutInflater != null;
-        View view = layoutInflater.inflate(R.layout.toast_layout, null);
+        View view = layoutInflater.inflate(R.layout.warning_layout, null);
         LinearLayout linearlayout = (LinearLayout) view.findViewById(R.id.maintoast);
         TextView text = view.findViewById(R.id.tv_message_toast);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) dpToPx(context, 190), (int) dpToPx(context, 60));
@@ -79,7 +76,7 @@ public class Tools {
     public void showshort(Context context, String msg) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         assert layoutInflater != null;
-        View view = layoutInflater.inflate(R.layout.toast_layout, null);
+        View view = layoutInflater.inflate(R.layout.warning_layout, null);
         LinearLayout linearlayout = (LinearLayout) view.findViewById(R.id.maintoast);
         TextView text = view.findViewById(R.id.tv_message_toast);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) dpToPx(context, 190), (int) dpToPx(context, 60));
@@ -95,7 +92,7 @@ public class Tools {
     }
 
     public void ShowDialog(Context context, String msg) {
-        View view = LayoutInflater.from(context).inflate(R.layout.toastdialog_layout, null, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.quitwarning_layout, null, false);
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(view);
 

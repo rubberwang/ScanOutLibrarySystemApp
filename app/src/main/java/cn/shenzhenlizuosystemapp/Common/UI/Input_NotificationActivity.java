@@ -19,13 +19,11 @@ import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
-import cn.shenzhenlizuosystemapp.Common.Fragment.SearchInputLibraryFragment;
-import cn.shenzhenlizuosystemapp.Common.Fragment.SearchOutLibraryFragment;
-import cn.shenzhenlizuosystemapp.Common.Fragment.SelectInputLibraryFragment;
-import cn.shenzhenlizuosystemapp.Common.Fragment.SelectOutLibraryFragment;
+import cn.shenzhenlizuosystemapp.Common.Fragment.Item_InputLibrary_Fragment;
+import cn.shenzhenlizuosystemapp.Common.Fragment.Select_InputLibrary_Fragment;
 import cn.shenzhenlizuosystemapp.R;
 
-public class InputNotificationActivity extends BaseActivity {
+public class Input_NotificationActivity extends BaseActivity {
 
     private ProgressDialog PD;
     private TextView TV_CastAbout;
@@ -35,14 +33,14 @@ public class InputNotificationActivity extends BaseActivity {
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     private LinearLayout LL_BackMainTable;
-    private SelectInputLibraryFragment selectInputLibraryFragment;
+    private Select_InputLibrary_Fragment selectInputLibraryFragment;
     private List<OutLibraryBill> outLibraryBills;
     private List<OutLibraryBill> SearchResultList;
     private Tools tools;
 
     @Override
     protected int inflateLayout() {
-        return R.layout.selectinputlibrary_layout;
+        return R.layout.select_inputlibrary_layout;
     }
 
     @Override
@@ -75,7 +73,7 @@ public class InputNotificationActivity extends BaseActivity {
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ViewManager.getInstance().finishActivity(InputNotificationActivity.this);
+                ViewManager.getInstance().finishActivity(Input_NotificationActivity.this);
             }
         });
     }
@@ -84,7 +82,7 @@ public class InputNotificationActivity extends BaseActivity {
         if (LL_BackMainTable.getVisibility() == View.VISIBLE) {
             LL_BackMainTable.setVisibility(View.GONE);
         }
-        selectInputLibraryFragment = SelectInputLibraryFragment.newInstance();
+        selectInputLibraryFragment = Select_InputLibrary_Fragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.F_SelectOut, selectInputLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
     }
@@ -154,9 +152,9 @@ public class InputNotificationActivity extends BaseActivity {
             try {
                 PD.dismiss();
                 if (result == 1) {
-                    SearchInputLibraryFragment searchInputLibraryFragment = SearchInputLibraryFragment.newInstance(SearchResultList);
+                    Item_InputLibrary_Fragment itemInputLibraryFragment = Item_InputLibrary_Fragment.newInstance(SearchResultList);
                     FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.F_SelectOut, searchInputLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                    fragmentManager.beginTransaction().replace(R.id.F_SelectOut, itemInputLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                     LL_BackMainTable.setVisibility(View.VISIBLE);
                     TextView TV_BackMainTable = (TextView) LL_BackMainTable.findViewById(R.id.TV_BackMainTable);
                     TV_BackMainTable.setOnClickListener(new View.OnClickListener() {
@@ -167,12 +165,12 @@ public class InputNotificationActivity extends BaseActivity {
                     });
                     ViseLog.d("搜索成功");
                 } else {
-                    tools.showshort(InputNotificationActivity.this, "搜索错误请重新搜索");
+                    tools.showshort(Input_NotificationActivity.this, "搜索错误请重新搜索");
                     ViseLog.d("搜索失败");
                 }
             } catch (Exception e) {
                 ViseLog.d("搜索错误" + e);
-                tools.showshort(InputNotificationActivity.this, "搜索错误请重新搜索");
+                tools.showshort(Input_NotificationActivity.this, "搜索错误请重新搜索");
             }
             ViseLog.i("搜索结果" + result);
         }

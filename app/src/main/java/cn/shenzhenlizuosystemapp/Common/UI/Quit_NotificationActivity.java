@@ -1,7 +1,6 @@
 package cn.shenzhenlizuosystemapp.Common.UI;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -20,12 +19,11 @@ import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
-import cn.shenzhenlizuosystemapp.Common.Fragment.SearchOutLibraryFragment;
-import cn.shenzhenlizuosystemapp.Common.Fragment.SelectOutLibraryFragment;
-import cn.shenzhenlizuosystemapp.Common.Fragment.WMS_Fragment;
+import cn.shenzhenlizuosystemapp.Common.Fragment.Item_QuitLibrary_Fragment;
+import cn.shenzhenlizuosystemapp.Common.Fragment.Select_QuitLibrary_Fragment;
 import cn.shenzhenlizuosystemapp.R;
 
-public class OutNotificationActivity extends BaseActivity {
+public class Quit_NotificationActivity extends BaseActivity {
 
     private ProgressDialog PD;
     private TextView TV_CastAbout;
@@ -35,14 +33,14 @@ public class OutNotificationActivity extends BaseActivity {
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     private LinearLayout LL_BackMainTable;
-    private SelectOutLibraryFragment selectOutLibraryFragment;
+    private Select_QuitLibrary_Fragment selectQuitLibraryFragment;
     private List<OutLibraryBill> outLibraryBills;
     private List<OutLibraryBill> SearchResultList;
     private Tools tools;
 
     @Override
     protected int inflateLayout() {
-        return R.layout.selectoutlibrary_layout;
+        return R.layout.select_quitlibrary_layout;
     }
 
     @Override
@@ -79,9 +77,9 @@ public class OutNotificationActivity extends BaseActivity {
         if (LL_BackMainTable.getVisibility() == View.VISIBLE) {
             LL_BackMainTable.setVisibility(View.GONE);
         }
-         selectOutLibraryFragment = SelectOutLibraryFragment.newInstance();
+         selectQuitLibraryFragment = Select_QuitLibrary_Fragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.F_SelectOut, selectOutLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+        fragmentManager.beginTransaction().replace(R.id.F_SelectOut, selectQuitLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
     }
 
     public void ToLoad(String ChracterSearch) {
@@ -91,7 +89,7 @@ public class OutNotificationActivity extends BaseActivity {
 
     private int LookForBranch(String ChracterSearch) {
         try {
-            outLibraryBills = selectOutLibraryFragment.GetSelectBills();
+            outLibraryBills = selectQuitLibraryFragment.GetSelectBills();
             if (outLibraryBills.size() >= 0) {
                 SearchResultList.clear();
                 for (int i = 0; i < outLibraryBills.size(); i++) {
@@ -126,7 +124,7 @@ public class OutNotificationActivity extends BaseActivity {
             @Override
 
             public void onClick(View v) {
-              ViewManager.getInstance().finishActivity(OutNotificationActivity.this);
+              ViewManager.getInstance().finishActivity(Quit_NotificationActivity.this);
             }
 
         });
@@ -161,9 +159,9 @@ public class OutNotificationActivity extends BaseActivity {
             try {
                 PD.dismiss();
                 if (result == 1) {
-                    SearchOutLibraryFragment searchOutLibraryFragment = SearchOutLibraryFragment.newInstance(SearchResultList);
+                    Item_QuitLibrary_Fragment itemOutLibraryFragment = Item_QuitLibrary_Fragment.newInstance(SearchResultList);
                     FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.F_SelectOut, searchOutLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                    fragmentManager.beginTransaction().replace(R.id.F_SelectOut, itemOutLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                     LL_BackMainTable.setVisibility(View.VISIBLE);
                     TextView TV_BackMainTable = (TextView) LL_BackMainTable.findViewById(R.id.TV_BackMainTable);
                     TV_BackMainTable.setOnClickListener(new View.OnClickListener() {
@@ -174,12 +172,12 @@ public class OutNotificationActivity extends BaseActivity {
                     });
                     ViseLog.d("搜索成功");
                 } else {
-                    tools.showshort(OutNotificationActivity.this, "搜索错误请重新搜索");
+                    tools.showshort(Quit_NotificationActivity.this, "搜索错误请重新搜索");
                     ViseLog.d("搜索失败");
                 }
             } catch (Exception e) {
                 ViseLog.d("搜索错误" + e);
-                tools.showshort(OutNotificationActivity.this, "搜索错误请重新搜索");
+                tools.showshort(Quit_NotificationActivity.this, "搜索错误请重新搜索");
             }
             ViseLog.i("搜索结果" + result);
         }
