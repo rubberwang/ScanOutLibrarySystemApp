@@ -118,7 +118,10 @@ public class SelectInputLibraryFragment extends Fragment {
                     adapter.setOnItemClickLitener(new SelectOutFullAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
-                            startActivity(new Intent(getActivity(),InputLibraryActivity.class));
+                            Intent intent = new Intent(getActivity(),InputLibraryActivity.class);
+                            intent.putExtra("FGUID",result.get(position).getFGuid());
+                            ViseLog.i("FGUID"+result.get(position).getFGuid());
+                            startActivity(intent);
                         }
 
                         @Override
