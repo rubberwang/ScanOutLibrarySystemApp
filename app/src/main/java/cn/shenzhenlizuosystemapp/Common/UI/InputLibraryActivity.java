@@ -5,7 +5,6 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -18,6 +17,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -28,16 +28,12 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.SelectOutFullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.EventBusScanDataMsg;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryData;
-import cn.shenzhenlizuosystemapp.Common.Fragment.SelectInputLibraryFragment;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
 
 public class InputLibraryActivity extends BaseActivity {
@@ -48,7 +44,6 @@ public class InputLibraryActivity extends BaseActivity {
 
     private InputLibraryObServer inputLibraryObServer;
     private WebService webService;
-    private List<OutLibraryData> outLibraryBills;
 
     @Override
     protected int inflateLayout() {
@@ -59,8 +54,6 @@ public class InputLibraryActivity extends BaseActivity {
     public void initData() {
         Intent intent = getIntent();
         FGUID = intent.getStringExtra("FGUID");
-        ViseLog.i("FGUID" + FGUID);
-        outLibraryBills = new ArrayList<OutLibraryData>();
         inputLibraryObServer = new InputLibraryObServer();
         getLifecycle().addObserver(inputLibraryObServer);
         webService = WebService.getSingleton();
@@ -74,7 +67,6 @@ public class InputLibraryActivity extends BaseActivity {
         Back = $(R.id.Back);
         TV_DeliverGoodsNumber = $(R.id.TV_DeliverGoodsNumber);
     }
-
 
     public void BackFinish() {
         Back.setOnClickListener(new View.OnClickListener() {
@@ -126,14 +118,21 @@ public class InputLibraryActivity extends BaseActivity {
         @Override
         protected List<OutLibraryData> doInBackground(Integer... params) {
             String OutBills = "";
+            List<OutLibraryData> outLibraryBills = new ArrayList<>();
+            InputStream in_withcode = null;
             try {
-                InputStream in_withcode = null;
                 OutBills = webService.GetInListData(ConnectStr.ConnectionToString, FGUID);
                 ViseLog.i("OutBills = " + OutBills);
                 in_withcode = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
                 outLibraryBills = GetInputArray(in_withcode);
-            } catch (Exception e) {
-                ViseLog.d("SelectOutLibraryGetOutLibraryBillsException " + e);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            } catch (SAXException e) {
+                e.printStackTrace();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
             }
             return outLibraryBills;
         }
@@ -146,8 +145,7 @@ public class InputLibraryActivity extends BaseActivity {
         protected void onPostExecute(final List<OutLibraryData> result) {
             try {
                 if (result.size() >= 0) {
-                    ViseLog.i("大于0" + result.get(0).getFCode()
-                    );
+                    TV_DeliverGoodsNumber.setText(result.get(0).getFCode());
                 }
             } catch (Exception e) {
                 ViseLog.d("Select适配RV数据错误" + e);
@@ -200,8 +198,9 @@ public class InputLibraryActivity extends BaseActivity {
         public void startElement(String uri, String localName, String qName,
                                  Attributes attributes) throws SAXException {
             tag = localName;
-            if (localName.equals("T_Body")) {
+            if (localName.equals("Table") || localName.equals("Table1")) {
                 outbody = new OutLibraryData();
+                ViseLog.i("创建outbody");
             }
         }
 
@@ -209,7 +208,7 @@ public class InputLibraryActivity extends BaseActivity {
         public void endElement(String uri, String localName, String qName)
                 throws SAXException {
             // 节点结束
-            if (localName.equals("T_Body")) {
+            if (localName.equals("Table") || localName.equals("Table1")) {
                 OutBodys.add(outbody);
                 outbody = null;
             }
@@ -221,20 +220,25 @@ public class InputLibraryActivity extends BaseActivity {
                 throws SAXException {
             String data = new String(ch, start, length);
             if (data != null && tag != null) {
-                if (tag.equals("FMaterial")) {
-                    outbody.(data);
-                } else if (tag.equals("FMaterial_Name")) {
-                    outbody.setFMaterial_Name(data);
-                } else if (tag.equals("FBaseQty")) {
-                    outbody.setFBaseQty(data);
-                } else if (tag.equals("FBoxUnitRate")) {
-                    outbody.setFBoxUnitRate(data);
-                } else if (tag.equals("FBoxQty")) {
-                    outbody.setFBoxQty(data);
-                } else if (tag.equals("FExecutedQty")) {
-                    outbody.setFExecutedQty(data);
-                } else if (tag.equals("FThisQty")) {
-                    outbody.setFThisQty(data);
+                if (tag.equals("FGuid")) {
+                    outbody.setFGuid(data);
+                    ViseLog.i(data);
+                } else if (tag.equals("FCode")) {
+                    outbody.setFCode(data);
+                } else if (tag.equals("FStock")) {
+                    outbody.setFStock(data);
+                } else if (tag.equals("FStock_Name")) {
+                    outbody.setFStock_Name(data);
+                } else if (tag.equals("FTransactionType")) {
+                    outbody.setFTransactionType(data);
+                } else if (tag.equals("FTransactionType_Name")) {
+                    outbody.setFTransactionType_Name(data);
+                } else if (tag.equals("FPartner")) {
+                    outbody.setFPartner(data);
+                } else if (tag.equals("FPartner_Name")) {
+                    outbody.setFPartner_Name(data);
+                } else if (tag.equals("FDate")) {
+                    outbody.setFDate(data);
                 }
             }
 
