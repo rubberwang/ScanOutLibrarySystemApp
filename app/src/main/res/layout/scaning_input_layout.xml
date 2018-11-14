@@ -73,7 +73,7 @@
                         android:id="@+id/TV_DeliverGoodsNumber"
                         style="@style/ScanOutLibraryText"
                         android:layout_width="0dp"
-                        android:layout_height="41dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="5" />
 
                     <TextView
@@ -109,9 +109,11 @@
 
                     <Spinner
                         android:id="@+id/Sp_house"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="3">
+                        android:overlapAnchor="false"
+                        android:spinnerMode="dropdown"
+                        android:layout_weight="5">
                     </Spinner>
 
                     <TextView

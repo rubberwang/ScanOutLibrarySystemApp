@@ -92,4 +92,5 @@
     <string name="thisSend">本次发货:</string>
     <string name="noSend">未发数量:</string>
     <string name="scanData">扫描数据:</string>
+    <string name="finish" translatable="false">完成</string>
 </resources>

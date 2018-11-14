@@ -69,9 +69,8 @@ public class InputLibraryActivity extends BaseActivity {
         webService = WebService.getSingleton();
         EventBus.getDefault().register(this);
         BackFinish();
-
         GetOutLibraryBills();
-        InitSp();
+
     }
 
     @Override
@@ -173,6 +172,8 @@ public class InputLibraryActivity extends BaseActivity {
                     TV_BusType.setText(result.get(0).getFTransactionType_Name());
                     TV_Unit.setText(result.get(0).getFPartner_Name());
                     quitLibraryDetails = result;
+                    InitSp();
+                    ViseLog.i("quitLibraryDetails 赋值");
                 }
             } catch (Exception e) {
                 ViseLog.d("Select适配RV数据错误" + e);

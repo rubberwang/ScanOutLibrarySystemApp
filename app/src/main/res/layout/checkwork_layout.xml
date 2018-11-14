@@ -105,9 +105,12 @@
                     android:text="@string/House" />
 
                 <Spinner
-                    android:layout_width="wrap_content"
+                    android:id="@+id/Sp_house"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="3">
+                    android:overlapAnchor="false"
+                    android:spinnerMode="dropdown"
+                    android:layout_weight="5">
                 </Spinner>
 
                 <TextView
