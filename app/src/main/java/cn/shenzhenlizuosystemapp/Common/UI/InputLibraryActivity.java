@@ -33,8 +33,10 @@ import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.EventBusScanDataMsg;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
+import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.ItemData;
+import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
 import cn.shenzhenlizuosystemapp.R;
 
 public class InputLibraryActivity extends BaseActivity {
@@ -42,13 +44,15 @@ public class InputLibraryActivity extends BaseActivity {
     private TextView Back;
     private TextView TV_DeliverGoodsNumber;
     private TextView TV_Time;
-    private Spinner TV_house;
+    private Spinner Sp_house;
     private TextView TV_BusType;
     private TextView TV_Unit;
     private String FGUID = "";
 
     private InputLibraryObServer inputLibraryObServer;
     private WebService webService;
+    private List<ItemData> SpStrList;
+    private List<QuitLibraryDetail> quitLibraryDetails;
 
     @Override
     protected int inflateLayout() {
@@ -61,10 +65,13 @@ public class InputLibraryActivity extends BaseActivity {
         FGUID = intent.getStringExtra("FGUID");
         inputLibraryObServer = new InputLibraryObServer();
         getLifecycle().addObserver(inputLibraryObServer);
+        SpStrList = new ArrayList<>();
         webService = WebService.getSingleton();
         EventBus.getDefault().register(this);
         BackFinish();
+
         GetOutLibraryBills();
+        InitSp();
     }
 
     @Override
@@ -72,7 +79,7 @@ public class InputLibraryActivity extends BaseActivity {
         Back = $(R.id.Back);
         TV_DeliverGoodsNumber = $(R.id.TV_DeliverGoodsNumber);
         TV_Time = $(R.id.TV_Time);
-        TV_house = $(R.id.TV_house);
+        Sp_house = $(R.id.Sp_house);
         TV_BusType = $(R.id.TV_BusType);
         TV_Unit = $(R.id.TV_Unit);
     }
@@ -86,6 +93,18 @@ public class InputLibraryActivity extends BaseActivity {
             }
 
         });
+    }
+
+    private void InitSp(){
+        if (quitLibraryDetails.size()>=0){
+            for (QuitLibraryDetail quitLibraryDetail:quitLibraryDetails){
+                ItemData itemData = new ItemData();
+                itemData.setData(quitLibraryDetail.getFStock_Name());
+                SpStrList.add(itemData);
+            }
+        }
+        LoginAdapter loginAdapter = new LoginAdapter(SpStrList, InputLibraryActivity.this);
+        Sp_house.setAdapter(loginAdapter);
     }
 
     class InputLibraryObServer implements LifecycleObserver {
@@ -120,27 +139,21 @@ public class InputLibraryActivity extends BaseActivity {
         getOutLibraryBillsAsyncTask.execute();
     }
 
-    public class GetInputLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<OutLibraryData>> {
+    public class GetInputLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<QuitLibraryDetail>> {
 
         private RecyclerView recyclerView;
 
         @Override
-        protected List<OutLibraryData> doInBackground(Integer... params) {
+        protected List<QuitLibraryDetail> doInBackground(Integer... params) {
             String OutBills = "";
-            List<OutLibraryData> outLibraryBills = new ArrayList<>();
+            List<QuitLibraryDetail> outLibraryBills = new ArrayList<>();
             InputStream in_withcode = null;
             try {
-                OutBills = webService.GetInListData(ConnectStr.ConnectionToString, FGUID);
+                OutBills = webService.GetWareHouseData(ConnectStr.ConnectionToString, FGUID);
                 ViseLog.i("OutBills = " + OutBills);
                 in_withcode = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
                 outLibraryBills = GetInputArray(in_withcode);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            } catch (SAXException e) {
-                e.printStackTrace();
-            } catch (ParserConfigurationException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return outLibraryBills;
@@ -151,7 +164,7 @@ public class InputLibraryActivity extends BaseActivity {
          * 在doInBackground方法执行结束之后在运行，并且运行在UI线程当中 可以对UI空间进行设置
          */
         @Override
-        protected void onPostExecute(final List<OutLibraryData> result) {
+        protected void onPostExecute(final List<QuitLibraryDetail> result) {
             try {
                 if (result.size() >= 0) {
                     TV_DeliverGoodsNumber.setText(result.get(0).getFCode());
@@ -159,6 +172,7 @@ public class InputLibraryActivity extends BaseActivity {
                     //TV_house.setDropDownHorizontalOffset(result.get(0).getFStock_Name());
                     TV_BusType.setText(result.get(0).getFTransactionType_Name());
                     TV_Unit.setText(result.get(0).getFPartner_Name());
+                    quitLibraryDetails = result;
                 }
             } catch (Exception e) {
                 ViseLog.d("Select适配RV数据错误" + e);
@@ -181,16 +195,16 @@ public class InputLibraryActivity extends BaseActivity {
         javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器
         BodySAXHandler handler = new BodySAXHandler();//创建处理函数
         parser.parse(stream, handler);//开始解析
-        List<OutLibraryData> outbodys = handler.getBody();
+        List<QuitLibraryDetail> outbodys = handler.getBody();
         return outbodys;
     }
 
     public class BodySAXHandler extends DefaultHandler {
-        private List<OutLibraryData> OutBodys;
-        private OutLibraryData outbody;// 当前解析的student
+        private List<QuitLibraryDetail> OutBodys;
+        private QuitLibraryDetail outbody;// 当前解析的student
         private String tag;// 当前解析的标签
 
-        public List<OutLibraryData> getBody() {
+        public List<QuitLibraryDetail> getBody() {
             if (OutBodys != null) {
                 return OutBodys;
             }
@@ -200,7 +214,7 @@ public class InputLibraryActivity extends BaseActivity {
         @Override
         public void startDocument() throws SAXException {
             // 文档开始
-            OutBodys = new ArrayList<OutLibraryData>();
+            OutBodys = new ArrayList<QuitLibraryDetail>();
         }
 
         @Override
@@ -212,7 +226,7 @@ public class InputLibraryActivity extends BaseActivity {
                                  Attributes attributes) throws SAXException {
             tag = localName;
             if (localName.equals("Table") || localName.equals("Table1")) {
-                outbody = new OutLibraryData();
+                outbody = new QuitLibraryDetail();
                 ViseLog.i("创建outbody");
             }
         }

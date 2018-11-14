@@ -60,7 +60,7 @@ public class WebService {
     }
 
 
-    public static String GetSelectOutListData(String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
+    public static String QuitLibraryNote(String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetOutStockNotices");
         soapObject.addProperty("ConnectionToString", ConnectionToString);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
@@ -76,7 +76,7 @@ public class WebService {
     }
 
 
-    public static String GetOutListData (String ConnectionToString,String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
+    public static String QuitWareHouseData (String ConnectionToString,String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetOutStockNoticeBill ");
         soapObject.addProperty("ConnectionToString", ConnectionToString);
         soapObject.addProperty("BillGuid", BillGuid);
@@ -93,7 +93,7 @@ public class WebService {
     }
 
 
-    public static String PutSelectOutListData(String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
+    public static String GetLibraryNote(String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetInStockNotices");
         soapObject.addProperty("ConnectionToString", ConnectionToString);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
@@ -108,7 +108,7 @@ public class WebService {
         return Result;
     }
 
-    public static String GetInListData(String ConnectionToString,String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
+    public static String GetWareHouseData(String ConnectionToString,String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetInStockNoticeBill");
         soapObject.addProperty("ConnectionToString", ConnectionToString);
         soapObject.addProperty("BillGuid", BillGuid);
@@ -126,7 +126,7 @@ public class WebService {
     }
 
 
-    public static String SumSelectOutListData(String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
+    public static String CheckLibraryNote(String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetCheckStockNotices");
         soapObject.addProperty("ConnectionToString", ConnectionToString);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
@@ -141,23 +141,8 @@ public class WebService {
         return Result;
     }
 
-    public static String CommitListData (String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
-        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetAdjustStockNotices ");
-        soapObject.addProperty("ConnectionToString", ConnectionToString);
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                SoapEnvelope.VER11);
-        envelope.bodyOut = soapObject;
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(soapObject);
-        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
-        httpTransportSE.call("http://www.lzbarcode.com/GetAdjustStockNotices ", envelope);
-        Object object = (Object) envelope.getResponse();
-        String Result = object.toString();
-        return Result;
-    }
 
-
-    public static String CommitData (String ConnectionToString,String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
+    public static String CheckWareHouseData (String ConnectionToString,String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetCheckStockNoticeBill ");
         soapObject.addProperty("ConnectionToString", ConnectionToString);
         soapObject.addProperty("BillGuid", BillGuid);
@@ -168,6 +153,21 @@ public class WebService {
         envelope.setOutputSoapObject(soapObject);
         HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
         httpTransportSE.call("http://www.lzbarcode.com/GetCheckStockNoticeBill ", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
+
+    public static String CommitLibraryNote (String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetAdjustStockNotices ");
+        soapObject.addProperty("ConnectionToString", ConnectionToString);
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/GetAdjustStockNotices ", envelope);
         Object object = (Object) envelope.getResponse();
         String Result = object.toString();
         return Result;

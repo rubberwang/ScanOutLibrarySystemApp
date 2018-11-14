@@ -1,6 +1,6 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
 
-public class OutLibraryData {
+public class QuitLibraryDetail {
     private String FGuid;
     private String FCode;
     private String FStock;

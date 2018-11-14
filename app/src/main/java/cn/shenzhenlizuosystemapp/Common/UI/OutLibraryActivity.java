@@ -3,6 +3,7 @@ package cn.shenzhenlizuosystemapp.Common.UI;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -22,6 +23,7 @@ import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.EventBusScanDataMsg;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
+import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -31,8 +33,16 @@ public class OutLibraryActivity extends BaseActivity {
     private RecyclerView RV_GetInfoTable;
     private ScanResult_RvAdapter scanResultRvAdapter;
 
+    private TextView TV_DeliverGoodsNumber;
+    private TextView TV_Time;
+    private TextView TV_House;
+    private TextView TV_BusType;
+    private TextView TV_Unit;
+    private String FGUID = "";
+
     private OutLibraryObServer outLibraryObServer;
     private List<ScanResultData> scanResultData;
+    private WebService webService;
 
     @Override
     protected int inflateLayout() {
@@ -45,8 +55,7 @@ public class OutLibraryActivity extends BaseActivity {
         outLibraryObServer = new OutLibraryObServer();
         getLifecycle().addObserver(outLibraryObServer);
         EventBus.getDefault().register(this);
-        BackFinish();
-        InitRecycler();
+
     }
 
     @Override

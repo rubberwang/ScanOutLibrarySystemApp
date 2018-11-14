@@ -88,7 +88,7 @@ public class Select_CheckLibrary_Fragment extends Fragment {
             String OutBills = "";
             try {
                 InputStream in_withcode = null;
-                OutBills = webService.SumSelectOutListData(ConnectStr.ConnectionToString);
+                OutBills = webService.CheckLibraryNote(ConnectStr.ConnectionToString);
                 ViseLog.i("OutBills = " + OutBills);
                 in_withcode = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
                 outLibraryBills = getOutLibraryFromXMl(in_withcode);
