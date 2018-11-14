@@ -3,25 +3,30 @@ package cn.shenzhenlizuosystemapp.Common.ZebarScan;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import com.symbol.emdk.EMDKManager;
+import com.symbol.emdk.EMDKManager.EMDKListener;
 import com.symbol.emdk.EMDKResults;
 import com.symbol.emdk.barcode.BarcodeManager;
+import com.symbol.emdk.barcode.BarcodeManager.ScannerConnectionListener;
 import com.symbol.emdk.barcode.ScanDataCollection;
 import com.symbol.emdk.barcode.Scanner;
+import com.symbol.emdk.barcode.Scanner.DataListener;
+import com.symbol.emdk.barcode.Scanner.StatusListener;
 import com.symbol.emdk.barcode.ScannerConfig;
 import com.symbol.emdk.barcode.ScannerException;
 import com.symbol.emdk.barcode.ScannerInfo;
 import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
+import com.vise.log.ViseLog;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import cn.shenzhenlizuosystemapp.Common.Base.Myapplication;
 import cn.shenzhenlizuosystemapp.Common.Port.ZebarScanResult;
 
-public class ContinuousScan implements EMDKManager.EMDKListener, Scanner.DataListener, Scanner.StatusListener, BarcodeManager.ScannerConnectionListener {
+public class ContinuousScan implements EMDKListener, DataListener, StatusListener, ScannerConnectionListener {
 
     private EMDKManager emdkManager = null;
     private BarcodeManager barcodeManager = null;
@@ -47,11 +52,11 @@ public class ContinuousScan implements EMDKManager.EMDKListener, Scanner.DataLis
         return cancelRead;
     }
 
-    private ContinuousScan(Context context) {
+    public ContinuousScan(Context context) {
         this.context = context;
+        deviceList = new ArrayList<ScannerInfo>();
         if (emdkManager != null) {
             barcodeManager = (BarcodeManager) emdkManager.getInstance(EMDKManager.FEATURE_TYPE.BARCODE);
-
             if (barcodeManager != null) {
                 barcodeManager.addConnectionListener(this);
             }
@@ -60,18 +65,20 @@ public class ContinuousScan implements EMDKManager.EMDKListener, Scanner.DataLis
             setTrigger();
             setDecoders();
         }
+        ViseLog.i("ContinuousScan构造");
     }
 
     public boolean HowState() {
-        EMDKResults results = EMDKManager.getEMDKManager(context, this);
+        EMDKResults results = EMDKManager.getEMDKManager(Myapplication.getContext(), this);
         if (results.statusCode != EMDKResults.STATUS_CODE.SUCCESS) {
             return false;
         }
         return true;
     }
 
-    public void SetResultPort(ZebarScanResult zebarScanResult) {
+    public ContinuousScan SetResultPort(ZebarScanResult zebarScanResult) {
         this.zebarScanError = zebarScanResult;
+        return getCancelRead(context);
     }
 
     private void deInitScanner() {
@@ -181,10 +188,8 @@ public class ContinuousScan implements EMDKManager.EMDKListener, Scanner.DataLis
 
     @Override
     public void onOpened(EMDKManager emdkManager) {
-
         this.emdkManager = emdkManager;
         barcodeManager = (BarcodeManager) emdkManager.getInstance(EMDKManager.FEATURE_TYPE.BARCODE);
-
         if (barcodeManager != null) {
             barcodeManager.addConnectionListener(this);
         }
@@ -255,7 +260,7 @@ public class ContinuousScan implements EMDKManager.EMDKListener, Scanner.DataLis
         }
     }
 
-    public ContinuousScan StartScan() {
+    public void StartScan() {
         if (scanner == null) {
             initScanner();
         }
@@ -270,7 +275,6 @@ public class ContinuousScan implements EMDKManager.EMDKListener, Scanner.DataLis
                 zebarScanError.OnBad("Status: " + e.getMessage());
             }
         }
-        return getCancelRead(context);
     }
 
     @Override

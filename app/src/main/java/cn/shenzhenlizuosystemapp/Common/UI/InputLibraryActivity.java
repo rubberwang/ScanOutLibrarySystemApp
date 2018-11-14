@@ -7,11 +7,34 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.symbol.emdk.EMDKManager;
+import com.symbol.emdk.EMDKManager.EMDKListener;
+import com.symbol.emdk.EMDKManager.FEATURE_TYPE;
+import com.symbol.emdk.EMDKResults;
+import com.symbol.emdk.ProfileManager;
+import com.symbol.emdk.barcode.BarcodeManager;
+import com.symbol.emdk.barcode.BarcodeManager.ConnectionState;
+import com.symbol.emdk.barcode.BarcodeManager.ScannerConnectionListener;
+import com.symbol.emdk.barcode.ScanDataCollection;
+import com.symbol.emdk.barcode.ScanDataCollection.ScanData;
+import com.symbol.emdk.barcode.Scanner;
+import com.symbol.emdk.barcode.Scanner.DataListener;
+import com.symbol.emdk.barcode.Scanner.StatusListener;
+import com.symbol.emdk.barcode.Scanner.TriggerType;
+import com.symbol.emdk.barcode.ScannerConfig;
+import com.symbol.emdk.barcode.ScannerException;
+import com.symbol.emdk.barcode.ScannerInfo;
+import com.symbol.emdk.barcode.ScannerResults;
+import com.symbol.emdk.barcode.StatusData;
+import com.symbol.emdk.barcode.StatusData.ScannerStates;
 import com.vise.log.ViseLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -26,6 +49,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -52,12 +76,13 @@ import cn.shenzhenlizuosystemapp.Common.Xml.InputTaskXml;
 import cn.shenzhenlizuosystemapp.Common.ZebarScan.ContinuousScan;
 import cn.shenzhenlizuosystemapp.R;
 
-public class InputLibraryActivity extends BaseActivity {
+public class InputLibraryActivity extends BaseActivity implements EMDKListener, DataListener, StatusListener, ScannerConnectionListener {
 
     private TextView Back;
     private TextView TV_DeliverGoodsNumber;
     private TextView TV_Time;
     private Spinner Sp_house;
+    private Spinner spinnerScannerDevices;
     private TextView TV_BusType;
     private TextView TV_Unit;
     private TextView TV_Scaning;
@@ -65,7 +90,6 @@ public class InputLibraryActivity extends BaseActivity {
     private RecyclerView RV_GetInfoTable;
     private RecyclerView RV_ScanInfoTable;
 
-    private InputLibraryObServer inputLibraryObServer;
     private WebService webService;
     private ScanResult_RvAdapter scanResult_rvAdapter;
     private ScanTask_RvAdapter scanTask_rvAdapter;
@@ -73,8 +97,21 @@ public class InputLibraryActivity extends BaseActivity {
     private List<ItemData> SpStrList;
     private List<QuitLibraryDetail> quitLibraryDetails;
     private List<TaskRvData> taskRvDataList;
+    private List<ScannerInfo> deviceList = null;
 
     private Tools tools;
+
+    /**
+     * 扫描
+     */
+    private int scannerIndex = 0;
+    private int defaultIndex = 0;
+    private Scanner scanner = null;
+    private BarcodeManager barcodeManager = null;
+    private EMDKManager emdkManager = null;
+    private ProfileManager profileManager = null;
+    private EMDKManager emdkManager2 = null;
+    private boolean IsStartRead = false;
 
     @Override
     protected int inflateLayout() {
@@ -83,13 +120,17 @@ public class InputLibraryActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        deviceList = new ArrayList<ScannerInfo>();
+        EMDKResults results = EMDKManager.getEMDKManager(getApplicationContext(), this);
+        if (results.statusCode != EMDKResults.STATUS_CODE.SUCCESS) {
+            ViseLog.i("Scan: " + "调用失败!");//调用失败
+            return;
+        }
         tools = Tools.getTools();
         scanResultData = new ArrayList<>();
         taskRvDataList = new ArrayList<>();
         Intent intent = getIntent();
         FGUID = intent.getStringExtra("FGUID");
-        inputLibraryObServer = new InputLibraryObServer();
-        getLifecycle().addObserver(inputLibraryObServer);
         SpStrList = new ArrayList<>();
         webService = WebService.getSingleton();
         EventBus.getDefault().register(this);
@@ -110,6 +151,7 @@ public class InputLibraryActivity extends BaseActivity {
         RV_GetInfoTable = $(R.id.RV_GetInfoTable);
         RV_ScanInfoTable = $(R.id.RV_ScanInfoTable);
         TV_Scaning = $(R.id.TV_Scaning);
+        spinnerScannerDevices = $(R.id.spinnerScannerDevices);
     }
 
     public void InitClick() {
@@ -125,26 +167,173 @@ public class InputLibraryActivity extends BaseActivity {
         TV_Scaning.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ContinuousScan.getCancelRead(InputLibraryActivity.this).HowState()) {
-                    ContinuousScan.getCancelRead(InputLibraryActivity.this).StartScan().SetResultPort(new ZebarScanResult() {
-                        @Override
-                        public void OnBad(String e) {
-                            ViseLog.i("扫描头错误" + e);
-                        }
-
-                        @Override
-                        public void OnSuccess(String Data) {
-                            ScanResultData scanResult = new ScanResultData();
-                            scanResult.setScanData(Data);
-                            scanResultData.add(scanResult);
-                            scanResult_rvAdapter.notifyDataSetChanged();
-                        }
-                    });
-                } else {
-                    tools.ShowDialog(InputLibraryActivity.this, "扫描头适配失败");
-                }
+                IsStartRead = true;
+                startScan();
             }
         });
+
+        spinnerScannerDevices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View arg1,
+                                       int position, long arg3) {
+
+                if ((scannerIndex != position) || (scanner == null)) {
+                    scannerIndex = position;
+                    deInitScanner();
+                    initScanner();
+                    setTrigger();
+                    setDecoders();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+            }
+
+        });
+    }
+
+    private void deInitScanner() {
+        if (scanner != null) {
+            try {
+                scanner.cancelRead();
+                scanner.disable();
+            } catch (Exception e) {
+                ViseLog.i("Status:错误 " + e.getMessage());
+            }
+            try {
+                scanner.removeDataListener(this);
+                scanner.removeStatusListener(this);
+            } catch (Exception e) {
+                ViseLog.i("Status:错误 " + e.getMessage());
+            }
+            try {
+                scanner.release();
+            } catch (Exception e) {
+                ViseLog.i("Status:错误 " + e.getMessage());
+            }
+            scanner = null;
+        }
+    }
+
+    private void initScanner() {
+        if (scanner == null) {
+            if ((deviceList != null) && (deviceList.size() != 0)) {
+                scanner = barcodeManager.getDevice(deviceList.get(scannerIndex));
+                Log.i("huangmin", "deviceListdata" + deviceList.get(scannerIndex).toString());
+            } else {
+                ViseLog.i("Status: " + "未能获得指定的扫描仪设备!请关闭并重新启动应用程序。");
+                return;
+            }
+            if (scanner != null) {
+                scanner.addDataListener(this);
+                scanner.addStatusListener(this);
+                try {
+                    scanner.enable();
+                } catch (ScannerException e) {
+                    ViseLog.i("Status: " + e.getMessage());
+                }
+            } else {
+                ViseLog.i("Status: " + "未能初始化扫描设备.");
+            }
+        }
+    }
+
+    private void setTrigger() {
+        if (scanner == null) {
+            initScanner();
+        }
+        if (scanner != null) {
+            scanner.triggerType = Scanner.TriggerType.SOFT_ALWAYS;//软解
+        }
+    }
+
+    private void setDecoders() {
+        if (scanner == null) {
+            initScanner();
+        }
+        if ((scanner != null) && (scanner.isEnabled())) {
+            try {
+                ScannerConfig config = scanner.getConfig();
+                // Set EAN8
+                config.decoderParams.ean8.enabled = true;
+                // Set EAN13
+                config.decoderParams.ean13.enabled = true;
+                // Set Code39
+                config.decoderParams.code39.enabled = true;
+                //Set Code128
+                config.decoderParams.code128.enabled = true;
+                scanner.setConfig(config);
+            } catch (ScannerException e) {
+                ViseLog.i("Status: " + e.getMessage());
+            }
+        }
+    }
+
+    private void enumerateScannerDevices() {
+        if (barcodeManager != null) {
+
+            List<String> friendlyNameList = new ArrayList<String>();
+            int spinnerIndex = 0;
+
+            deviceList = barcodeManager.getSupportedDevicesInfo();
+
+            if ((deviceList != null) && (deviceList.size() != 0)) {
+
+                Iterator<ScannerInfo> it = deviceList.iterator();
+                while (it.hasNext()) {
+                    ScannerInfo scnInfo = it.next();
+                    friendlyNameList.add(scnInfo.getFriendlyName());
+                    if (scnInfo.isDefaultScanner()) {
+                        defaultIndex = spinnerIndex;
+                    }
+                    ++spinnerIndex;
+                }
+            } else {
+                ViseLog.i("Status: " + "未能获得支持的扫描器设备列表!请重启设备.");
+            }
+            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(InputLibraryActivity.this, android.R.layout.simple_spinner_item, friendlyNameList);
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerScannerDevices.setAdapter(spinnerAdapter);
+            spinnerScannerDevices.setSelection(1);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        deInitScanner();
+        if (emdkManager != null) {
+            ViseLog.i("EMDK不等于空");
+            barcodeManager = (BarcodeManager) emdkManager.getInstance(EMDKManager.FEATURE_TYPE.BARCODE);
+            // Add connection listener 添加连接监听器
+            if (barcodeManager != null) {
+                barcodeManager.addConnectionListener(this);
+            }
+            enumerateScannerDevices();//适配设备支持模式
+            spinnerScannerDevices.setSelection(1);
+            initScanner();
+            setTrigger();
+            setDecoders();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        deInitScanner();
+        if (barcodeManager != null) {
+            barcodeManager.removeConnectionListener(this);
+            barcodeManager = null;
+            deviceList = null;
+        }
+        // Release the barcode manager resources
+        if (emdkManager != null) {
+            emdkManager.release(EMDKManager.FEATURE_TYPE.BARCODE);
+        }
+        Log.i("MainActivity", "    onPause()");
     }
 
     private void InitRecycler() {
@@ -197,33 +386,6 @@ public class InputLibraryActivity extends BaseActivity {
         }
         InputAdapter InputAdapter = new InputAdapter(SpStrList, InputLibraryActivity.this);
         Sp_house.setAdapter(InputAdapter);
-    }
-
-    class InputLibraryObServer implements LifecycleObserver {
-        @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        public void ON_CREATE() {
-        }
-
-        @OnLifecycleEvent(Lifecycle.Event.ON_START)
-        public void ON_START() {
-        }
-
-        @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-        public void ON_RESUME() {
-        }
-
-        @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-        public void ON_PAUSE() {
-            EventBus.getDefault().unregister(this);
-        }
-
-        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-        public void ON_STOP() {
-        }
-
-        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-        public void ON_DESTROY() {
-        }
     }
 
     private void GetOutLibraryBills() {
@@ -371,6 +533,183 @@ public class InputLibraryActivity extends BaseActivity {
                 }
             }
 
+        }
+    }
+
+    @Override
+    public void onOpened(EMDKManager emdkManager) {
+        ViseLog.i("Status: " + "EMDK打开成功!");
+
+        this.emdkManager = emdkManager;
+        barcodeManager = (BarcodeManager) emdkManager.getInstance(FEATURE_TYPE.BARCODE);
+        if (barcodeManager != null) {
+            barcodeManager.addConnectionListener(this);
+        }
+        enumerateScannerDevices();
+        spinnerScannerDevices.setSelection(defaultIndex);
+    }
+
+    @Override
+    public void onClosed() {
+        if (emdkManager != null) {
+            if (barcodeManager != null) {
+                barcodeManager.removeConnectionListener(this);
+                barcodeManager = null;
+            }
+            emdkManager.release();
+            emdkManager = null;
+        }
+        ViseLog.i("Status: " + "EMDK意外关闭!请关闭并重新启动应用程序.");
+    }
+
+    @Override
+    public void onConnectionChange(ScannerInfo scannerInfo, BarcodeManager.ConnectionState connectionState) {
+        String status;
+        String scannerName = "";
+
+        String statusExtScanner = connectionState.toString();
+        String scannerNameExtScanner = scannerInfo.getFriendlyName();
+
+        if (deviceList.size() != 0) {
+            scannerName = deviceList.get(scannerIndex).getFriendlyName();
+        }
+
+        if (scannerName.equalsIgnoreCase(scannerNameExtScanner)) {//忽略大小写
+
+            switch (connectionState) {
+                case CONNECTED:
+                    deInitScanner();
+                    initScanner();
+                    setTrigger();
+                    setDecoders();
+                    break;
+                case DISCONNECTED:
+                    deInitScanner();
+                    break;
+            }
+            status = scannerNameExtScanner + ":" + statusExtScanner;
+            new InputLibraryActivity.AsyncStatusUpdate().execute(status);
+        }
+    }
+
+    @Override
+    public void onData(ScanDataCollection scanDataCollection) {
+        if ((scanDataCollection != null) && (scanDataCollection.getResult() == ScannerResults.SUCCESS)) {
+            ArrayList<ScanData> scanData = scanDataCollection.getScanData();
+            for (ScanData data : scanData) {
+
+                String dataString = data.getData();
+
+                new AsyncDataUpdate().execute(dataString);
+            }
+        }
+    }
+
+    @Override
+    public void onStatus(StatusData statusData) {
+        ScannerStates state = statusData.getState();
+        switch (state) {
+            case IDLE://关闭
+                if (IsStartRead) {
+                    try {
+                        // An attempt to use the scanner continuously and rapidly (with a delay < 100 ms between scans)
+                        // may cause the scanner to pause momentarily before resuming the scanning.
+                        // Hence add some delay (>= 100ms) before submitting the next read.
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        scanner.read();
+                    } catch (ScannerException e) {
+                        ViseLog.i(e.getMessage());
+                    }
+                }
+                break;
+        }
+    }
+
+    private void startScan() {
+
+        if (scanner == null) {
+            initScanner();
+        }
+
+        if (scanner != null) {
+            try {
+                if (scanner.isEnabled()) {
+                    Log.i("huangmin", "isEnabled" + scanner.isEnabled());
+                    // Submit a new read.
+                    scanner.read();
+                } else {
+                    ViseLog.i("Status: 扫描仪未启用");
+                }
+            } catch (ScannerException e) {
+                ViseLog.i("Status: " + e.getMessage());
+            }
+        }
+    }
+
+
+    private class AsyncStatusUpdate extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            return params[0];
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            ViseLog.i("Status: " + result);
+        }
+    }
+
+    private class AsyncDataUpdate extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            return params[0];
+        }
+
+        protected void onPostExecute(String result) {
+            if (result != null) {
+                ViseLog.i("ScanResultData" + result);
+                ScanResultData scanResult = new ScanResultData();
+                scanResult.setScanData(result);
+                scanResultData.add(scanResult);
+                scanResult_rvAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    //资源释放
+    public void CleanGC() {
+        if (barcodeManager != null) {
+            barcodeManager.removeConnectionListener(this);
+            barcodeManager = null;
+        }
+        // Release all the resources
+        if (emdkManager != null) {
+            emdkManager.release();
+            emdkManager = null;
+        }
+        //Clean up the objects created by EMDK manager
+        if (profileManager != null) {
+            profileManager = null;
+        }
+        if (emdkManager2 != null) {
+            emdkManager2.release();
+            emdkManager2 = null;
+        }
+
+        if (scanner != null) {
+            scanner = null;
+        }
+        if (deviceList != null) {
+            deviceList = null;
         }
     }
 }
