@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.squareup.leakcanary.LeakCanary;
 import com.vise.log.ViseLog;
 import com.vise.log.inner.LogcatTree;
 
@@ -32,6 +33,15 @@ public class Myapplication extends Application {
                 .configFormatTag("%d{HH:mm:ss:SSS} %t %c{-5}")//个性化设置标签，默认显示包名
                 .configLevel(Log.VERBOSE);//设置日志最小输出级别，默认Log.VERBOSE
         ViseLog.plant(new LogcatTree());//添加打印日志信息到Logcat的树
+
+
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
+
     }
 
     public static Context getContext() {
@@ -42,7 +52,7 @@ public class Myapplication extends Application {
         return new Myapplication();
     }
 
- 
+
 
     @Override
     public void onTerminate() {

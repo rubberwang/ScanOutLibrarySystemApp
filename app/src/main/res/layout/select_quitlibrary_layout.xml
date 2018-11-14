@@ -119,7 +119,7 @@
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/F_SelectOut"
+        android:id="@+id/F_SelectOut1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"

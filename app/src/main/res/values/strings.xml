@@ -75,9 +75,11 @@
     <string name="BackMainRV">返回总出库单列表</string>
     <string name="SelectGetLibrary">选择入库通知单</string>
     <string name="OutLibrarySum">出库单号:</string>
+    <string name="InputLibrarySum">入库单号:</string>
     <string name="LibraryCode">通知单号:</string>
     <string name="OutLibraryWarehouse">仓库名称:</string>
     <string name="OutLibraryType">出库类型:</string>
+    <string name="InputLibraryType">入库类型:</string>
     <string name="OutLibraryTime">创建时间:</string>
     <string name="CommitStyle">调拨方式:</string>
     <string name="InputWareHouse">入库仓库:</string>
@@ -89,10 +91,12 @@
     <string name="materID">物料编号:</string>
     <string name="nameRoot">品名规格:</string>
     <string name="shouldSend">应发数量:</string>
+    <string name="HouseSpace">仓位:</string>
     <string name="alreadySend">已发数量:</string>
     <string name="statistics">计量单位:</string>
     <string name="thisSend">本次发货:</string>
     <string name="noSend">未发数量:</string>
     <string name="scanData">扫描数据:</string>
+    <string name="scaning">扫描</string>
     <string name="finish" translatable="false">完成</string>
 </resources>

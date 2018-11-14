@@ -27,7 +27,7 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.SelectQuit_FullAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.SelectInput_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
@@ -111,9 +111,9 @@ public class Select_InputLibrary_Fragment extends Fragment {
                     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     recyclerView.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
                     recyclerView.setLayoutManager(layoutManager);
-                    SelectQuit_FullAdapter adapter = new SelectQuit_FullAdapter(getActivity(), result);
+                    SelectInput_FullAdapter adapter = new SelectInput_FullAdapter(getActivity(), result);
                     recyclerView.setAdapter(adapter);
-                    adapter.setOnItemClickLitener(new SelectQuit_FullAdapter.OnItemClickLitener() {
+                    adapter.setOnItemClickLitener(new SelectInput_FullAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
                             Intent intent = new Intent(getActivity(),InputLibraryActivity.class);

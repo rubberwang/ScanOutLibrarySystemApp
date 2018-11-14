@@ -79,7 +79,7 @@ public class Quit_NotificationActivity extends BaseActivity {
         }
          selectQuitLibraryFragment = Select_QuitLibrary_Fragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.F_SelectOut, selectQuitLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+        fragmentManager.beginTransaction().replace(R.id.F_SelectOut1, selectQuitLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
     }
 
     public void ToLoad(String ChracterSearch) {
@@ -161,7 +161,7 @@ public class Quit_NotificationActivity extends BaseActivity {
                 if (result == 1) {
                     Item_QuitLibrary_Fragment itemOutLibraryFragment = Item_QuitLibrary_Fragment.newInstance(SearchResultList);
                     FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.F_SelectOut, itemOutLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                    fragmentManager.beginTransaction().replace(R.id.F_SelectOut1, itemOutLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                     LL_BackMainTable.setVisibility(View.VISIBLE);
                     TextView TV_BackMainTable = (TextView) LL_BackMainTable.findViewById(R.id.TV_BackMainTable);
                     TV_BackMainTable.setOnClickListener(new View.OnClickListener() {

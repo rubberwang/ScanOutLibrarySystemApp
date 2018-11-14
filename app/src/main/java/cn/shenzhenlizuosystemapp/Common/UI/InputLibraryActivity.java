@@ -36,7 +36,8 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.EventBusScanDataMsg;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.ItemData;
-import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
+//import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
+import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.InputAdapter;
 import cn.shenzhenlizuosystemapp.R;
 
 public class InputLibraryActivity extends BaseActivity {
@@ -102,8 +103,8 @@ public class InputLibraryActivity extends BaseActivity {
                 SpStrList.add(itemData);
             }
         }
-        LoginAdapter loginAdapter = new LoginAdapter(SpStrList, InputLibraryActivity.this);
-        Sp_house.setAdapter(loginAdapter);
+        InputAdapter InputAdapter = new InputAdapter(SpStrList, InputLibraryActivity.this);
+        Sp_house.setAdapter(InputAdapter);
     }
 
     class InputLibraryObServer implements LifecycleObserver {
@@ -174,6 +175,7 @@ public class InputLibraryActivity extends BaseActivity {
                     quitLibraryDetails = result;
                     InitSp();
                     ViseLog.i("quitLibraryDetails 赋值");
+
                 }
             } catch (Exception e) {
                 ViseLog.d("Select适配RV数据错误" + e);

@@ -15,7 +15,7 @@ import com.vise.log.ViseLog;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.SelectQuit_FullAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.SelectInput_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
@@ -62,9 +62,9 @@ public class Item_InputLibrary_Fragment extends Fragment {
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             RV_CastAbout.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
             RV_CastAbout.setLayoutManager(layoutManager);
-            SelectQuit_FullAdapter adapter = new SelectQuit_FullAdapter(getActivity(), selectOutLibraryList);
+            SelectInput_FullAdapter adapter = new SelectInput_FullAdapter(getActivity(), selectOutLibraryList);
             RV_CastAbout.setAdapter(adapter);
-            adapter.setOnItemClickLitener(new SelectQuit_FullAdapter.OnItemClickLitener() {
+            adapter.setOnItemClickLitener(new SelectInput_FullAdapter.OnItemClickLitener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     startActivity(new Intent(getActivity(),InputLibraryActivity.class));
