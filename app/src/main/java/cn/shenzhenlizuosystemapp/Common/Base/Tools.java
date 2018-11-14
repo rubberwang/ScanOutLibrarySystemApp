@@ -23,9 +23,20 @@ import static android.content.Context.MODE_PRIVATE;
 public class Tools {
 
     private static Toast toast;
-    private static Tools mToastUtils;
+    private static Tools mtools;
     public Tools tools;
     private MyProgressDialog myProgressDialog;
+
+    public static Tools getTools() {
+        if (mtools == null) {
+            synchronized (Tools.class) {
+                if (mtools == null) {
+                    mtools = new Tools();
+                }
+            }
+        }
+        return mtools;
+    }
 
     public SharedPreferences InitSharedPreferences(Context context) {
         SharedPreferences sharedPreferences;

@@ -5,11 +5,13 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.symbol.emdk.EMDKManager;
 import com.vise.log.ViseLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -29,15 +31,25 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
+import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResult_RvAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.ScanTask_RvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
+import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.EventBusScanDataMsg;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryDetail;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.ItemData;
 //import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
 import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.InputAdapter;
+import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
+import cn.shenzhenlizuosystemapp.Common.Port.ZebarScanResult;
+import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
+import cn.shenzhenlizuosystemapp.Common.Xml.InputTaskXml;
+import cn.shenzhenlizuosystemapp.Common.ZebarScan.ContinuousScan;
 import cn.shenzhenlizuosystemapp.R;
 
 public class InputLibraryActivity extends BaseActivity {
@@ -48,12 +60,21 @@ public class InputLibraryActivity extends BaseActivity {
     private Spinner Sp_house;
     private TextView TV_BusType;
     private TextView TV_Unit;
+    private TextView TV_Scaning;
     private String FGUID = "";
+    private RecyclerView RV_GetInfoTable;
+    private RecyclerView RV_ScanInfoTable;
 
     private InputLibraryObServer inputLibraryObServer;
     private WebService webService;
+    private ScanResult_RvAdapter scanResult_rvAdapter;
+    private ScanTask_RvAdapter scanTask_rvAdapter;
+    private List<ScanResultData> scanResultData;
     private List<ItemData> SpStrList;
     private List<QuitLibraryDetail> quitLibraryDetails;
+    private List<TaskRvData> taskRvDataList;
+
+    private Tools tools;
 
     @Override
     protected int inflateLayout() {
@@ -62,6 +83,9 @@ public class InputLibraryActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        tools = Tools.getTools();
+        scanResultData = new ArrayList<>();
+        taskRvDataList = new ArrayList<>();
         Intent intent = getIntent();
         FGUID = intent.getStringExtra("FGUID");
         inputLibraryObServer = new InputLibraryObServer();
@@ -69,9 +93,10 @@ public class InputLibraryActivity extends BaseActivity {
         SpStrList = new ArrayList<>();
         webService = WebService.getSingleton();
         EventBus.getDefault().register(this);
-        BackFinish();
+        InitClick();
         GetOutLibraryBills();
-
+        InitRecycler();
+        InitScanRecycler();
     }
 
     @Override
@@ -82,9 +107,12 @@ public class InputLibraryActivity extends BaseActivity {
         Sp_house = $(R.id.Sp_house);
         TV_BusType = $(R.id.TV_BusType);
         TV_Unit = $(R.id.TV_Unit);
+        RV_GetInfoTable = $(R.id.RV_GetInfoTable);
+        RV_ScanInfoTable = $(R.id.RV_ScanInfoTable);
+        TV_Scaning = $(R.id.TV_Scaning);
     }
 
-    public void BackFinish() {
+    public void InitClick() {
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
 
@@ -93,11 +121,75 @@ public class InputLibraryActivity extends BaseActivity {
             }
 
         });
+        //扫描
+        TV_Scaning.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContinuousScan.getCancelRead(InputLibraryActivity.this).HowState()) {
+                    ContinuousScan.getCancelRead(InputLibraryActivity.this).StartScan().SetResultPort(new ZebarScanResult() {
+                        @Override
+                        public void OnBad(String e) {
+                            ViseLog.i("扫描头错误" + e);
+                        }
+
+                        @Override
+                        public void OnSuccess(String Data) {
+                            ScanResultData scanResult = new ScanResultData();
+                            scanResult.setScanData(Data);
+                            scanResultData.add(scanResult);
+                            scanResult_rvAdapter.notifyDataSetChanged();
+                        }
+                    });
+                } else {
+                    tools.ShowDialog(InputLibraryActivity.this, "扫描头适配失败");
+                }
+            }
+        });
     }
 
-    private void InitSp(){
-        if (quitLibraryDetails.size()>=0){
-            for (QuitLibraryDetail quitLibraryDetail:quitLibraryDetails){
+    private void InitRecycler() {
+        //扫描数据适配
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
+        RV_GetInfoTable.setLayoutManager(layoutManager);
+        scanResult_rvAdapter = new ScanResult_RvAdapter(this, scanResultData);
+        RV_GetInfoTable.setAdapter(scanResult_rvAdapter);
+        scanResult_rvAdapter.setOnItemClickLitener(new ScanResult_RvAdapter.OnItemClickLitener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+            }
+        });
+    }
+
+    private void InitScanRecycler() {
+        //扫描任务列表适配
+        LinearLayoutManager ScanTaskL = new LinearLayoutManager(this);
+        ScanTaskL.setOrientation(ScanTaskL.VERTICAL);
+        RV_ScanInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
+        RV_ScanInfoTable.setLayoutManager(ScanTaskL);
+        scanTask_rvAdapter = new ScanTask_RvAdapter(this, taskRvDataList);
+        RV_ScanInfoTable.setAdapter(scanTask_rvAdapter);
+        scanTask_rvAdapter.setOnItemClickLitener(new ScanTask_RvAdapter.OnItemClickLitener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+            }
+        });
+    }
+
+    private void InitSp(List<QuitLibraryDetail> quitLibraryDetails) {
+        if (quitLibraryDetails.size() >= 0) {
+            for (QuitLibraryDetail quitLibraryDetail : quitLibraryDetails) {
                 ItemData itemData = new ItemData();
                 itemData.setData(quitLibraryDetail.getFStock_Name());
                 SpStrList.add(itemData);
@@ -147,12 +239,15 @@ public class InputLibraryActivity extends BaseActivity {
         protected List<QuitLibraryDetail> doInBackground(Integer... params) {
             String OutBills = "";
             List<QuitLibraryDetail> outLibraryBills = new ArrayList<>();
-            InputStream in_withcode = null;
+            InputStream in_Heard = null;
+            InputStream in_Body = null;
             try {
                 OutBills = webService.GetWareHouseData(ConnectStr.ConnectionToString, FGUID);
                 ViseLog.i("OutBills = " + OutBills);
-                in_withcode = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
-                outLibraryBills = GetInputArray(in_withcode);
+                in_Heard = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
+                outLibraryBills = GetInputArray(in_Heard);
+                in_Body = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
+                taskRvDataList = InputTaskXml.getSingleton().GetInputBodyXml(in_Body);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -167,13 +262,16 @@ public class InputLibraryActivity extends BaseActivity {
         protected void onPostExecute(final List<QuitLibraryDetail> result) {
             try {
                 if (result.size() >= 0) {
+                    if (taskRvDataList.size() >= 0) {
+                        taskRvDataList.remove(0);
+                        InitScanRecycler();
+                    }
                     TV_DeliverGoodsNumber.setText(result.get(0).getFCode());
                     TV_Time.setText(result.get(0).getFDate());
                     //TV_house.setDropDownHorizontalOffset(result.get(0).getFStock_Name());
                     TV_BusType.setText(result.get(0).getFTransactionType_Name());
                     TV_Unit.setText(result.get(0).getFPartner_Name());
-                    quitLibraryDetails = result;
-                    InitSp();
+                    InitSp(result);
                     ViseLog.i("quitLibraryDetails 赋值");
 
                 }
@@ -191,6 +289,7 @@ public class InputLibraryActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void messageEventBus(EventBusScanDataMsg event) {
         ViseLog.i("EventBus = " + event.ScanDataMsg);
+
     }
 
     public List GetInputArray(InputStream stream) throws SAXException, IOException, ParserConfigurationException {
@@ -228,7 +327,7 @@ public class InputLibraryActivity extends BaseActivity {
         public void startElement(String uri, String localName, String qName,
                                  Attributes attributes) throws SAXException {
             tag = localName;
-            if (localName.equals("Table") || localName.equals("Table1")) {
+            if (localName.equals("Table")) {
                 outbody = new QuitLibraryDetail();
                 ViseLog.i("创建outbody");
             }
@@ -238,7 +337,7 @@ public class InputLibraryActivity extends BaseActivity {
         public void endElement(String uri, String localName, String qName)
                 throws SAXException {
             // 节点结束
-            if (localName.equals("Table") || localName.equals("Table1")) {
+            if (localName.equals("Table")) {
                 OutBodys.add(outbody);
                 outbody = null;
             }
@@ -250,7 +349,7 @@ public class InputLibraryActivity extends BaseActivity {
                 throws SAXException {
             String data = new String(ch, start, length);
             if (data != null && tag != null) {
-                if (tag.equals("FGuid")) {
+                if (tag.equals("HeadGuid")) {
                     outbody.setFGuid(data);
                     ViseLog.i(data);
                 } else if (tag.equals("FCode")) {
