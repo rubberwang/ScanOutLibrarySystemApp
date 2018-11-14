@@ -55,7 +55,8 @@ public class OutLibraryActivity extends BaseActivity {
         outLibraryObServer = new OutLibraryObServer();
         getLifecycle().addObserver(outLibraryObServer);
         EventBus.getDefault().register(this);
-
+        BackFinish();
+        InitRecycler();
     }
 
     @Override

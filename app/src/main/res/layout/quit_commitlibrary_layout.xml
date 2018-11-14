@@ -16,7 +16,7 @@
             style="@style/AppCustomBarText"
             android:gravity="center_vertical"
             android:paddingLeft="50dp"
-            android:text="@string/InputCommitLibrary" />
+            android:text="@string/QuitCommitLibrary" />
     </LinearLayout>
 
 
@@ -119,7 +119,7 @@
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/F_InputCommit"
+        android:id="@+id/F_QuitCommit"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
