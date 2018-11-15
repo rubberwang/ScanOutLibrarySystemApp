@@ -80,7 +80,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
     private TextView Back;
     private TextView TV_DeliverGoodsNumber;
-    private TextView TV_Time;
     private Spinner Sp_house;
     private Spinner spinnerScannerDevices;
     private TextView TV_BusType;
@@ -144,7 +143,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     public void initView() {
         Back = $(R.id.Back);
         TV_DeliverGoodsNumber = $(R.id.TV_DeliverGoodsNumber);
-        TV_Time = $(R.id.TV_Time);
         Sp_house = $(R.id.Sp_house);
         TV_BusType = $(R.id.TV_BusType);
         TV_Unit = $(R.id.TV_Unit);
