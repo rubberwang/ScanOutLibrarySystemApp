@@ -429,7 +429,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         InitScanRecycler();
                     }
                     TV_DeliverGoodsNumber.setText(result.get(0).getFCode());
-                    TV_Time.setText(result.get(0).getFDate());
+                    //TV_Time.setText(result.get(0).getFDate());
                     //TV_house.setDropDownHorizontalOffset(result.get(0).getFStock_Name());
                     TV_BusType.setText(result.get(0).getFTransactionType_Name());
                     TV_Unit.setText(result.get(0).getFPartner_Name());
@@ -528,8 +528,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                     outbody.setFPartner(data);
                 } else if (tag.equals("FPartner_Name")) {
                     outbody.setFPartner_Name(data);
-                } else if (tag.equals("FDate")) {
-                    outbody.setFDate(data);
                 }
             }
 
