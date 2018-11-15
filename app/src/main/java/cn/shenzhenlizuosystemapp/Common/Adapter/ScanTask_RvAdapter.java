@@ -54,11 +54,14 @@ public class ScanTask_RvAdapter extends RecyclerView.Adapter {
             String[] ShouldSend = datas.get(position).getTV_shouldSend().split("\\.");
             String[] AlreadySend = datas.get(position).getTV_alreadySend().split("\\.");
             String[] ThisSend = datas.get(position).getTV_thisSend().split("\\.");
+
             int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
 
             ((ScanTask_RvAdapter.ViewHoders) holder).TV_materID.setText(datas.get(position).getTV_materID());
             ((ScanTask_RvAdapter.ViewHoders) holder).TV_nameRoot.setText(NameRoot[0]);
             ((ScanTask_RvAdapter.ViewHoders) holder).TV_statistics.setText(datas.get(position).getTV_statistics());
+            ((ScanTask_RvAdapter.ViewHoders) holder).TV_size.setText(datas.get(position).getTV_size());
+            ((ScanTask_RvAdapter.ViewHoders) holder).TV_commonunit.setText(datas.get(position).getTV_commonunit());
             ((ScanTask_RvAdapter.ViewHoders) holder).TV_alreadySend.setText(AlreadySend[0]);
             ((ScanTask_RvAdapter.ViewHoders) holder).TV_thisSend.setText(ThisSend[0]);
             ((ScanTask_RvAdapter.ViewHoders) holder).TV_shouldSend.setText(ShouldSend[0]);
@@ -91,6 +94,8 @@ public class ScanTask_RvAdapter extends RecyclerView.Adapter {
         private TextView TV_alreadySend;
         private TextView TV_thisSend;
         private TextView TV_noSend;
+        private TextView TV_size;
+        private TextView TV_commonunit;
 
         public ViewHoders(View itemView) {
             super(itemView);
@@ -101,6 +106,8 @@ public class ScanTask_RvAdapter extends RecyclerView.Adapter {
             TV_alreadySend = (TextView) itemView.findViewById(R.id.TV_alreadySend);
             TV_thisSend = (TextView) itemView.findViewById(R.id.TV_thisSend);
             TV_noSend = (TextView) itemView.findViewById(R.id.TV_noSend);
+            TV_size = (TextView) itemView.findViewById(R.id.TV_size);
+            TV_commonunit = (TextView) itemView.findViewById(R.id.TV_commonunit);
         }
     }
 

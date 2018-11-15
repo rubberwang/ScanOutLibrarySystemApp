@@ -93,10 +93,13 @@
     <string name="shouldSend">应发数量:</string>
     <string name="HouseSpace">仓位:</string>
     <string name="alreadySend">已发数量:</string>
-    <string name="statistics">计量单位:</string>
+    <string name="statistics">基本单位:</string>
+    <string name="commonunit">常用单位:</string>
     <string name="thisSend">本次发货:</string>
     <string name="noSend">未发数量:</string>
     <string name="scanData">扫描数据:</string>
-    <string name="scaning">扫描</string>
+    <string name="scaning">扫码</string>
+    <string name="scaningdata">扫码数据：</string>
+    <string name="cutoff">/</string>
     <string name="finish" translatable="false">完成</string>
 </resources>

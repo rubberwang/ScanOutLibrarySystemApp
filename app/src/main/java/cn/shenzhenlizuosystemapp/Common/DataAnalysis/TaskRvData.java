@@ -4,7 +4,9 @@ public class TaskRvData {
     private String FGUID;
     private String TV_materID;
     private String TV_nameRoot;
+    private String TV_size;
     private String TV_statistics;
+    private String TV_commonunit;
     private String TV_alreadySend;
     private String TV_thisSend;
     private String TV_shouldSend;
@@ -23,6 +25,16 @@ public class TaskRvData {
 
     public void setTV_nameRoot(String TV_nameRoot) {
         this.TV_nameRoot = TV_nameRoot;
+    }
+
+    public void setTV_size(String TV_size) {
+        this.TV_size = TV_size;
+    }
+
+
+
+    public void setTV_commonunit(String TV_commonunit) {
+        this.TV_commonunit = TV_commonunit;
     }
 
     public void setTV_statistics(String TV_statistics) {
@@ -51,6 +63,16 @@ public class TaskRvData {
 
     public String getTV_nameRoot() {
         return TV_nameRoot;
+    }
+
+    public String getTV_size() {
+        return TV_size;
+    }
+
+
+
+    public String getTV_commonunit() {
+        return TV_commonunit;
     }
 
     public String getTV_statistics() {

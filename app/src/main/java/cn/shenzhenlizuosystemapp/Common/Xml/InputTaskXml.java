@@ -101,9 +101,13 @@ public class InputTaskXml {
                     outbody.setTV_alreadySend(data);
                 } else if (tag.equals("FThisAuxQty")) {//本次
                     outbody.setTV_thisSend(data);
-                } else if (tag.equals("FUnitRate")) {//规格
+                } else if (tag.equals("FMaterial_Name")) {//品名
                     outbody.setTV_nameRoot(data);
-                } else if (tag.equals("FUnit_Name")) {//计量单位
+                } else if (tag.equals("FModel")) {//规格
+                    outbody.setTV_size(data);
+                }else if (tag.equals("FUnit_Name")) {//常用单位
+                    outbody.setTV_commonunit(data);
+                }else if (tag.equals("FBaseUnit_Name")) {//基本单位
                     outbody.setTV_statistics(data);
                 }
             }

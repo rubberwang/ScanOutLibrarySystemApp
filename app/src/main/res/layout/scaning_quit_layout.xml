@@ -28,23 +28,7 @@
         android:layout_weight="3"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.3"
-            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/TV_State"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/SelectItemYellow"
-                android:gravity="center"
-                android:text="@string/PleaseScan"
-                android:textColor="@color/Black"
-                android:textSize="13sp"
-                android:textStyle="bold" />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,10 +62,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
-                    android:text="@string/Time" />
+                    android:text="@string/BusType" />
 
                 <TextView
-                    android:id="@+id/TV_Time"
+                    android:id="@+id/TV_BusType"
                     style="@style/ScanOutLibraryText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -118,14 +102,23 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
-                    android:text="@string/BusType" />
+                    android:text="@string/HouseSpace" />
 
-                <TextView
-                    android:id="@+id/TV_BusType"
-                    style="@style/ScanOutLibraryText"
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="5" />
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5">
+                    <Spinner
+                        android:id="@+id/Sp_QuitHouseSpace"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:overlapAnchor="false"
+                        android:spinnerMode="dropdown"
+                        android:layout_weight="5"
+                        >
+                    </Spinner>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -202,6 +195,7 @@ android:background="@color/Black"
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@color/ScanGray"
                     android:orientation="horizontal">
 
                     <TextView
@@ -210,6 +204,7 @@ android:background="@color/Black"
                         android:layout_height="match_parent"
                         android:layout_weight="4"
                         android:text="@string/OutLibraryScanDetail"
+
                         android:textColor="@color/Black" />
 
                     <TextView
@@ -244,7 +239,8 @@ android:background="@color/Black"
                 android:id="@+id/RV_GetInfoTable"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="5" />
+                android:layout_weight="5"
+                android:background="@color/functionbackground"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

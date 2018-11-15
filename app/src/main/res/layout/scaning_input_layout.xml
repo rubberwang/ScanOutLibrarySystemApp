@@ -18,7 +18,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:text="@string/ScanInputLibrary" />
-
+        
     </LinearLayout>
 
 
@@ -28,155 +28,149 @@
         android:layout_weight="3"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.3"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/TV_State"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/SelectItemYellow"
-                android:gravity="center"
-                android:text="@string/PleaseScanInput"
-                android:textColor="@color/Black"
-                android:textSize="13sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/ScanGray"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.6"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/ScanOutLibraryText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:text="@string/DeliverGoodsNumber" />
-
-                <TextView
-                    android:id="@+id/TV_DeliverGoodsNumber"
-                    style="@style/ScanOutLibraryText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="5" />
-
-                <TextView
-                    style="@style/ScanOutLibraryText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:text="@string/Time" />
-
-                <TextView
-                    android:id="@+id/TV_Time"
-                    style="@style/ScanOutLibraryText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="5" />
-
-            </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.6"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/ScanOutLibraryText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:text="@string/InputWareHouse" />
-
+                android:layout_weight="1"
+                android:background="@color/ScanGray"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5">
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.6"
+                    android:orientation="horizontal">
 
-                    <Spinner
-                        android:id="@+id/Sp_house"
-                        android:layout_width="match_parent"
+                    <TextView
+                        style="@style/ScanOutLibraryText"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="5"
-                        android:overlapAnchor="false"
-                        android:spinnerMode="dropdown"></Spinner>
+                        android:layout_weight="3"
+                        android:text="@string/DeliverGoodsNumber" />
+
+                    <TextView
+                        android:id="@+id/TV_DeliverGoodsNumber"
+                        style="@style/ScanOutLibraryText"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5" />
+
+                    <TextView
+                        style="@style/ScanOutLibraryText"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:text="@string/BusType" />
+
+                    <TextView
+                        android:id="@+id/TV_BusType"
+                        style="@style/ScanOutLibraryText"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5" />
 
                 </LinearLayout>
 
-                <TextView
-                    style="@style/ScanOutLibraryText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:text="@string/BusType" />
 
-                <TextView
-                    android:id="@+id/TV_BusType"
-                    style="@style/ScanOutLibraryText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="5" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.6"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/ScanOutLibraryText"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:text="@string/InputWareHouse" />
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5">
+                        <Spinner
+                            android:id="@+id/Sp_house"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:overlapAnchor="false"
+                            android:spinnerMode="dropdown"
+                            android:layout_weight="5"
+                            >
+                        </Spinner>
+
+                </LinearLayout>
+
+                    <TextView
+                        style="@style/ScanOutLibraryText"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:text="@string/HouseSpace" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5">
+                        <Spinner
+                            android:id="@+id/Sp_InputHouseSpace"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:overlapAnchor="false"
+                            android:spinnerMode="dropdown"
+                            android:layout_weight="5"
+                            >
+                        </Spinner>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.6"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/ScanOutLibraryText"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:text="@string/Unit" />
+
+                    <TextView
+                        android:id="@+id/TV_Unit"
+                        style="@style/ScanOutLibraryText"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5" />
+
+                    <TextView
+                        android:id="@+id/TV_Unit1"
+                        style="@style/ScanOutLibraryText"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="8" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.6"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/ScanOutLibraryText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:text="@string/Unit" />
-
-                <TextView
-                    android:id="@+id/TV_Unit"
-                    style="@style/ScanOutLibraryText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="5" />
-
-                <TextView
-                    android:id="@+id/TV_Unit1"
-                    style="@style/ScanOutLibraryText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="8" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
+        <Spinner
+            android:id="@+id/spinnerScannerDevices"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="1px"
+            android:visibility="invisible" />
 
     </LinearLayout>
-
-    <Spinner
-        android:id="@+id/spinnerScannerDevices"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginTop="1px"
-        android:visibility="invisible" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -189,119 +183,120 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="16"
-        android:orientation="vertical">
-
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/RV_ScanInfoTable"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="9" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="3dp"
-            android:layout_weight="1.3"
-            android:background="@drawable/edittext_normal"
+            android:layout_weight="16"
             android:orientation="vertical">
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/RV_ScanInfoTable"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="9" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="0dp"
+                android:layout_margin="3dp"
+                android:layout_weight="1.3"
+                android:background="@drawable/edittext_normal"
+                android:orientation="vertical">
 
-                <View
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:background="@color/functionbackground"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/TV_scaningdata"
+                        style="@style/ScanBlueText"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5"
+                        android:text="@string/scaningdata"
+                        android:textColor="@color/Black" />
+
+                    <TextView
+                        android:id="@+id/TV_AlreadyScanSum"
+                        style="@style/ScanBlueText"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:textColor="@color/Black" />
+
+                    <TextView
+                        style="@style/ScanBlueText"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:text="@string/OutLibraryScanDetail"
+                        android:textColor="@color/Black" />
+
+
+
+
+                    <CheckBox
+                        android:id="@+id/IsUserName_CB"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:layout_margin="3dp"
+                        android:checked="true"
+                        />
+
+
+                </LinearLayout>
+
+                </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/RV_GetInfoTable"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="6"
+                android:background="@color/functionbackground" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.5">
 
                 <TextView
-                    style="@style/ScanBlueText"
+                    android:id="@+id/TV_Scaning"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:text="@string/OutLibraryScanDetail"
-                    android:textColor="@color/Black" />
-
-
-                <TextView
-                    android:id="@+id/TV_AlreadyScanSum"
-                    style="@style/ScanBlueText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textColor="@color/Black" />
-
-                <CheckBox
-                    android:id="@+id/IsUserName_CB"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="3dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/checkselect"
-                    android:button="@null" />
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1.5"
+                    android:background="@drawable/circularbead_purple"
+                    android:gravity="center"
+                    android:text="@string/scaning"
+                    android:textColor="@color/White"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/TV_AlreadyScanSum1"
-                    style="@style/ScanBlueText"
+                    android:id="@+id/TV_Sumbit"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textColor="@color/Black" />
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1.5"
+                    android:background="@drawable/circularbead_purple"
+                    android:gravity="center"
+                    android:text="@string/Submit"
+                    android:textColor="@color/White"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/RV_GetInfoTable"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="5" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.5">
-
-            <TextView
-                android:id="@+id/TV_Submit"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1.5"
-                android:background="@drawable/circularbead_purple"
-                android:gravity="center"
-                android:text="@string/Submit"
-                android:textColor="@color/White"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/TV_Scaning"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1.5"
-                android:background="@drawable/circularbead_purple"
-                android:gravity="center"
-                android:text="@string/scaning"
-                android:textColor="@color/White"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
     </LinearLayout>
-
-</LinearLayout>
 
