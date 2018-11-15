@@ -20,7 +20,7 @@ public class ScanTask_RvAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private List<TaskRvData> datas;
-    private ScanTask_RvAdapter.OnItemClickLitener mOnItemClickLitener;
+    private OnItemClickLitener mOnItemClickLitener;
     private int selected = -1;
 
     public ScanTask_RvAdapter(Context context, List<TaskRvData> data) {
@@ -34,14 +34,14 @@ public class ScanTask_RvAdapter extends RecyclerView.Adapter {
         void onItemLongClick(View view, int position);
     }
 
-    public void setOnItemClickLitener(ScanTask_RvAdapter.OnItemClickLitener mOnItemClickLitener) {
+    public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener) {
         this.mOnItemClickLitener = mOnItemClickLitener;
     }
 
     @Override
     //重写onCreateViewHolder方法，返回一个自定义的ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ScanTask_RvAdapter.ViewHoders viewHoders = new ScanTask_RvAdapter.ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.accept_datas, parent, false));
+        ViewHoders viewHoders = new ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.accept_datas, parent, false));
         return viewHoders;
     }
 
@@ -57,15 +57,15 @@ public class ScanTask_RvAdapter extends RecyclerView.Adapter {
 
             int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
 
-            ((ScanTask_RvAdapter.ViewHoders) holder).TV_materID.setText(datas.get(position).getTV_materID());
-            ((ScanTask_RvAdapter.ViewHoders) holder).TV_nameRoot.setText(NameRoot[0]);
-            ((ScanTask_RvAdapter.ViewHoders) holder).TV_statistics.setText(datas.get(position).getTV_statistics());
-            ((ScanTask_RvAdapter.ViewHoders) holder).TV_size.setText(datas.get(position).getTV_size());
-            ((ScanTask_RvAdapter.ViewHoders) holder).TV_commonunit.setText(datas.get(position).getTV_commonunit());
-            ((ScanTask_RvAdapter.ViewHoders) holder).TV_alreadySend.setText(AlreadySend[0]);
-            ((ScanTask_RvAdapter.ViewHoders) holder).TV_thisSend.setText(ThisSend[0]);
-            ((ScanTask_RvAdapter.ViewHoders) holder).TV_shouldSend.setText(ShouldSend[0]);
-            ((ScanTask_RvAdapter.ViewHoders) holder).TV_noSend.setText(NoSend + "");
+            ((ViewHoders) holder).TV_materID.setText(datas.get(position).getTV_materID());
+            ((ViewHoders) holder).TV_nameRoot.setText(NameRoot[0]);
+            ((ViewHoders) holder).TV_statistics.setText(datas.get(position).getTV_statistics());
+            ((ViewHoders) holder).TV_size.setText(datas.get(position).getTV_size());
+            ((ViewHoders) holder).TV_commonunit.setText(datas.get(position).getTV_commonunit());
+            ((ViewHoders) holder).TV_alreadySend.setText(AlreadySend[0]);
+            ((ViewHoders) holder).TV_thisSend.setText(ThisSend[0]);
+            ((ViewHoders) holder).TV_shouldSend.setText(ShouldSend[0]);
+            ((ViewHoders) holder).TV_noSend.setText(NoSend + "");
             if (mOnItemClickLitener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -76,7 +76,7 @@ public class ScanTask_RvAdapter extends RecyclerView.Adapter {
                 });
             }
         } catch (Exception e) {
-
+            ViseLog.i("ScanTaskException = " + e.getMessage());
         }
     }
 

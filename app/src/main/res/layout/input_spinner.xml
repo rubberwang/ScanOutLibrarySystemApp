@@ -7,13 +7,13 @@
     <TextView
         android:id="@+id/TV_InputSpinner"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="29dp"
         android:gravity="center"
-        />
-    
+        android:paddingLeft="4dp"/>
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="29px">
+        android:layout_height="35px">
     </View>
     <View
         android:layout_width="match_parent"

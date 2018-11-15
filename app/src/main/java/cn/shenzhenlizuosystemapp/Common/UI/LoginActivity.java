@@ -319,7 +319,7 @@ public class LoginActivity extends BaseActivity {
             tools.show(LoginActivity.this, "请输入用户名 密码");
         } else {
             tools.ShowProgressDialog("登录中...", this);
-            loginSyncThread = new LoginActivity.LoginSyncThread(Edit_UserName.getText().toString(), Edit_PassWord.getText().toString());
+            loginSyncThread = new LoginSyncThread(Edit_UserName.getText().toString(), Edit_PassWord.getText().toString());
             loginSyncThread.start();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -349,8 +349,8 @@ public class LoginActivity extends BaseActivity {
             try {
                 Message msg = new Message();
                 String string = ProjectNameAndConnectMap.get(SelectProjectStr);
-                ConnectStr.ConnectionToString = string;
-                String Result = httpRequest.LoginIn(User, Paw, string);
+                String Result = httpRequest.LoginIn(User, Paw, ConnectStr.ConnectionToString);
+                ViseLog.i(string);
                 Gson gson = new Gson();
                 Json student = gson.fromJson(String.valueOf(Result), Json.class);
                 Log.i("MainActivity", "Res" + student.getMsg() + student.getSuccess());

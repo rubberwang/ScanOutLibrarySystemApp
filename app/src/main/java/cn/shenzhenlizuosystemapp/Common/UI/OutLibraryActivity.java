@@ -223,7 +223,7 @@ public class OutLibraryActivity extends BaseActivity {
     }
 
     private void GetOutLibraryBills() {
-        OutLibraryActivity.GetInputLibraryBillsAsyncTask getOutLibraryBillsAsyncTask = new OutLibraryActivity.GetInputLibraryBillsAsyncTask();
+        GetInputLibraryBillsAsyncTask getOutLibraryBillsAsyncTask = new GetInputLibraryBillsAsyncTask();
         getOutLibraryBillsAsyncTask.execute();
     }
 
@@ -287,83 +287,83 @@ public class OutLibraryActivity extends BaseActivity {
 
     }
 
-        public List GetInputArray(InputStream stream) throws SAXException, IOException, ParserConfigurationException {
-            SAXParserFactory factory = SAXParserFactory.newInstance();//创建SAX解析工厂
-            javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器
-            OutLibraryActivity.BodySAXHandler handler = new OutLibraryActivity.BodySAXHandler();//创建处理函数
-            parser.parse(stream, handler);//开始解析
-            List<QuitLibraryDetail> outbodys = handler.getBody();
-            return outbodys;
+    public List GetInputArray(InputStream stream) throws SAXException, IOException, ParserConfigurationException {
+        SAXParserFactory factory = SAXParserFactory.newInstance();//创建SAX解析工厂
+        javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器
+        BodySAXHandler handler = new BodySAXHandler();//创建处理函数
+        parser.parse(stream, handler);//开始解析
+        List<QuitLibraryDetail> outbodys = handler.getBody();
+        return outbodys;
+    }
+
+    public class BodySAXHandler extends DefaultHandler {
+        private List<QuitLibraryDetail> OutBodys;
+        private QuitLibraryDetail outbody;// 当前解析的student
+        private String tag;// 当前解析的标签
+
+        public List<QuitLibraryDetail> getBody() {
+            if (OutBodys != null) {
+                return OutBodys;
+            }
+            return null;
         }
 
-        public class BodySAXHandler extends DefaultHandler {
-            private List<QuitLibraryDetail> OutBodys;
-            private QuitLibraryDetail outbody;// 当前解析的student
-            private String tag;// 当前解析的标签
+        @Override
+        public void startDocument() throws SAXException {
+            // 文档开始
+            OutBodys = new ArrayList<QuitLibraryDetail>();
+        }
 
-            public List<QuitLibraryDetail> getBody() {
-                if (OutBodys != null) {
-                    return OutBodys;
+        @Override
+        public void endDocument() throws SAXException {
+        }
+
+        @Override
+        public void startElement(String uri, String localName, String qName,
+                                 Attributes attributes) throws SAXException {
+            tag = localName;
+            if (localName.equals("Table")) {
+                outbody = new QuitLibraryDetail();
+                ViseLog.i("创建outbody");
+            }
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName)
+                throws SAXException {
+            // 节点结束
+            if (localName.equals("Table")) {
+                OutBodys.add(outbody);
+                outbody = null;
+            }
+            tag = null;
+        }
+
+        @Override
+        public void characters(char[] ch, int start, int length)
+                throws SAXException {
+            String data = new String(ch, start, length);
+            if (data != null && tag != null) {
+                if (tag.equals("HeadGuid")) {
+                    outbody.setFGuid(data);
+                    ViseLog.i(data);
+                } else if (tag.equals("FCode")) {
+                    outbody.setFCode(data);
+                } else if (tag.equals("FStock")) {
+                    outbody.setFStock(data);
+                } else if (tag.equals("FStock_Name")) {
+                    outbody.setFStock_Name(data);
+                } else if (tag.equals("FTransactionType")) {
+                    outbody.setFTransactionType(data);
+                } else if (tag.equals("FTransactionType_Name")) {
+                    outbody.setFTransactionType_Name(data);
+                } else if (tag.equals("FPartner")) {
+                    outbody.setFPartner(data);
+                } else if (tag.equals("FPartner_Name")) {
+                    outbody.setFPartner_Name(data);
                 }
-                return null;
             }
 
-            @Override
-            public void startDocument() throws SAXException {
-                // 文档开始
-                OutBodys = new ArrayList<QuitLibraryDetail>();
-            }
-
-            @Override
-            public void endDocument() throws SAXException {
-            }
-
-            @Override
-            public void startElement(String uri, String localName, String qName,
-                                     Attributes attributes) throws SAXException {
-                tag = localName;
-                if (localName.equals("Table")) {
-                    outbody = new QuitLibraryDetail();
-                    ViseLog.i("创建outbody");
-                }
-            }
-
-            @Override
-            public void endElement(String uri, String localName, String qName)
-                    throws SAXException {
-                // 节点结束
-                if (localName.equals("Table")) {
-                    OutBodys.add(outbody);
-                    outbody = null;
-                }
-                tag = null;
-            }
-
-            @Override
-            public void characters(char[] ch, int start, int length)
-                    throws SAXException {
-                String data = new String(ch, start, length);
-                if (data != null && tag != null) {
-                    if (tag.equals("HeadGuid")) {
-                        outbody.setFGuid(data);
-                        ViseLog.i(data);
-                    } else if (tag.equals("FCode")) {
-                        outbody.setFCode(data);
-                    } else if (tag.equals("FStock")) {
-                        outbody.setFStock(data);
-                    } else if (tag.equals("FStock_Name")) {
-                        outbody.setFStock_Name(data);
-                    } else if (tag.equals("FTransactionType")) {
-                        outbody.setFTransactionType(data);
-                    } else if (tag.equals("FTransactionType_Name")) {
-                        outbody.setFTransactionType_Name(data);
-                    } else if (tag.equals("FPartner")) {
-                        outbody.setFPartner(data);
-                    } else if (tag.equals("FPartner_Name")) {
-                        outbody.setFPartner_Name(data);
-                    }
-                }
-
-            }
+        }
     }
 }

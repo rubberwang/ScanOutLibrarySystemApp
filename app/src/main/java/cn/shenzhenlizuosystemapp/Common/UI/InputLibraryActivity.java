@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -80,6 +81,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
     private TextView Back;
     private TextView TV_DeliverGoodsNumber;
+    private TextView TV_Time;
     private Spinner Sp_house;
     private Spinner spinnerScannerDevices;
     private TextView TV_BusType;
@@ -90,6 +92,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private RecyclerView RV_ScanInfoTable;
 
     private WebService webService;
+    private InputLibraryObServer inputLibraryObServer;
     private ScanResult_RvAdapter scanResult_rvAdapter;
     private ScanTask_RvAdapter scanTask_rvAdapter;
     private List<ScanResultData> scanResultData;
@@ -97,7 +100,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private List<QuitLibraryDetail> quitLibraryDetails;
     private List<TaskRvData> taskRvDataList;
     private List<ScannerInfo> deviceList = null;
-
+    private List<String> ScanResStrList = null;
     private Tools tools;
 
     /**
@@ -119,24 +122,26 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
     @Override
     public void initData() {
+        EventBus.getDefault().register(this);
+        Intent intent = getIntent();
+        FGUID = intent.getStringExtra("FGUID");
+        ScanResStrList = new ArrayList<String>();
         deviceList = new ArrayList<ScannerInfo>();
+        SpStrList = new ArrayList<>();
+        scanResultData = new ArrayList<>();
+        taskRvDataList = new ArrayList<>();
         EMDKResults results = EMDKManager.getEMDKManager(getApplicationContext(), this);
         if (results.statusCode != EMDKResults.STATUS_CODE.SUCCESS) {
             ViseLog.i("Scan: " + "调用失败!");//调用失败
             return;
         }
         tools = Tools.getTools();
-        scanResultData = new ArrayList<>();
-        taskRvDataList = new ArrayList<>();
-        Intent intent = getIntent();
-        FGUID = intent.getStringExtra("FGUID");
-        SpStrList = new ArrayList<>();
+        inputLibraryObServer = new InputLibraryObServer();
+        getLifecycle().addObserver(inputLibraryObServer);
         webService = WebService.getSingleton();
-        EventBus.getDefault().register(this);
         InitClick();
         GetOutLibraryBills();
         InitRecycler();
-        InitScanRecycler();
     }
 
     @Override
@@ -244,7 +249,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             initScanner();
         }
         if (scanner != null) {
-            scanner.triggerType = Scanner.TriggerType.SOFT_ALWAYS;//软解
+            scanner.triggerType = TriggerType.SOFT_ALWAYS;//软解
         }
     }
 
@@ -305,7 +310,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         deInitScanner();
         if (emdkManager != null) {
             ViseLog.i("EMDK不等于空");
-            barcodeManager = (BarcodeManager) emdkManager.getInstance(EMDKManager.FEATURE_TYPE.BARCODE);
+            barcodeManager = (BarcodeManager) emdkManager.getInstance(FEATURE_TYPE.BARCODE);
             // Add connection listener 添加连接监听器
             if (barcodeManager != null) {
                 barcodeManager.addConnectionListener(this);
@@ -329,7 +334,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         }
         // Release the barcode manager resources
         if (emdkManager != null) {
-            emdkManager.release(EMDKManager.FEATURE_TYPE.BARCODE);
+            emdkManager.release(FEATURE_TYPE.BARCODE);
         }
         Log.i("MainActivity", "    onPause()");
     }
@@ -427,22 +432,20 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         InitScanRecycler();
                     }
                     TV_DeliverGoodsNumber.setText(result.get(0).getFCode());
-                    //TV_Time.setText(result.get(0).getFDate());
-                    //TV_house.setDropDownHorizontalOffset(result.get(0).getFStock_Name());
                     TV_BusType.setText(result.get(0).getFTransactionType_Name());
                     TV_Unit.setText(result.get(0).getFPartner_Name());
                     InitSp(result);
                     ViseLog.i("quitLibraryDetails 赋值");
-
                 }
             } catch (Exception e) {
-                ViseLog.d("Select适配RV数据错误" + e);
+                ViseLog.d("GetInputLibraryBillsAsyncTask" + e);
             }
             ViseLog.i("出库单返回数据" + result);
         }
 
         @Override
         protected void onPreExecute() {
+
         }
     }
 
@@ -559,7 +562,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     }
 
     @Override
-    public void onConnectionChange(ScannerInfo scannerInfo, BarcodeManager.ConnectionState connectionState) {
+    public void onConnectionChange(ScannerInfo scannerInfo, ConnectionState connectionState) {
         String status;
         String scannerName = "";
 
@@ -584,7 +587,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                     break;
             }
             status = scannerNameExtScanner + ":" + statusExtScanner;
-            new InputLibraryActivity.AsyncStatusUpdate().execute(status);
+            new AsyncStatusUpdate().execute(status);
         }
     }
 
@@ -608,9 +611,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             case IDLE://关闭
                 if (IsStartRead) {
                     try {
-                        // An attempt to use the scanner continuously and rapidly (with a delay < 100 ms between scans)
-                        // may cause the scanner to pause momentarily before resuming the scanning.
-                        // Hence add some delay (>= 100ms) before submitting the next read.
+
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
@@ -672,17 +673,63 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
         protected void onPostExecute(String result) {
             if (result != null) {
-                ViseLog.i("ScanResultData" + result);
-                ScanResultData scanResult = new ScanResultData();
-                scanResult.setScanData(result);
-                scanResultData.add(scanResult);
-                scanResult_rvAdapter.notifyDataSetChanged();
+                ViseLog.i("ScanResultData" + String.valueOf(CheckResultList(result)));
+                if (CheckResultList(result)) {
+                    ScanResStrList.add(result);
+                    ScanResultVerifyTask scanResultVerifyTask = new ScanResultVerifyTask();
+                    scanResultVerifyTask.execute(result);
+                } else {
+                    ViseLog.i("存在");
+                }
             }
         }
     }
 
+    private class ScanResultVerifyTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String Res = null;
+            try {
+                Res = webService.GetBarcodeAnalyze(params[0], ConnectStr.ConnectionToString);
+            } catch (Exception e) {
+                ViseLog.i("ScanResultVerifyTask Exception = " + e.getMessage());
+            }
+            return Res + "," + params[0];
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            String[] StrList = result.split(",");
+            if (StrList.length > 0) {
+                if (!StrList.equals("continue")) {
+                    IsStartRead = false;
+                }
+            }
+            ScanResultData scanResult = new ScanResultData();
+            scanResult.setScanData(StrList[1]);
+            scanResultData.add(scanResult);
+            scanResult_rvAdapter.notifyDataSetChanged();
+            ViseLog.i("ScanResultVerifyTask Result: " + result);
+        }
+    }
+
+    private boolean CheckResultList(String result) {
+        if (scanResultData.size() >= 0 && !TextUtils.isEmpty(result)) {
+            if (ScanResStrList.contains(result)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //资源释放
     public void CleanGC() {
+        if (IsStartRead) {
+            IsStartRead = false;
+        }
         if (barcodeManager != null) {
             barcodeManager.removeConnectionListener(this);
             barcodeManager = null;
@@ -706,6 +753,34 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         }
         if (deviceList != null) {
             deviceList = null;
+        }
+    }
+
+    class InputLibraryObServer implements LifecycleObserver {
+        @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        public void ON_CREATE() {
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_START)
+        public void ON_START() {
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+        public void ON_RESUME() {
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+        public void ON_PAUSE() {
+
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+        public void ON_STOP() {
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        public void ON_DESTROY() {
+            CleanGC();
         }
     }
 }
