@@ -18,7 +18,7 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.Fragment.Item_QuitLibrary_Fragment;
 import cn.shenzhenlizuosystemapp.Common.Fragment.Select_QuitLibrary_Fragment;
 import cn.shenzhenlizuosystemapp.R;
@@ -34,8 +34,8 @@ public class Quit_NotificationActivity extends BaseActivity {
 
     private LinearLayout LL_BackMainTable;
     private Select_QuitLibrary_Fragment selectQuitLibraryFragment;
-    private List<OutLibraryBill> outLibraryBills;
-    private List<OutLibraryBill> SearchResultList;
+    private List<QuitLibraryBill> outLibraryBills;
+    private List<QuitLibraryBill> SearchResultList;
     private Tools tools;
 
     @Override
@@ -49,7 +49,6 @@ public class Quit_NotificationActivity extends BaseActivity {
         tools  = new Tools();
         InitFragment();
         InitClick();
-        BackFinish();
     }
 
     @Override
@@ -97,7 +96,7 @@ public class Quit_NotificationActivity extends BaseActivity {
                     Log.i("huangmin", "BoxNumber " + BoxNumber.charAt(0));
 //                    ||BoxNumber.substring(2,
                     if (BoxNumber.equals(ChracterSearch) || BoxNumber.contains(ChracterSearch)) {
-                        OutLibraryBill outLibraryBill = new OutLibraryBill();
+                        QuitLibraryBill outLibraryBill = new QuitLibraryBill();
                         outLibraryBill.setFCode(outLibraryBills.get(i).getFCode());
                         outLibraryBill.setFDate(outLibraryBills.get(i).getFDate());
                         outLibraryBill.setFTransactionType_Name(outLibraryBills.get(i).getFTransactionType_Name());
@@ -119,16 +118,6 @@ public class Quit_NotificationActivity extends BaseActivity {
     }
 
 
-    public void BackFinish() {
-        Back.setOnClickListener(new View.OnClickListener() {
-            @Override
-
-            public void onClick(View v) {
-              ViewManager.getInstance().finishActivity(Quit_NotificationActivity.this);
-            }
-
-        });
-    }
 
     public class ToLoadOutLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, Integer> {
 

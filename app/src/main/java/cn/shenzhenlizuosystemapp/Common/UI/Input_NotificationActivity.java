@@ -18,7 +18,7 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.Fragment.Item_InputLibrary_Fragment;
 import cn.shenzhenlizuosystemapp.Common.Fragment.Select_InputLibrary_Fragment;
 import cn.shenzhenlizuosystemapp.R;
@@ -34,8 +34,8 @@ public class Input_NotificationActivity extends BaseActivity {
 
     private LinearLayout LL_BackMainTable;
     private Select_InputLibrary_Fragment selectInputLibraryFragment;
-    private List<OutLibraryBill> outLibraryBills;
-    private List<OutLibraryBill> SearchResultList;
+    private List<QuitLibraryBill> outLibraryBills;
+    private List<QuitLibraryBill> SearchResultList;
     private Tools tools;
 
     @Override
@@ -101,7 +101,7 @@ public class Input_NotificationActivity extends BaseActivity {
                     String BoxNumber = outLibraryBills.get(i).getFCode();
                     Log.i("huangmin", "BoxNumber " + BoxNumber.charAt(0));
                     if (BoxNumber.equals(ChracterSearch) || BoxNumber.contains(ChracterSearch)) {
-                        OutLibraryBill outLibraryBill = new OutLibraryBill();
+                        QuitLibraryBill outLibraryBill = new QuitLibraryBill();
                         outLibraryBill.setFCode(outLibraryBills.get(i).getFCode());
                         outLibraryBill.setFDate(outLibraryBills.get(i).getFDate());
                         outLibraryBill.setFTransactionType_Name(outLibraryBills.get(i).getFTransactionType_Name());

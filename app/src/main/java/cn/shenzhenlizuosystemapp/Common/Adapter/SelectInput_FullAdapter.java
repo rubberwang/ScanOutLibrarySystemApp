@@ -10,17 +10,17 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryBill;
 import cn.shenzhenlizuosystemapp.R;
 
 public class SelectInput_FullAdapter extends RecyclerView.Adapter {
 
     private Context context;
-    private List<OutLibraryBill> datas;
+    private List<QuitLibraryBill> datas;
     private SelectInput_FullAdapter.OnItemClickLitener mOnItemClickLitener;
     private int selected = -1;
 
-    public SelectInput_FullAdapter(Context context, List<OutLibraryBill> data) {
+    public SelectInput_FullAdapter(Context context, List<QuitLibraryBill> data) {
         this.context = context;
         this.datas = data;
     }

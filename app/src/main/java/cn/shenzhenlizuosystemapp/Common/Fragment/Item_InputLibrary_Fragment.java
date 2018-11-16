@@ -17,7 +17,7 @@ import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Adapter.SelectInput_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.UI.InputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
@@ -25,14 +25,14 @@ import cn.shenzhenlizuosystemapp.R;
 
 public class Item_InputLibrary_Fragment extends Fragment {
 
-    private static List<OutLibraryBill> selectOutLibraryList;
+    private static List<QuitLibraryBill> selectOutLibraryList;
     private RecyclerView RV_CastAbout;
     private ProgressDialog PD;
     private Tools tools;
     private WebService webService;
 
-    public static Item_InputLibrary_Fragment newInstance(List<OutLibraryBill> selectOutLibraryData) {
-        selectOutLibraryList = new ArrayList<OutLibraryBill>();
+    public static Item_InputLibrary_Fragment newInstance(List<QuitLibraryBill> selectOutLibraryData) {
+        selectOutLibraryList = new ArrayList<QuitLibraryBill>();
         selectOutLibraryList.clear();
         Item_InputLibrary_Fragment.selectOutLibraryList = selectOutLibraryData;
         return new Item_InputLibrary_Fragment();

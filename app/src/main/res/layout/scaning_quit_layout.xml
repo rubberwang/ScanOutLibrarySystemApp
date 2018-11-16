@@ -155,7 +155,12 @@
 
         </LinearLayout>
 
-
+        <Spinner
+            android:id="@+id/spinnerScannerDevices"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="1px"
+            android:visibility="invisible" />
 
     </LinearLayout>
 

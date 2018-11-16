@@ -27,13 +27,12 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.SelectInput_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Adapter.SelectQuit_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.OutLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.UI.OutLibraryActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.QuitLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -44,7 +43,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
    private WebService webService;
    private Tools tools;
    private ProgressDialog PD;
-   private List<OutLibraryBill> outLibraryBills;
+   private List<QuitLibraryBill> outLibraryBills;
 
     public static Select_QuitLibrary_Fragment newInstance() {
         Select_QuitLibrary_Fragment fragment = new Select_QuitLibrary_Fragment();
@@ -75,7 +74,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
         getOutLibraryBillsAsyncTask.execute();
     }
 
-    public class GetOutLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<OutLibraryBill>> {
+    public class GetOutLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<QuitLibraryBill>> {
 
         private RecyclerView recyclerView;
 
@@ -85,7 +84,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
         }
 
         @Override
-        protected List<OutLibraryBill> doInBackground(Integer... params) {
+        protected List<QuitLibraryBill> doInBackground(Integer... params) {
             String OutBills = "";
             try {
                 InputStream in_withcode = null;
@@ -104,7 +103,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
          * 在doInBackground方法执行结束之后在运行，并且运行在UI线程当中 可以对UI空间进行设置
          */
         @Override
-        protected void onPostExecute(final List<OutLibraryBill> result) {
+        protected void onPostExecute(final List<QuitLibraryBill> result) {
             try {
                 PD.dismiss();
                 if (result.size() >= 0) {
@@ -117,7 +116,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
                     adapter.setOnItemClickLitener(new SelectQuit_FullAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
-                            startActivity(new Intent(getActivity(),OutLibraryActivity.class));
+                            startActivity(new Intent(getActivity(),QuitLibraryActivity.class));
                         }
 
                         @Override
@@ -145,16 +144,16 @@ public class Select_QuitLibrary_Fragment extends Fragment {
         javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器
         SAXHandler handler = new SAXHandler();//创建处理函数
         parser.parse(stream, handler);//开始解析
-        List<OutLibraryBill> OutLibrary = handler.getBills();
+        List<QuitLibraryBill> OutLibrary = handler.getBills();
         return OutLibrary;
     }
 
     public class SAXHandler extends DefaultHandler {
-        private List<OutLibraryBill> Outbills;
-        private OutLibraryBill Bill;// 当前解析的student
+        private List<QuitLibraryBill> Outbills;
+        private QuitLibraryBill Bill;// 当前解析的student
         private String tag;// 当前解析的标签
 
-        public List<OutLibraryBill> getBills() {
+        public List<QuitLibraryBill> getBills() {
             if (Outbills != null) {
                 return Outbills;
             }
@@ -164,7 +163,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
         @Override
         public void startDocument() throws SAXException {
             // 文档开始
-            Outbills = new ArrayList<OutLibraryBill>();
+            Outbills = new ArrayList<QuitLibraryBill>();
         }
 
         @Override
@@ -176,7 +175,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
                                  Attributes attributes) throws SAXException {
             tag = localName;
             if (localName.equals("Table")) {
-                Bill = new OutLibraryBill();
+                Bill = new QuitLibraryBill();
             }
         }
 
@@ -216,7 +215,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
         }
     }
 
-    public  List<OutLibraryBill> GetSelectBills() {
+    public  List<QuitLibraryBill> GetSelectBills() {
         return this.outLibraryBills;
     }
 }
