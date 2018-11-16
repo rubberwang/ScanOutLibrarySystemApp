@@ -91,7 +91,6 @@ public class OutLibraryActivity extends BaseActivity {
         getLifecycle().addObserver(outLibraryObServer);
         SpStrList = new ArrayList<>();
         webService = WebService.getSingleton();
-        EventBus.getDefault().register(this);
         InitClick();
         GetOutLibraryBills();
         InitRecycler();
@@ -210,7 +209,6 @@ public class OutLibraryActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         public void ON_PAUSE() {
-            EventBus.getDefault().unregister(this);
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -281,12 +279,7 @@ public class OutLibraryActivity extends BaseActivity {
         protected void onPreExecute() {
         }
     }
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void messageEventBus(EventBusScanDataMsg event) {
-        ViseLog.i("EventBus = " + event.ScanDataMsg);
-
-    }
-
+  
     public List GetInputArray(InputStream stream) throws SAXException, IOException, ParserConfigurationException {
         SAXParserFactory factory = SAXParserFactory.newInstance();//创建SAX解析工厂
         javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器

@@ -124,7 +124,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
                         }
                     });
                 }
-            } catch (Exception e) {
+            } catch (Exception e) { 
                 ViseLog.d("Select适配RV数据错误" + e);
                 tools.showshort(getActivity(), "出库数据加载错误，请重新打开");
             }

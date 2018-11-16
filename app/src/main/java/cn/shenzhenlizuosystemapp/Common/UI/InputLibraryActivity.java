@@ -122,7 +122,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
     @Override
     public void initData() {
-        EventBus.getDefault().register(this);
         Intent intent = getIntent();
         FGUID = intent.getStringExtra("FGUID");
         ScanResStrList = new ArrayList<String>();
@@ -449,12 +448,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void messageEventBus(EventBusScanDataMsg event) {
-        ViseLog.i("EventBus = " + event.ScanDataMsg);
-
-    }
-
     public List GetInputArray(InputStream stream) throws SAXException, IOException, ParserConfigurationException {
         SAXParserFactory factory = SAXParserFactory.newInstance();//创建SAX解析工厂
         javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器
@@ -596,9 +589,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         if ((scanDataCollection != null) && (scanDataCollection.getResult() == ScannerResults.SUCCESS)) {
             ArrayList<ScanData> scanData = scanDataCollection.getScanData();
             for (ScanData data : scanData) {
-
                 String dataString = data.getData();
-
                 new AsyncDataUpdate().execute(dataString);
             }
         }
@@ -700,9 +691,10 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
         @Override
         protected void onPostExecute(String result) {
-            String[] StrList = result.split(",");
+            String[] StrList = result.split(","); 
             if (StrList.length > 0) {
-                if (!StrList.equals("continue")) {
+                if (!StrList[0].equals("continue")) {
+                    ViseLog.i("ScanResultVerifyTask Result 关灯");
                     IsStartRead = false;
                 }
             }

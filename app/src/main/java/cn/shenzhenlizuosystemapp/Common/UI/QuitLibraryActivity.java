@@ -581,7 +581,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                     break;
             }
             status = scannerNameExtScanner + ":" + statusExtScanner;
-            new QuitLibraryActivity.AsyncStatusUpdate().execute(status);
+            new AsyncStatusUpdate().execute(status);
         }
     }
 
@@ -593,7 +593,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
 
                 String dataString = data.getData();
 
-                new QuitLibraryActivity.AsyncDataUpdate().execute(dataString);
+                new AsyncDataUpdate().execute(dataString);
             }
         }
     }
@@ -670,7 +670,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                 ViseLog.i("ScanResultData" + String.valueOf(CheckResultList(result)));
                 if (CheckResultList(result)) {
                     ScanResStrList.add(result);
-                    QuitLibraryActivity.ScanResultVerifyTask scanResultVerifyTask = new QuitLibraryActivity.ScanResultVerifyTask();
+                    ScanResultVerifyTask scanResultVerifyTask = new ScanResultVerifyTask();
                     scanResultVerifyTask.execute(result);
                 } else {
                     ViseLog.i("存在");

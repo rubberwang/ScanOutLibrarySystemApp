@@ -50,6 +50,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ViewManager.getInstance().finishActivity(this);
     }
 
     @Override
