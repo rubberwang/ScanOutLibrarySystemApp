@@ -1,4 +1,4 @@
-package cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter;
+package cn.shenzhenlizuosystemapp.Common.SpinnerAdapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,14 +9,15 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
 import cn.shenzhenlizuosystemapp.R;
 
-public class InputAdapter extends BaseAdapter {
+public class StockAdapter extends BaseAdapter {
 
-    List<ItemData> data;
+    List<StockBean> data;
     Context context;
 
-    public InputAdapter(List<ItemData> itemData, Context context) {
+    public StockAdapter(List<StockBean> itemData, Context context) {
         this.data = itemData;
         this.context = context;
     }
@@ -40,7 +41,7 @@ public class InputAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = LayoutInflater.from(context).inflate(R.layout.input_spinner, null);
         TextView textView = view.findViewById(R.id.TV_InputSpinner);
-        textView.setText(data.get(i).getData());
+        textView.setText(data.get(i).getFName());
         return view;
     }
 }

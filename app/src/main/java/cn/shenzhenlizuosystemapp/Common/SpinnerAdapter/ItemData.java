@@ -1,4 +1,4 @@
-package cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter;
+package cn.shenzhenlizuosystemapp.Common.SpinnerAdapter;
 
 public class ItemData {
     String data;

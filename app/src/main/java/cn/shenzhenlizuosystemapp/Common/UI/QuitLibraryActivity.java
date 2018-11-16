@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -44,7 +43,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -67,14 +65,11 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.ItemData;
+import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.ItemData;
 //import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
-import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.InputAdapter;
-import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
-import cn.shenzhenlizuosystemapp.Common.Port.ZebarScanResult;
+import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.InputAdapter;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputTaskXml;
-import cn.shenzhenlizuosystemapp.Common.ZebarScan.ContinuousScan;
 import cn.shenzhenlizuosystemapp.R;
 
 public class QuitLibraryActivity extends BaseActivity implements EMDKListener, DataListener, StatusListener, ScannerConnectionListener{

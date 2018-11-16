@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -38,13 +37,9 @@ import com.symbol.emdk.barcode.StatusData;
 import com.symbol.emdk.barcode.StatusData.ScannerStates;
 import com.vise.log.ViseLog;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -62,19 +57,19 @@ import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.EventBusScanDataMsg;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.ItemData;
+import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.ItemData;
 //import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
-import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.InputAdapter;
-import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
-import cn.shenzhenlizuosystemapp.Common.Port.ZebarScanResult;
+import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.InputAdapter;
+import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.StockAdapter;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputTaskXml;
-import cn.shenzhenlizuosystemapp.Common.ZebarScan.ContinuousScan;
+import cn.shenzhenlizuosystemapp.Common.Xml.StocksCallXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.StocksXml;
 import cn.shenzhenlizuosystemapp.R;
 
 public class InputLibraryActivity extends BaseActivity implements EMDKListener, DataListener, StatusListener, ScannerConnectionListener {
@@ -84,6 +79,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private TextView TV_Time;
     private Spinner Sp_house;
     private Spinner spinnerScannerDevices;
+    private Spinner Sp_InputHouseSpace;
     private TextView TV_BusType;
     private TextView TV_Unit;
     private TextView TV_Scaning;
@@ -101,6 +97,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private List<TaskRvData> taskRvDataList;
     private List<ScannerInfo> deviceList = null;
     private List<String> ScanResStrList = null;
+    List<StockBean> stockBeans = null;
+    List<StockBean> stockCellBeans = null;
     private Tools tools;
 
     /**
@@ -114,6 +112,15 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private ProfileManager profileManager = null;
     private EMDKManager emdkManager2 = null;
     private boolean IsStartRead = false;
+
+    private int GetSpinnerPos(List<StockBean> Datas, String value) {
+        for (int i = 0; i < Datas.size(); i++) {
+            if (Datas.get(i).getFName().equals(value)) {
+                return i;
+            }
+        }
+        return 0;
+    }
 
     @Override
     protected int inflateLayout() {
@@ -129,6 +136,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         SpStrList = new ArrayList<>();
         scanResultData = new ArrayList<>();
         taskRvDataList = new ArrayList<>();
+        stockBeans = new ArrayList<>();
         EMDKResults results = EMDKManager.getEMDKManager(getApplicationContext(), this);
         if (results.statusCode != EMDKResults.STATUS_CODE.SUCCESS) {
             ViseLog.i("Scan: " + "调用失败!");//调用失败
@@ -138,8 +146,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         inputLibraryObServer = new InputLibraryObServer();
         getLifecycle().addObserver(inputLibraryObServer);
         webService = WebService.getSingleton();
-        InitClick();
         GetOutLibraryBills();
+        InitClick();
         InitRecycler();
     }
 
@@ -154,6 +162,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         RV_ScanInfoTable = $(R.id.RV_ScanInfoTable);
         TV_Scaning = $(R.id.TV_Scaning);
         spinnerScannerDevices = $(R.id.spinnerScannerDevices);
+        Sp_InputHouseSpace = $(R.id.Sp_InputHouseSpace);
     }
 
     public void InitClick() {
@@ -378,16 +387,13 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         });
     }
 
-    private void InitSp(List<QuitLibraryDetail> quitLibraryDetails) {
-        if (quitLibraryDetails.size() >= 0) {
-            for (QuitLibraryDetail quitLibraryDetail : quitLibraryDetails) {
-                ItemData itemData = new ItemData();
-                itemData.setData(quitLibraryDetail.getFStock_Name());
-                SpStrList.add(itemData);
-            }
-        }
-        InputAdapter InputAdapter = new InputAdapter(SpStrList, InputLibraryActivity.this);
-        Sp_house.setAdapter(InputAdapter);
+    private void InitSp(List<StockBean> stockBeans, String StockName) {
+        StockAdapter StockAdapter = new StockAdapter(stockBeans, InputLibraryActivity.this);
+        Sp_house.setAdapter(StockAdapter);
+        int Pos = GetSpinnerPos(stockBeans, StockName);
+        Sp_house.setSelection(Pos);
+        AsyncGetStocksCell asyncGetStocksCell = new AsyncGetStocksCell();
+        asyncGetStocksCell.execute();
     }
 
     private void GetOutLibraryBills() {
@@ -401,10 +407,13 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
         @Override
         protected List<QuitLibraryDetail> doInBackground(Integer... params) {
-            String OutBills = "";
             List<QuitLibraryDetail> outLibraryBills = new ArrayList<>();
+            stockBeans = new ArrayList<>();
+            String OutBills = "";
+            String Stocks = "";
             InputStream in_Heard = null;
             InputStream in_Body = null;
+            InputStream in_Stocks = null;
             try {
                 OutBills = webService.GetWareHouseData(ConnectStr.ConnectionToString, FGUID);
                 ViseLog.i("OutBills = " + OutBills);
@@ -412,6 +421,10 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 outLibraryBills = GetInputArray(in_Heard);
                 in_Body = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
                 taskRvDataList = InputTaskXml.getSingleton().GetInputBodyXml(in_Body);
+
+                Stocks = webService.GetStocks(ConnectStr.ConnectionToString);
+                in_Stocks = new ByteArrayInputStream(Stocks.getBytes("UTF-8"));
+                stockBeans = StocksXml.getSingleton().GetStocksXml(in_Stocks);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -430,10 +443,12 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         taskRvDataList.remove(0);
                         InitScanRecycler();
                     }
+                    if (stockBeans.size() >= 0) {
+                        InitSp(stockBeans, result.get(0).getFStock_Name());
+                    }
                     TV_DeliverGoodsNumber.setText(result.get(0).getFCode());
                     TV_BusType.setText(result.get(0).getFTransactionType_Name());
                     TV_Unit.setText(result.get(0).getFPartner_Name());
-                    InitSp(result);
                     ViseLog.i("quitLibraryDetails 赋值");
                 }
             } catch (Exception e) {
@@ -619,11 +634,9 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     }
 
     private void startScan() {
-
         if (scanner == null) {
             initScanner();
         }
-
         if (scanner != null) {
             try {
                 if (scanner.isEnabled()) {
@@ -676,6 +689,30 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         }
     }
 
+    private class AsyncGetStocksCell extends AsyncTask<String, Void, List<StockBean>> {
+
+        @Override
+        protected List<StockBean> doInBackground(String... params) {
+            List<StockBean> stockBeanList = new ArrayList<>();
+            try {
+                int pos = GetSpinnerPos(stockBeans,Sp_house.getSelectedItem().toString());
+                String StocksCell = webService.GetStocksCell(ConnectStr.ConnectionToString,stockBeans.get(pos).getFGuid());
+                InputStream inStockCell = new ByteArrayInputStream(StocksCell.getBytes("UTF-8"));
+                stockBeanList = StocksCallXml.getSingleton().GetStocksCallXml(inStockCell);
+            } catch (Exception e) {
+                ViseLog.i("AsyncGetStocksCellException = " + e.getMessage());
+            }
+            return stockBeanList;
+        }
+
+        protected void onPostExecute(List<StockBean> result) {
+            if (result.size() >= 0) {
+                StockAdapter StockAdapter = new StockAdapter(result, InputLibraryActivity.this);
+                Sp_InputHouseSpace.setAdapter(StockAdapter);
+            }
+        }
+    }
+
     private class ScanResultVerifyTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -691,7 +728,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
         @Override
         protected void onPostExecute(String result) {
-            String[] StrList = result.split(","); 
+            String[] StrList = result.split(",");
             if (StrList.length > 0) {
                 if (!StrList[0].equals("continue")) {
                     ViseLog.i("ScanResultVerifyTask Result 关灯");

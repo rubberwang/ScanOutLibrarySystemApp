@@ -1,4 +1,4 @@
-package cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter;
+package cn.shenzhenlizuosystemapp.Common.SpinnerAdapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -40,8 +40,8 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Json;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.JsonUitl;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.ItemData;
-import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
+import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.ItemData;
+import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.LoginAdapter;
 import cn.shenzhenlizuosystemapp.Common.WebBean.GetProjectResult;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -229,8 +229,7 @@ public class LoginActivity extends BaseActivity {
         }).start();
     }
 
-    private List<String> getSpinnerData() {
-        // 数据源
+    private List<String> getSpinnerData() {  // 数据源
         List<String> dataList = new ArrayList<>();
         for (String key : ProjectNameAndConnectMap.keySet()) {
             dataList.add(key);
@@ -302,6 +301,9 @@ public class LoginActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         public void ON_DESTROY() {
+            if (tools != null) {
+                tools = null;
+            }
             if (ProjectNameAndConnectMap != null) {
                 ProjectNameAndConnectMap = null;
             }
@@ -349,7 +351,7 @@ public class LoginActivity extends BaseActivity {
             try {
                 Message msg = new Message();
                 String string = ProjectNameAndConnectMap.get(SelectProjectStr);
-                String Result = httpRequest.LoginIn(User, Paw, ConnectStr.ConnectionToString);
+                String Result = httpRequest.LoginIn(User, Paw, string);
                 ViseLog.i(string);
                 Gson gson = new Gson();
                 Json student = gson.fromJson(String.valueOf(Result), Json.class);
@@ -399,6 +401,7 @@ public class LoginActivity extends BaseActivity {
                         IsNetWork = true;
                         tools.showshort(LoginActivity.this, "登录成功");
                         tools.PutStringData("Project", SelectProjectStr, sharedPreferences);
+                        ConnectStr.ConnectionToString = ProjectNameAndConnectMap.get(SelectProjectStr);
                         startActivity(new Intent(LoginActivity.this, MainTabActivity.class));
                         break;
                     }
