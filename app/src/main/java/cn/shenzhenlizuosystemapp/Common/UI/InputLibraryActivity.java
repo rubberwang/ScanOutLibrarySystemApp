@@ -387,9 +387,21 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         });
     }
 
-    private void InitSp(List<StockBean> stockBeans, String StockName) {
+    private void InitSp(final List<StockBean> stockBeans, String StockName) {
         StockAdapter StockAdapter = new StockAdapter(stockBeans, InputLibraryActivity.this);
         Sp_house.setAdapter(StockAdapter);
+        Sp_house.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                AsyncGetStocksCell asyncGetStocksCell = new AsyncGetStocksCell();
+                asyncGetStocksCell.execute(String.valueOf(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         int Pos = GetSpinnerPos(stockBeans, StockName);
         Sp_house.setSelection(Pos);
         AsyncGetStocksCell asyncGetStocksCell = new AsyncGetStocksCell();
@@ -695,8 +707,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         protected List<StockBean> doInBackground(String... params) {
             List<StockBean> stockBeanList = new ArrayList<>();
             try {
-                int pos = GetSpinnerPos(stockBeans,Sp_house.getSelectedItem().toString());
-                String StocksCell = webService.GetStocksCell(ConnectStr.ConnectionToString,stockBeans.get(pos).getFGuid());
+                String StocksCell = webService.GetStocksCell(ConnectStr.ConnectionToString,stockBeans.get(Integer.parseInt(params[0])).getFGuid());
                 InputStream inStockCell = new ByteArrayInputStream(StocksCell.getBytes("UTF-8"));
                 stockBeanList = StocksCallXml.getSingleton().GetStocksCallXml(inStockCell);
             } catch (Exception e) {

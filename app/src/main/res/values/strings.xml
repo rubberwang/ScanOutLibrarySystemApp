@@ -89,7 +89,7 @@
     <string name="DirectCommit">直接调拨</string>
     <string name="InputCommit">入库调拨</string>
     <string name="UpLoad">加载中</string>
-    <string name="Stop">暂停</string>
+    <string name="Stop">停</string>
     <string name="materID">物料编号:</string>
     <string name="nameRoot">品名规格:</string>
     <string name="shouldSend">应发数量:</string>
@@ -98,10 +98,11 @@
     <string name="statistics">基本单位:</string>
     <string name="commonunit">常用单位:</string>
     <string name="thisSend">本次发货:</string>
+    <string name="thisEnter">本次收货:</string>
     <string name="noSend">未发数量:</string>
     <string name="ScanNumber">数量:</string>
     <string name="scanData">扫描数据:</string>
-    <string name="scaning">扫码</string>
+    <string name="scaning">开始扫码</string>
     <string name="scaningdata">扫码数据：</string>
     <string name="cutoff">/</string>
     <string name="finish" translatable="false">完成</string>

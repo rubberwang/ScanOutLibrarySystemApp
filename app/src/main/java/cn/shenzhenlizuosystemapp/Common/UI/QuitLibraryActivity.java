@@ -55,7 +55,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
 import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResult_RvAdapter;
-import cn.shenzhenlizuosystemapp.Common.Adapter.ScanTask_RvAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.ScanTask_InputRvAdapter;
+//import cn.shenzhenlizuosystemapp.Common.Adapter.ScanTask_RvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
@@ -63,13 +64,14 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.EventBusScanDataMsg;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
+//import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitTaskRvData;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.ItemData;
-//import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.InputAdapter;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
-import cn.shenzhenlizuosystemapp.Common.Xml.InputTaskXml;
+//import cn.shenzhenlizuosystemapp.Common.Xml.InputTaskXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.QuitTaskXml;
 import cn.shenzhenlizuosystemapp.R;
 
 public class QuitLibraryActivity extends BaseActivity implements EMDKListener, DataListener, StatusListener, ScannerConnectionListener{
@@ -88,12 +90,12 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
 
     private WebService webService;
     private OutLibraryObServer outLibraryObServer;
+    private ScanTask_InputRvAdapter ScanTask_InputRvAdapter;
     private ScanResult_RvAdapter scanResult_rvAdapter;
-    private ScanTask_RvAdapter scanTask_rvAdapter;
     private List<ScanResultData> scanResultData;
     private List<ItemData> SpStrList;
     private List<QuitLibraryDetail> quitLibraryDetails;
-    private List<TaskRvData> taskRvDataList;
+    private List<QuitTaskRvData> taskRvDataList;
     private List<ScannerInfo> deviceList = null;
     private List<String> ScanResStrList = null;
     private Tools tools;
@@ -356,9 +358,9 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         ScanTaskL.setOrientation(ScanTaskL.VERTICAL);
         RV_ScanInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
         RV_ScanInfoTable.setLayoutManager(ScanTaskL);
-        scanTask_rvAdapter = new ScanTask_RvAdapter(this, taskRvDataList);
-        RV_ScanInfoTable.setAdapter(scanTask_rvAdapter);
-        scanTask_rvAdapter.setOnItemClickLitener(new ScanTask_RvAdapter.OnItemClickLitener() {
+        ScanTask_InputRvAdapter = new ScanTask_InputRvAdapter(this, taskRvDataList);
+        RV_ScanInfoTable.setAdapter(ScanTask_InputRvAdapter);
+        ScanTask_InputRvAdapter.setOnItemClickLitener(new ScanTask_InputRvAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
 
@@ -403,7 +405,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                 in_Heard = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
                 outLibraryBills = GetInputArray(in_Heard);
                 in_Body = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
-                taskRvDataList = InputTaskXml.getSingleton().GetInputBodyXml(in_Body);
+                taskRvDataList = QuitTaskXml.getSingleton().GetInputBodyXml(in_Body);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -698,7 +700,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
             ScanResultData scanResult = new ScanResultData();
             scanResult.setScanData(StrList[1]);
             scanResultData.add(scanResult);
-            scanResult_rvAdapter.notifyDataSetChanged();
+            ScanTask_InputRvAdapter.notifyDataSetChanged();
             ViseLog.i("ScanResultVerifyTask Result: " + result);
         }
     }

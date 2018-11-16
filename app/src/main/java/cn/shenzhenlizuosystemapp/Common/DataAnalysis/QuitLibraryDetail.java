@@ -9,7 +9,7 @@ public class QuitLibraryDetail {
     private String FTransactionType_Name;
     private String FPartner;
     private String FPartner_Name;
-    private String FDate;
+
 
     public void setFGuid(String FGuid) {
         this.FGuid = FGuid;
@@ -43,9 +43,6 @@ public class QuitLibraryDetail {
         this.FPartner_Name = FPartner_Name;
     }
 
-    public void setFDate(String FDate) {
-        this.FDate = FDate;
-    }
 
     public String getFGuid() {
         return FGuid;
@@ -79,7 +76,4 @@ public class QuitLibraryDetail {
         return FPartner_Name;
     }
 
-    public String getFDate() {
-        return FDate;
-    }
 }
