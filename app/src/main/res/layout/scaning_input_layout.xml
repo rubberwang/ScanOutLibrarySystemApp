@@ -211,42 +211,39 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/TV_scaningdata"
+                        android:id="@+id/TV_scandata"
                         style="@style/ScanBlueText"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1.5"
+                        android:layout_weight="1"
                         android:text="@string/scaningdata"
                         android:textColor="@color/Black" />
 
                     <TextView
-                        android:id="@+id/TV_AlreadyScanSum"
+                        android:id="@+id/TV_scaningdata"
                         style="@style/ScanBlueText"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.5"
+                        android:layout_weight="1"
                         android:textColor="@color/Black" />
 
                     <TextView
+                        android:id="@+id/TV_ScanNumber"
                         style="@style/ScanBlueText"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="4"
-                        android:text="@string/OutLibraryScanDetail"
+                        android:layout_weight="0.4"
+                        android:text="@string/ScanNumber"
                         android:textColor="@color/Black" />
 
-
-
-
-                    <CheckBox
-                        android:id="@+id/IsUserName_CB"
+                    <EditText
+                        android:id="@+id/ScanNumber"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.5"
-                        android:layout_margin="3dp"
-                        android:checked="true"
-                        />
-
+                        android:layout_weight="1.5"
+                        android:gravity="center_vertical"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -275,6 +272,21 @@
                     android:background="@drawable/circularbead_purple"
                     android:gravity="center"
                     android:text="@string/scaning"
+                    android:textColor="@color/White"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/TV_Stop"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1.5"
+                    android:background="@drawable/circularbead_purple"
+                    android:gravity="center"
+                    android:text="@string/Stop"
                     android:textColor="@color/White"
                     android:textSize="15sp"
                     android:textStyle="bold" />
