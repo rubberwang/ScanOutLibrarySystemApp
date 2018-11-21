@@ -94,7 +94,6 @@ public class LoginActivity extends BaseActivity {
         sharedPreferences = tools.InitSharedPreferences(this);
         DetectionHistoryUser();
         DetectionHistoryUserPwd();
-
         IsPassWord_CB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -115,7 +114,6 @@ public class LoginActivity extends BaseActivity {
                 }
             }
         });
-
         IsUserName_CB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -397,7 +395,6 @@ public class LoginActivity extends BaseActivity {
                 switch (msg.what) {
                     case 1: {
                         tools.DismissProgressDialog();
-                        CheckBoxLogic();
                         IsNetWork = true;
                         tools.showshort(LoginActivity.this, "登录成功");
                         tools.PutStringData("Project", SelectProjectStr, sharedPreferences);

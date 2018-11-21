@@ -682,7 +682,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         protected String doInBackground(String... params) {
             String Res = null;
             try {
-                Res = webService.GetBarcodeAnalyze(params[0], ConnectStr.ConnectionToString);
+                Res = webService.GetBarcodeAnalyze(params[0], ConnectStr.ConnectionToString,"");
             } catch (Exception e) {
                 ViseLog.i("ScanResultVerifyTask Exception = " + e.getMessage());
             }
