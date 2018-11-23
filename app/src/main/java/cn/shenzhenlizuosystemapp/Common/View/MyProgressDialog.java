@@ -15,9 +15,13 @@ public class MyProgressDialog extends ProgressDialog {
         super(context);
     }
 
-    public MyProgressDialog(Context context, int theme, String Msg) {
+    public MyProgressDialog(Context context, int theme) {
         super(context, theme);
+    }
+
+    public void ShowPD(String Msg) {
         this.Msg = Msg;
+        super.show();
     }
 
     @Override

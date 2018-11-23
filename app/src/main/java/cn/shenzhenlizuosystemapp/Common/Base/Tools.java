@@ -25,7 +25,6 @@ public class Tools {
     private static Toast toast;
     private static Tools mtools;
     public Tools tools;
-    private MyProgressDialog myProgressDialog;
 
     public static Tools getTools() {
         if (mtools == null) {
@@ -132,21 +131,6 @@ public class Tools {
         }
         dialogWindow.setAttributes(lp);
         dialog.show();
-    }
-
-    public void ShowProgressDialog(String Msg, Context context) {
-        if (myProgressDialog == null) {
-            synchronized (MyProgressDialog.class) {
-                if (myProgressDialog == null) {
-                    myProgressDialog = new MyProgressDialog(context, R.style.CustomDialog, Msg);
-                }
-            }
-        }
-        myProgressDialog.show();
-    }
-
-    public void DismissProgressDialog() {
-        myProgressDialog.dismiss();
     }
 
     public static float dpToPx(Context context, int dp) {

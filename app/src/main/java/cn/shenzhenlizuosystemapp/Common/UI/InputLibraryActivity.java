@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -70,6 +71,7 @@ import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.ItemData;
 //import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.InputAdapter;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.StockAdapter;
+import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.Xml.GetChildTag;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputTaskXml;
@@ -82,7 +84,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private TextView Back;
     private TextView TV_DeliverGoodsNumber;
     private TextView TV_Time;
-    private TextView TV_Stop;
     private Spinner Sp_house;
     private Spinner spinnerScannerDevices;
     private Spinner Sp_InputHouseSpace;
@@ -122,6 +123,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private String EndSpXml = "";
     private String Res = null;
     private int State = 1;
+    private MyProgressDialog myProgressDialog;
 
     private int GetSpinnerPos(List<StockBean> Datas, String value) {
         for (int i = 0; i < Datas.size(); i++) {
@@ -156,9 +158,9 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         inputLibraryObServer = new InputLibraryObServer();
         getLifecycle().addObserver(inputLibraryObServer);
         webService = WebService.getSingleton();
-        GetOutLibraryBills();
         InitClick();
         InitRecycler();
+        GetOutLibraryBills();
     }
 
     @Override
@@ -173,7 +175,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         TV_Scaning = $(R.id.TV_Scaning);
         spinnerScannerDevices = $(R.id.spinnerScannerDevices);
         Sp_InputHouseSpace = $(R.id.Sp_InputHouseSpace);
-        TV_Stop = $(R.id.TV_Stop);
+        myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
     }
 
     public void InitClick() {
@@ -200,12 +202,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             }
         });
         //停止
-        TV_Stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               stopScan();
-            }
-        });
 
         spinnerScannerDevices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -432,6 +428,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         getOutLibraryBillsAsyncTask.execute();
     }
 
+
     public class GetInputLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<QuitLibraryDetail>> {
 
         private RecyclerView recyclerView;
@@ -481,7 +478,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                     TV_Unit.setText(result.get(0).getFPartner_Name());
                     ViseLog.i("quitLibraryDetails 赋值");
                 }
-                tools.DismissProgressDialog();
+                myProgressDialog.dismiss();
             } catch (Exception e) {
                 ViseLog.d("GetInputLibraryBillsAsyncTask" + e);
             }
@@ -490,7 +487,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
         @Override
         protected void onPreExecute() {
-            tools.ShowProgressDialog("数据加载zhong...", InputLibraryActivity.this);
+            myProgressDialog.ShowPD("加载数据中...");
         }
     }
 
@@ -601,9 +598,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     }
 
     private void stopScan() {
-
         if (scanner != null) {
-
             try {
                 // Reset continuous flag
                 IsStartRead = false;
@@ -785,7 +780,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
         @Override
         protected void onPostExecute(String result) {
-            tools.DismissProgressDialog();
+            myProgressDialog.dismiss();
             String[] StrList = result.split(",");
             if (StrList.length > 0) {
                 if (!StrList[0].equals("false")) {
@@ -802,7 +797,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
         @Override
         protected void onPreExecute() {
-            tools.ShowProgressDialog("数据加载zhong...", InputLibraryActivity.this);
+            myProgressDialog.ShowPD("加载数据中....");
         }
     }
 
@@ -846,6 +841,9 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         if (deviceList != null) {
             deviceList = null;
         }
+        if (tools != null) {
+            tools = null;
+        }
     }
 
     class InputLibraryObServer implements LifecycleObserver {
@@ -859,6 +857,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
         @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
         public void ON_RESUME() {
+
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)

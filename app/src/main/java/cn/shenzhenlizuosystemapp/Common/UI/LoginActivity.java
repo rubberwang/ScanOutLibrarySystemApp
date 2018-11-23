@@ -42,6 +42,7 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.JsonUitl;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.ItemData;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.LoginAdapter;
+import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.WebBean.GetProjectResult;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -72,6 +73,7 @@ public class LoginActivity extends BaseActivity {
     private final String TAG = "MainActivity";
     private String SelectProjectStr = "";
     private List<ItemData> itemData;
+    private MyProgressDialog myProgressDialog;
 
     private int GetSpinnerPos(String value) {
         for (int i = 0; i < itemData.size(); i++) {
@@ -272,6 +274,7 @@ public class LoginActivity extends BaseActivity {
         btnLogin = (Button) findViewById(R.id.LogIn_But);
         SpinnerProjet = (Spinner) findViewById(R.id.sp);
         Img_Setting = $(R.id.Img_Setting);
+        myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
     }
 
 
@@ -318,7 +321,7 @@ public class LoginActivity extends BaseActivity {
         if (TextUtils.isEmpty(Edit_UserName.getText().toString()) && TextUtils.isEmpty(Edit_PassWord.getText().toString())) {
             tools.show(LoginActivity.this, "请输入用户名 密码");
         } else {
-            tools.ShowProgressDialog("登录中...", this);
+            myProgressDialog.ShowPD("登录中...");
             loginSyncThread = new LoginSyncThread(Edit_UserName.getText().toString(), Edit_PassWord.getText().toString());
             loginSyncThread.start();
             handler.postDelayed(new Runnable() {
@@ -394,7 +397,7 @@ public class LoginActivity extends BaseActivity {
             if (handlerMemoryActivity != null) {
                 switch (msg.what) {
                     case 1: {
-                        tools.DismissProgressDialog();
+                      myProgressDialog.dismiss();
                         IsNetWork = true;
                         tools.showshort(LoginActivity.this, "登录成功");
                         tools.PutStringData("Project", SelectProjectStr, sharedPreferences);
@@ -403,13 +406,13 @@ public class LoginActivity extends BaseActivity {
                         break;
                     }
                     case 2: {
-                        tools.DismissProgressDialog();
+                        myProgressDialog.dismiss();
                         IsNetWork = true;
                         tools.ShowDialog(LoginActivity.this, "用户名或密码错误");
                         break;
                     }
                     case 3: {
-                        tools.DismissProgressDialog();
+                        myProgressDialog.dismiss();
                         tools.ShowDialog(LoginActivity.this, "网络连接超时");
                         break;
                     }
