@@ -61,7 +61,7 @@ public class Select_CheckLibrary_Fragment extends Fragment {
         View rootView = inflater.inflate(R.layout.init_select_quitlibrary, container, false);
         RV_InitSelectFull = rootView.findViewById(R.id.RV_InitSelectFull);
         tools = new Tools();
-        webService = WebService.getSingleton();
+        webService = new WebService(this.getActivity());
         PD = new ProgressDialog(this.getActivity());
         PD.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         PD.setCancelable(false);

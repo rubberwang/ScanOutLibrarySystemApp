@@ -90,7 +90,7 @@ public class LoginActivity extends BaseActivity {
 
     public void initData() {
         tools = new Tools();
-        httpRequest = new WebService();
+        httpRequest = new WebService(this);
         logInObServer = new LogInObServer();
         getLifecycle().addObserver(logInObServer);
         sharedPreferences = tools.InitSharedPreferences(this);
@@ -186,7 +186,7 @@ public class LoginActivity extends BaseActivity {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    String result = WebService.getProject();
+                    String result = httpRequest.getProject();
                     GetProjectResult projectResult = (GetProjectResult) JsonUitl.stringToObject(result, GetProjectResult.class);
                     for (GetProjectResult.Project bean : projectResult.Projects) {
                         ProjectNameAndConnectMap.put(bean.ProjectName, bean.ConnecTionToString);

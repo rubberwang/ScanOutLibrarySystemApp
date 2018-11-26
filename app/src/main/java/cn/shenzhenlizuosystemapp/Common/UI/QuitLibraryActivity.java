@@ -161,7 +161,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         tools = Tools.getTools();
         outLibraryObServer = new OutLibraryObServer();
         getLifecycle().addObserver(outLibraryObServer);
-        webService = WebService.getSingleton();
+        //webService = WebService.getSingleton();
         GetOutLibraryBills();
         InitClick();
         InitRecycler();
@@ -180,6 +180,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         spinnerScannerDevices = $(R.id.spinnerScannerDevices);
         Sp_QuitHouseSpace = $(R.id.Sp_QuitHouseSpace);
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
+        webService = new WebService(this);
     }
 
     public void InitClick() {
