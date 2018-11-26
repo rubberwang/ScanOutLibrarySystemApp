@@ -16,7 +16,7 @@
     <string name="ExitApp">退出APP</string>
     <string name="EditIP">请输入服务器IP地址</string>
     <string name="SaveSetting">保存设置</string>
-    <string name="ServerIPInput">输入服务器IP</string>
+    <string name="ServerIPInput">后台服务器</string>
     <string name="Yes">是</string>
     <string name="No">否</string>
     <string name="MES">生产作业</string>
@@ -26,7 +26,7 @@
     <string name="PutHouse">出库作业</string>
     <string name="Commit">调拨作业</string>
     <string name="Check">盘点作业</string>
-    <string name="InputPrinterIP">输入打印机IP</string>
+    <string name="InputPrinterIP">网络打印机</string>
     <string name="PleaseInputPrinterIP">请输入打印机IP</string>
     <string name="SettingPrintPort">打印机端口号</string>
     <string name="PleaseSettingPrintPort">请输入打印机端口号</string>
@@ -103,6 +103,7 @@
     <string name="ScanNumber">数量:</string>
     <string name="scanData">扫描数据:</string>
     <string name="scaning">开始扫码</string>
+    <string name="stopScan">停止扫码</string>
     <string name="scaningdata">扫码数据：</string>
     <string name="cutoff">/</string>
     <string name="finish" translatable="false">完成</string>
