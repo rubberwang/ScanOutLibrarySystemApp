@@ -3,6 +3,16 @@ package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
 public class ScanResultData {
 
     private String ScanData;
+    private String Name;
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public String getName() {
+        return Name;
+        
+    }
 
     public String getScanData() {
         return ScanData;

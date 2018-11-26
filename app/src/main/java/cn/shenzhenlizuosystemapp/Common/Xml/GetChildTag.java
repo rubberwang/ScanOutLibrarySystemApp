@@ -67,7 +67,7 @@ public class GetChildTag {
         public void startElement(String uri, String localName, String qName,
                                  Attributes attributes) throws SAXException {
             tag = localName;
-            if (localName.equals("BarcodeLib")) {
+            if (localName.equals("Show")||localName.equals("BarcodeLib")) {
                 childTag = new ChildTag();
                 ViseLog.i("创建outbody");
             }
@@ -77,7 +77,7 @@ public class GetChildTag {
         public void endElement(String uri, String localName, String qName)
                 throws SAXException {
             // 节点结束
-            if (localName.equals("BarcodeLib")) {
+            if (localName.equals("Show")||localName.equals("BarcodeLib")) {
                 childTags.add(childTag);
                 childTag = null;
             }
@@ -91,6 +91,8 @@ public class GetChildTag {
             if (data != null && tag != null) {
                 if (tag.equals("Success")) {
                     childTag.setOneChildTag(data);
+                }else if(tag.equals("name")) {
+                    childTag.setName(data);
                 }
             }
         }

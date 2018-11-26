@@ -3,6 +3,7 @@ package cn.shenzhenlizuosystemapp.Common.UI;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -124,6 +125,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private String Res = null;
     private int State = 1;
     private MyProgressDialog myProgressDialog;
+    private Context MContect;
 
     private int GetSpinnerPos(List<StockBean> Datas, String value) {
         for (int i = 0; i < Datas.size(); i++) {
@@ -141,6 +143,11 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
     @Override
     public void initData() {
+        EMDKResults results = EMDKManager.getEMDKManager(getApplicationContext(), this);
+        if (results.statusCode != EMDKResults.STATUS_CODE.SUCCESS) {
+            ViseLog.i("Scan: " + "调用失败!");//调用失败
+            return;
+        }
         Intent intent = getIntent();
         FGUID = intent.getStringExtra("FGUID");
         ScanResStrList = new ArrayList<String>();
@@ -149,11 +156,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         scanResultData = new ArrayList<>();
         taskRvDataList = new ArrayList<>();
         stockBeans = new ArrayList<>();
-        EMDKResults results = EMDKManager.getEMDKManager(getApplicationContext(), this);
-        if (results.statusCode != EMDKResults.STATUS_CODE.SUCCESS) {
-            ViseLog.i("Scan: " + "调用失败!");//调用失败
-            return;
-        }
+        MContect = new WeakReference<>(InputLibraryActivity.this).get();
         tools = Tools.getTools();
         inputLibraryObServer = new InputLibraryObServer();
         getLifecycle().addObserver(inputLibraryObServer);
@@ -195,9 +198,11 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                     if (scanTask_rvAdapter.getselection() >= 0) {
                         IsStartRead = true;
                         startScan();
+                    } else {
+                        tools.ShowDialog(InputLibraryActivity.this, "请选择一张任务单再点击扫描");
                     }
                 } else {
-                    tools.ShowDialog(InputLibraryActivity.this, "请选择一张任务单再点击扫描");
+                    tools.show(MContect, "网络连接错误");
                 }
             }
         });
@@ -401,6 +406,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 if (scanTask_rvAdapter.getselection() == position) {
                     scanTask_rvAdapter.setSelection(-1);
                     scanTask_rvAdapter.notifyDataSetChanged();//未选中
+                    stopScan();
+                    IsStartRead = false;
                 } else {
                     scanTask_rvAdapter.setSelection(position);
                     scanTask_rvAdapter.notifyDataSetChanged();//选中
@@ -415,12 +422,24 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     }
 
     private void InitSp(List<StockBean> stockBeans, String StockName) {
-        StockAdapter StockAdapter = new StockAdapter(stockBeans, InputLibraryActivity.this);
-        Sp_house.setAdapter(StockAdapter);
-        int Pos = GetSpinnerPos(stockBeans, StockName);
-        Sp_house.setSelection(Pos);
-        AsyncGetStocksCell asyncGetStocksCell = new AsyncGetStocksCell();
-        asyncGetStocksCell.execute();
+        if (stockBeans.size() >= 0) {
+            StockAdapter StockAdapter = new StockAdapter(stockBeans, InputLibraryActivity.this);
+            Sp_house.setAdapter(StockAdapter);
+            int Pos = GetSpinnerPos(stockBeans, StockName);
+            Sp_house.setSelection(Pos);
+            Sp_house.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    AsyncGetStocksCell asyncGetStocksCell = new AsyncGetStocksCell(i);
+                    asyncGetStocksCell.execute();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+        }
     }
 
     private void GetOutLibraryBills() {
@@ -732,11 +751,16 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
     private class AsyncGetStocksCell extends AsyncTask<String, Void, List<StockBean>> {
 
+        private int pos = 0;
+
+        AsyncGetStocksCell(int pos) {
+            this.pos = pos;
+        }
+
         @Override
         protected List<StockBean> doInBackground(String... params) {
             List<StockBean> stockBeanList = new ArrayList<>();
             try {
-                int pos = GetSpinnerPos(stockBeans, Sp_house.getSelectedItem().toString());
                 String StocksCell = webService.GetStocksCell(ConnectStr.ConnectionToString, stockBeans.get(pos).getFGuid());
                 InputStream inStockCell = new ByteArrayInputStream(StocksCell.getBytes("UTF-8"));
                 stockBeanList = StocksCallXml.getSingleton().GetStocksCallXml(inStockCell);
@@ -774,8 +798,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             } catch (Exception e) {
                 ViseLog.i("ScanResultVerifyTask Exception = " + e.getMessage());
             }
-            ViseLog.i("ChildTagList[0] = " + childTagList.get(0).getOneChildTag());
-            return childTagList.get(0).getOneChildTag() + "," + params[0];
+            ViseLog.i("ChildTagList[0] = " + childTagList.get(childTagList.size() - 2).getName());
+            return childTagList.get(1).getOneChildTag() + "," + params[0] + "," + childTagList.get(0).getName();
         }
 
         @Override
@@ -790,6 +814,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             }
             ScanResultData scanResult = new ScanResultData();
             scanResult.setScanData(StrList[1]);
+            scanResult.setName(StrList[2]);
             scanResultData.add(scanResult);
             scanResult_rvAdapter.notifyDataSetChanged();
             ViseLog.i("ScanResultVerifyTask Result: " + result);
@@ -862,7 +887,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
         @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         public void ON_PAUSE() {
-
+            tools.ToastCancel();
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -896,7 +921,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         ViseLog.i("Xml = " + Xml);
                         StartSpXml = Xml.substring(0, Xml.indexOf("<Show>"));
                         EndSpXml = Xml.substring(Xml.indexOf("<BarcodeLib>"), Xml.length());
-                        tools.show(InputLibraryActivity.this, "选取任务成功");
+                        tools.show(MContect, "选取任务成功");
                         break;
                     }
                     case 2: {

@@ -4,6 +4,15 @@ public class ChildTag {
     
     private String OneChildTag;
     private String TwoChildTag;
+    private String Name;
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
 
     public void setOneChildTag(String oneChildTag) {
         OneChildTag = oneChildTag;

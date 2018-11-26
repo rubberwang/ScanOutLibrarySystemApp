@@ -100,6 +100,10 @@ public class Tools {
         toast.setView(view);
         toast.show();
     }
+    
+    public void ToastCancel(){
+        toast.cancel();
+    }
 
     public void ShowDialog(Context context, String msg) {
         View view = LayoutInflater.from(context).inflate(R.layout.quitwarning_layout, null, false);
