@@ -70,6 +70,12 @@ public class Quit_NotificationActivity extends BaseActivity {
                 ViseLog.i("搜索内容"+ET_CastAbout.getText().toString());
             }
         });
+        Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewManager.getInstance().finishActivity(Quit_NotificationActivity.this);
+            }
+        });
     }
 
     private void InitFragment(){

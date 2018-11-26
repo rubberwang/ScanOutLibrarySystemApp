@@ -267,20 +267,6 @@
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/TV_Stop"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="1.5"
-                    android:background="@drawable/circularbead_purple"
-                    android:gravity="center"
-                    android:text="@string/Stop"
-                    android:textColor="@color/White"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/TV_Sumbit"

@@ -66,6 +66,13 @@ public class ScanTask_QuitRvAdapter extends RecyclerView.Adapter {
             ((ViewHoders) holder).TV_thisSend.setText(ThisSend[0]);
             ((ViewHoders) holder).TV_shouldSend.setText(ShouldSend[0]);
             ((ViewHoders) holder).TV_noSend.setText(NoSend + "");
+
+            if (selected == position) {
+                holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.Thin_Bule));
+            } else {
+                holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.BarTextColor));
+            }
+
             if (mOnItemClickLitener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -114,7 +121,6 @@ public class ScanTask_QuitRvAdapter extends RecyclerView.Adapter {
     public void setSelection(int position) {
         this.selected = position;
     }
-
 
     public int getselection() {
         return selected;
