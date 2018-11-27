@@ -160,7 +160,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         tools = Tools.getTools();
         inputLibraryObServer = new InputLibraryObServer();
         getLifecycle().addObserver(inputLibraryObServer);
-        webService = WebService.getSingleton();
         InitClick();
         InitRecycler();
         GetOutLibraryBills();
@@ -179,6 +178,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         spinnerScannerDevices = $(R.id.spinnerScannerDevices);
         Sp_InputHouseSpace = $(R.id.Sp_InputHouseSpace);
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
+        webService = new WebService(this);
     }
 
     public void InitClick() {
