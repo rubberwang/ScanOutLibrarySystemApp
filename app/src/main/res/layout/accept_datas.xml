@@ -132,7 +132,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/shouldSend"
+            android:text="@string/shouldReceive"
             android:textSize="12sp" />
 
         <TextView
@@ -150,7 +150,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/alreadySend"
+            android:text="@string/alreadyReceive"
             android:textSize="12sp" />
 
         <TextView
@@ -200,7 +200,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/noSend"
+            android:text="@string/noReceive"
             android:textSize="12sp" />
 
         <TextView

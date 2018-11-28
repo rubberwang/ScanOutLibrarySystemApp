@@ -93,13 +93,16 @@
     <string name="materID">物料编号:</string>
     <string name="nameRoot">品名规格:</string>
     <string name="shouldSend">应发数量:</string>
+    <string name="shouldReceive">应收数量:</string>
     <string name="HouseSpace">仓位:</string>
     <string name="alreadySend">已发数量:</string>
+    <string name="alreadyReceive">已收数量:</string>
     <string name="statistics">基本单位:</string>
     <string name="commonunit">常用单位:</string>
     <string name="thisSend">本次发货:</string>
     <string name="thisEnter">本次收货:</string>
     <string name="noSend">未发数量:</string>
+    <string name="noReceive">未收数量:</string>
     <string name="ScanNumber">数量:</string>
     <string name="scanData">扫描数据:</string>
     <string name="scaning">开始扫码</string>
