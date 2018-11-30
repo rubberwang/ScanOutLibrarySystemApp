@@ -2,25 +2,37 @@ package cn.shenzhenlizuosystemapp.Common.HttpConnect;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
+
+import com.vise.log.ViseLog;
 
 import org.ksoap2.SoapEnvelope;
-import com.vise.log.ViseLog;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
-import android.text.TextUtils;
-import cn.shenzhenlizuosystemapp.Common.UI.SettingActivity;
-import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 
 import java.io.IOException;
+
+import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 
 public class WebService {
     private SharedPreferences sharedPreferences;
     private static  String  LastNameSpaceAddress ="http://www.lzbarcode.com/";
     private String urlAddress;
+    private static WebService webService;
 
-
+    public static WebService getSingleton(Context context) {
+        if (webService == null) {
+            synchronized (WebService.class) {
+                if (webService == null) {
+                    webService = new WebService(context);
+                }
+            }
+        }
+        return webService;
+    }
+    
 //"http://192.168.1.6:809/DBS/WebService/WebAPI.asmx";
     public WebService(Context context) {
         Tools tools = new Tools();
@@ -185,10 +197,11 @@ public class WebService {
         return Result;
     }
 
-    public String GetBarcodeAnalyze(String MaterielID,String Data,String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
-        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "BarcodeAnalyze ");
+    public String GetBarcodeAnalyze(String MaterielID,String Data,String ConnectionToString,String UserName) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "BarcodeAnalyze");
         
         soapObject.addProperty("MaterielID", MaterielID);
+        soapObject.addProperty("UserName", UserName);
         soapObject.addProperty("Data", Data);
         soapObject.addProperty("ConnectionToString", ConnectionToString);
         
@@ -198,7 +211,7 @@ public class WebService {
         envelope.dotNet = true;
         envelope.setOutputSoapObject(soapObject);
         HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
-        httpTransportSE.call("http://www.lzbarcode.com/BarcodeAnalyze ", envelope);
+        httpTransportSE.call("http://www.lzbarcode.com/BarcodeAnalyze", envelope);
         Object object = (Object) envelope.getResponse();
         String Result = object.toString();
         return Result;
@@ -232,6 +245,28 @@ public class WebService {
         envelope.setOutputSoapObject(soapObject);
         HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
         httpTransportSE.call("http://www.lzbarcode.com/GetStocksCell", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
+
+    public String CreateInStockBill(String ConnectionToString,String inStockNoticeID,String UserName,String StockName,String StockCellName,String Products) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "CreateInStockBill");
+        
+        soapObject.addProperty("ConnectionToString", ConnectionToString);
+        soapObject.addProperty("inStockNoticeID", inStockNoticeID);
+        soapObject.addProperty("UserName", UserName);
+        soapObject.addProperty("StockName", StockName);
+        soapObject.addProperty("StockCellName", StockCellName);
+        soapObject.addProperty("Products", Products);
+        
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/CreateInStockBill", envelope);
         Object object = (Object) envelope.getResponse();
         String Result = object.toString();
         return Result;

@@ -401,6 +401,7 @@ public class LoginActivity extends BaseActivity {
                         IsNetWork = true;
                         tools.showshort(LoginActivity.this, "登录成功");
                         tools.PutStringData("Project", SelectProjectStr, sharedPreferences);
+                        ConnectStr.USERNAME = Edit_UserName.getText().toString();
                         ConnectStr.ConnectionToString = ProjectNameAndConnectMap.get(SelectProjectStr);
                         startActivity(new Intent(LoginActivity.this, MainTabActivity.class));
                         break;

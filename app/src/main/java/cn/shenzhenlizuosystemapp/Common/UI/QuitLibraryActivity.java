@@ -788,16 +788,16 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
             String EndStr = null;
             List<ChildTag> childTagList = new ArrayList<>();
             try {
-                String MiddleStr = String.format("<Show><name></name><value >%s</value></Show>", params[0]);
-                if (State == 1) {
-                    EndStr = StartSpXml + MiddleStr + EndSpXml;
-                    State = 2;
-                } else {
-                    EndStr = addSpace(Res, MiddleStr);
-                }
-                Res = webService.GetBarcodeAnalyze("12B1FFE4-9800-48BB-ACD9-87C99D39C976", EndStr, ConnectStr.ConnectionToString);
-                InputStream in_Str = new ByteArrayInputStream(Res.getBytes("UTF-8"));
-                childTagList = GetChildTag.getSingleton().getChildTagXml(in_Str);
+//                String MiddleStr = String.format("<Show><name></name><value >%s</value></Show>", params[0]);
+//                if (State == 1) {
+//                    EndStr = StartSpXml + MiddleStr + EndSpXml;
+//                    State = 2;
+//                } else {
+//                    EndStr = addSpace(Res, MiddleStr);
+//                }
+//                Res = webService.GetBarcodeAnalyze("12B1FFE4-9800-48BB-ACD9-87C99D39C976", EndStr, ConnectStr.ConnectionToString);
+//                InputStream in_Str = new ByteArrayInputStream(Res.getBytes("UTF-8"));
+//                childTagList = GetChildTag.getSingleton().getChildTagXml(in_Str);
             } catch (Exception e) {
                 ViseLog.i("ScanResultVerifyTask Exception = " + e.getMessage());
             }
@@ -950,15 +950,15 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
             //执行耗时操作
             Message msg = new Message();
             try {
-                String Result = webService.GetBarcodeAnalyze("12B1FFE4-9800-48BB-ACD9-87C99D39C976", "", ConnectStr.ConnectionToString);
-                if (!TextUtils.isEmpty(Result)) {
-                    msg.what = 1;
-                    msg.getData().putString("Xml", Result);
-                    handler.sendMessage(msg);
-                } else {
-                    msg.what = 2;
-                    handler.sendMessage(msg);
-                }
+//                String Result = webService.GetBarcodeAnalyze("12B1FFE4-9800-48BB-ACD9-87C99D39C976", "", ConnectStr.ConnectionToString);
+//                if (!TextUtils.isEmpty(Result)) {
+//                    msg.what = 1;
+//                    msg.getData().putString("Xml", Result);
+//                    handler.sendMessage(msg);
+//                } else {
+//                    msg.what = 2;
+//                    handler.sendMessage(msg);
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
                 ViseLog.d("GetNullXmlSyncThread Exception" + e);

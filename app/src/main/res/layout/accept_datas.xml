@@ -31,8 +31,6 @@
             android:gravity="center_vertical"
             android:textSize="13sp" />
 
-
-
     </LinearLayout>
 
 
@@ -212,7 +210,6 @@
             android:gravity="center_vertical"
 
             android:textSize="13sp" />
-
 
 
     </LinearLayout>
