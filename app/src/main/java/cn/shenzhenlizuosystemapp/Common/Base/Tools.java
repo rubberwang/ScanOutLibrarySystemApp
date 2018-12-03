@@ -24,6 +24,7 @@ public class Tools {
     private static Toast toast;
     private static Tools mtools;
     private static Dialog dialog = null;
+    private boolean IsShowDialog = false;
 
     public static Tools getTools() {
         if (mtools == null) {
@@ -105,35 +106,39 @@ public class Tools {
     }
 
     public void ShowDialog(Context context, String msg) {
-        View view = LayoutInflater.from(context).inflate(R.layout.quitwarning_layout, null, false);
-        final Dialog dialog = new Dialog(context);
-        dialog.setContentView(view);
+        if (!IsShowDialog){
+            View view = LayoutInflater.from(context).inflate(R.layout.quitwarning_layout, null, false);
+            final Dialog dialog = new Dialog(context);
+            dialog.setContentView(view);
 
-        TextView Tx_Ensure = view.findViewById(R.id.Tx_Ensure);
-        TextView Tx_Msg = view.findViewById(R.id.tv_message_toast);
-        Tx_Msg.setText(msg);
-
-        Tx_Ensure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
+            TextView Tx_Ensure = view.findViewById(R.id.Tx_Ensure);
+            TextView Tx_Msg = view.findViewById(R.id.tv_message_toast);
+            Tx_Msg.setText(msg);
+            Tx_Ensure.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IsShowDialog = false;
+                    dialog.dismiss();
+                }
+            });
+            Window dialogWindow = dialog.getWindow();
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            DisplayMetrics dm = context.getResources().getDisplayMetrics();
+            int screenWidth = dm.widthPixels;
+            int screenHeight = dm.heightPixels;
+            ViseLog.i("屏幕宽高" + screenWidth + "  " + screenHeight);
+            if (screenWidth > 900 && screenHeight > 1600) {
+                lp.width = 900; // 宽度
+                lp.height = 600; // 高度
+            } else {
+                lp.width = 520; // 宽度
+                lp.height = 400; // 高度
             }
-        });
-        Window dialogWindow = dialog.getWindow();
-        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        DisplayMetrics dm = context.getResources().getDisplayMetrics();
-        int screenWidth = dm.widthPixels;
-        int screenHeight = dm.heightPixels;
-        ViseLog.i("屏幕宽高" + screenWidth + "  " + screenHeight);
-        if (screenWidth > 900 && screenHeight > 1600) {
-            lp.width = 900; // 宽度
-            lp.height = 600; // 高度
-        } else {
-            lp.width = 520; // 宽度
-            lp.height = 400; // 高度
+            dialogWindow.setAttributes(lp);
+            dialog.setCancelable(false);
+            dialog.show();
+            IsShowDialog = true;
         }
-        dialogWindow.setAttributes(lp);
-        dialog.show();
     }
 
     public static float dpToPx(Context context, int dp) {
@@ -169,6 +174,7 @@ public class Tools {
             lp.height = 400; // 高度
         }
         dialogWindow.setAttributes(lp);
+        dialog.setCancelable(false);
         dialog.show();
     }
 

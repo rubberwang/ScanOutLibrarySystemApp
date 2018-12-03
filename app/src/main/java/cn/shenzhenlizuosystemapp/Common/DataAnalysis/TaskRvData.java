@@ -11,7 +11,17 @@ public class TaskRvData {
     private String TV_thisSend;
     private String TV_shouldSend;
     private String TV_noSend;
-    
+    private String FMaterial;
+
+    public void setFMaterial(String FMaterial) {
+        this.FMaterial = FMaterial;
+    }
+
+    public String getFMaterial() {
+        return FMaterial;
+        
+    }
+
     public void setFGUID(String FGUID) {
         this.FGUID = FGUID;
     }

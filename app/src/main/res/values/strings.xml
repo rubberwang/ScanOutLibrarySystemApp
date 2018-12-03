@@ -110,4 +110,5 @@
     <string name="scaningdata">扫码数据：</string>
     <string name="cutoff">/</string>
     <string name="finish" translatable="false">完成</string>
+    <string name="Save">保存</string>
 </resources>

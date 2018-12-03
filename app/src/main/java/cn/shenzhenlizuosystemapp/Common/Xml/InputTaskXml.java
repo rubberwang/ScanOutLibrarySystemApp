@@ -109,6 +109,8 @@ public class InputTaskXml {
                     outbody.setTV_commonunit(data);
                 }else if (tag.equals("FBaseUnit_Name")) {//基本单位
                     outbody.setTV_statistics(data);
+                } else if (tag.equals("FMaterial")) {//物料编号
+                    outbody.setFMaterial(data);
                 }
             }
 

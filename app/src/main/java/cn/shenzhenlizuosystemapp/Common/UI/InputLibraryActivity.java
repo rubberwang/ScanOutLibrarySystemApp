@@ -99,6 +99,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private TextView TV_Scaning;
     private TextView TV_Cancel;
     private TextView TV_Sumbit;
+    private TextView TV_Save;
     private String FGUID = "";
     private String HeardID = "";
     private RecyclerView RV_GetInfoTable;
@@ -142,6 +143,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private boolean IsScaning = false;
     private boolean IsCatch = true;
     private boolean IsClean = false;
+    private boolean IsScanFinish = false;
     private int RV_ScanInfoTableIndex = 0;
 
     private int GetSpinnerPos(List<StockBean> Datas, String value) {
@@ -201,6 +203,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         TV_Cancel = $(R.id.TV_Cancel);
         TV_Sumbit = $(R.id.TV_Sumbit);
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
+        TV_Save = $(R.id.TV_Save);
     }
 
     public void InitClick() {
@@ -221,7 +224,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         if (IsScaning) {
                             //停止扫描
                             IsScaning = false;
-                            TV_Scaning.setText(R.string.scaning);
                             ShowCancelDialog(MContect, "是否确定取消本次扫描");
                         } else {
                             IsStartRead = true;
@@ -235,6 +237,13 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 } else {
                     tools.show(MContect, "网络连接错误");
                 }
+            }
+        });
+
+        TV_Save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SaveSNSum();
             }
         });
 
@@ -866,8 +875,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 } else {
                     EndStr = addSpace(Res, MiddleStr);
                 }
-                ViseLog.i("taskRvDataList.get(RV_ScanInfoTableIndex).getTV_materID() = " + taskRvDataList.get(RV_ScanInfoTableIndex).getFGUID());
-                Res = webService.GetBarcodeAnalyze(taskRvDataList.get(RV_ScanInfoTableIndex).getFGUID(), EndStr, ConnectStr.ConnectionToString, ConnectStr.USERNAME);
+                ViseLog.i("taskRvDataList.get(RV_ScanInfoTableIndex).getTV_materID() = " + taskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial());
+                Res = webService.GetBarcodeAnalyze(taskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(), EndStr, ConnectStr.ConnectionToString, ConnectStr.USERNAME);
                 if (TextUtils.isEmpty(Res)) {
                     ViseLog.i("res为空" + Res);
                     return "";
@@ -878,6 +887,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 Log.i("huangmin", "AsyncDataSuccess = " + Res);
                 return childTagList.get(childTagList.size() - 1).getOneChildTag() + "," + params[0] + "," + childTagList.get(0).getName();
             } catch (Exception e) {
+                ViseLog.i("ScanResultVerifyTask Exception = " + e);
                 return "";
             }
         }
@@ -893,7 +903,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         Log.i("huangmin", "货物上传成功");
                         IsCatch = true;
                         GetNullXml(RV_ScanInfoTableIndex);
-                        SaveSNSum();
+
                         Res = "";
                         State = 1;
                     } else {
@@ -1025,7 +1035,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         ViseLog.i("Xml = " + Xml);
                         StartSpXml = Xml.substring(0, Xml.indexOf("<Show>"));
                         EndSpXml = Xml.substring(Xml.indexOf("<BarcodeLib>"), Xml.length());
-                        tools.show(MContect, "获取模版");
+//                        tools.show(MContect, "获取模版");
                         break;
                     }
                     case 2: {
@@ -1091,7 +1101,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             //执行耗时操作
             Message msg = new Message();
             try {
-                String Result = webService.GetBarcodeAnalyze(taskRvDataList.get(RV_ScanInfoTableIndex).getTV_materID(), "", ConnectStr.ConnectionToString, ConnectStr.USERNAME);
+                String Result = webService.GetBarcodeAnalyze(taskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(), "", ConnectStr.ConnectionToString, ConnectStr.USERNAME);
                 if (!TextUtils.isEmpty(Result)) {
                     msg.what = 1;
                     msg.getData().putString("Xml", Result);
@@ -1177,6 +1187,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 ViseLog.i("扫描完一个物料");
                 InputStream in_Str = null;
                 in_Str = new ByteArrayInputStream(Res.getBytes("UTF-8"));
+                ViseLog.i("SaveSNSum = " + Res);
                 List<InputSubmitDataBean> inputSubmitDataBeanList = GetSnNumberXml.getSingleton().ReadPullXML(in_Str);
                 InputSubmitDataBean InputBean = new InputSubmitDataBean();
                 InputBean.setSn(inputSubmitDataBeanList.get(0).getSn());
@@ -1200,6 +1211,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     }
 
     private void StopScanUpdata() {
+        TV_Scaning.setText(R.string.scaning);
         stopScan();
         scanResultData.clear();
         ScanResStrList.clear();
@@ -1225,7 +1237,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             //执行耗时操作
             Message msg = new Message();
             try {
-                String DetailedListXml = GetSnNumberXml.getSingleton().CreateInputXmlStr(OverallSituationList, MaterialIDList,BodyIdList);
+                String DetailedListXml = GetSnNumberXml.getSingleton().CreateInputXmlStr(OverallSituationList, MaterialIDList, BodyIdList);
                 ViseLog.i("DetailedListXml = " + DetailedListXml + " Sp_house.getSelectedItem().toString() = " + stockBeans.get(SpHouseIndex).getFName()
                         + "Sp_InputHouseSpace.getSelectedItem().toString() = " + stockBeanList.get(SpInputHouseSpaceIndex).getFName());
 
