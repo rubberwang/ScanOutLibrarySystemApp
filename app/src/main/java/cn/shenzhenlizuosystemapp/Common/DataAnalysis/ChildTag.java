@@ -1,10 +1,19 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
 
 public class ChildTag {
-    
+
     private String OneChildTag;
     private String TwoChildTag;
     private String Name;
+    private String Qty;
+
+    public String getQty() {
+        return Qty;
+    }
+
+    public void setQty(String qty) {
+        Qty = qty;
+    }
 
     public String getName() {
         return Name;

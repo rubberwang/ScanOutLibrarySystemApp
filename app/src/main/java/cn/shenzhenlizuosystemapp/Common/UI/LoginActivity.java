@@ -294,6 +294,7 @@ public class LoginActivity extends BaseActivity {
         @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         public void ON_PAUSE() {
             ThreadStop();
+            ViewManager.getInstance().finishActivity(LoginActivity.this);
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)

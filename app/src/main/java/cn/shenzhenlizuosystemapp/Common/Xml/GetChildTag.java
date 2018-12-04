@@ -93,6 +93,8 @@ public class GetChildTag {
                     childTag.setOneChildTag(data);
                 }else if(tag.equals("name")) {
                     childTag.setName(data);
+                } else if(tag.equals("FQty")) {
+                    childTag.setQty(data);
                 }
             }
         }

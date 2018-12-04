@@ -20,6 +20,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -102,6 +103,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private TextView TV_Save;
     private String FGUID = "";
     private String HeardID = "";
+    private EditText Et_ScanNumber;
     private RecyclerView RV_GetInfoTable;
     private RecyclerView RV_ScanInfoTable;
 
@@ -144,6 +146,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private boolean IsCatch = true;
     private boolean IsClean = false;
     private boolean IsScanFinish = false;
+    private boolean IsNetWork = false;
+    private boolean IsEditNumber = false;
     private int RV_ScanInfoTableIndex = 0;
 
     private int GetSpinnerPos(List<StockBean> Datas, String value) {
@@ -204,9 +208,13 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         TV_Sumbit = $(R.id.TV_Sumbit);
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
         TV_Save = $(R.id.TV_Save);
+        Et_ScanNumber = $(R.id.Et_ScanNumber);
     }
 
     public void InitClick() {
+        Et_ScanNumber.setFocusable(false);
+        Et_ScanNumber.setFocusableInTouchMode(false);
+
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
 
@@ -222,9 +230,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 if (scanTask_rvAdapter != null) {
                     if (scanTask_rvAdapter.getselection() >= 0) {
                         if (IsScaning) {
-                            //停止扫描
-                            IsScaning = false;
-                            ShowCancelDialog(MContect, "是否确定取消本次扫描");
+                            ShowCancelDialog(MContect, "是否确定取消本次扫描");//停止扫描
                         } else {
                             IsStartRead = true;
                             IsScaning = true;
@@ -243,7 +249,25 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         TV_Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SaveSNSum();
+                if (IsEditNumber) {
+                    if (TextUtils.isEmpty(Et_ScanNumber.getText().toString())){
+                        tools.ShowDialog(MContect,"请输入数量在提交");
+                    }else {
+                        IsEditNumber = false;
+                        SaveSNSum();
+                        Res = "";
+                        GetNullXml(RV_ScanInfoTableIndex);
+                        IsScaning = false;
+                        stopScan();
+                    }
+                }else {
+                    IsEditNumber = false;
+                    SaveSNSum();
+                    Res = "";
+                    GetNullXml(RV_ScanInfoTableIndex);
+                    IsScaning = false;
+                    stopScan();
+                }
             }
         });
 
@@ -687,6 +711,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     }
 
     private void stopScan() {
+        IsScaning = false;
+        TV_Scaning.setText(R.string.scaning);
         if (scanner != null) {
             try {
                 // Reset continuous flag
@@ -806,13 +832,17 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         protected void onPostExecute(String result) {
             if (result != null) {
                 ViseLog.i("ScanResultData" + String.valueOf(CheckResultList(result)));
-                if (CheckResultList(result) && IsCatch) {
-                    IsCatch = false;
-                    ScanResStrList.add(result);
-                    ScanResultVerifyTask scanResultVerifyTask = new ScanResultVerifyTask();
-                    scanResultVerifyTask.execute(result);
+                if (IsScanFinish) {
+                    tools.ShowDialog(MContect, "已扫描完，请点击提交在接着扫描");
                 } else {
-                    ViseLog.i("没进入上传到服务器验证");
+                    if (CheckResultList(result) && IsCatch) {
+                        IsCatch = false;
+                        ScanResStrList.add(result);
+                        ScanResultVerifyTask scanResultVerifyTask = new ScanResultVerifyTask();
+                        scanResultVerifyTask.execute(result);
+                    } else {
+                        ViseLog.i("没进入上传到服务器验证");
+                    }
                 }
             } else {
                 ViseLog.i("ScanResult = NUll");
@@ -885,7 +915,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 childTagList = GetChildTag.getSingleton().getChildTagXml(in_Str);
                 in_Str.close();
                 Log.i("huangmin", "AsyncDataSuccess = " + Res);
-                return childTagList.get(childTagList.size() - 1).getOneChildTag() + "," + params[0] + "," + childTagList.get(0).getName();
+                return childTagList.get(childTagList.size() - 1).getOneChildTag() + "," + params[0] + "," + childTagList.get(0).getName() + "," +
+                        childTagList.get(childTagList.size() - 1).getQty();
             } catch (Exception e) {
                 ViseLog.i("ScanResultVerifyTask Exception = " + e);
                 return "";
@@ -900,18 +931,23 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 Log.i("huangmin", "result = " + result);
                 if (StrList.length > 0) {
                     if (StrList[0].equals("true")) {
-                        Log.i("huangmin", "货物上传成功");
-                        IsCatch = true;
-                        GetNullXml(RV_ScanInfoTableIndex);
-
-                        Res = "";
-                        State = 1;
-                    } else {
-                        if (State == 1) {
-                            State = 2;
-                            MaterialIDList.add(taskRvDataList.get(RV_ScanInfoTableIndex).getTV_materID());
-                            BodyIdList.add(taskRvDataList.get(scanTask_rvAdapter.getselection()).getFGUID());
+                        Log.i("StrList[0] = ", "true");
+                        if (StrList[3].equals("0")) {
+                            IsEditNumber = true;
+                            Et_ScanNumber.setFocusableInTouchMode(true);
+                            Et_ScanNumber.setFocusable(true);
+                            Et_ScanNumber.requestFocus();
                         }
+                        IsCatch = true;
+                        IsScanFinish = true;
+                        State = 1;
+                        ScanResultData scanResult = new ScanResultData();
+                        scanResult.setScanData(StrList[1]);
+                        scanResult.setName(StrList[2]);
+                        scanResultData.add(scanResult);
+                        scanResult_rvAdapter.notifyDataSetChanged();
+                        IsCatch = true;
+                    } else {
                         ScanResultData scanResult = new ScanResultData();
                         scanResult.setScanData(StrList[1]);
                         scanResult.setName(StrList[2]);
@@ -1047,6 +1083,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         break;
                     }
                     case 4: {
+                        IsNetWork = true;
                         myProgressDialog.dismiss();
                         tools.ShowOnClickDialog(MContect, "提交成功", new View.OnClickListener() {
                             @Override
@@ -1062,6 +1099,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         break;
                     }
                     case 5: {
+                        IsNetWork = true;
                         myProgressDialog.dismiss();
                         tools.ShowOnClickDialog(MContect, "提交数据有错误", new View.OnClickListener() {
                             @Override
@@ -1080,6 +1118,10 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         tools.ShowDialog(MContect, "没有这个物料规则请选择其它物料规则");
                         scanTask_rvAdapter.setSelection(-1);
                         scanResult_rvAdapter.notifyDataSetChanged();
+                    }
+                    case 7: {
+                        myProgressDialog.dismiss();
+                        tools.ShowDialog(MContect, "网络连接超时");
                     }
                 }
             } else {
@@ -1186,23 +1228,37 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             if (!TextUtils.isEmpty(Res) && Res.length() > 0) {
                 ViseLog.i("扫描完一个物料");
                 InputStream in_Str = null;
+                int Number = 0;
                 in_Str = new ByteArrayInputStream(Res.getBytes("UTF-8"));
                 ViseLog.i("SaveSNSum = " + Res);
                 List<InputSubmitDataBean> inputSubmitDataBeanList = GetSnNumberXml.getSingleton().ReadPullXML(in_Str);
+                if (inputSubmitDataBeanList.get(0).getNumber().equals("0")) {
+                    Number = Integer.parseInt(Et_ScanNumber.getText().toString());
+                } else {
+                    Number = Integer.parseInt(inputSubmitDataBeanList.get(0).getNumber());
+                }
+                MaterialIDList.add(taskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial());
+                BodyIdList.add(taskRvDataList.get(scanTask_rvAdapter.getselection()).getFGUID());
                 InputSubmitDataBean InputBean = new InputSubmitDataBean();
                 InputBean.setSn(inputSubmitDataBeanList.get(0).getSn());
-                InputBean.setNumber(inputSubmitDataBeanList.get(0).getNumber());
+                InputBean.setNumber(Number + "");
                 OverallSituationList.add(InputBean);
                 int ThisSendSum = Integer.parseInt(taskRvDataList.get(scanTask_rvAdapter.getselection()).getTV_thisSend().split("\\.")[0]);
                 ViseLog.i("ThisSendSum = " + ThisSendSum);
-                taskRvDataList.get(scanTask_rvAdapter.getselection()).setTV_thisSend(String.valueOf(ThisSendSum + Integer.parseInt(inputSubmitDataBeanList.get(0).getNumber())));
+                taskRvDataList.get(scanTask_rvAdapter.getselection()).setTV_thisSend(String.valueOf(ThisSendSum + Number));
                 scanTask_rvAdapter.notifyDataSetChanged();
                 scanResultData.clear();
                 ScanResStrList.clear();
                 scanResult_rvAdapter.notifyDataSetChanged();
                 IsClean = true;
+                IsScanFinish = false;
                 ViseLog.i("inputSubmitDataBeanList Sn= " + inputSubmitDataBeanList.get(0).getSn() + "Number = " + inputSubmitDataBeanList.get(0).getNumber());
                 in_Str.close();
+                Et_ScanNumber.setText("");
+                scanTask_rvAdapter.setSelection(-1);
+                scanResult_rvAdapter.notifyDataSetChanged();
+            } else {
+                tools.ShowDialog(MContect, "都还没开始扫描");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1211,7 +1267,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     }
 
     private void StopScanUpdata() {
-        TV_Scaning.setText(R.string.scaning);
         stopScan();
         scanResultData.clear();
         ScanResStrList.clear();
@@ -1225,6 +1280,16 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             myProgressDialog.ShowPD("正在提交...");
             SumbitDataThread sumbitDataThread = new SumbitDataThread();
             sumbitDataThread.start();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!IsNetWork) {
+                        Message msg = new Message();
+                        msg.what = 7;
+                        handler.handleMessage(msg);
+                    }
+                }
+            }, 5000);
         } else {
             tools.ShowDialog(MContect, "一个扫描完成的物料都没有");
         }
