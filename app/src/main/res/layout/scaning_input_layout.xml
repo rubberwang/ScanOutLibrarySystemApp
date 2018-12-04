@@ -97,7 +97,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:overlapAnchor="false"
-                        android:spinnerMode="dropdown"></Spinner>
+                        android:spinnerMode="dropdown">
+                    </Spinner>
 
                 </LinearLayout>
 
@@ -119,7 +120,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="6.5"
                         android:overlapAnchor="false"
-                        android:spinnerMode="dropdown"></Spinner>
+                        android:spinnerMode="dropdown">
+                    </Spinner>
 
                 </LinearLayout>
 

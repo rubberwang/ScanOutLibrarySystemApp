@@ -1,11 +1,14 @@
 package cn.shenzhenlizuosystemapp.Common.UI;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
@@ -20,6 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -60,16 +64,17 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResult_RvAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResult_QuitRvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Adapter.ScanTask_QuitRvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildTag;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildQuitTag;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitSubmitDataBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanQuitXmlResult;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitTaskRvData;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
@@ -77,7 +82,7 @@ import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.ItemData;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.QuitStockAdapter;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
-import cn.shenzhenlizuosystemapp.Common.Xml.GetChildTag;
+import cn.shenzhenlizuosystemapp.Common.Xml.GetQuitChildTag;
 import cn.shenzhenlizuosystemapp.Common.Xml.GetQuitSnNumberXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.QuitTaskXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.StocksCallXml;
@@ -97,16 +102,17 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
     private TextView TV_Scaning;
     private TextView TV_Cancel;
     private TextView TV_Sumbit;
+    private TextView TV_Save;
     private String FGUID = "";
     private String HeardID = "";
+    private EditText Et_ScanNumber;
     private RecyclerView RV_GetInfoTable;
     private RecyclerView RV_ScanInfoTable;
 
     private WebService webService;
     private OutLibraryObServer outLibraryObServer;
-    private ScanResult_RvAdapter scanResult_rvAdapter;
+    private ScanResult_QuitRvAdapter scanResult_quitRvAdapter;
     private ScanTask_QuitRvAdapter scanTask_Quit_rvAdapter;
-    private List<ScanResultData> scanResultData;
     private List<ItemData> SpStrList;
     private List<QuitTaskRvData> QuittaskRvDataList;
     private List<ScannerInfo> deviceList = null;
@@ -116,6 +122,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
     private List<QuitSubmitDataBean> OverallSituationList = null;
     private List<String> MaterialIDList = null;
     private List<String> BodyIdList = null;
+    private List<ChildQuitTag> childQuitTagList = null;
     private Tools tools;
 
     /**
@@ -140,6 +147,10 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
     private boolean IsScaning = false;
     private boolean IsCatch = true;
     private boolean IsClean = false;
+    private boolean IsScanFinish = false;
+    private boolean IsNetWork = false;
+    private boolean IsEditNumber = false;
+    private boolean SaveClickState = false;
     private int RV_ScanInfoTableIndex = 0;
 
     private int GetSpinnerPos(List<StockBean> Datas, String value) {
@@ -168,7 +179,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         ScanResStrList = new ArrayList<String>();
         deviceList = new ArrayList<ScannerInfo>();
         SpStrList = new ArrayList<>();
-        scanResultData = new ArrayList<>();
+        childQuitTagList = new ArrayList<>();
         QuittaskRvDataList = new ArrayList<>();
         stockBeans = new ArrayList<>();
         OverallSituationList = new ArrayList<>();
@@ -199,9 +210,14 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         TV_Cancel = $(R.id.TV_Cancel);
         TV_Sumbit = $(R.id.TV_Sumbit);
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
+        TV_Save = $(R.id.TV_Save);
+        Et_ScanNumber = $(R.id.Et_ScanNumber);
     }
 
+    @SuppressLint("ResourceAsColor")
     public void InitClick() {
+        Et_ScanNumber.setFocusable(false);
+        Et_ScanNumber.setFocusableInTouchMode(false);
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
 
@@ -209,6 +225,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                 ViewManager.getInstance().finishActivity(QuitLibraryActivity.this);
             }
         });
+
         //扫描
         TV_Scaning.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,10 +233,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                 if (scanTask_Quit_rvAdapter != null) {
                     if (scanTask_Quit_rvAdapter.getselection() >= 0) {
                         if (IsScaning) {
-                            //停止扫描
-                            IsScaning = false;
-                            TV_Scaning.setText(R.string.scaning);
-                            ShowCancelDialog(MContect, "是否确定取消本次扫描");
+                            ShowCancelDialog(MContect, "是否确定取消本次扫描");//停止扫描
                         } else {
                             IsStartRead = true;
                             IsScaning = true;
@@ -227,10 +241,38 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                             startScan();
                         }
                     } else {
-                        tools.ShowDialog(QuitLibraryActivity.this, "请选择一张任务单再点击扫描");
+                        tools.ShowDialog(QuitLibraryActivity.this, "请选择一个产品再点击扫描");
                     }
                 } else {
                     tools.show(MContect, "网络连接错误");
+                }
+            }
+        });
+
+        TV_SaveState(true);
+        TV_Save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (SaveClickState) {
+                    if (IsEditNumber) {
+                        if (TextUtils.isEmpty(Et_ScanNumber.getText().toString())) {
+                            tools.ShowDialog(MContect, "请输入数量在提交");
+                        } else {
+                            IsEditNumber = false;
+                            SaveSNSum();
+                            Res = "";
+                            GetNullXml(RV_ScanInfoTableIndex);
+                            IsScaning = false;
+                            stopScan();
+                        }
+                    } else {
+                        IsEditNumber = false;
+                        SaveSNSum();
+                        Res = "";
+                        GetNullXml(RV_ScanInfoTableIndex);
+                        IsScaning = false;
+                        stopScan();
+                    }
                 }
             }
         });
@@ -427,9 +469,9 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
         RV_GetInfoTable.setLayoutManager(layoutManager);
-//        scanResult_rvAdapter = new ScanResult_RvAdapter(this, scanResultData);
-        RV_GetInfoTable.setAdapter(scanResult_rvAdapter);
-        scanResult_rvAdapter.setOnItemClickLitener(new ScanResult_RvAdapter.OnItemClickLitener() {
+        scanResult_quitRvAdapter = new ScanResult_QuitRvAdapter(this,childQuitTagList);
+        RV_GetInfoTable.setAdapter(scanResult_quitRvAdapter);
+        scanResult_quitRvAdapter.setOnItemClickLitener(new ScanResult_QuitRvAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
 
@@ -675,6 +717,8 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
     }
 
     private void stopScan() {
+        IsScaning = false;
+        TV_Scaning.setText(R.string.scaning);
         if (scanner != null) {
             try {
                 // Reset continuous flag
@@ -794,13 +838,17 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         protected void onPostExecute(String result) {
             if (result != null) {
                 ViseLog.i("ScanResultData" + String.valueOf(CheckResultList(result)));
-                if (CheckResultList(result) && IsCatch) {
-                    IsCatch = false;
-                    ScanResStrList.add(result);
-                    ScanResultVerifyTask scanResultVerifyTask = new ScanResultVerifyTask();
-                    scanResultVerifyTask.execute(result);
+                if (IsScanFinish) {
+                    tools.ShowDialog(MContect, "已扫描完，请点击提交在接着扫描");
                 } else {
-                    ViseLog.i("没进入上传到服务器验证");
+                    if (CheckResultList(result) && IsCatch) {
+                        IsCatch = false;
+                        ScanResStrList.add(result);
+                        ScanResultVerifyTask scanResultVerifyTask = new ScanResultVerifyTask();
+                        scanResultVerifyTask.execute(result);
+                    } else {
+                        ViseLog.i("没进入上传到服务器验证");
+                    }
                 }
             } else {
                 ViseLog.i("ScanResult = NUll");
@@ -855,7 +903,6 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         @Override
         protected String doInBackground(String... params) {
             String EndStr = null;
-            List<ChildTag> childTagList = new ArrayList<>();
             try {
                 String MiddleStr = String.format("<Show><name></name><value >%s</value></Show>", params[0]);
                 if (State == 1) {
@@ -863,19 +910,21 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                 } else {
                     EndStr = addSpace(Res, MiddleStr);
                 }
-                ViseLog.i("QuittaskRvDataList.get(RV_ScanInfoTableIndex).getTV_materID() = " + QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFGUID());
+                ViseLog.i("State = " + State);
                 Res = webService.GetBarcodeAnalyze(QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFGUID(), EndStr, ConnectStr.ConnectionToString, ConnectStr.USERNAME);
                 if (TextUtils.isEmpty(Res)) {
                     ViseLog.i("res为空" + Res);
                     return "";
                 }
                 InputStream in_Str = new ByteArrayInputStream(Res.getBytes("UTF-8"));
-                childTagList = GetChildTag.getSingleton().getChildTagXml(in_Str);
+                childQuitTagList = GetQuitChildTag.getSingleton().getChildQuitTagXml(in_Str);
+                InputStream in_result = new ByteArrayInputStream(Res.getBytes("UTF-8"));
+                List<ScanQuitXmlResult> scanQuitXmlResults = GetQuitChildTag.getSingleton().getScanQuitXmlResult(in_result);
                 in_Str.close();
-                Log.i("huangmin", "AsyncDataSuccess = " + Res);
-//                return childTagList.get(childTagList.size() - 1).getOneChildTag() + "," + params[0] + "," + childTagList.get(0).getName();
-                return "";
+                Log.i("huangmin", "AsyncDataSuccess = " + scanQuitXmlResults.get(0).getResult() + "," + scanQuitXmlResults.get(0).getFQty());
+                return scanQuitXmlResults.get(0).getResult() + "," + scanQuitXmlResults.get(0).getFQty();
             } catch (Exception e) {
+                ViseLog.i("ScanResultVerifyTask Exception = " + e);
                 return "";
             }
         }
@@ -888,23 +937,22 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                 Log.i("huangmin", "result = " + result);
                 if (StrList.length > 0) {
                     if (StrList[0].equals("true")) {
-                        Log.i("huangmin", "货物上传成功");
-                        IsCatch = true;
-                        GetNullXml(RV_ScanInfoTableIndex);
-                        SaveSNSum();
-                        Res = "";
-                        State = 1;
-                    } else {
-                        if (State == 1) {
-                            State = 2;
-                            MaterialIDList.add(QuittaskRvDataList.get(RV_ScanInfoTableIndex).getTV_materID());
-                            BodyIdList.add(QuittaskRvDataList.get(scanTask_Quit_rvAdapter.getselection()).getFGUID());
+                        Log.i("StrList[0] = ", "true");
+                        if (StrList[1].equals("0")) {
+                            IsEditNumber = true;
+                            Et_ScanNumber.setFocusableInTouchMode(true);
+                            Et_ScanNumber.setFocusable(true);
+                            Et_ScanNumber.requestFocus();
                         }
-                        ScanResultData scanResult = new ScanResultData();
-                        scanResult.setScanData(StrList[1]);
-                        scanResult.setName(StrList[2]);
-                        scanResultData.add(scanResult);
-                        scanResult_rvAdapter.notifyDataSetChanged();
+                        IsCatch = true;
+                        IsScanFinish = true;
+                        State = 1;
+                        InitRecycler();
+                        IsCatch = true;
+                        TV_SaveState(false);
+                    } else {
+                        State = 2;
+                        InitRecycler();
                         IsCatch = true;
                         ViseLog.i("ScanResultVerifyTask Result: " + result);
                     }
@@ -913,9 +961,9 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                 ViseLog.i("异常返回result = NULL");
                 IsCatch = true;
                 GetNullXml(RV_ScanInfoTableIndex);
-                scanResultData.clear();
+                childQuitTagList.clear();
                 ScanResStrList.clear();
-                scanResult_rvAdapter.notifyDataSetChanged();
+                InitRecycler();
                 Res = "";
                 State = 1;
                 tools.ShowDialog(MContect, "扫描数据错误");
@@ -929,7 +977,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
     }
 
     private boolean CheckResultList(String result) {
-        if (scanResultData.size() >= 0 && !TextUtils.isEmpty(result)) {
+        if (childQuitTagList.size() >= 0 && !TextUtils.isEmpty(result)) {
             if (ScanResStrList.contains(result)) {
                 return false;
             } else {
@@ -1009,7 +1057,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         private WeakReference<QuitLibraryActivity> weakReference;
 
         public MyHandler(QuitLibraryActivity QuitLibraryActivity) {
-            weakReference = new WeakReference<QuitLibraryActivity>(QuitLibraryActivity);
+            weakReference = new WeakReference<>(QuitLibraryActivity);
         }
 
         @Override
@@ -1023,11 +1071,11 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                         ViseLog.i("Xml = " + Xml);
                         StartSpXml = Xml.substring(0, Xml.indexOf("<Show>"));
                         EndSpXml = Xml.substring(Xml.indexOf("<BarcodeLib>"), Xml.length());
-                        tools.show(MContect, "获取模版");
+//                        tools.show(MContect, "获取模版");
                         break;
                     }
                     case 2: {
-                        tools.ShowDialog(QuitLibraryActivity.this, "选择出库任务失败");
+                        tools.ShowDialog(QuitLibraryActivity.this, "选择产品失败");
                         break;
                     }
                     case 3: {
@@ -1035,8 +1083,9 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                         break;
                     }
                     case 4: {
+                        IsNetWork = true;
                         myProgressDialog.dismiss();
-                        tools.ShowOnClickDialog(MContect, "提交成功", new View.OnClickListener() {
+                        tools.ShowOnClickDialog(MContect, "保存成功", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 tools.DisappearDialog();
@@ -1050,8 +1099,9 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                         break;
                     }
                     case 5: {
+                        IsNetWork = true;
                         myProgressDialog.dismiss();
-                        tools.ShowOnClickDialog(MContect, "提交数据有错误", new View.OnClickListener() {
+                        tools.ShowOnClickDialog(MContect, "保存数据有错误", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 tools.DisappearDialog();
@@ -1067,7 +1117,11 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                     case 6: {
                         tools.ShowDialog(MContect, "没有这个物料规则请选择其它物料规则");
                         scanTask_Quit_rvAdapter.setSelection(-1);
-                        scanResult_rvAdapter.notifyDataSetChanged();
+                        scanResult_quitRvAdapter.notifyDataSetChanged();
+                    }
+                    case 7: {
+                        myProgressDialog.dismiss();
+                        tools.ShowDialog(MContect, "网络连接超时");
                     }
                 }
             } else {
@@ -1174,22 +1228,37 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
             if (!TextUtils.isEmpty(Res) && Res.length() > 0) {
                 ViseLog.i("扫描完一个物料");
                 InputStream in_Str = null;
+                int Number = 0;
                 in_Str = new ByteArrayInputStream(Res.getBytes("UTF-8"));
+                ViseLog.i("SaveSNSum = " + Res);
                 List<QuitSubmitDataBean> inputSubmitDataBeanList = GetQuitSnNumberXml.getSingleton().ReadPullXML(in_Str);
+                if (inputSubmitDataBeanList.get(0).getNumber().equals("0")) {
+                    Number = Integer.parseInt(Et_ScanNumber.getText().toString());
+                } else {
+                    Number = Integer.parseInt(inputSubmitDataBeanList.get(0).getNumber());
+                }
+                MaterialIDList.add(QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial());
+                BodyIdList.add(QuittaskRvDataList.get(scanTask_Quit_rvAdapter.getselection()).getFGUID());
                 QuitSubmitDataBean InputBean = new QuitSubmitDataBean();
                 InputBean.setSn(inputSubmitDataBeanList.get(0).getSn());
-                InputBean.setNumber(inputSubmitDataBeanList.get(0).getNumber());
+                InputBean.setNumber(Number + "");
                 OverallSituationList.add(InputBean);
                 int ThisSendSum = Integer.parseInt(QuittaskRvDataList.get(scanTask_Quit_rvAdapter.getselection()).getTV_thisSend().split("\\.")[0]);
                 ViseLog.i("ThisSendSum = " + ThisSendSum);
                 QuittaskRvDataList.get(scanTask_Quit_rvAdapter.getselection()).setTV_thisSend(String.valueOf(ThisSendSum + Integer.parseInt(inputSubmitDataBeanList.get(0).getNumber())));
                 scanTask_Quit_rvAdapter.notifyDataSetChanged();
-                scanResultData.clear();
+                childQuitTagList.clear();
                 ScanResStrList.clear();
-                scanResult_rvAdapter.notifyDataSetChanged();
+                scanResult_quitRvAdapter.notifyDataSetChanged();
                 IsClean = true;
+                IsScanFinish = false;
                 ViseLog.i("inputSubmitDataBeanList Sn= " + inputSubmitDataBeanList.get(0).getSn() + "Number = " + inputSubmitDataBeanList.get(0).getNumber());
                 in_Str.close();
+                Et_ScanNumber.setText("");
+                scanTask_Quit_rvAdapter.setSelection(-1);
+                scanResult_quitRvAdapter.notifyDataSetChanged();
+            } else {
+                tools.ShowDialog(MContect, "都还没开始扫描，无法提交");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1199,9 +1268,9 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
 
     private void StopScanUpdata() {
         stopScan();
-        scanResultData.clear();
+        childQuitTagList.clear();
         ScanResStrList.clear();
-        scanResult_rvAdapter.notifyDataSetChanged();
+        scanResult_quitRvAdapter.notifyDataSetChanged();
         scanTask_Quit_rvAdapter.setSelection(-1);
         scanTask_Quit_rvAdapter.notifyDataSetChanged();
     }
@@ -1211,8 +1280,18 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
             myProgressDialog.ShowPD("正在提交...");
             SumbitDataThread sumbitDataThread = new SumbitDataThread();
             sumbitDataThread.start();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!IsNetWork) {
+                        Message msg = new Message();
+                        msg.what = 7;
+                        handler.handleMessage(msg);
+                    }
+                }
+            }, 5000);
         } else {
-            tools.ShowDialog(MContect, "一个扫描完成的物料都没有");
+            tools.ShowDialog(MContect, "一个扫描完成的物料都没有，无法提交");
         }
     }
 
@@ -1227,7 +1306,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                 ViseLog.i("DetailedListXml = " + DetailedListXml + " Sp_house.getSelectedItem().toString() = " + stockBeans.get(SpHouseIndex).getFName()
                         + "Sp_InputHouseSpace.getSelectedItem().toString() = " + stockBeanList.get(SpInputHouseSpaceIndex).getFName());
 
-                String Result = webService.CreateInStockBill(ConnectStr.ConnectionToString, HeardID,
+                String Result = webService.CreateOutStockBill(ConnectStr.ConnectionToString, HeardID,
                         ConnectStr.USERNAME, stockBeans.get(SpHouseIndex).getFName(), stockBeanList.get(SpInputHouseSpaceIndex).getFName(), DetailedListXml);
                 ViseLog.i("SumbitResult = " + Result);
                 if (Result.equals("Success")) {
@@ -1241,6 +1320,20 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                 e.printStackTrace();
                 ViseLog.d("GetNullXmlSyncThread Exception" + e);
             }
+        }
+    }
+
+    @SuppressLint("ResourceAsColor")
+    private void TV_SaveState(boolean is) {
+        if (is) {
+            TV_Save.setTextColor(getResources().getColor(R.color.Black));
+            TV_Save.setBackgroundColor(R.color.functionbackground);
+        } else {
+            SaveClickState = true;
+            Resources res = getResources();
+            Drawable drawable = res.getDrawable(R.drawable.circularbead_purple);
+            TV_Save.setBackground(drawable);
+            TV_Save.setTextColor(getResources().getColor(R.color.White));
         }
     }
 }

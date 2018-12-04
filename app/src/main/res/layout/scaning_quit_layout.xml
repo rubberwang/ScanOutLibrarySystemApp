@@ -29,7 +29,6 @@
         android:orientation="vertical">
 
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -74,7 +73,6 @@
             </LinearLayout>
 
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -88,14 +86,20 @@
                     android:layout_weight="3"
                     android:text="@string/House" />
 
-                <Spinner
-                    android:id="@+id/Sp_house"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:overlapAnchor="false"
-                    android:spinnerMode="dropdown"
                     android:layout_weight="5">
+
+                <Spinner
+                    android:id="@+id/Sp_house"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overlapAnchor="false"
+                    android:spinnerMode="dropdown">
                 </Spinner>
+
+                </LinearLayout>
 
                 <TextView
                     style="@style/ScanOutLibraryText"
@@ -108,20 +112,19 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="6.5">
+
                     <Spinner
                         android:id="@+id/Sp_QuitHouseSpace"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_weight="6.5"
                         android:overlapAnchor="false"
-                        android:spinnerMode="dropdown"
-                        android:layout_weight="5"
-                        >
+                        android:spinnerMode="dropdown">
                     </Spinner>
 
                 </LinearLayout>
 
             </LinearLayout>
-
 
 
             <LinearLayout
@@ -228,13 +231,18 @@
                         android:textColor="@color/Black" />
 
                     <EditText
-                        android:id="@+id/ScanNumber"
+                        android:id="@+id/Et_ScanNumber"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
                         android:layout_weight="1.5"
+                        android:background="@drawable/edittext_background"
                         android:gravity="center_vertical"
+                        android:inputType="number"
                         android:textSize="13sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:paddingLeft="3dp"/>
 
                 </LinearLayout>
 
@@ -244,7 +252,7 @@
                 android:id="@+id/RV_GetInfoTable"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="5"
+                android:layout_weight="6"
                 android:background="@color/functionbackground"/>
 
             <LinearLayout
@@ -268,7 +276,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/TV_Sumbit"
+                    android:id="@+id/TV_Save"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
@@ -278,6 +286,21 @@
                     android:background="@drawable/circularbead_purple"
                     android:gravity="center"
                     android:text="@string/Submit"
+                    android:textColor="@color/White"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/TV_Sumbit"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1.5"
+                    android:background="@drawable/circularbead_purple"
+                    android:gravity="center"
+                    android:text="@string/Save"
                     android:textColor="@color/White"
                     android:textSize="15sp"
                     android:textStyle="bold" />
