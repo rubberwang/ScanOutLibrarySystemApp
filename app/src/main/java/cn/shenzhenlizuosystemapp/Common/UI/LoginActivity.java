@@ -388,7 +388,7 @@ public class LoginActivity extends BaseActivity {
         private WeakReference<LoginActivity> weakReference;
 
         public MyHandler(LoginActivity logInActivity) {
-            weakReference = new WeakReference<LoginActivity>(logInActivity);
+            weakReference = new WeakReference<>(logInActivity);
         }
 
         @Override

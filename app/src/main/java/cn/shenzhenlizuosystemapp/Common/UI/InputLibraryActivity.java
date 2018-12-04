@@ -1,11 +1,14 @@
 package cn.shenzhenlizuosystemapp.Common.UI;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
@@ -71,6 +74,7 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubmitDataBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanXmlResult;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
@@ -111,7 +115,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private InputLibraryObServer inputLibraryObServer;
     private ScanResult_RvAdapter scanResult_rvAdapter;
     private ScanTask_RvAdapter scanTask_rvAdapter;
-    private List<ScanResultData> scanResultData;
     private List<ItemData> SpStrList;
     private List<TaskRvData> taskRvDataList;
     private List<ScannerInfo> deviceList = null;
@@ -121,6 +124,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private List<InputSubmitDataBean> OverallSituationList = null;
     private List<String> MaterialIDList = null;
     private List<String> BodyIdList = null;
+    private List<ChildTag> childTagList = null;
     private Tools tools;
 
     /**
@@ -148,6 +152,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private boolean IsScanFinish = false;
     private boolean IsNetWork = false;
     private boolean IsEditNumber = false;
+    private boolean SaveClickState = false;
     private int RV_ScanInfoTableIndex = 0;
 
     private int GetSpinnerPos(List<StockBean> Datas, String value) {
@@ -176,7 +181,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         ScanResStrList = new ArrayList<String>();
         deviceList = new ArrayList<ScannerInfo>();
         SpStrList = new ArrayList<>();
-        scanResultData = new ArrayList<>();
+        childTagList = new ArrayList<>();
         taskRvDataList = new ArrayList<>();
         stockBeans = new ArrayList<>();
         OverallSituationList = new ArrayList<>();
@@ -211,10 +216,10 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         Et_ScanNumber = $(R.id.Et_ScanNumber);
     }
 
+    @SuppressLint("ResourceAsColor")
     public void InitClick() {
         Et_ScanNumber.setFocusable(false);
         Et_ScanNumber.setFocusableInTouchMode(false);
-
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
 
@@ -238,7 +243,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                             startScan();
                         }
                     } else {
-                        tools.ShowDialog(InputLibraryActivity.this, "请选择一张任务单再点击扫描");
+                        tools.ShowDialog(InputLibraryActivity.this, "请选择一个产品再点击扫描");
                     }
                 } else {
                     tools.show(MContect, "网络连接错误");
@@ -246,13 +251,23 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             }
         });
 
+        TV_SaveState(true);
         TV_Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (IsEditNumber) {
-                    if (TextUtils.isEmpty(Et_ScanNumber.getText().toString())){
-                        tools.ShowDialog(MContect,"请输入数量在提交");
-                    }else {
+                if (SaveClickState) {
+                    if (IsEditNumber) {
+                        if (TextUtils.isEmpty(Et_ScanNumber.getText().toString())) {
+                            tools.ShowDialog(MContect, "请输入数量在提交");
+                        } else {
+                            IsEditNumber = false;
+                            SaveSNSum();
+                            Res = "";
+                            GetNullXml(RV_ScanInfoTableIndex);
+                            IsScaning = false;
+                            stopScan();
+                        }
+                    } else {
                         IsEditNumber = false;
                         SaveSNSum();
                         Res = "";
@@ -260,13 +275,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         IsScaning = false;
                         stopScan();
                     }
-                }else {
-                    IsEditNumber = false;
-                    SaveSNSum();
-                    Res = "";
-                    GetNullXml(RV_ScanInfoTableIndex);
-                    IsScaning = false;
-                    stopScan();
                 }
             }
         });
@@ -463,7 +471,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
         RV_GetInfoTable.setLayoutManager(layoutManager);
-        scanResult_rvAdapter = new ScanResult_RvAdapter(this, scanResultData);
+        scanResult_rvAdapter = new ScanResult_RvAdapter(this, childTagList);
         RV_GetInfoTable.setAdapter(scanResult_rvAdapter);
         scanResult_rvAdapter.setOnItemClickLitener(new ScanResult_RvAdapter.OnItemClickLitener() {
             @Override
@@ -897,7 +905,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         @Override
         protected String doInBackground(String... params) {
             String EndStr = null;
-            List<ChildTag> childTagList = new ArrayList<>();
             try {
                 String MiddleStr = String.format("<Show><name></name><value >%s</value></Show>", params[0]);
                 if (State == 1) {
@@ -905,7 +912,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 } else {
                     EndStr = addSpace(Res, MiddleStr);
                 }
-                ViseLog.i("taskRvDataList.get(RV_ScanInfoTableIndex).getTV_materID() = " + taskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial());
+                ViseLog.i("State = " + State);
                 Res = webService.GetBarcodeAnalyze(taskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(), EndStr, ConnectStr.ConnectionToString, ConnectStr.USERNAME);
                 if (TextUtils.isEmpty(Res)) {
                     ViseLog.i("res为空" + Res);
@@ -913,10 +920,11 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 }
                 InputStream in_Str = new ByteArrayInputStream(Res.getBytes("UTF-8"));
                 childTagList = GetChildTag.getSingleton().getChildTagXml(in_Str);
+                InputStream in_result = new ByteArrayInputStream(Res.getBytes("UTF-8"));
+                List<ScanXmlResult> scanXmlResults = GetChildTag.getSingleton().getScanXmlResult(in_result);
                 in_Str.close();
-                Log.i("huangmin", "AsyncDataSuccess = " + Res);
-                return childTagList.get(childTagList.size() - 1).getOneChildTag() + "," + params[0] + "," + childTagList.get(0).getName() + "," +
-                        childTagList.get(childTagList.size() - 1).getQty();
+                Log.i("huangmin", "AsyncDataSuccess = " + scanXmlResults.get(0).getResult() + "," + scanXmlResults.get(0).getFQty());
+                return scanXmlResults.get(0).getResult() + "," + scanXmlResults.get(0).getFQty();
             } catch (Exception e) {
                 ViseLog.i("ScanResultVerifyTask Exception = " + e);
                 return "";
@@ -932,7 +940,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 if (StrList.length > 0) {
                     if (StrList[0].equals("true")) {
                         Log.i("StrList[0] = ", "true");
-                        if (StrList[3].equals("0")) {
+                        if (StrList[1].equals("0")) {
                             IsEditNumber = true;
                             Et_ScanNumber.setFocusableInTouchMode(true);
                             Et_ScanNumber.setFocusable(true);
@@ -941,18 +949,12 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         IsCatch = true;
                         IsScanFinish = true;
                         State = 1;
-                        ScanResultData scanResult = new ScanResultData();
-                        scanResult.setScanData(StrList[1]);
-                        scanResult.setName(StrList[2]);
-                        scanResultData.add(scanResult);
-                        scanResult_rvAdapter.notifyDataSetChanged();
+                        InitRecycler();
                         IsCatch = true;
+                        TV_SaveState(false);
                     } else {
-                        ScanResultData scanResult = new ScanResultData();
-                        scanResult.setScanData(StrList[1]);
-                        scanResult.setName(StrList[2]);
-                        scanResultData.add(scanResult);
-                        scanResult_rvAdapter.notifyDataSetChanged();
+                        State = 2;
+                        InitRecycler();
                         IsCatch = true;
                         ViseLog.i("ScanResultVerifyTask Result: " + result);
                     }
@@ -961,9 +963,9 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 ViseLog.i("异常返回result = NULL");
                 IsCatch = true;
                 GetNullXml(RV_ScanInfoTableIndex);
-                scanResultData.clear();
+                childTagList.clear();
                 ScanResStrList.clear();
-                scanResult_rvAdapter.notifyDataSetChanged();
+                InitRecycler();
                 Res = "";
                 State = 1;
                 tools.ShowDialog(MContect, "扫描数据错误");
@@ -977,7 +979,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     }
 
     private boolean CheckResultList(String result) {
-        if (scanResultData.size() >= 0 && !TextUtils.isEmpty(result)) {
+        if (childTagList.size() >= 0 && !TextUtils.isEmpty(result)) {
             if (ScanResStrList.contains(result)) {
                 return false;
             } else {
@@ -1075,7 +1077,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         break;
                     }
                     case 2: {
-                        tools.ShowDialog(InputLibraryActivity.this, "选择入库任务失败");
+                        tools.ShowDialog(InputLibraryActivity.this, "选择产品失败");
                         break;
                     }
                     case 3: {
@@ -1085,7 +1087,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                     case 4: {
                         IsNetWork = true;
                         myProgressDialog.dismiss();
-                        tools.ShowOnClickDialog(MContect, "提交成功", new View.OnClickListener() {
+                        tools.ShowOnClickDialog(MContect, "保存成功", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 tools.DisappearDialog();
@@ -1101,7 +1103,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                     case 5: {
                         IsNetWork = true;
                         myProgressDialog.dismiss();
-                        tools.ShowOnClickDialog(MContect, "提交数据有错误", new View.OnClickListener() {
+                        tools.ShowOnClickDialog(MContect, "保存数据有错误", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 tools.DisappearDialog();
@@ -1247,7 +1249,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 ViseLog.i("ThisSendSum = " + ThisSendSum);
                 taskRvDataList.get(scanTask_rvAdapter.getselection()).setTV_thisSend(String.valueOf(ThisSendSum + Number));
                 scanTask_rvAdapter.notifyDataSetChanged();
-                scanResultData.clear();
+                childTagList.clear();
                 ScanResStrList.clear();
                 scanResult_rvAdapter.notifyDataSetChanged();
                 IsClean = true;
@@ -1258,7 +1260,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 scanTask_rvAdapter.setSelection(-1);
                 scanResult_rvAdapter.notifyDataSetChanged();
             } else {
-                tools.ShowDialog(MContect, "都还没开始扫描");
+                tools.ShowDialog(MContect, "都还没开始扫描，无法提交");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1268,7 +1270,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
     private void StopScanUpdata() {
         stopScan();
-        scanResultData.clear();
+        childTagList.clear();
         ScanResStrList.clear();
         scanResult_rvAdapter.notifyDataSetChanged();
         scanTask_rvAdapter.setSelection(-1);
@@ -1291,7 +1293,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 }
             }, 5000);
         } else {
-            tools.ShowDialog(MContect, "一个扫描完成的物料都没有");
+            tools.ShowDialog(MContect, "一个扫描完成的物料都没有，无法提交");
         }
     }
 
@@ -1320,6 +1322,20 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 e.printStackTrace();
                 ViseLog.d("GetNullXmlSyncThread Exception" + e);
             }
+        }
+    }
+
+    @SuppressLint("ResourceAsColor")
+    private void TV_SaveState(boolean is) {
+        if (is) {
+            TV_Save.setTextColor(getResources().getColor(R.color.Black));
+            TV_Save.setBackgroundColor(R.color.functionbackground);
+        } else {
+            SaveClickState = true;
+            Resources res = getResources();
+            Drawable drawable = res.getDrawable(R.drawable.circularbead_purple);
+            TV_Save.setBackground(drawable);
+            TV_Save.setTextColor(getResources().getColor(R.color.White));
         }
     }
 }

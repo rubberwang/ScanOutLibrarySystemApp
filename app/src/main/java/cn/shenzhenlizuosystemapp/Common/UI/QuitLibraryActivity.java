@@ -427,7 +427,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
         RV_GetInfoTable.setLayoutManager(layoutManager);
-        scanResult_rvAdapter = new ScanResult_RvAdapter(this, scanResultData);
+//        scanResult_rvAdapter = new ScanResult_RvAdapter(this, scanResultData);
         RV_GetInfoTable.setAdapter(scanResult_rvAdapter);
         scanResult_rvAdapter.setOnItemClickLitener(new ScanResult_RvAdapter.OnItemClickLitener() {
             @Override
@@ -873,7 +873,8 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                 childTagList = GetChildTag.getSingleton().getChildTagXml(in_Str);
                 in_Str.close();
                 Log.i("huangmin", "AsyncDataSuccess = " + Res);
-                return childTagList.get(childTagList.size() - 1).getOneChildTag() + "," + params[0] + "," + childTagList.get(0).getName();
+//                return childTagList.get(childTagList.size() - 1).getOneChildTag() + "," + params[0] + "," + childTagList.get(0).getName();
+                return "";
             } catch (Exception e) {
                 return "";
             }

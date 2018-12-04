@@ -60,7 +60,7 @@ public class CheckLibraryActivity extends BaseActivity {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
         RV_GetInfoTable.setLayoutManager(layoutManager);
-        scanResultRvAdapter = new ScanResult_RvAdapter(this, scanResultData);
+//        scanResultRvAdapter = new ScanResult_RvAdapter(this, scanResultData);
         RV_GetInfoTable.setAdapter(scanResultRvAdapter);
         scanResultRvAdapter.setOnItemClickLitener(new ScanResult_RvAdapter.OnItemClickLitener() {
             @Override

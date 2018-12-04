@@ -10,17 +10,18 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildTag;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
 import cn.shenzhenlizuosystemapp.R;
 
 public class ScanResult_RvAdapter extends RecyclerView.Adapter {
 
     private Context context;
-    private List<ScanResultData> datas;
+    private List<ChildTag> datas;
     private ScanResult_RvAdapter.OnItemClickLitener mOnItemClickLitener;
     private int selected = -1;
 
-    public ScanResult_RvAdapter(Context context, List<ScanResultData> data) {
+    public ScanResult_RvAdapter(Context context, List<ChildTag> data) {
         this.context = context;
         this.datas = data;
     }
@@ -47,7 +48,7 @@ public class ScanResult_RvAdapter extends RecyclerView.Adapter {
     //填充onCreateViewHolder方法返回的holder中的控件
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
-            ((ScanResult_RvAdapter.ViewHoders) holder).TV_scanData.setText(datas.get(position).getScanData());
+            ((ScanResult_RvAdapter.ViewHoders) holder).TV_scanData.setText(datas.get(position).getValue());
             ((ScanResult_RvAdapter.ViewHoders) holder).Tv_TypeResult.setText(datas.get(position).getName());
             if (mOnItemClickLitener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
