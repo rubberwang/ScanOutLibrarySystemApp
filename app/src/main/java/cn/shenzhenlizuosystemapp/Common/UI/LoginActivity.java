@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.MainThread;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -293,8 +294,6 @@ public class LoginActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         public void ON_PAUSE() {
-            ThreadStop();
-            ViewManager.getInstance().finishActivity(LoginActivity.this);
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -303,6 +302,7 @@ public class LoginActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         public void ON_DESTROY() {
+            ThreadStop();
             if (tools != null) {
                 tools = null;
             }
@@ -315,6 +315,8 @@ public class LoginActivity extends BaseActivity {
             if (itemData != null) {
                 itemData = null;
             }
+            handler.removeCallbacks(getMainLooper().getThread());
+            ViewManager.getInstance().finishActivity(LoginActivity.this);
         }
     }
 
@@ -381,6 +383,48 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
+//    static class handler extends Handler {
+//        WeakReference<LoginActivity> mWeakReference;
+//
+//        public MyHandler(LoginActivity loginActivity) {
+//            mWeakReference = new WeakReference<>(loginActivity);
+//        }
+//
+//        @Override
+//        public void handleMessage(Message msg) {
+//            final LoginActivity loginActivity = mWeakReference.get();
+//            if (loginActivity != null) {
+//                switch (msg.what) {
+//                    case 1: {
+//                        loginActivity.myProgressDialog.dismiss();
+//                        loginActivity.IsNetWork = true;
+//                        loginActivity.tools.showshort(loginActivity, "登录成功");
+//                        loginActivity.tools.PutStringData("Project", loginActivity.SelectProjectStr, loginActivity.sharedPreferences);
+//                        ConnectStr.USERNAME = loginActivity.Edit_UserName.getText().toString();
+//                        ConnectStr.ConnectionToString = loginActivity.ProjectNameAndConnectMap.get(loginActivity.SelectProjectStr);
+//                        loginActivity.startActivity(new Intent(loginActivity, MainTabActivity.class));
+//                        break;
+//                    }
+//                    case 2: {
+//                        loginActivity.myProgressDialog.dismiss();
+//                        loginActivity.IsNetWork = true;
+//                        loginActivity.tools.ShowDialog(loginActivity, "用户名或密码错误");
+//                        break;
+//                    }
+//                    case 3: {
+//                        loginActivity.myProgressDialog.dismiss();
+//                        loginActivity.tools.ShowDialog(loginActivity, "网络连接超时");
+//                        break;
+//                    }
+//                }
+//            } else {
+//                ViseLog.i("没有得到Activity实例不进行操作");
+//            }
+//            
+//        }
+//    }
+
+
     private MyHandler handler = new MyHandler(LoginActivity.this);
 
     class MyHandler extends Handler {
@@ -398,7 +442,7 @@ public class LoginActivity extends BaseActivity {
             if (handlerMemoryActivity != null) {
                 switch (msg.what) {
                     case 1: {
-                      myProgressDialog.dismiss();
+                        myProgressDialog.dismiss();
                         IsNetWork = true;
                         tools.showshort(LoginActivity.this, "登录成功");
                         tools.PutStringData("Project", SelectProjectStr, sharedPreferences);
@@ -423,13 +467,8 @@ public class LoginActivity extends BaseActivity {
                 ViseLog.i("没有得到Activity实例不进行操作");
             }
         }
-
     }
-
-    private void CheckBoxLogic() {
-
-    }
-
+    
     private void IsExitApp() {
         View view = LayoutInflater.from(LoginActivity.this).inflate(R.layout.exit_app, null, false);
         final Dialog dialog = new Dialog(LoginActivity.this);
@@ -465,6 +504,7 @@ public class LoginActivity extends BaseActivity {
         }
         dialogWindow.setAttributes(lp);
         dialog.show();
+
     }
 
 }

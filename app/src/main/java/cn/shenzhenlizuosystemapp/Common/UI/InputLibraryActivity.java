@@ -1256,9 +1256,12 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 IsScanFinish = false;
                 ViseLog.i("inputSubmitDataBeanList Sn= " + inputSubmitDataBeanList.get(0).getSn() + "Number = " + inputSubmitDataBeanList.get(0).getNumber());
                 in_Str.close();
-                Et_ScanNumber.setText("");
                 scanTask_rvAdapter.setSelection(-1);
                 scanResult_rvAdapter.notifyDataSetChanged();
+                TV_SaveState(true);
+                Et_ScanNumber.setText("");
+                Et_ScanNumber.setFocusable(false);
+                Et_ScanNumber.setFocusableInTouchMode(false);
             } else {
                 tools.ShowDialog(MContect, "都还没开始扫描，无法提交");
             }
@@ -1328,6 +1331,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     @SuppressLint("ResourceAsColor")
     private void TV_SaveState(boolean is) {
         if (is) {
+            SaveClickState = false;
             TV_Save.setTextColor(getResources().getColor(R.color.Black));
             TV_Save.setBackgroundColor(R.color.functionbackground);
         } else {
