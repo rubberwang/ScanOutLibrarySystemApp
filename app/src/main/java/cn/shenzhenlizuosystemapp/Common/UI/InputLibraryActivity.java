@@ -73,9 +73,9 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildTag;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubmitDataBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryDetail;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanXmlResult;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.SubBody;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.ItemData;
@@ -107,6 +107,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private TextView TV_Save;
     private String FGUID = "";
     private String HeardID = "";
+    private String FPartner = "";
+    private String BusinessType = "";
     private EditText Et_ScanNumber;
     private RecyclerView RV_GetInfoTable;
     private RecyclerView RV_ScanInfoTable;
@@ -121,9 +123,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private List<String> ScanResStrList = null;
     private List<StockBean> stockBeans = null;
     private List<StockBean> stockBeanList = null;
-    private List<InputSubmitDataBean> OverallSituationList = null;
-    private List<String> MaterialIDList = null;
-    private List<String> BodyIdList = null;
+    private List<InputSubmitDataBean> InputSubmitDataBeanList = null;
+    private List<SubBody> subBodyList = null;
     private List<ChildTag> childTagList = null;
     private Tools tools;
 
@@ -184,9 +185,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         childTagList = new ArrayList<>();
         taskRvDataList = new ArrayList<>();
         stockBeans = new ArrayList<>();
-        OverallSituationList = new ArrayList<>();
-        MaterialIDList = new ArrayList<>();
-        BodyIdList = new ArrayList<>();
+        InputSubmitDataBeanList = new ArrayList<>();
+        subBodyList = new ArrayList<>();
         MContect = new WeakReference<>(InputLibraryActivity.this).get();
         tools = Tools.getTools();
         inputLibraryObServer = new InputLibraryObServer();
@@ -500,13 +500,15 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         Integer.parseInt(taskRvDataList.get(position).getTV_alreadySend().split("\\.")[0])) {
                     tools.ShowDialog(MContect, "这张单已扫描完成");
                 } else {
-                    if (scanTask_rvAdapter.getselection() == -1) {
-                        if (RV_ScanInfoTableIndex != position) {
-                            RV_ScanInfoTableIndex = position;
-                        }
-                        scanTask_rvAdapter.setSelection(position);
-                        scanTask_rvAdapter.notifyDataSetChanged();//选中
-                        GetNullXml(position);
+                    if (!IsScaning) {
+//                        if (scanTask_rvAdapter.getselection() == -1) {
+                            if (RV_ScanInfoTableIndex != position) {
+                                RV_ScanInfoTableIndex = position;
+                            }
+                            scanTask_rvAdapter.setSelection(position);
+                            scanTask_rvAdapter.notifyDataSetChanged();//选中
+                            GetNullXml(position);
+//                        }
                     } else {
                         tools.show(MContect, "请扫描完当前任务");
                     }
@@ -597,6 +599,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                     TV_BusType.setText(result.get(0).getFTransactionType_Name());
                     TV_Unit.setText(result.get(0).getFPartner_Name());
                     HeardID = result.get(0).getFGuid();
+                    FPartner = result.get(0).getFPartner();
+                    BusinessType = result.get(0).getFTransactionType();
                     ViseLog.i("quitLibraryDetails 赋值");
                 }
                 myProgressDialog.dismiss();
@@ -687,6 +691,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 } else if (tag.equals("FPartner_Name")) {
                     outbody.setFPartner_Name(data);
                 }
+
             }
 
         }
@@ -1125,6 +1130,22 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         myProgressDialog.dismiss();
                         tools.ShowDialog(MContect, "网络连接超时");
                     }
+                    case 8: {
+                        IsNetWork = true;
+                        myProgressDialog.dismiss();
+                        tools.ShowOnClickDialog(MContect, "保存数据异常", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                tools.DisappearDialog();
+                            }
+                        }, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                            }
+                        }, true);
+                        break;
+                    }
                 }
             } else {
                 ViseLog.i("没有得到Activity实例不进行操作");
@@ -1230,21 +1251,32 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             if (!TextUtils.isEmpty(Res) && Res.length() > 0) {
                 ViseLog.i("扫描完一个物料");
                 InputStream in_Str = null;
+                InputStream in_Str2 = null;
                 int Number = 0;
                 in_Str = new ByteArrayInputStream(Res.getBytes("UTF-8"));
+                in_Str2 = new ByteArrayInputStream(Res.getBytes("UTF-8"));
                 ViseLog.i("SaveSNSum = " + Res);
-                List<InputSubmitDataBean> inputSubmitDataBeanList = GetSnNumberXml.getSingleton().ReadPullXML(in_Str);
-                if (inputSubmitDataBeanList.get(0).getNumber().equals("0")) {
+                List<InputSubmitDataBean> inputSubmitDataBeans = GetSnNumberXml.getSingleton().ReadPullXML(in_Str);
+                List<SubBody> subBodys = GetSnNumberXml.getSingleton().ReadSubBodyPullXML(in_Str2);
+                if (inputSubmitDataBeans.get(0).getFQty().equals("0")) {
                     Number = Integer.parseInt(Et_ScanNumber.getText().toString());
                 } else {
-                    Number = Integer.parseInt(inputSubmitDataBeanList.get(0).getNumber());
+                    Number = Integer.parseInt(inputSubmitDataBeans.get(0).getFQty());
                 }
-                MaterialIDList.add(taskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial());
-                BodyIdList.add(taskRvDataList.get(scanTask_rvAdapter.getselection()).getFGUID());
-                InputSubmitDataBean InputBean = new InputSubmitDataBean();
-                InputBean.setSn(inputSubmitDataBeanList.get(0).getSn());
-                InputBean.setNumber(Number + "");
-                OverallSituationList.add(InputBean);
+                InputSubmitDataBean inputSubmitDataBean = new InputSubmitDataBean();
+                inputSubmitDataBean.setFGuid(taskRvDataList.get(RV_ScanInfoTableIndex).getFGUID());
+                inputSubmitDataBean.setFBillID(HeardID);
+                inputSubmitDataBean.setFMaterial(taskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial());
+                inputSubmitDataBean.setFUnit(taskRvDataList.get(RV_ScanInfoTableIndex).getFUnit());
+                inputSubmitDataBean.setFQty(Number + "");
+                InputSubmitDataBeanList.add(inputSubmitDataBean);
+
+                SubBody subBody = new SubBody();
+                subBody.setFGuid("");
+                subBody.setFBillBodyID(taskRvDataList.get(RV_ScanInfoTableIndex).getFGUID());
+                subBody.setFBarcodeLib(subBodys.get(0).getFBarcodeLib());
+                subBodyList.add(subBody);
+
                 int ThisSendSum = Integer.parseInt(taskRvDataList.get(scanTask_rvAdapter.getselection()).getTV_thisSend().split("\\.")[0]);
                 ViseLog.i("ThisSendSum = " + ThisSendSum);
                 taskRvDataList.get(scanTask_rvAdapter.getselection()).setTV_thisSend(String.valueOf(ThisSendSum + Number));
@@ -1254,20 +1286,20 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 scanResult_rvAdapter.notifyDataSetChanged();
                 IsClean = true;
                 IsScanFinish = false;
-                ViseLog.i("inputSubmitDataBeanList Sn= " + inputSubmitDataBeanList.get(0).getSn() + "Number = " + inputSubmitDataBeanList.get(0).getNumber());
-                in_Str.close();
                 scanTask_rvAdapter.setSelection(-1);
                 scanResult_rvAdapter.notifyDataSetChanged();
                 TV_SaveState(true);
                 Et_ScanNumber.setText("");
                 Et_ScanNumber.setFocusable(false);
                 Et_ScanNumber.setFocusableInTouchMode(false);
+                in_Str.close();
+                in_Str2.close();
             } else {
                 tools.ShowDialog(MContect, "都还没开始扫描，无法提交");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ViseLog.i("SaveSNSumException = " + e.getMessage());
+            ViseLog.i("SaveSNSumException = " + e);
         }
     }
 
@@ -1281,7 +1313,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     }
 
     private void SumbitData() {
-        if (OverallSituationList.size() > 0) {
+        if (InputSubmitDataBeanList.size() > 0) {
             myProgressDialog.ShowPD("正在提交...");
             SumbitDataThread sumbitDataThread = new SumbitDataThread();
             sumbitDataThread.start();
@@ -1296,7 +1328,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 }
             }, 5000);
         } else {
-            tools.ShowDialog(MContect, "一个扫描完成的物料都没有，无法提交");
+            tools.ShowDialog(MContect, "一个提交完成的物料都没有，无法保存");
         }
     }
 
@@ -1307,7 +1339,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             //执行耗时操作
             Message msg = new Message();
             try {
-                String DetailedListXml = GetSnNumberXml.getSingleton().CreateInputXmlStr(OverallSituationList, MaterialIDList, BodyIdList);
+//                OverallSituationList, MaterialIDList, BodyIdList
+                String DetailedListXml = GetSnNumberXml.getSingleton().CreateInputXmlStr(HeardID, FPartner, BusinessType, InputSubmitDataBeanList, subBodyList);
                 ViseLog.i("DetailedListXml = " + DetailedListXml + " Sp_house.getSelectedItem().toString() = " + stockBeans.get(SpHouseIndex).getFName()
                         + "Sp_InputHouseSpace.getSelectedItem().toString() = " + stockBeanList.get(SpInputHouseSpaceIndex).getFName());
 
@@ -1324,6 +1357,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             } catch (Exception e) {
                 e.printStackTrace();
                 ViseLog.d("GetNullXmlSyncThread Exception" + e);
+                msg.what = 8;
+                handler.sendMessage(msg);
             }
         }
     }
@@ -1341,5 +1376,20 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             TV_Save.setBackground(drawable);
             TV_Save.setTextColor(getResources().getColor(R.color.White));
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        tools.ShowOnClickDialog(MContect, "是否退出入库界面，退出数据将清空", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ViewManager.getInstance().finishActivity(InputLibraryActivity.this);
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tools.DisappearDialog();
+            }
+        }, false);
     }
 }

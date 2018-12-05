@@ -111,6 +111,8 @@ public class InputTaskXml {
                     outbody.setTV_statistics(data);
                 } else if (tag.equals("FMaterial")) {//物料编号
                     outbody.setFMaterial(data);
+                } else if (tag.equals("FUnit")) {//物料编号
+                    outbody.setFUnit(data);
                 }
             }
 

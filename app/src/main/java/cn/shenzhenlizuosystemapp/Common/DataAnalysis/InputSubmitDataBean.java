@@ -1,23 +1,49 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
 
 public class InputSubmitDataBean {
-    private String Sn;
-    private String Number;
+    private String FGuid;
+    private String FBillID;
+    private String FMaterial;
+    private String FUnit;
+    private String FQty;
 
-    public String getSn() {
-        return Sn;
+    public String getFGuid() {
+        return FGuid;
     }
 
-    public void setSn(String sn) {
-        Sn = sn;
+    public String getFBillID() {
+        return FBillID;
     }
 
-    public void setNumber(String number) {
-        Number = number;
+    public String getFMaterial() {
+        return FMaterial;
     }
 
-    public String getNumber() {
-        return Number;
+    public String getFUnit() {
+        return FUnit;
     }
 
+    public String getFQty() {
+        return FQty;
+    }
+
+    public void setFGuid(String FGuid) {
+        this.FGuid = FGuid;
+    }
+
+    public void setFBillID(String FBillID) {
+        this.FBillID = FBillID;
+    }
+
+    public void setFMaterial(String FMaterial) {
+        this.FMaterial = FMaterial;
+    }
+
+    public void setFUnit(String FUnit) {
+        this.FUnit = FUnit;
+    }
+
+    public void setFQty(String FQty) {
+        this.FQty = FQty;
+    }
 }

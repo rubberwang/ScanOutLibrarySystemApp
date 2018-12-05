@@ -12,6 +12,24 @@ public class TaskRvData {
     private String TV_shouldSend;
     private String TV_noSend;
     private String FMaterial;
+    private String FPartner;
+    private String FUnit;
+
+    public String getFUnit() {
+        return FUnit;
+    }
+
+    public void setFUnit(String FUnit) {
+        this.FUnit = FUnit;
+    }
+
+    public String getFPartner() {
+        return FPartner;
+    }
+
+    public void setFPartner(String FPartner) {
+        this.FPartner = FPartner;
+    }
 
     public void setFMaterial(String FMaterial) {
         this.FMaterial = FMaterial;
@@ -29,6 +47,7 @@ public class TaskRvData {
     public String getFGUID() {
         return FGUID;
     }
+    
     public void setTV_materID(String TV_materID) {
         this.TV_materID = TV_materID;
     }
@@ -40,8 +59,6 @@ public class TaskRvData {
     public void setTV_size(String TV_size) {
         this.TV_size = TV_size;
     }
-
-
 
     public void setTV_commonunit(String TV_commonunit) {
         this.TV_commonunit = TV_commonunit;
@@ -78,8 +95,6 @@ public class TaskRvData {
     public String getTV_size() {
         return TV_size;
     }
-
-
 
     public String getTV_commonunit() {
         return TV_commonunit;
