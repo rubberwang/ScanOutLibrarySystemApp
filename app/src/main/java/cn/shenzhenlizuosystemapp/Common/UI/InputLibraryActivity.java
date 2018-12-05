@@ -260,12 +260,20 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         if (TextUtils.isEmpty(Et_ScanNumber.getText().toString())) {
                             tools.ShowDialog(MContect, "请输入数量在提交");
                         } else {
-                            IsEditNumber = false;
-                            SaveSNSum();
-                            Res = "";
-                            GetNullXml(RV_ScanInfoTableIndex);
-                            IsScaning = false;
-                            stopScan();
+                            String[] ShouldSend = taskRvDataList.get(RV_ScanInfoTableIndex).getTV_shouldSend().split("\\.");
+                            String[] AlreadySend = taskRvDataList.get(RV_ScanInfoTableIndex).getTV_alreadySend().split("\\.");
+                            int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
+                            if (NoSend>=Integer.parseInt(Et_ScanNumber.getText().toString())){
+                                IsEditNumber = false;
+                                SaveSNSum();
+                                Res = "";
+                                GetNullXml(RV_ScanInfoTableIndex);
+                                IsScaning = false;
+                                stopScan();
+                            }else {
+                                tools.ShowDialog(MContect,"输入数量超出未收数量，请重新输入！");
+                            }
+
                         }
                     } else {
                         IsEditNumber = false;
