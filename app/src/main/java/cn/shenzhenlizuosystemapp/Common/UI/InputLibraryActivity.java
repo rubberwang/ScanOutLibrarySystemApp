@@ -502,12 +502,12 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 } else {
                     if (!IsScaning) {
 //                        if (scanTask_rvAdapter.getselection() == -1) {
-                            if (RV_ScanInfoTableIndex != position) {
-                                RV_ScanInfoTableIndex = position;
-                            }
-                            scanTask_rvAdapter.setSelection(position);
-                            scanTask_rvAdapter.notifyDataSetChanged();//选中
-                            GetNullXml(position);
+                        if (RV_ScanInfoTableIndex != position) {
+                            RV_ScanInfoTableIndex = position;
+                        }
+                        scanTask_rvAdapter.setSelection(position);
+                        scanTask_rvAdapter.notifyDataSetChanged();//选中
+                        GetNullXml(position);
 //                        }
                     } else {
                         tools.show(MContect, "请扫描完当前任务");
@@ -824,7 +824,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
         @Override
         protected String doInBackground(String... params) {
-
             return params[0];
         }
 
@@ -950,7 +949,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                             Et_ScanNumber.setFocusableInTouchMode(true);
                             Et_ScanNumber.setFocusable(true);
                             Et_ScanNumber.requestFocus();
-                        }
+                        } 
                         IsCatch = true;
                         IsScanFinish = true;
                         State = 1;
@@ -1262,6 +1261,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                     Number = Integer.parseInt(Et_ScanNumber.getText().toString());
                 } else {
                     Number = Integer.parseInt(inputSubmitDataBeans.get(0).getFQty());
+                    Et_ScanNumber.setText(Number);
                 }
                 InputSubmitDataBean inputSubmitDataBean = new InputSubmitDataBean();
                 inputSubmitDataBean.setFGuid(taskRvDataList.get(RV_ScanInfoTableIndex).getFGUID());
@@ -1270,13 +1270,11 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 inputSubmitDataBean.setFUnit(taskRvDataList.get(RV_ScanInfoTableIndex).getFUnit());
                 inputSubmitDataBean.setFQty(Number + "");
                 InputSubmitDataBeanList.add(inputSubmitDataBean);
-
                 SubBody subBody = new SubBody();
                 subBody.setFGuid("");
                 subBody.setFBillBodyID(taskRvDataList.get(RV_ScanInfoTableIndex).getFGUID());
                 subBody.setFBarcodeLib(subBodys.get(0).getFBarcodeLib());
                 subBodyList.add(subBody);
-
                 int ThisSendSum = Integer.parseInt(taskRvDataList.get(scanTask_rvAdapter.getselection()).getTV_thisSend().split("\\.")[0]);
                 ViseLog.i("ThisSendSum = " + ThisSendSum);
                 taskRvDataList.get(scanTask_rvAdapter.getselection()).setTV_thisSend(String.valueOf(ThisSendSum + Number));
