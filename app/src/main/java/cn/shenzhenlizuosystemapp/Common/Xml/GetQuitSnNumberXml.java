@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitSubmitDataBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.SubQuitBody;
 
 public class GetQuitSnNumberXml {
 
@@ -45,12 +46,9 @@ public class GetQuitSnNumberXml {
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("BarcodeLib")) {
                             quitSubmitDataBean = new QuitSubmitDataBean();
-                        } else if ("FGuid".equals(parser.getName())) {
-                            String Guid = parser.nextText();
-                            quitSubmitDataBean.setSn(Guid);
                         } else if ("FQty".equals(parser.getName())) {
                             String Sum = parser.nextText();
-                            quitSubmitDataBean.setNumber(Sum);
+                            quitSubmitDataBean.setFQty(Sum);
                         }
                         break;
                     case XmlPullParser.END_TAG:
@@ -70,8 +68,47 @@ public class GetQuitSnNumberXml {
         }
         return null;
     }
+    public static List<SubQuitBody> ReadSubBodyPullXML(InputStream inputStream) {
+        XmlPullParser parser = Xml.newPullParser();
+        try {
+            parser.setInput(inputStream, "UTF-8");
+            int eventType = parser.getEventType();
+            SubQuitBody subQuitBody = null;
+            List<SubQuitBody> subBodyList = null;
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                    case XmlPullParser.START_DOCUMENT:
+                        subBodyList = new ArrayList<>();
+                        break;
+                    case XmlPullParser.START_TAG:
+                        String name = parser.getName();
+                        if (name.equalsIgnoreCase("BarcodeLib")) {
+                            subQuitBody = new SubQuitBody();
+                        } else if ("FGuid".equals(parser.getName())) {
+                            String Sum = parser.nextText();
+                            subQuitBody.setFBarcodeLib(Sum);
+                        }
+                        break;
+                    case XmlPullParser.END_TAG:
+                        if (parser.getName().equalsIgnoreCase("BarcodeLib")
+                                && subQuitBody != null) {
+                            subBodyList.add(subQuitBody);
+                            subQuitBody = null;
+                        }
+                        break;
+                }
+                eventType = parser.next();
+            }
+            inputStream.close();
+            return subBodyList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-    public String CreateInputXmlStr(List<QuitSubmitDataBean> inputSubmitDataBeans, List<String> Guid, List<String> BodyID) {
+
+    public String CreateInputXmlStr(String FGuid, String FPartner, String FTransactionType, List<QuitSubmitDataBean> inputSubmitDataBeans, List<SubQuitBody> subBodyList) {
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             StringWriter stringWriter = new StringWriter();
@@ -79,32 +116,55 @@ public class GetQuitSnNumberXml {
             try {
                 serializer.setOutput(stringWriter);
                 serializer.startDocument("UTF-8", true);
-                // persons标签开始
                 serializer.startTag(null, "NewDataSet");
-                for (int i = 0; i < Guid.size(); i++) {
-                    serializer.startTag(null, "Material");
-                    serializer.startTag(null, "Guid");
-                    serializer.text(Guid.get(i));
-                    serializer.endTag(null, "Guid");
-                    serializer.startTag(null, "BodyID");
-                    serializer.text(BodyID.get(i));
-                    serializer.endTag(null, "BodyID");
-                    serializer.endTag(null, "Material");
-                }
+
+                serializer.startTag(null, "BillHead");
+                serializer.startTag(null, "FGuid");
+                serializer.text(FGuid);
+                serializer.endTag(null, "FGuid");
+                serializer.startTag(null, "FPartner");
+                serializer.text(FPartner);
+                serializer.endTag(null, "FPartner");
+                serializer.startTag(null, "FTransactionType");
+                serializer.text(FTransactionType);
+                serializer.endTag(null, "FTransactionType");
+                serializer.endTag(null, "BillHead");
+
                 for (int index = 0; index < inputSubmitDataBeans.size(); index++) {
-                    serializer.startTag(null, "SerialNum");
-                    serializer.startTag(null, "SN");
-                    serializer.text(inputSubmitDataBeans.get(index).getSn());
-                    serializer.endTag(null, "SN");
-                    serializer.startTag(null, "MaterialId");
-                    serializer.text(Guid.get(index));
-                    serializer.endTag(null, "MaterialId");
-                    serializer.startTag(null, "Qty");
-                    serializer.text(inputSubmitDataBeans.get(index).getNumber());
-                    serializer.endTag(null, "Qty");
-                    serializer.endTag(null, "SerialNum");
+                    serializer.startTag(null, "BillBody");
+                    serializer.startTag(null, "FGuid");
+                    serializer.text(inputSubmitDataBeans.get(index).getFGuid());
+                    serializer.endTag(null, "FGuid");
+                    serializer.startTag(null, "FBillID");
+                    serializer.text(inputSubmitDataBeans.get(index).getFBillID());
+                    serializer.endTag(null, "FBillID");
+                    serializer.startTag(null, "FMaterial");
+                    serializer.text(inputSubmitDataBeans.get(index).getFMaterial());
+                    serializer.endTag(null, "FMaterial");
+                    serializer.startTag(null, "FUnit");
+                    serializer.text(inputSubmitDataBeans.get(index).getFUnit());
+                    serializer.endTag(null, "FUnit");
+                    serializer.startTag(null, "FQty");
+                    serializer.text(inputSubmitDataBeans.get(index).getFQty());
+                    serializer.endTag(null, "FQty");
+                    serializer.endTag(null, "BillBody");
+                }
+
+                for (int s = 0; s < subBodyList.size(); s++) {
+                    serializer.startTag(null, "SubBody");
+                    serializer.startTag(null, "FGuid");
+                    serializer.text(subBodyList.get(s).getFGuid());
+                    serializer.endTag(null, "FGuid");
+                    serializer.startTag(null, "FBillBodyID");
+                    serializer.text(subBodyList.get(s).getFBillBodyID());
+                    serializer.endTag(null, "FBillBodyID");
+                    serializer.startTag(null, "FBarcodeLib");
+                    serializer.text(subBodyList.get(s).getFBarcodeLib());
+                    serializer.endTag(null, "FBarcodeLib");
+                    serializer.endTag(null, "SubBody");
                 }
                 serializer.endTag(null, "NewDataSet");
+
                 serializer.endDocument();
                 stringWriter.close();
                 return String.valueOf(stringWriter);

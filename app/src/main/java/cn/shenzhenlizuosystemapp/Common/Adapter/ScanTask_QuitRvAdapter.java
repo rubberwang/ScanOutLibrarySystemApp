@@ -12,6 +12,7 @@ import com.vise.log.ViseLog;
 
 import java.util.List;
 
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitTaskRvData;
 import cn.shenzhenlizuosystemapp.R;
