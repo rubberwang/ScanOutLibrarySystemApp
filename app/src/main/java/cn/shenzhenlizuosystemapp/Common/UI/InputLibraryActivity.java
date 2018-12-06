@@ -156,6 +156,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private boolean SaveClickState = false;
     private boolean IsSave = false;
     private int RV_ScanInfoTableIndex = 0;
+    private String Ex = "";
 
     private int GetSpinnerPos(List<StockBean> Datas, String value) {
         for (int i = 0; i < Datas.size(); i++) {
@@ -961,6 +962,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 return scanXmlResults.get(0).getResult() + "," + scanXmlResults.get(0).getFQty();
             } catch (Exception e) {
                 ViseLog.i("ScanResultVerifyTask Exception = " + e);
+                Ex = e.getMessage();
                 return "";
             }
         }
@@ -1006,7 +1008,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 InitRecycler();
                 Res = "";
                 State = 1;
-                tools.ShowDialog(MContect, "扫描数据错误");
+                tools.ShowDialog(MContect, "扫描数据错误" + Ex);
             }
         }
 
