@@ -180,5 +180,6 @@ public class Tools {
 
     public void DisappearDialog() {
         dialog.dismiss();
+        dialog = null;
     }
 }

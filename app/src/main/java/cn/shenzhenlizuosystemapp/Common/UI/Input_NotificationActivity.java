@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.vise.log.ViseLog;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class Input_NotificationActivity extends BaseActivity {
     private List<QuitLibraryBill> outLibraryBills;
     private List<QuitLibraryBill> SearchResultList;
     private Tools tools;
+    private Input_NotificationActivity MContect = null;
 
     @Override
     protected int inflateLayout() {
@@ -45,6 +47,7 @@ public class Input_NotificationActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        MContect = new WeakReference<>(Input_NotificationActivity.this).get();
         SearchResultList = new ArrayList<>();
         tools = new Tools();
         InitFragment();
@@ -165,12 +168,12 @@ public class Input_NotificationActivity extends BaseActivity {
                     });
                     ViseLog.d("搜索成功");
                 } else {
-                    tools.showshort(Input_NotificationActivity.this, "搜索错误请重新搜索");
+                    tools.showshort(MContect, "搜索错误请重新搜索");
                     ViseLog.d("搜索失败");
                 }
             } catch (Exception e) {
                 ViseLog.d("搜索错误" + e);
-                tools.showshort(Input_NotificationActivity.this, "搜索错误请重新搜索");
+                tools.showshort(MContect, "搜索错误请重新搜索");
             }
             ViseLog.i("搜索结果" + result);
         }

@@ -1056,7 +1056,9 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         if (deviceList != null) {
             deviceList = null;
         }
+
         if (tools != null) {
+            tools.DisappearDialog();
             tools = null;
         }
     }

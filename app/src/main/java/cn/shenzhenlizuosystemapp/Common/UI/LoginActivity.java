@@ -74,6 +74,7 @@ public class LoginActivity extends BaseActivity {
     private String SelectProjectStr = "";
     private List<ItemData> itemData;
     private MyProgressDialog myProgressDialog;
+    private LoginActivity MContect = null;
 
     private int GetSpinnerPos(String value) {
         for (int i = 0; i < itemData.size(); i++) {
@@ -90,6 +91,7 @@ public class LoginActivity extends BaseActivity {
 
     public void initData() {
         tools = new Tools();
+        MContect = new WeakReference<>(LoginActivity.this).get();
         httpRequest = new WebService(this);
         logInObServer = new LogInObServer();
         getLifecycle().addObserver(logInObServer);
@@ -328,7 +330,7 @@ public class LoginActivity extends BaseActivity {
 
     private void LogInUser() {
         if (TextUtils.isEmpty(Edit_UserName.getText().toString()) && TextUtils.isEmpty(Edit_PassWord.getText().toString())) {
-            tools.show(LoginActivity.this, "请输入用户名 密码");
+            tools.show(MContect, "请输入用户名 密码");
         } else {
             myProgressDialog.ShowPD("登录中...");
             loginSyncThread = new LoginSyncThread(Edit_UserName.getText().toString(), Edit_PassWord.getText().toString());
@@ -408,7 +410,7 @@ public class LoginActivity extends BaseActivity {
                     case 1: {
                         myProgressDialog.dismiss();
                         IsNetWork = true;
-                        tools.showshort(LoginActivity.this, "登录成功");
+                        tools.showshort(MContect, "登录成功");
                         tools.PutStringData("Project", SelectProjectStr, sharedPreferences);
                         ConnectStr.USERNAME = Edit_UserName.getText().toString();
                         ConnectStr.ConnectionToString = ProjectNameAndConnectMap.get(SelectProjectStr);
@@ -419,12 +421,12 @@ public class LoginActivity extends BaseActivity {
                     case 2: {
                         myProgressDialog.dismiss();
                         IsNetWork = true;
-                        tools.ShowDialog(LoginActivity.this, "用户名或密码错误");
+                        tools.ShowDialog(MContect, "用户名或密码错误");
                         break;
                     }
                     case 3: {
                         myProgressDialog.dismiss();
-                        tools.ShowDialog(LoginActivity.this, "网络连接超时");
+                        tools.ShowDialog(MContect, "网络连接超时");
                         break;
                     }
                 }
