@@ -67,7 +67,10 @@ public class Item_InputLibrary_Fragment extends Fragment {
             adapter.setOnItemClickLitener(new SelectInput_FullAdapter.OnItemClickLitener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    startActivity(new Intent(getActivity(),InputLibraryActivity.class));
+                    Intent intent = new Intent(getActivity(),InputLibraryActivity.class);
+                    intent.putExtra("FGUID",selectOutLibraryList.get(position).getFGuid());
+                    ViseLog.i("FGUID"+selectOutLibraryList.get(position).getFGuid());
+                    startActivity(intent);
                 }
 
                 @Override

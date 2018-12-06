@@ -68,7 +68,10 @@ public class Item_QuitLibrary_Fragment extends Fragment {
             adapter.setOnItemClickLitener(new SelectQuit_FullAdapter.OnItemClickLitener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    startActivity(new Intent(getActivity(),QuitLibraryActivity.class));
+                    Intent intent = new Intent(getActivity(),QuitLibraryActivity.class);
+                    intent.putExtra("FGUID",selectOutLibraryList.get(position).getFGuid());
+                    ViseLog.i("FGUID"+selectOutLibraryList.get(position).getFGuid());
+                    startActivity(intent);
                 }
 
                 @Override
