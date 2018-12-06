@@ -259,7 +259,7 @@ public class WebService {
         soapObject.addProperty("StockName", StockName);
         soapObject.addProperty("StockCellName", StockCellName);
         soapObject.addProperty("Products", Products);
-
+        soapObject.addProperty("InStockBill", Products);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
         envelope.bodyOut = soapObject;
