@@ -289,10 +289,17 @@ public class LoginActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
         public void ON_RESUME() {
+            if (tools.GetStringData(sharedPreferences, "IsScanInput").equals("true")) {
+                ConnectStr.ISSHOWNONEXECUTION = true;
+            } else {
+                ConnectStr.ISSHOWNONEXECUTION = false;
+            }
+            ViseLog.i("ISSHOWNONEXECUTION = " + ConnectStr.ISSHOWNONEXECUTION + "sharedPreferences = " + tools.GetStringData(sharedPreferences, "IsScanInput"));
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         public void ON_PAUSE() {
+          
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -406,6 +413,7 @@ public class LoginActivity extends BaseActivity {
                         ConnectStr.USERNAME = Edit_UserName.getText().toString();
                         ConnectStr.ConnectionToString = ProjectNameAndConnectMap.get(SelectProjectStr);
                         startActivity(new Intent(LoginActivity.this, MainTabActivity.class));
+                        ViewManager.getInstance().finishActivity(LoginActivity.this);
                         break;
                     }
                     case 2: {
@@ -425,7 +433,7 @@ public class LoginActivity extends BaseActivity {
             }
         }
     }
-    
+
     private void IsExitApp() {
         View view = LayoutInflater.from(LoginActivity.this).inflate(R.layout.exit_app, null, false);
         final Dialog dialog = new Dialog(LoginActivity.this);
@@ -437,6 +445,7 @@ public class LoginActivity extends BaseActivity {
         TV_Yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 ViewManager.getInstance().exitApp(LoginActivity.this);
             }
         });
@@ -461,7 +470,6 @@ public class LoginActivity extends BaseActivity {
         }
         dialogWindow.setAttributes(lp);
         dialog.show();
-
     }
 
 }

@@ -9,15 +9,19 @@ import android.media.Image;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.vise.log.ViseLog;
 
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.R;
 
 public class SettingActivity extends BaseActivity {
@@ -27,6 +31,7 @@ public class SettingActivity extends BaseActivity {
     private EditText IP_ET;
     private EditText ET_InputPrinterIP;
     private EditText ET_InputPrinterPort;
+    private CheckBox IsScanInput;
     private Tools tools;
     private SharedPreferences sharedPreferences;
     private ServerIPSettingObServer serverIPSettingObServer;
@@ -67,6 +72,17 @@ public class SettingActivity extends BaseActivity {
                 ViewManager.getInstance().finishActivity(SettingActivity.this);//直接移除栈
             }
         });
+        IsScanInput.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    tools.PutStringData("IsScanInput", "true", sharedPreferences);
+                } else {
+                    tools.PutStringData("IsScanInput", "false", sharedPreferences);
+                }
+            }
+        });
+        IsScanInput.setChecked(ConnectStr.ISSHOWNONEXECUTION);
     }
 
     @Override
@@ -76,6 +92,7 @@ public class SettingActivity extends BaseActivity {
         IP_ET = $(R.id.IP_ET);
         ET_InputPrinterIP = $(R.id.ET_InputPrinterIP);
         ET_InputPrinterPort = $(R.id.ET_InputPrinterPort);
+        IsScanInput = $(R.id.IsScanInput);
     }
 
     private void DetectionSp() {

@@ -12,6 +12,7 @@ import com.vise.log.ViseLog;
 
 import java.util.List;
 
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
 import cn.shenzhenlizuosystemapp.R;
@@ -51,10 +52,9 @@ public class ScanTask_RvAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
             String[] NameRoot = datas.get(position).getTV_nameRoot().split("\\.");
+            String[] ThisSend = datas.get(position).getTV_thisSend().split("\\.");
             String[] ShouldSend = datas.get(position).getTV_shouldSend().split("\\.");
             String[] AlreadySend = datas.get(position).getTV_alreadySend().split("\\.");
-            String[] ThisSend = datas.get(position).getTV_thisSend().split("\\.");
-
             int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
 
             ((ViewHoders) holder).TV_materID.setText(datas.get(position).getTV_materID());
