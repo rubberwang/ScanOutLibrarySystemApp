@@ -108,6 +108,8 @@ public class QuitTaskXml {
                     outbody.setTV_commonunit(data);
                 }else if (tag.equals("FBaseUnit_Name")) {//基本单位
                     outbody.setTV_statistics(data);
+                } else if (tag.equals("FUnit")) {//物料编号
+                    outbody.setFUnit(data);
                 }
             }
 

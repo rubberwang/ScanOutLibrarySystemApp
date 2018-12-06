@@ -12,6 +12,24 @@ public class QuitTaskRvData {
     private String TV_shouldSend;
     private String TV_noSend;
     private String FMaterial;
+    private String FPartner;
+    private String FUnit;
+
+    public String getFUnit() {
+        return FUnit;
+    }
+
+    public void setFUnit(String FUnit) {
+        this.FUnit = FUnit;
+    }
+
+    public String getFPartner() {
+        return FPartner;
+    }
+
+    public void setFPartner(String FPartner) {
+        this.FPartner = FPartner;
+    }
 
     public void setFMaterial(String FMaterial) {
         this.FMaterial = FMaterial;
