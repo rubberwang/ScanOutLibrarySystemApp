@@ -147,6 +147,9 @@ public class GetSnNumberXml {
                     serializer.startTag(null, "FQty");
                     serializer.text(inputSubmitDataBeans.get(index).getFQty());
                     serializer.endTag(null, "FQty");
+                    serializer.startTag(null, "FPrice");
+                    serializer.text(inputSubmitDataBeans.get(index).getFPrice());
+                    serializer.endTag(null, "FPrice");
                     serializer.endTag(null, "BillBody");
                 }
 

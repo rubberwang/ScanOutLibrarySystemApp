@@ -114,6 +114,7 @@ public class SettingActivity extends BaseActivity {
             tools.PutStringData("ServerIPAddress", IP_ET.getText().toString(), sharedPreferences);
             tools.PutStringData("ServerIPPort", ET_InputPrinterPort.getText().toString(), sharedPreferences);
             tools.show(this, "保存成功");
+            ViseLog.i("ET_InputPrinterIP = "+ET_InputPrinterIP.getText().toString());
             ViewManager.getInstance().finishActivity(SettingActivity.this);//直接移除栈
         } else {
             tools.show(this, "请输入地址后再次点击保存");

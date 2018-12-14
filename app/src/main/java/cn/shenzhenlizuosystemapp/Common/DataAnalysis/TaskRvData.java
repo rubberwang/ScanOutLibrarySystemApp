@@ -14,6 +14,18 @@ public class TaskRvData {
     private String FMaterial;
     private String FPartner;
     private String FUnit;
+    private String FPrice;
+
+
+    public String getFPrice() {
+        return FPrice;
+    }
+
+    public void setFPrice(String FPrice) {
+
+        this.FPrice = FPrice;
+    }
+
 
     public String getFUnit() {
         return FUnit;
@@ -37,7 +49,7 @@ public class TaskRvData {
 
     public String getFMaterial() {
         return FMaterial;
-        
+
     }
 
     public void setFGUID(String FGUID) {
@@ -47,7 +59,7 @@ public class TaskRvData {
     public String getFGUID() {
         return FGUID;
     }
-    
+
     public void setTV_materID(String TV_materID) {
         this.TV_materID = TV_materID;
     }

@@ -32,11 +32,11 @@ public class InputTaskXml {
         }
         return inputTaskXml;
     }
-    
+
     public List GetInputBodyXml(InputStream stream) throws SAXException, IOException, ParserConfigurationException {
         SAXParserFactory factory = SAXParserFactory.newInstance();//创建SAX解析工厂
         javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器
-       BodySAXHandler handler = new BodySAXHandler();//创建处理函数
+        BodySAXHandler handler = new BodySAXHandler();//创建处理函数
         parser.parse(stream, handler);//开始解析
         List<TaskRvData> outbodys = handler.getBody();
         return outbodys;
@@ -105,14 +105,16 @@ public class InputTaskXml {
                     outbody.setTV_nameRoot(data);
                 } else if (tag.equals("FModel")) {//规格
                     outbody.setTV_size(data);
-                }else if (tag.equals("FUnit_Name")) {//常用单位
+                } else if (tag.equals("FUnit_Name")) {//常用单位
                     outbody.setTV_commonunit(data);
-                }else if (tag.equals("FBaseUnit_Name")) {//基本单位
+                } else if (tag.equals("FBaseUnit_Name")) {//基本单位
                     outbody.setTV_statistics(data);
                 } else if (tag.equals("FMaterial")) {//物料编号
                     outbody.setFMaterial(data);
                 } else if (tag.equals("FUnit")) {//物料编号
                     outbody.setFUnit(data);
+                } else if (tag.equals("FPrice")) {
+                    outbody.setFPrice(data);
                 }
             }
 

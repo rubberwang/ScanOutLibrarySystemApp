@@ -74,7 +74,6 @@ public class LoginActivity extends BaseActivity {
     private String SelectProjectStr = "";
     private List<ItemData> itemData;
     private MyProgressDialog myProgressDialog;
-    private LoginActivity MContect = null;
 
     private int GetSpinnerPos(String value) {
         for (int i = 0; i < itemData.size(); i++) {
@@ -91,7 +90,6 @@ public class LoginActivity extends BaseActivity {
 
     public void initData() {
         tools = new Tools();
-        MContect = new WeakReference<>(LoginActivity.this).get();
         httpRequest = new WebService(this);
         logInObServer = new LogInObServer();
         getLifecycle().addObserver(logInObServer);
@@ -301,7 +299,7 @@ public class LoginActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         public void ON_PAUSE() {
-          
+
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -330,7 +328,7 @@ public class LoginActivity extends BaseActivity {
 
     private void LogInUser() {
         if (TextUtils.isEmpty(Edit_UserName.getText().toString()) && TextUtils.isEmpty(Edit_PassWord.getText().toString())) {
-            tools.show(MContect, "请输入用户名 密码");
+            tools.show(LoginActivity.this, "请输入用户名 密码");
         } else {
             myProgressDialog.ShowPD("登录中...");
             loginSyncThread = new LoginSyncThread(Edit_UserName.getText().toString(), Edit_PassWord.getText().toString());
@@ -360,24 +358,22 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void run() {
             //执行耗时操作
+            Message msg = new Message();
             try {
-                Message msg = new Message();
                 String string = ProjectNameAndConnectMap.get(SelectProjectStr);
                 String Result = httpRequest.LoginIn(User, Paw, string);
                 ViseLog.i(string);
-                Gson gson = new Gson();
-                Json student = gson.fromJson(String.valueOf(Result), Json.class);
-                Log.i("MainActivity", "Res" + student.getMsg() + student.getSuccess());
-                if (student.getSuccess().equals("true")) {
+                Log.i("MainActivity", "Res" + Result);
+                if (Result.equals("true")) {
                     msg.what = 1;
-                    handler.sendMessage(msg);
-                } else {
-                    msg.what = 2;
                     handler.sendMessage(msg);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 ThreadStop();
+                msg.what = 2;
+                msg.getData().putString("LoginException",e.getMessage());
+                handler.sendMessage(msg);
                 ViseLog.d("UserModel Exception" + e);
             }
         }
@@ -410,7 +406,7 @@ public class LoginActivity extends BaseActivity {
                     case 1: {
                         myProgressDialog.dismiss();
                         IsNetWork = true;
-                        tools.showshort(MContect, "登录成功");
+                        tools.showshort(LoginActivity.this, "登录成功");
                         tools.PutStringData("Project", SelectProjectStr, sharedPreferences);
                         ConnectStr.USERNAME = Edit_UserName.getText().toString();
                         ConnectStr.ConnectionToString = ProjectNameAndConnectMap.get(SelectProjectStr);
@@ -421,12 +417,12 @@ public class LoginActivity extends BaseActivity {
                     case 2: {
                         myProgressDialog.dismiss();
                         IsNetWork = true;
-                        tools.ShowDialog(MContect, "用户名或密码错误");
+                        tools.ShowDialog(LoginActivity.this, msg.getData().getString("LoginException"));
                         break;
                     }
                     case 3: {
                         myProgressDialog.dismiss();
-                        tools.ShowDialog(MContect, "网络连接超时");
+                        tools.ShowDialog(LoginActivity.this, "网络连接超时");
                         break;
                     }
                 }

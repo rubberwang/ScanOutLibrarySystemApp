@@ -6,6 +6,15 @@ public class InputSubmitDataBean {
     private String FMaterial;
     private String FUnit;
     private String FQty;
+    private String FPrice;
+
+    public String getFPrice() {
+        return FPrice;
+    }
+
+    public void setFPrice(String FPrice) {
+        this.FPrice = FPrice;
+    }
 
     public String getFGuid() {
         return FGuid;

@@ -295,6 +295,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        tools.DisappearDialog();
                         ViewManager.getInstance().finishActivity(InputLibraryActivity.this);
                     }
                 }, new View.OnClickListener() {
@@ -958,7 +959,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 InputStream in_result = new ByteArrayInputStream(Res.getBytes("UTF-8"));
                 List<ScanXmlResult> scanXmlResults = GetChildTag.getSingleton().getScanXmlResult(in_result);
                 in_Str.close();
-                Log.i("huangmin", "AsyncDataSuccess = " + scanXmlResults.get(0).getResult() + "," + scanXmlResults.get(0).getFQty());
+                Log.i("huangmin", "AsyncDataSuccess = " + Res);
                 return scanXmlResults.get(0).getResult() + "," + scanXmlResults.get(0).getFQty();
             } catch (Exception e) {
                 ViseLog.i("ScanResultVerifyTask Exception = " + e);
@@ -1306,6 +1307,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 inputSubmitDataBean.setFMaterial(taskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial());
                 inputSubmitDataBean.setFUnit(taskRvDataList.get(RV_ScanInfoTableIndex).getFUnit());
                 inputSubmitDataBean.setFQty(Number + "");
+                inputSubmitDataBean.setFPrice(taskRvDataList.get(RV_ScanInfoTableIndex).getFPrice());
                 InputSubmitDataBeanList.add(inputSubmitDataBean);
                 SubBody subBody = new SubBody();
                 subBody.setFGuid("");
@@ -1394,11 +1396,10 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             try {
 //                OverallSituationList, MaterialIDList, BodyIdList
                 String DetailedListXml = GetSnNumberXml.getSingleton().CreateInputXmlStr(HeardID, FPartner, BusinessType, InputSubmitDataBeanList, subBodyList);
-                ViseLog.i("DetailedListXml = " + DetailedListXml + " Sp_house.getSelectedItem().toString() = " + stockBeans.get(SpHouseIndex).getFName()
-                        + "Sp_InputHouseSpace.getSelectedItem().toString() = " + stockBeanList.get(SpInputHouseSpaceIndex).getFName());
-
-                String Result = webService.CreateInStockBill(ConnectStr.ConnectionToString, HeardID,
-                        ConnectStr.USERNAME, stockBeans.get(SpHouseIndex).getFName(), stockBeanList.get(SpInputHouseSpaceIndex).getFName(), DetailedListXml);
+                ViseLog.i("DetailedListXml = " + DetailedListXml + " Sp_house.getSelectedItem().toString() = " + stockBeans.get(SpHouseIndex).getFGuid()
+                        + "Sp_InputHouseSpace.getSelectedItem().toString() = " + stockBeanList.get(SpInputHouseSpaceIndex).getFGuid());
+                String Result = webService.CreateInStockBill(ConnectStr.ConnectionToString,
+                        ConnectStr.USERNAME, stockBeans.get(SpHouseIndex).getFGuid(), stockBeanList.get(SpInputHouseSpaceIndex).getFGuid(), DetailedListXml);
                 ViseLog.i("SumbitResult = " + Result);
                 if (Result.equals("Success")) {
                     msg.what = 4;

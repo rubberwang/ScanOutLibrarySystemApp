@@ -250,16 +250,14 @@ public class WebService {
         return Result;
     }
 
-    public String CreateInStockBill(String ConnectionToString,String inStockNoticeID,String UserName,String StockName,String StockCellName,String Products) throws IOException, XmlPullParserException, ClassCastException {
+    public String CreateInStockBill(String ConnectionToString,String UserName,String Stock,String StockCell,String InStockBill) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "CreateInStockBill");
 
         soapObject.addProperty("ConnectionToString", ConnectionToString);
-        soapObject.addProperty("inStockNoticeID", inStockNoticeID);
         soapObject.addProperty("UserName", UserName);
-        soapObject.addProperty("StockName", StockName);
-        soapObject.addProperty("StockCellName", StockCellName);
-        soapObject.addProperty("Products", Products);
-        soapObject.addProperty("InStockBill", Products);
+        soapObject.addProperty("StockID", Stock);
+        soapObject.addProperty("StockCellID", StockCell);
+        soapObject.addProperty("InStockBill", InStockBill);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
         envelope.bodyOut = soapObject;
