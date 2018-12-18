@@ -1,6 +1,6 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
 
-public class ScanXmlResult {
+public class ScanInputXmlResult {
     private String Result;
     private String FQty;
 

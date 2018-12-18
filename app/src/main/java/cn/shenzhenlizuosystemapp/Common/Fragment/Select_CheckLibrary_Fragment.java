@@ -85,12 +85,12 @@ public class Select_CheckLibrary_Fragment extends Fragment {
 
         @Override
         protected List<CheckLibraryBill> doInBackground(Integer... params) {
-            String OutBills = "";
+            String CheckBills = "";
             try {
                 InputStream in_withcode = null;
-                OutBills = webService.CheckLibraryNote(ConnectStr.ConnectionToString);
-                ViseLog.i("OutBills = " + OutBills);
-                in_withcode = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
+                CheckBills = webService.CheckLibraryNote(ConnectStr.ConnectionToString);
+                ViseLog.i("CheckBills = " + CheckBills);
+                in_withcode = new ByteArrayInputStream(CheckBills.getBytes("UTF-8"));
                 outLibraryBills = getOutLibraryFromXMl(in_withcode);
             } catch (Exception e) {
                 ViseLog.d("SelectOutLibraryGetOutLibraryBillsException " + e);
@@ -149,13 +149,13 @@ public class Select_CheckLibrary_Fragment extends Fragment {
     }
 
     public class SAXHandler extends DefaultHandler {
-        private List<CheckLibraryBill> Outbills;
+        private List<CheckLibraryBill> Checkbills;
         private CheckLibraryBill Bill;// 当前解析的student
         private String tag;// 当前解析的标签
 
         public List<CheckLibraryBill> getBills() {
-            if (Outbills != null) {
-                return Outbills;
+            if (Checkbills != null) {
+                return Checkbills;
             }
             return null;
         }
@@ -163,7 +163,7 @@ public class Select_CheckLibrary_Fragment extends Fragment {
         @Override
         public void startDocument() throws SAXException {
             // 文档开始
-            Outbills = new ArrayList<CheckLibraryBill>();
+            Checkbills = new ArrayList<CheckLibraryBill>();
         }
 
         @Override
@@ -184,7 +184,7 @@ public class Select_CheckLibrary_Fragment extends Fragment {
                 throws SAXException {
             // 节点结束
             if (localName.equals("Table")) {
-                Outbills.add(Bill);
+                Checkbills.add(Bill);
                 Bill = null;
             }
             tag = null;

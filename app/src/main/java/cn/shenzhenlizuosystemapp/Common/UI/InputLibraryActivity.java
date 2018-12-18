@@ -55,8 +55,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResult_RvAdapter;
-import cn.shenzhenlizuosystemapp.Common.Adapter.ScanTask_RvAdapter;
+
+import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResult_InputRvAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.ScanTask_InputRvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
@@ -64,23 +65,23 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildTag;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubmitDataBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryDetail;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanXmlResult;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryDetail;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanInputXmlResult;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Stock_Return;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.SubBody;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.ItemData;
-import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.StockAdapter;
+import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.InputStockAdapter;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.WebBean.InputLibraryAllInfo;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
-import cn.shenzhenlizuosystemapp.Common.Xml.GetChildTag;
-import cn.shenzhenlizuosystemapp.Common.Xml.GetSnNumberXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.GetInputChildTag;
+import cn.shenzhenlizuosystemapp.Common.Xml.GetInputSnNumberXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputLibraryXmlAnalysis;
-import cn.shenzhenlizuosystemapp.Common.Xml.StockXmlAnalysis;
+import cn.shenzhenlizuosystemapp.Common.Xml.InputStockXmlAnalysis;
 import cn.shenzhenlizuosystemapp.R;
 
 
@@ -108,10 +109,10 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
     private WebService webService;
     private InputLibraryObServer inputLibraryObServer;
-    private ScanResult_RvAdapter scanResult_rvAdapter;
-    private ScanTask_RvAdapter scanTask_rvAdapter;
+    private ScanResult_InputRvAdapter scanResult_Input_rvAdapter;
+    private ScanTask_InputRvAdapter scanTask_Input_rvAdapter;
     private List<ItemData> SpStrList;
-    private List<TaskRvData> taskRvDataList = null;
+    private List<InputTaskRvData> inputTaskRvDataList = null;
     private List<ScannerInfo> deviceList = null;
     private List<String> ScanResStrList = null;
     private List<StockBean> stockBeans = null;
@@ -188,7 +189,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         webService = WebService.getSingleton(this);
         InitClick();
         InitRecycler();
-        GetOutLibraryBills();
+        GetInputLibraryBills();
     }
 
     @Override
@@ -226,8 +227,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         TV_Scaning.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (scanTask_rvAdapter != null) {
-                    if (scanTask_rvAdapter.getselection() >= 0) {
+                if (scanTask_Input_rvAdapter != null) {
+                    if (scanTask_Input_rvAdapter.getselection() >= 0) {
                         if (IsScaning) {
                             ShowCancelDialog(MContect, "是否确定取消本次扫描");//停止扫描
                         } else {
@@ -254,8 +255,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         if (TextUtils.isEmpty(Et_ScanNumber.getText().toString())) {
                             tools.ShowDialog(MContect, "请输入数量在提交");
                         } else {
-                            String[] ShouldSend = taskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty().split("\\.");
-                            String[] AlreadySend = taskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty().split("\\.");
+                            String[] ShouldSend = inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty().split("\\.");
+                            String[] AlreadySend = inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty().split("\\.");
                             int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
                             if (NoSend >= Integer.parseInt(Et_ScanNumber.getText().toString()) && Integer.parseInt(Et_ScanNumber.getText().toString()) != 0) {
                                 IsEditNumber = false;
@@ -483,8 +484,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
         RV_GetInfoTable.setLayoutManager(layoutManager);
-        scanResult_rvAdapter = new ScanResult_RvAdapter(this, childTagList);
-        RV_GetInfoTable.setAdapter(scanResult_rvAdapter);
+        scanResult_Input_rvAdapter = new ScanResult_InputRvAdapter(this, childTagList);
+        RV_GetInfoTable.setAdapter(scanResult_Input_rvAdapter);
     }
 
     private void InitScanRecycler() {
@@ -494,30 +495,30 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         RV_ScanInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
         RV_ScanInfoTable.setLayoutManager(ScanTaskL);
         if (ConnectStr.ISSHOWNONEXECUTION) {
-            taskRvDataList = DisposeTaskRvDataList(taskRvDataList);
+            inputTaskRvDataList = DisposeTaskRvDataList(inputTaskRvDataList);
         }
-        scanTask_rvAdapter = new ScanTask_RvAdapter(this, taskRvDataList);
-        RV_ScanInfoTable.setAdapter(scanTask_rvAdapter);
-        scanTask_rvAdapter.setOnItemClickLitener(new ScanTask_RvAdapter.OnItemClickLitener() {
+        scanTask_Input_rvAdapter = new ScanTask_InputRvAdapter(this, inputTaskRvDataList);
+        RV_ScanInfoTable.setAdapter(scanTask_Input_rvAdapter);
+        scanTask_Input_rvAdapter.setOnItemClickLitener(new ScanTask_InputRvAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
-                if (Integer.parseInt(taskRvDataList.get(position).getFAuxQty().split("\\.")[0]) <= Integer.parseInt(taskRvDataList.get(position).getFThisAuxQty().split("\\.")[0]) +
-                        Integer.parseInt(taskRvDataList.get(position).getFExecutedAuxQty().split("\\.")[0])) {
+                if (Integer.parseInt(inputTaskRvDataList.get(position).getFAuxQty().split("\\.")[0]) <= Integer.parseInt(inputTaskRvDataList.get(position).getFThisAuxQty().split("\\.")[0]) +
+                        Integer.parseInt(inputTaskRvDataList.get(position).getFExecutedAuxQty().split("\\.")[0])) {
                     tools.ShowDialog(MContect, "这张单已扫描完成");
                 } else {
                     if (!IsScaning) {
-//                        if (scanTask_rvAdapter.getselection() == -1) {
+//                        if (scanTask_Input_rvAdapter.getselection() == -1) {
                         if (RV_ScanInfoTableIndex != position) {
                             RV_ScanInfoTableIndex = position;
                         }
-                        scanTask_rvAdapter.setSelection(position);
-                        scanTask_rvAdapter.notifyDataSetChanged();//选中
+                        scanTask_Input_rvAdapter.setSelection(position);
+                        scanTask_Input_rvAdapter.notifyDataSetChanged();//选中
                         GetNullXml(position);
                         if (RV_ScanInfoTableIndex != position) {
                             RV_ScanInfoTableIndex = position;
                         }
-                        scanTask_rvAdapter.setSelection(position);
-                        scanTask_rvAdapter.notifyDataSetChanged();//选中
+                        scanTask_Input_rvAdapter.setSelection(position);
+                        scanTask_Input_rvAdapter.notifyDataSetChanged();//选中
                         GetNullXml(position);
 //                        }
                     } else {
@@ -534,8 +535,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
     private void InitSp(List<StockBean> stockBeans, String StockName) {
         if (stockBeans.size() >= 0) {
-            StockAdapter StockAdapter = new StockAdapter(stockBeans, InputLibraryActivity.this);
-            Sp_house.setAdapter(StockAdapter);
+            InputStockAdapter InputStockAdapter = new InputStockAdapter(stockBeans, InputLibraryActivity.this);
+            Sp_house.setAdapter(InputStockAdapter);
             int Pos = GetSpinnerPos(stockBeans, StockName);
             Sp_house.setSelection(Pos);
             Sp_house.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -556,56 +557,56 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         }
     }
 
-    private void GetOutLibraryBills() {
-        GetInputLibraryBillsAsyncTask getOutLibraryBillsAsyncTask = new GetInputLibraryBillsAsyncTask();
-        getOutLibraryBillsAsyncTask.execute();
+    private void GetInputLibraryBills() {
+        GetInputLibraryBillsAsyncTask getInputLibraryBillsAsyncTask = new GetInputLibraryBillsAsyncTask();
+        getInputLibraryBillsAsyncTask.execute();
     }
 
 
-    public class GetInputLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<QuitLibraryDetail>> {
+    public class GetInputLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<InputLibraryDetail>> {
 
         private RecyclerView recyclerView;
 
         @Override
-        protected List<QuitLibraryDetail> doInBackground(Integer... params) {
-            List<QuitLibraryDetail> outLibraryBills = new ArrayList<>();
+        protected List<InputLibraryDetail> doInBackground(Integer... params) {
+            List<InputLibraryDetail> inputLibraryBills = new ArrayList<>();
             stockBeans = new ArrayList<>();
-            taskRvDataList = new ArrayList<>();
-            String OutBills = "";
+            inputTaskRvDataList = new ArrayList<>();
+            String InputBills = "";
             String Stocks = "";
             InputStream in_Stocks = null;
             try {
-                OutBills = webService.GetWareHouseData(ConnectStr.ConnectionToString, FGUID);
-                InputStream InputAllInfoStream = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
+                InputBills = webService.GetWareHouseData(ConnectStr.ConnectionToString, FGUID);
+                InputStream InputAllInfoStream = new ByteArrayInputStream(InputBills.getBytes("UTF-8"));
                 List<InputLibraryAllInfo> inputLibraryAllInfoList = InputLibraryXmlAnalysis.getSingleton().GetInputAllInfoList(InputAllInfoStream);
                 if (inputLibraryAllInfoList.get(0).getFStatus().equals("1")) {
                     InputStream HeadinfoStr = new ByteArrayInputStream(inputLibraryAllInfoList.get(0).getFInfo().getBytes("UTF-8"));
                     InputStream BodyinfoStr = new ByteArrayInputStream(inputLibraryAllInfoList.get(0).getFInfo().getBytes("UTF-8"));
                     ViseLog.i("inputLibraryAllInfoList.get(0).getFInfo() = " + inputLibraryAllInfoList.get(0).getFInfo());
-                    outLibraryBills = InputLibraryXmlAnalysis.getSingleton().GetInputDetailXml(HeadinfoStr);
-                    taskRvDataList = InputLibraryXmlAnalysis.getSingleton().GetBodyInfo(BodyinfoStr);
+                    inputLibraryBills = InputLibraryXmlAnalysis.getSingleton().GetInputDetailXml(HeadinfoStr);
+                    inputTaskRvDataList = InputLibraryXmlAnalysis.getSingleton().GetBodyInfo(BodyinfoStr);
                     HeadinfoStr.close();
                     BodyinfoStr.close();
                     Stocks = webService.GetStocks(ConnectStr.ConnectionToString);
                     in_Stocks = new ByteArrayInputStream(Stocks.getBytes("UTF-8"));
-                    List<Stock_Return> stock_returnList = StockXmlAnalysis.getSingleton().GetXmlStockReturn(in_Stocks);
+                    List<Stock_Return> stock_returnList = InputStockXmlAnalysis.getSingleton().GetXmlStockReturn(in_Stocks);
                     if (stock_returnList.get(0).getFStatus().equals("1")) {
                         InputStream In_StockInfo = new ByteArrayInputStream(stock_returnList.get(0).getFInfo().getBytes("UTF-8"));
-                        stockBeans = StockXmlAnalysis.getSingleton().GetXmlStockInfo(In_StockInfo);
+                        stockBeans = InputStockXmlAnalysis.getSingleton().GetXmlStockInfo(In_StockInfo);
                     } else {
                         stockBeans.clear();
                     }
                     ViseLog.i("Stocks = " + Stocks);
-                    return outLibraryBills;
+                    return inputLibraryBills;
                 } else {
-                    outLibraryBills.clear();
-                    return outLibraryBills;
+                    inputLibraryBills.clear();
+                    return inputLibraryBills;
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return outLibraryBills;
+            return inputLibraryBills;
         }
 
         /**
@@ -613,10 +614,10 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
          * 在doInBackground方法执行结束之后在运行，并且运行在UI线程当中 可以对UI空间进行设置
          */
         @Override
-        protected void onPostExecute(final List<QuitLibraryDetail> result) {
+        protected void onPostExecute(final List<InputLibraryDetail> result) {
             try {
                 if (result.size() >= 0) {
-                    if (taskRvDataList.size() >= 0) {
+                    if (inputTaskRvDataList.size() >= 0) {
                         InitScanRecycler();
                     }
                     if (stockBeans.size() >= 0) {
@@ -675,7 +676,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         TV_Scaning.setText(R.string.scaning);
         ScanResStrList.clear();
         childTagList.clear();
-        scanResult_rvAdapter.notifyDataSetChanged();
+        scanResult_Input_rvAdapter.notifyDataSetChanged();
         if (scanner != null) {
             try {
                 // Reset continuous flag
@@ -795,12 +796,12 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             if (result != null) {
                 ViseLog.i("ScanResultData" + String.valueOf(CheckResultList(result)));
                 int NoSendQty = 0;
-                if (!TextUtils.isEmpty(taskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty()) && !TextUtils.isEmpty(taskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty())) {
-                    int AuxQty = Integer.parseInt(taskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty().split("\\.")[0]);
-                    int ExecutedAuxQty = Integer.parseInt(taskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty().split("\\.")[0]);
+                if (!TextUtils.isEmpty(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty()) && !TextUtils.isEmpty(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty())) {
+                    int AuxQty = Integer.parseInt(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty().split("\\.")[0]);
+                    int ExecutedAuxQty = Integer.parseInt(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty().split("\\.")[0]);
                     NoSendQty = AuxQty - ExecutedAuxQty;
                 }
-                if (Integer.parseInt(taskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty().split("\\.")[0]) <= NoSendQty) {
+                if (Integer.parseInt(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty().split("\\.")[0]) <= NoSendQty) {
                     if (IsScanFinish) {
                         tools.ShowDialog(MContect, "已扫描完，请点击提交在接着扫描");
                     } else {
@@ -837,7 +838,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 List<AdapterReturn> stock_returns = AnalysisReturnsXml.getSingleton().GetReturn(inStockCell);
                 if (stock_returns.get(0).getFStatus().equals("1")) {
                     InputStream In_Info = new ByteArrayInputStream(stock_returns.get(0).getFInfo().getBytes("UTF-8"));
-                    stockBeanList = StockXmlAnalysis.getSingleton().GetXmlStockInfo(In_Info);
+                    stockBeanList = InputStockXmlAnalysis.getSingleton().GetXmlStockInfo(In_Info);
                 } else {
                     stockBeanList.clear();
                 }
@@ -849,8 +850,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
         protected void onPostExecute(List<StockBean> result) {
             if (result.size() >= 0) {
-                StockAdapter StockAdapter = new StockAdapter(result, InputLibraryActivity.this);
-                Sp_InputHouseSpace.setAdapter(StockAdapter);
+                InputStockAdapter InputStockAdapter = new InputStockAdapter(result, InputLibraryActivity.this);
+                Sp_InputHouseSpace.setAdapter(InputStockAdapter);
                 Sp_InputHouseSpace.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -881,19 +882,19 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                     EndStr = addSpace(Res, MiddleStr);
                 }
                 ViseLog.i("State = " + EndStr);
-                Res = webService.GetBarcodeAnalyze(taskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(), EndStr, ConnectStr.ConnectionToString, ConnectStr.USERNAME);
+                Res = webService.GetBarcodeAnalyze(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(), EndStr, ConnectStr.ConnectionToString, ConnectStr.USERNAME);
                 if (TextUtils.isEmpty(Res)) {
                     ViseLog.i("res为空" + Res);
                     return "";
                 }
                 InputStream in_Str = new ByteArrayInputStream(Res.getBytes("UTF-8"));
                 childTagList.clear();
-                childTagList = GetChildTag.getSingleton().getChildTagXml(in_Str);
+                childTagList = GetInputChildTag.getSingleton().getChildTagXml(in_Str);
                 InputStream in_result = new ByteArrayInputStream(Res.getBytes("UTF-8"));
-                List<ScanXmlResult> scanXmlResults = GetChildTag.getSingleton().getScanXmlResult(in_result);
+                List<ScanInputXmlResult> scanInputXmlResults = GetInputChildTag.getSingleton().getScanXmlResult(in_result);
                 in_Str.close();
                 Log.i("huangmin", "AsyncDataSuccess = " + Res);
-                return scanXmlResults.get(0).getResult() + "," + scanXmlResults.get(0).getFQty();
+                return scanInputXmlResults.get(0).getResult() + "," + scanInputXmlResults.get(0).getFQty();
             } catch (Exception e) {
                 ViseLog.i("ScanResultVerifyTask Exception = " + e);
                 Ex = e.getMessage();
@@ -1094,8 +1095,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                     }
                     case 6: {
                         tools.ShowDialog(MContect, "没有这个物料规则请选择其它物料规则");
-                        scanTask_rvAdapter.setSelection(-1);
-                        scanResult_rvAdapter.notifyDataSetChanged();
+                        scanTask_Input_rvAdapter.setSelection(-1);
+                        scanResult_Input_rvAdapter.notifyDataSetChanged();
                     }
                     case 7: {
                         myProgressDialog.dismiss();
@@ -1137,7 +1138,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             //执行耗时操作
             Message msg = new Message();
             try {
-                String Result = webService.GetBarcodeAnalyze(taskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(), "", ConnectStr.ConnectionToString, ConnectStr.USERNAME);
+                String Result = webService.GetBarcodeAnalyze(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(), "", ConnectStr.ConnectionToString, ConnectStr.USERNAME);
                 if (!TextUtils.isEmpty(Result)) {
                     msg.what = 1;
                     msg.getData().putString("Xml", Result);
@@ -1156,7 +1157,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     }
 
     private void GetNullXml(int pos) {
-        GetNullXmlSyncThread getNullXmlSyncThread = new GetNullXmlSyncThread(taskRvDataList.get(pos).getFGuid());
+        GetNullXmlSyncThread getNullXmlSyncThread = new GetNullXmlSyncThread(inputTaskRvDataList.get(pos).getFGuid());
         getNullXmlSyncThread.start();
     }
 
@@ -1226,8 +1227,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 int Number = 0;
                 in_Str = new ByteArrayInputStream(Res.getBytes("UTF-8"));
                 in_Str2 = new ByteArrayInputStream(Res.getBytes("UTF-8"));
-                List<InputSubmitDataBean> inputSubmitDataBeans = GetSnNumberXml.getSingleton().ReadPullXML(in_Str);
-                List<SubBody> subBodys = GetSnNumberXml.getSingleton().ReadSubBodyPullXML(in_Str2);
+                List<InputSubmitDataBean> inputSubmitDataBeans = GetInputSnNumberXml.getSingleton().ReadPullXML(in_Str);
+                List<SubBody> subBodys = GetInputSnNumberXml.getSingleton().ReadSubBodyPullXML(in_Str2);
                 if (inputSubmitDataBeans.get(0).getFQty().equals("0")) {
                     Number = Integer.parseInt(Et_ScanNumber.getText().toString());
                 } else {
@@ -1235,29 +1236,29 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 }
                 ViseLog.i("Number = " + Number);
                 InputSubmitDataBean inputSubmitDataBean = new InputSubmitDataBean();
-                inputSubmitDataBean.setFGuid(taskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
+                inputSubmitDataBean.setFGuid(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
                 inputSubmitDataBean.setFBillID(HeardID);
-                inputSubmitDataBean.setFMaterial(taskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial());
-                inputSubmitDataBean.setFUnit(taskRvDataList.get(RV_ScanInfoTableIndex).getFUnit());
+                inputSubmitDataBean.setFMaterial(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial());
+                inputSubmitDataBean.setFUnit(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFUnit());
                 inputSubmitDataBean.setFQty(Number + "");
-                inputSubmitDataBean.setFPrice(taskRvDataList.get(RV_ScanInfoTableIndex).getFPrice());
+                inputSubmitDataBean.setFPrice(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFPrice());
                 InputSubmitDataBeanList.add(inputSubmitDataBean);
                 SubBody subBody = new SubBody();
                 subBody.setFGuid("");
-                subBody.setFBillBodyID(taskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
+                subBody.setFBillBodyID(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
                 subBody.setFBarcodeLib(subBodys.get(0).getFBarcodeLib());
                 subBodyList.add(subBody);
-                int ThisSendSum = Integer.parseInt(taskRvDataList.get(scanTask_rvAdapter.getselection()).getFThisAuxQty().split("\\.")[0]);
+                int ThisSendSum = Integer.parseInt(inputTaskRvDataList.get(scanTask_Input_rvAdapter.getselection()).getFThisAuxQty().split("\\.")[0]);
                 ViseLog.i("ThisSendSum = " + ThisSendSum);
-//                taskRvDataList.get(scanTask_rvAdapter.getselection()).getFThisAuxQty(String.valueOf(ThisSendSum + Number));
+//                inputTaskRvDataList.get(scanTask_Input_rvAdapter.getselection()).getFThisAuxQty(String.valueOf(ThisSendSum + Number));
                 if (!IsSave) {
                     stopScan();
-                    scanTask_rvAdapter.setSelection(-1);
+                    scanTask_Input_rvAdapter.setSelection(-1);
                 }
-                scanTask_rvAdapter.notifyDataSetChanged();
+                scanTask_Input_rvAdapter.notifyDataSetChanged();
                 childTagList.clear();
                 ScanResStrList.clear();
-                scanResult_rvAdapter.notifyDataSetChanged();
+                scanResult_Input_rvAdapter.notifyDataSetChanged();
                 IsClean = true;
                 IsScanFinish = false;
                 TV_SaveState(true);
@@ -1268,14 +1269,14 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 in_Str2.close();
                 tools.showshort(MContect, "提交成功");
                 IsSave = false;
-//                int ThisNewSendSum = Integer.parseInt(taskRvDataList.get(scanTask_rvAdapter.getselection()).getTV_thisSend().split("\\.")[0]);
-//                String[] ShouldSend = taskRvDataList.get(RV_ScanInfoTableIndex).getTV_shouldSend().split("\\.");
-//                String[] AlreadySend = taskRvDataList.get(RV_ScanInfoTableIndex).getTV_alreadySend().split("\\.");
+//                int ThisNewSendSum = Integer.parseInt(inputTaskRvDataList.get(scanTask_Input_rvAdapter.getselection()).getTV_thisSend().split("\\.")[0]);
+//                String[] ShouldSend = inputTaskRvDataList.get(RV_ScanInfoTableIndex).getTV_shouldSend().split("\\.");
+//                String[] AlreadySend = inputTaskRvDataList.get(RV_ScanInfoTableIndex).getTV_alreadySend().split("\\.");
 //                int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
 //                if (ThisNewSendSum >= NoSend) {
 //                    stopScan();
-//                    scanTask_rvAdapter.setSelection(-1);
-//                    scanTask_rvAdapter.notifyDataSetChanged();
+//                    scanTask_Input_rvAdapter.setSelection(-1);
+//                    scanTask_Input_rvAdapter.notifyDataSetChanged();
 //                }
             } else {
                 tools.ShowDialog(MContect, "都还没开始扫描，无法提交");
@@ -1295,9 +1296,9 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         stopScan();
         childTagList.clear();
         ScanResStrList.clear();
-        scanResult_rvAdapter.notifyDataSetChanged();
-        scanTask_rvAdapter.setSelection(-1);
-        scanTask_rvAdapter.notifyDataSetChanged();
+        scanResult_Input_rvAdapter.notifyDataSetChanged();
+        scanTask_Input_rvAdapter.setSelection(-1);
+        scanTask_Input_rvAdapter.notifyDataSetChanged();
     }
 
     private void SumbitData() {
@@ -1328,7 +1329,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             Message msg = new Message();
             try {
 //                OverallSituationList, MaterialIDList, BodyIdList
-                String DetailedListXml = GetSnNumberXml.getSingleton().CreateInputXmlStr(HeardID, FPartner, BusinessType, InputSubmitDataBeanList, subBodyList);
+                String DetailedListXml = GetInputSnNumberXml.getSingleton().CreateInputXmlStr(HeardID, FPartner, BusinessType, InputSubmitDataBeanList, subBodyList);
                 ViseLog.i("DetailedListXml = " + DetailedListXml + " Sp_house.getSelectedItem().toString() = " + stockBeans.get(SpHouseIndex).getFGuid()
                         + "Sp_InputHouseSpace.getSelectedItem().toString() = " + stockBeanList.get(SpInputHouseSpaceIndex).getFGuid());
                 String Result = webService.CreateInStockBill(ConnectStr.ConnectionToString,
@@ -1381,18 +1382,18 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         }, false);
     }
 
-    private List DisposeTaskRvDataList(List<TaskRvData> DisposeTaskRvDataList) {
-        for (int index = 0; index < DisposeTaskRvDataList.size(); index++) {
+    private List DisposeTaskRvDataList(List<InputTaskRvData> disposeInputTaskRvDataList) {
+        for (int index = 0; index < disposeInputTaskRvDataList.size(); index++) {
             String NoSendQty = "0";
-            if (!TextUtils.isEmpty(DisposeTaskRvDataList.get(index).getFAuxQty()) && !TextUtils.isEmpty(DisposeTaskRvDataList.get(index).getFExecutedAuxQty())) {
-                int AuxQty = Integer.parseInt(DisposeTaskRvDataList.get(index).getFAuxQty().split("\\.")[0]);
-                int ExecutedAuxQty = Integer.parseInt(DisposeTaskRvDataList.get(index).getFExecutedAuxQty().split("\\.")[0]);
+            if (!TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFAuxQty()) && !TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFExecutedAuxQty())) {
+                int AuxQty = Integer.parseInt(disposeInputTaskRvDataList.get(index).getFAuxQty().split("\\.")[0]);
+                int ExecutedAuxQty = Integer.parseInt(disposeInputTaskRvDataList.get(index).getFExecutedAuxQty().split("\\.")[0]);
                 NoSendQty = String.valueOf(AuxQty - ExecutedAuxQty);
             }
             if (Integer.parseInt(NoSendQty) <= 0) {
-                DisposeTaskRvDataList.remove(index);
+                disposeInputTaskRvDataList.remove(index);
             }
         }
-        return DisposeTaskRvDataList;
+        return disposeInputTaskRvDataList;
     }
 }

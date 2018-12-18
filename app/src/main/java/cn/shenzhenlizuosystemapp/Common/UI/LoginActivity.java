@@ -38,7 +38,6 @@ import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.JsonUitl;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.LoginResInfo;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.ItemData;

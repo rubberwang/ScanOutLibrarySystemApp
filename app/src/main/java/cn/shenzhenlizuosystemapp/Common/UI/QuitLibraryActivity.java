@@ -112,7 +112,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
     private RecyclerView RV_ScanInfoTable;
 
     private WebService webService;
-    private OutLibraryObServer outLibraryObServer;
+    private QuitLibraryObServer quitLibraryObServer;
     private ScanResult_QuitRvAdapter scanResult_quitRvAdapter;
     private ScanTask_QuitRvAdapter scanTask_Quit_rvAdapter;
     private List<ItemData> SpStrList;
@@ -188,8 +188,8 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         subQuitBodyList = new ArrayList<>();
         MContect = new WeakReference<>(QuitLibraryActivity.this).get();
         tools = Tools.getTools();
-        outLibraryObServer = new OutLibraryObServer();
-        getLifecycle().addObserver(outLibraryObServer);
+        quitLibraryObServer = new QuitLibraryObServer();
+        getLifecycle().addObserver(quitLibraryObServer);
         webService = WebService.getSingleton(this);
         InitClick();
         InitRecycler();
@@ -637,18 +637,18 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器
         BodySAXHandler handler = new BodySAXHandler();//创建处理函数
         parser.parse(stream, handler);//开始解析
-        List<QuitLibraryDetail> outbodys = handler.getBody();
-        return outbodys;
+        List<QuitLibraryDetail> quitbodys = handler.getBody();
+        return quitbodys;
     }
 
     public class BodySAXHandler extends DefaultHandler {
-        private List<QuitLibraryDetail> OutBodys;
-        private QuitLibraryDetail outbody;// 当前解析的student
+        private List<QuitLibraryDetail> QuitBodys;
+        private QuitLibraryDetail quitBody;// 当前解析的student
         private String tag;// 当前解析的标签
 
         public List<QuitLibraryDetail> getBody() {
-            if (OutBodys != null) {
-                return OutBodys;
+            if (QuitBodys != null) {
+                return QuitBodys;
             }
             return null;
         }
@@ -656,7 +656,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         @Override
         public void startDocument() throws SAXException {
             // 文档开始
-            OutBodys = new ArrayList<QuitLibraryDetail>();
+            QuitBodys = new ArrayList<QuitLibraryDetail>();
         }
 
         @Override
@@ -668,8 +668,8 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                                  Attributes attributes) throws SAXException {
             tag = localName;
             if (localName.equals("Table")) {
-                outbody = new QuitLibraryDetail();
-                ViseLog.i("创建outbody");
+                quitBody = new QuitLibraryDetail();
+                ViseLog.i("创建quitBody");
             }
         }
 
@@ -678,8 +678,8 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                 throws SAXException {
             // 节点结束
             if (localName.equals("Table")) {
-                OutBodys.add(outbody);
-                outbody = null;
+                QuitBodys.add(quitBody);
+                quitBody = null;
             }
             tag = null;
         }
@@ -690,22 +690,22 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
             String data = new String(ch, start, length);
             if (data != null && tag != null) {
                 if (tag.equals("HeadGuid")) {
-                    outbody.setFGuid(data);
+                    quitBody.setFGuid(data);
                     ViseLog.i(data);
                 } else if (tag.equals("FCode")) {
-                    outbody.setFCode(data);
+                    quitBody.setFCode(data);
                 } else if (tag.equals("FStock")) {
-                    outbody.setFStock(data);
+                    quitBody.setFStock(data);
                 } else if (tag.equals("FStock_Name")) {
-                    outbody.setFStock_Name(data);
+                    quitBody.setFStock_Name(data);
                 } else if (tag.equals("FTransactionType")) {
-                    outbody.setFTransactionType(data);
+                    quitBody.setFTransactionType(data);
                 } else if (tag.equals("FTransactionType_Name")) {
-                    outbody.setFTransactionType_Name(data);
+                    quitBody.setFTransactionType_Name(data);
                 } else if (tag.equals("FPartner")) {
-                    outbody.setFPartner(data);
+                    quitBody.setFPartner(data);
                 } else if (tag.equals("FPartner_Name")) {
-                    outbody.setFPartner_Name(data);
+                    quitBody.setFPartner_Name(data);
                 }
 
             }
@@ -1059,7 +1059,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         }
     }
 
-    class OutLibraryObServer implements LifecycleObserver {
+    class QuitLibraryObServer implements LifecycleObserver {
         @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
         public void ON_CREATE() {
         }

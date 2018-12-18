@@ -10,24 +10,22 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Stock_Return;
-import cn.shenzhenlizuosystemapp.Common.WebBean.InputLibraryAllInfo;
 
-public class StockXmlAnalysis {
+public class InputStockXmlAnalysis {
 
-    private volatile static StockXmlAnalysis stockXmlAnalysis;
+    private volatile static InputStockXmlAnalysis inputStockXmlAnalysis;
 
-    public static StockXmlAnalysis getSingleton() {
-        if (stockXmlAnalysis == null) {
-            synchronized (StockXmlAnalysis.class) {
-                if (stockXmlAnalysis == null) {
-                    stockXmlAnalysis = new StockXmlAnalysis();
+    public static InputStockXmlAnalysis getSingleton() {
+        if (inputStockXmlAnalysis == null) {
+            synchronized (InputStockXmlAnalysis.class) {
+                if (inputStockXmlAnalysis == null) {
+                    inputStockXmlAnalysis = new InputStockXmlAnalysis();
                 }
             }
         }
-        return stockXmlAnalysis;
+        return inputStockXmlAnalysis;
     }
 
     public List<Stock_Return> GetXmlStockReturn(InputStream inputStream) {

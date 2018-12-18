@@ -17,7 +17,7 @@ import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Adapter.SelectInput_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.UI.InputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
@@ -25,16 +25,16 @@ import cn.shenzhenlizuosystemapp.R;
 
 public class Item_InputLibrary_Fragment extends Fragment {
 
-    private static List<QuitLibraryBill> selectOutLibraryList;
+    private static List<InputLibraryBill> selectInputLibraryList;
     private RecyclerView RV_CastAbout;
     private ProgressDialog PD;
     private Tools tools;
     private WebService webService;
 
-    public static Item_InputLibrary_Fragment newInstance(List<QuitLibraryBill> selectOutLibraryData) {
-        selectOutLibraryList = new ArrayList<QuitLibraryBill>();
-        selectOutLibraryList.clear();
-        Item_InputLibrary_Fragment.selectOutLibraryList = selectOutLibraryData;
+    public static Item_InputLibrary_Fragment newInstance(List<InputLibraryBill> selectInputLibraryData) {
+        selectInputLibraryList = new ArrayList<InputLibraryBill>();
+        selectInputLibraryList.clear();
+        Item_InputLibrary_Fragment.selectInputLibraryList = selectInputLibraryData;
         return new Item_InputLibrary_Fragment();
     }
 
@@ -57,19 +57,19 @@ public class Item_InputLibrary_Fragment extends Fragment {
     }
 
     private void ToLoadData() {
-        if (selectOutLibraryList.size() >= 0) {
+        if (selectInputLibraryList.size() >= 0) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             RV_CastAbout.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
             RV_CastAbout.setLayoutManager(layoutManager);
-            SelectInput_FullAdapter adapter = new SelectInput_FullAdapter(getActivity(), selectOutLibraryList);
+            SelectInput_FullAdapter adapter = new SelectInput_FullAdapter(getActivity(), selectInputLibraryList);
             RV_CastAbout.setAdapter(adapter);
             adapter.setOnItemClickLitener(new SelectInput_FullAdapter.OnItemClickLitener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     Intent intent = new Intent(getActivity(),InputLibraryActivity.class);
-                    intent.putExtra("FGUID",selectOutLibraryList.get(position).getFGuid());
-                    ViseLog.i("FGUID"+selectOutLibraryList.get(position).getFGuid());
+                    intent.putExtra("FGUID",selectInputLibraryList.get(position).getFGuid());
+                    ViseLog.i("FGUID"+selectInputLibraryList.get(position).getFGuid());
                     startActivity(intent);
                 }
 

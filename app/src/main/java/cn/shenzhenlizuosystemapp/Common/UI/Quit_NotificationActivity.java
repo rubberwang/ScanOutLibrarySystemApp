@@ -138,13 +138,13 @@ public class Quit_NotificationActivity extends BaseActivity {
 
         @Override
         protected Integer doInBackground(Integer... params) {
-            int OutBills = 0;
+            int QuitBills = 0;
             try {
-                OutBills = LookForBranch(ChracterSearch);
+                QuitBills = LookForBranch(ChracterSearch);
             } catch (Exception e) {
                 ViseLog.d("SelectOutLibraryGetOutLibraryBillsException " + e);
             }
-            return OutBills;
+            return QuitBills;
         }
 
         /**

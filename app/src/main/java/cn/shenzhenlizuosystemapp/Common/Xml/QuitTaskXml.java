@@ -14,7 +14,6 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-//import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitTaskRvData;
 
 public class QuitTaskXml {
@@ -37,18 +36,18 @@ public class QuitTaskXml {
         javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器
        BodySAXHandler handler = new BodySAXHandler();//创建处理函数
         parser.parse(stream, handler);//开始解析
-        List<QuitTaskRvData> outbodys = handler.getBody();
-        return outbodys;
+        List<QuitTaskRvData> quitBodys = handler.getBody();
+        return quitBodys;
     }
 
     public class BodySAXHandler extends DefaultHandler {
-        private List<QuitTaskRvData> OutBodys;
-        private QuitTaskRvData outbody;// 当前解析的student
+        private List<QuitTaskRvData> QuitBodys;
+        private QuitTaskRvData quitBody;// 当前解析的student
         private String tag;// 当前解析的标签
 
         public List<QuitTaskRvData> getBody() {
-            if (OutBodys != null) {
-                return OutBodys;
+            if (QuitBodys != null) {
+                return QuitBodys;
             }
             return null;
         }
@@ -56,7 +55,7 @@ public class QuitTaskXml {
         @Override
         public void startDocument() throws SAXException {
             // 文档开始
-            OutBodys = new ArrayList<QuitTaskRvData>();
+            QuitBodys = new ArrayList<QuitTaskRvData>();
         }
 
         @Override
@@ -68,8 +67,8 @@ public class QuitTaskXml {
                                  Attributes attributes) throws SAXException {
             tag = localName;
             if (localName.equals("Table") || localName.equals("Table1")) {
-                outbody = new QuitTaskRvData();
-                ViseLog.i("创建outbody");
+                quitBody = new QuitTaskRvData();
+                ViseLog.i("创建quitBody");
             }
         }
 
@@ -78,8 +77,8 @@ public class QuitTaskXml {
                 throws SAXException {
             // 节点结束
             if (localName.equals("Table") || localName.equals("Table1")) {
-                OutBodys.add(outbody);
-                outbody = null;
+                QuitBodys.add(quitBody);
+                quitBody = null;
             }
             tag = null;
         }
@@ -90,26 +89,26 @@ public class QuitTaskXml {
             String data = new String(ch, start, length);
             if (data != null && tag != null) {
                 if (tag.equals("FGuid")) {
-                    outbody.setFGUID(data);
+                    quitBody.setFGUID(data);
                     ViseLog.i(data);
                 } else if (tag.equals("FMaterial_Code")) {//物料编号
-                    outbody.setTV_materID(data);
+                    quitBody.setTV_materID(data);
                 } else if (tag.equals("FAuxQty")) {//应发
-                    outbody.setTV_shouldSend(data);
+                    quitBody.setTV_shouldSend(data);
                 } else if (tag.equals("FExecutedAuxQty")) {//已发
-                    outbody.setTV_alreadySend(data);
+                    quitBody.setTV_alreadySend(data);
                 } else if (tag.equals("FThisAuxQty")) {//本次
-                    outbody.setTV_thisSend(data);
+                    quitBody.setTV_thisSend(data);
                 } else if (tag.equals("FMaterial_Name")) {//品名
-                    outbody.setTV_nameRoot(data);
+                    quitBody.setTV_nameRoot(data);
                 } else if (tag.equals("FModel")) {//规格
-                    outbody.setTV_size(data);
+                    quitBody.setTV_size(data);
                 }else if (tag.equals("FUnit_Name")) {//常用单位
-                    outbody.setTV_commonunit(data);
+                    quitBody.setTV_commonunit(data);
                 }else if (tag.equals("FBaseUnit_Name")) {//基本单位
-                    outbody.setTV_statistics(data);
+                    quitBody.setTV_statistics(data);
                 } else if (tag.equals("FUnit")) {//物料编号
-                    outbody.setFUnit(data);
+                    quitBody.setFUnit(data);
                 }
             }
 

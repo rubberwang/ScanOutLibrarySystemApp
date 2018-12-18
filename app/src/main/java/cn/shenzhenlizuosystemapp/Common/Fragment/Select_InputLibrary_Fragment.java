@@ -31,7 +31,7 @@ import cn.shenzhenlizuosystemapp.Common.Adapter.SelectInput_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.LoginResInfo;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.UI.InputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
@@ -46,7 +46,7 @@ public class Select_InputLibrary_Fragment extends Fragment {
     private WebService webService;
     private Tools tools;
     private ProgressDialog PD;
-    private List<QuitLibraryBill> outLibraryBills;
+    private List<InputLibraryBill> inputLibraryBills;
 
     public static Select_InputLibrary_Fragment newInstance() {
         Select_InputLibrary_Fragment fragment = new Select_InputLibrary_Fragment();
@@ -56,7 +56,7 @@ public class Select_InputLibrary_Fragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.init_select_quitlibrary, container, false);
+        View rootView = inflater.inflate(R.layout.init_select_inputlibrary, container, false);
         RV_InitSelectFull = rootView.findViewById(R.id.RV_InitSelectFull);
         tools = new Tools();
         webService = new WebService(this.getActivity());
@@ -68,40 +68,40 @@ public class Select_InputLibrary_Fragment extends Fragment {
     }
 
     private void GetOutLibraryBills() {
-        GetOutLibraryBillsAsyncTask getOutLibraryBillsAsyncTask = new GetOutLibraryBillsAsyncTask(RV_InitSelectFull);
-        getOutLibraryBillsAsyncTask.execute();
+        GetInputLibraryBillsAsyncTask getInputLibraryBillsAsyncTask = new GetInputLibraryBillsAsyncTask(RV_InitSelectFull);
+        getInputLibraryBillsAsyncTask.execute();
     }
 
-    public class GetOutLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<QuitLibraryBill>> {
+    public class GetInputLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<InputLibraryBill>> {
 
         private RecyclerView recyclerView;
 
-        public GetOutLibraryBillsAsyncTask(RecyclerView recyclerView) {
+        public GetInputLibraryBillsAsyncTask(RecyclerView recyclerView) {
             super();
             this.recyclerView = recyclerView;
         }
 
         @Override
-        protected List<QuitLibraryBill> doInBackground(Integer... params) {
-            String OutBills = "";
+        protected List<InputLibraryBill> doInBackground(Integer... params) {
+            String InputBills = "";
             try {
                 InputStream in_withcode = null;
-                OutBills = webService.GetLibraryNote(ConnectStr.ConnectionToString);
-                ViseLog.i("OutBills = " + OutBills);
-                in_withcode = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
+                InputBills = webService.GetLibraryNote(ConnectStr.ConnectionToString);
+                ViseLog.i("InputBills = " + InputBills);
+                in_withcode = new ByteArrayInputStream(InputBills.getBytes("UTF-8"));
                 List<InputAllBean> ResultXmlList = InputXmlAnalysis.getSingleton().GetAllInputList(in_withcode);
                 in_withcode.close();
                 if (ResultXmlList.get(0).getFStatus().equals("1")) {
                     InputStream inputInfoStream = new ByteArrayInputStream(ResultXmlList.get(0).getFInfo().getBytes("UTF-8"));
-                    outLibraryBills = InputXmlAnalysis.getSingleton().GetInputInfoXml(inputInfoStream);
+                    inputLibraryBills = InputXmlAnalysis.getSingleton().GetInputInfoXml(inputInfoStream);
                     inputInfoStream.close();
                 } else {
-                    outLibraryBills.clear();
+                    inputLibraryBills.clear();
                 }
             } catch (Exception e) {
-                ViseLog.d("SelectOutLibraryGetOutLibraryBillsException " + e);
+                ViseLog.d("SelectInputLibraryGetInputLibraryBillsException " + e);
             }
-            return outLibraryBills;
+            return inputLibraryBills;
         }
 
         /**
@@ -109,7 +109,7 @@ public class Select_InputLibrary_Fragment extends Fragment {
          * 在doInBackground方法执行结束之后在运行，并且运行在UI线程当中 可以对UI空间进行设置
          */
         @Override
-        protected void onPostExecute(final List<QuitLibraryBill> result) {
+        protected void onPostExecute(final List<InputLibraryBill> result) {
             try {
                 PD.dismiss();
                 if (result.size() >= 0) {
@@ -153,18 +153,18 @@ public class Select_InputLibrary_Fragment extends Fragment {
         javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器
         SAXHandler handler = new SAXHandler();//创建处理函数
         parser.parse(stream, handler);//开始解析
-        List<QuitLibraryBill> OutLibrary = handler.getBills();
+        List<InputLibraryBill> OutLibrary = handler.getBills();
         return OutLibrary;
     }
 
     public class SAXHandler extends DefaultHandler {
-        private List<QuitLibraryBill> Outbills;
-        private QuitLibraryBill Bill;// 当前解析的student
+        private List<InputLibraryBill> Inputbills;
+        private InputLibraryBill Bill;// 当前解析的student
         private String tag;// 当前解析的标签
 
-        public List<QuitLibraryBill> getBills() {
-            if (Outbills != null) {
-                return Outbills;
+        public List<InputLibraryBill> getBills() {
+            if (Inputbills != null) {
+                return Inputbills;
             }
             return null;
         }
@@ -172,7 +172,7 @@ public class Select_InputLibrary_Fragment extends Fragment {
         @Override
         public void startDocument() throws SAXException {
             // 文档开始
-            Outbills = new ArrayList<QuitLibraryBill>();
+            Inputbills = new ArrayList<InputLibraryBill>();
         }
 
         @Override
@@ -184,7 +184,7 @@ public class Select_InputLibrary_Fragment extends Fragment {
                                  Attributes attributes) throws SAXException {
             tag = localName;
             if (localName.equals("Head")) {
-                Bill = new QuitLibraryBill();
+                Bill = new InputLibraryBill();
             }
         }
 
@@ -193,7 +193,7 @@ public class Select_InputLibrary_Fragment extends Fragment {
                 throws SAXException {
             // 节点结束
             if (localName.equals("Head")) {
-                Outbills.add(Bill);
+                Inputbills.add(Bill);
                 Bill = null;
             }
             tag = null;
@@ -224,7 +224,7 @@ public class Select_InputLibrary_Fragment extends Fragment {
         }
     }
 
-    public List<QuitLibraryBill> GetSelectBills() {
-        return this.outLibraryBills;
+    public List<InputLibraryBill> GetSelectBills() {
+        return this.inputLibraryBills;
     }
 }

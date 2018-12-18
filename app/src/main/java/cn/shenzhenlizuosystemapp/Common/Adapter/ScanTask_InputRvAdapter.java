@@ -14,19 +14,17 @@ import com.vise.log.ViseLog;
 
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
 import cn.shenzhenlizuosystemapp.R;
 
-public class ScanTask_RvAdapter extends RecyclerView.Adapter {
+public class ScanTask_InputRvAdapter extends RecyclerView.Adapter {
 
     private Context context;
-    private List<TaskRvData> datas;
+    private List<InputTaskRvData> datas;
     private OnItemClickLitener mOnItemClickLitener;
     private int selected = -1;
 
-    public ScanTask_RvAdapter(Context context, List<TaskRvData> data) {
+    public ScanTask_InputRvAdapter(Context context, List<InputTaskRvData> data) {
         this.context = context;
         this.datas = data;
     }
@@ -44,7 +42,7 @@ public class ScanTask_RvAdapter extends RecyclerView.Adapter {
     @Override
     //重写onCreateViewHolder方法，返回一个自定义的ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ViewHoders viewHoders = new ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.accept_datas, parent, false));
+        ViewHoders viewHoders = new ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.accept_input_datas, parent, false));
         return viewHoders;
     }
 
@@ -54,7 +52,7 @@ public class ScanTask_RvAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
             ((ViewHoders) holder).TV_Material_Code.setText(datas.get(position).getFMaterial_Code());
-            ((ViewHoders) holder).TV_Model.setText(datas.get(position).getFModel() + "" + datas.get(position).getFMaterial_Code());
+            ((ViewHoders) holder).TV_Model.setText(datas.get(position).getFModel() + "" + datas.get(position).getFMaterial_Name());
             ((ViewHoders) holder).TV_BaseUnit_Name.setText(datas.get(position).getFBaseUnit_Name());
             ((ViewHoders) holder).TV_Unit_Name.setText(datas.get(position).getFUnit_Name());
             ((ViewHoders) holder).TV_AuxQty.setText(datas.get(position).getFAuxQty());

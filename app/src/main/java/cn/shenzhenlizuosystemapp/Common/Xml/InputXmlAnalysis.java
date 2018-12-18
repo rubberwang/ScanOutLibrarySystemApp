@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.WebBean.GetProjectResult;
 import cn.shenzhenlizuosystemapp.Common.WebBean.InputAllBean;
 
@@ -66,9 +66,9 @@ public class InputXmlAnalysis {
         return null;
     }
 
-    public List<QuitLibraryBill> GetInputInfoXml(InputStream inputStream) {
-        QuitLibraryBill inputInfoBeans = null;
-        List<QuitLibraryBill> inputInfoList = null;
+    public List<InputLibraryBill> GetInputInfoXml(InputStream inputStream) {
+        InputLibraryBill inputInfoBeans = null;
+        List<InputLibraryBill> inputInfoList = null;
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setInput(inputStream, "UTF-8");
@@ -76,12 +76,12 @@ public class InputXmlAnalysis {
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
-                        inputInfoList = new ArrayList<QuitLibraryBill>();
+                        inputInfoList = new ArrayList<InputLibraryBill>();
                         break;
                     case XmlPullParser.START_TAG:
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("Head")) {
-                            inputInfoBeans = new QuitLibraryBill();
+                            inputInfoBeans = new InputLibraryBill();
                         } else if (name.equalsIgnoreCase("FGuid")) {
                             inputInfoBeans.setFGuid(parser.nextText());
                         } else if (name.equalsIgnoreCase("FCode")) {

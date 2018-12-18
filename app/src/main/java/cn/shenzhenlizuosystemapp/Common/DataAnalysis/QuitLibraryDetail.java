@@ -10,7 +10,6 @@ public class QuitLibraryDetail {
     private String FPartner;
     private String FPartner_Name;
 
-
     public void setFGuid(String FGuid) {
         this.FGuid = FGuid;
     }
@@ -42,7 +41,6 @@ public class QuitLibraryDetail {
     public void setFPartner_Name(String FPartner_Name) {
         this.FPartner_Name = FPartner_Name;
     }
-
 
     public String getFGuid() {
         return FGuid;

@@ -85,12 +85,12 @@ public class Select_QuitLibrary_Fragment extends Fragment {
 
         @Override
         protected List<QuitLibraryBill> doInBackground(Integer... params) {
-            String OutBills = "";
+            String QuitBills = "";
             try {
                 InputStream in_withcode = null;
-                OutBills = webService.QuitLibraryNote(ConnectStr.ConnectionToString);
-                ViseLog.i("OutBills = " + OutBills);
-                in_withcode = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
+                QuitBills = webService.QuitLibraryNote(ConnectStr.ConnectionToString);
+                ViseLog.i("QuitBills = " + QuitBills);
+                in_withcode = new ByteArrayInputStream(QuitBills.getBytes("UTF-8"));
                 outLibraryBills = getOutLibraryFromXMl(in_withcode);
             } catch (Exception e) {
                 ViseLog.d("SelectOutLibraryGetOutLibraryBillsException " + e);
@@ -152,13 +152,13 @@ public class Select_QuitLibrary_Fragment extends Fragment {
     }
 
     public class SAXHandler extends DefaultHandler {
-        private List<QuitLibraryBill> Outbills;
+        private List<QuitLibraryBill> Quitbills;
         private QuitLibraryBill Bill;// 当前解析的student
         private String tag;// 当前解析的标签
 
         public List<QuitLibraryBill> getBills() {
-            if (Outbills != null) {
-                return Outbills;
+            if (Quitbills != null) {
+                return Quitbills;
             }
             return null;
         }
@@ -166,7 +166,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
         @Override
         public void startDocument() throws SAXException {
             // 文档开始
-            Outbills = new ArrayList<QuitLibraryBill>();
+            Quitbills = new ArrayList<QuitLibraryBill>();
         }
 
         @Override
@@ -187,7 +187,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
                 throws SAXException {
             // 节点结束
             if (localName.equals("Table")) {
-                Outbills.add(Bill);
+                Quitbills.add(Bill);
                 Bill = null;
             }
             tag = null;

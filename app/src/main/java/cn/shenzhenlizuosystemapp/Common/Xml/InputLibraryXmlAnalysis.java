@@ -4,23 +4,14 @@ import android.util.Xml;
 
 import com.vise.log.ViseLog;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 import org.xmlpull.v1.XmlPullParser;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryDetail;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
-import cn.shenzhenlizuosystemapp.Common.WebBean.GetProjectResult;
-import cn.shenzhenlizuosystemapp.Common.WebBean.InputAllBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryDetail;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
 import cn.shenzhenlizuosystemapp.Common.WebBean.InputLibraryAllInfo;
 
 public class InputLibraryXmlAnalysis {
@@ -78,9 +69,9 @@ public class InputLibraryXmlAnalysis {
         return null;
     }
 
-    public List<QuitLibraryDetail> GetInputDetailXml(InputStream inputStream) {
-        QuitLibraryDetail InputDetailXmls = new QuitLibraryDetail();
-        List<QuitLibraryDetail> InputDetailXmlList = null;
+    public List<InputLibraryDetail> GetInputDetailXml(InputStream inputStream) {
+        InputLibraryDetail InputDetailXmls = new InputLibraryDetail();
+        List<InputLibraryDetail> InputDetailXmlList = null;
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setInput(inputStream, "UTF-8");
@@ -88,12 +79,12 @@ public class InputLibraryXmlAnalysis {
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
-                        InputDetailXmlList = new ArrayList<QuitLibraryDetail>();
+                        InputDetailXmlList = new ArrayList<InputLibraryDetail>();
                         break;
                     case XmlPullParser.START_TAG:
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("Head")) {
-                            InputDetailXmls = new QuitLibraryDetail();
+                            InputDetailXmls = new InputLibraryDetail();
                         } else if (name.equalsIgnoreCase("FCode")) {
                             InputDetailXmls.setFCode(parser.nextText());
                         } else if (name.equalsIgnoreCase("FStock")) {
@@ -132,9 +123,9 @@ public class InputLibraryXmlAnalysis {
         return null;
     }
 
-    public List<TaskRvData> GetBodyInfo(InputStream inputStream) {
-        TaskRvData taskRvDatas = new TaskRvData();
-        List<TaskRvData> taskRvDataList = null;
+    public List<InputTaskRvData> GetBodyInfo(InputStream inputStream) {
+        InputTaskRvData inputTaskRvDatas = new InputTaskRvData();
+        List<InputTaskRvData> inputTaskRvDataList = null;
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setInput(inputStream, "UTF-8");
@@ -142,86 +133,86 @@ public class InputLibraryXmlAnalysis {
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
-                        taskRvDataList = new ArrayList<TaskRvData>();
+                        inputTaskRvDataList = new ArrayList<InputTaskRvData>();
                         break;
                     case XmlPullParser.START_TAG:
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("Body")) {
-                            taskRvDatas = new TaskRvData();
+                            inputTaskRvDatas = new InputTaskRvData();
                         } else if (name.equalsIgnoreCase("FGuid")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFGuid(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFGuid(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FMaterial")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFMaterial(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFMaterial(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FMaterial_Name")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFMaterial_Name(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFMaterial_Name(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FMaterial_Code")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFMaterial_Code(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFMaterial_Code(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FModel")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFModel(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFModel(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FBaseUnit_Name")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFBaseUnit_Name(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFBaseUnit_Name(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FUnit")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFUnit(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFUnit(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FUnit_Name")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFUnit_Name(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFUnit_Name(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FPrice")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFPrice(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFPrice(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FAuxQty")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFAuxQty(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFAuxQty(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FExecutedBaseQty")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFExecutedBaseQty(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFExecutedBaseQty(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FExecutedAuxQty")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFExecutedAuxQty(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFExecutedAuxQty(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FThisBaseQty")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFThisBaseQty(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFThisBaseQty(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FThisAuxQty")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFThisAuxQty(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFThisAuxQty(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FIsClosed")) {
-                            if (taskRvDatas != null) {
-                                taskRvDatas.setFIsClosed(parser.nextText());
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFIsClosed(parser.nextText());
                             }
                         }
                         break;
                     case XmlPullParser.END_TAG:
                         if (parser.getName().equalsIgnoreCase("Body")
-                                && taskRvDatas != null) {
-                            taskRvDataList.add(taskRvDatas);
-                            taskRvDatas = null;
+                                && inputTaskRvDatas != null) {
+                            inputTaskRvDataList.add(inputTaskRvDatas);
+                            inputTaskRvDatas = null;
                         }
                         break;
                 }
                 eventType = parser.next();
             }
             inputStream.close();
-            return taskRvDataList;
+            return inputTaskRvDataList;
         } catch (Exception e) {
             e.printStackTrace();
             ViseLog.i("Body Exception = " + e);

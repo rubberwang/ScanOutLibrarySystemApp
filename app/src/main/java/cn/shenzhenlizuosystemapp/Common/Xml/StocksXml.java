@@ -1,7 +1,5 @@
 package cn.shenzhenlizuosystemapp.Common.Xml;
 
-import com.vise.log.ViseLog;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -15,7 +13,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
 
 public class StocksXml {
 

@@ -1,6 +1,6 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
 
-public class TaskRvData {
+public class InputTaskRvData {
     private String FGuid;
     private String FMaterial;
     private String FMaterial_Code;

@@ -12,12 +12,12 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
 import cn.shenzhenlizuosystemapp.R;
 
-public class StockAdapter extends BaseAdapter {
+public class InputStockAdapter extends BaseAdapter {
 
     List<StockBean> data;
     Context context;
 
-    public StockAdapter(List<StockBean> itemData, Context context) {
+    public InputStockAdapter(List<StockBean> itemData, Context context) {
         this.data = itemData;
         this.context = context;
     }

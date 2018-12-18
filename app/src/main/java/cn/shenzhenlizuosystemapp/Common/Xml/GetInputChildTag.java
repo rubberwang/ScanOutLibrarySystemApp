@@ -15,22 +15,21 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildTag;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanXmlResult;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanInputXmlResult;
 
-public class GetChildTag {
+public class GetInputChildTag {
 
-    private volatile static GetChildTag getChildTag;
+    private volatile static GetInputChildTag getInputChildTag;
 
-    public static GetChildTag getSingleton() {
-        if (getChildTag == null) {
-            synchronized (GetChildTag.class) {
-                if (getChildTag == null) {
-                    getChildTag = new GetChildTag();
+    public static GetInputChildTag getSingleton() {
+        if (getInputChildTag == null) {
+            synchronized (GetInputChildTag.class) {
+                if (getInputChildTag == null) {
+                    getInputChildTag = new GetInputChildTag();
                 }
             }
         }
-        return getChildTag;
+        return getInputChildTag;
     }
 
     public List getChildTagXml(InputStream stream) throws SAXException, IOException, ParserConfigurationException {
@@ -47,16 +46,16 @@ public class GetChildTag {
         javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器
         BodySAXHandler handler = new BodySAXHandler();//创建处理函数
         parser.parse(stream, handler);//开始解析
-        List<ScanXmlResult> xmlResults = handler.getScanXml();
+        List<ScanInputXmlResult> xmlResults = handler.getScanXml();
         return xmlResults;
     }
 
     public class BodySAXHandler extends DefaultHandler {
         private List<ChildTag> childTags;
-        private List<ScanXmlResult> scanXmlResultList;
+        private List<ScanInputXmlResult> scanInputXmlResultList;
         private ChildTag childTag;// 当前解析的student
         private String tag;// 当前解析的标签
-        private ScanXmlResult scanXmlResult;
+        private ScanInputXmlResult scanInputXmlResult;
 
         public List<ChildTag> getBody() {
             if (childTags != null) {
@@ -65,9 +64,9 @@ public class GetChildTag {
             return null;
         }
 
-        public List<ScanXmlResult> getScanXml() {
-            if (scanXmlResultList != null) {
-                return scanXmlResultList;
+        public List<ScanInputXmlResult> getScanXml() {
+            if (scanInputXmlResultList != null) {
+                return scanInputXmlResultList;
             }
             return null;
         }
@@ -76,7 +75,7 @@ public class GetChildTag {
         public void startDocument() throws SAXException {
             // 文档开始
             childTags = new ArrayList<ChildTag>();
-            scanXmlResultList = new ArrayList<>();
+            scanInputXmlResultList = new ArrayList<>();
         }
 
         @Override
@@ -91,7 +90,7 @@ public class GetChildTag {
                 childTag = new ChildTag();
                 ViseLog.i("创建ChildTag");
             } else if (localName.equals("BarcodeLib")) {
-                scanXmlResult = new ScanXmlResult();
+                scanInputXmlResult = new ScanInputXmlResult();
                 ViseLog.i("创建ScanXmlResult");
             }
         }
@@ -104,8 +103,8 @@ public class GetChildTag {
                 childTags.add(childTag);
                 childTag = null;
             } else if (localName.equals("BarcodeLib")) {
-                scanXmlResultList.add(scanXmlResult);
-                scanXmlResult = null;
+                scanInputXmlResultList.add(scanInputXmlResult);
+                scanInputXmlResult = null;
             }
             tag = null;
         }
@@ -116,11 +115,11 @@ public class GetChildTag {
             String data = new String(ch, start, length);
             if (data != null && tag != null) {
                 if (tag.equals("Success")) {
-                    scanXmlResult.setResult(data);
+                    scanInputXmlResult.setResult(data);
                 } else if (tag.equals("name")) {
                     childTag.setName(data);
                 } else if (tag.equals("FQty")) {
-                    scanXmlResult.setFQty(data);
+                    scanInputXmlResult.setFQty(data);
                 } else if (tag.equals("value")) {
                     childTag.setValue(data);
                 }

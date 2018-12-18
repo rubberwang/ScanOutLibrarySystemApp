@@ -19,7 +19,7 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.Fragment.Item_InputLibrary_Fragment;
 import cn.shenzhenlizuosystemapp.Common.Fragment.Select_InputLibrary_Fragment;
 import cn.shenzhenlizuosystemapp.R;
@@ -35,8 +35,8 @@ public class Input_NotificationActivity extends BaseActivity {
 
     private LinearLayout LL_BackMainTable;
     private Select_InputLibrary_Fragment selectInputLibraryFragment;
-    private List<QuitLibraryBill> outLibraryBills;
-    private List<QuitLibraryBill> SearchResultList;
+    private List<InputLibraryBill> inputLibraryBills;
+    private List<InputLibraryBill> SearchResultList;
     private Tools tools;
     private Input_NotificationActivity MContect = null;
 
@@ -97,22 +97,22 @@ public class Input_NotificationActivity extends BaseActivity {
 
     private int LookForBranch(String ChracterSearch) {
         try {
-            outLibraryBills = selectInputLibraryFragment.GetSelectBills();
-            if (outLibraryBills.size() >= 0) {
+            inputLibraryBills = selectInputLibraryFragment.GetSelectBills();
+            if (inputLibraryBills.size() >= 0) {
                 SearchResultList.clear();
-                for (int i = 0; i < outLibraryBills.size(); i++) {
-                    String BoxNumber = outLibraryBills.get(i).getFCode();
+                for (int i = 0; i < inputLibraryBills.size(); i++) {
+                    String BoxNumber = inputLibraryBills.get(i).getFCode();
                     Log.i("huangmin", "BoxNumber " + BoxNumber.charAt(0));
                     if (BoxNumber.equals(ChracterSearch) || BoxNumber.contains(ChracterSearch)) {
-                        QuitLibraryBill outLibraryBill = new QuitLibraryBill();
-                        outLibraryBill.setFCode(outLibraryBills.get(i).getFCode());
-                        outLibraryBill.setFDate(outLibraryBills.get(i).getFDate());
-                        outLibraryBill.setFTransactionType_Name(outLibraryBills.get(i).getFTransactionType_Name());
-                        outLibraryBill.setFTransactionType(outLibraryBills.get(i).getFTransactionType());
-                        outLibraryBill.setFStock_Name(outLibraryBills.get(i).getFStock_Name());
-                        outLibraryBill.setFStock(outLibraryBills.get(i).getFStock());
-                        outLibraryBill.setFGuid(outLibraryBills.get(i).getFGuid());
-                        SearchResultList.add(outLibraryBill);
+                        InputLibraryBill inputLibraryBill = new InputLibraryBill();
+                        inputLibraryBill.setFCode(inputLibraryBills.get(i).getFCode());
+                        inputLibraryBill.setFDate(inputLibraryBills.get(i).getFDate());
+                        inputLibraryBill.setFTransactionType_Name(inputLibraryBills.get(i).getFTransactionType_Name());
+                        inputLibraryBill.setFTransactionType(inputLibraryBills.get(i).getFTransactionType());
+                        inputLibraryBill.setFStock_Name(inputLibraryBills.get(i).getFStock_Name());
+                        inputLibraryBill.setFStock(inputLibraryBills.get(i).getFStock());
+                        inputLibraryBill.setFGuid(inputLibraryBills.get(i).getFGuid());
+                        SearchResultList.add(inputLibraryBill);
                     }
                 }
                 return 1;
@@ -137,13 +137,13 @@ public class Input_NotificationActivity extends BaseActivity {
 
         @Override
         protected Integer doInBackground(Integer... params) {
-            int OutBills = 0;
+            int InputBills = 0;
             try {
-                OutBills = LookForBranch(ChracterSearch);
+                InputBills = LookForBranch(ChracterSearch);
             } catch (Exception e) {
                 ViseLog.d("SelectOutLibraryGetOutLibraryBillsException " + e);
             }
-            return OutBills;
+            return InputBills;
         }
 
         /**

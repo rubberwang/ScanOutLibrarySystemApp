@@ -15,15 +15,15 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubmitDataBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.SubBody;
 
-public class GetSnNumberXml {
+public class GetInputSnNumberXml {
 
-    private volatile static GetSnNumberXml getChildTag;
+    private volatile static GetInputSnNumberXml getChildTag;
 
-    public static GetSnNumberXml getSingleton() {
+    public static GetInputSnNumberXml getSingleton() {
         if (getChildTag == null) {
-            synchronized (GetSnNumberXml.class) {
+            synchronized (GetInputSnNumberXml.class) {
                 if (getChildTag == null) {
-                    getChildTag = new GetSnNumberXml();
+                    getChildTag = new GetInputSnNumberXml();
                 }
             }
         }

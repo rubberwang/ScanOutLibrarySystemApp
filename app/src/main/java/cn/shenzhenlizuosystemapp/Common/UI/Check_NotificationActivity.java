@@ -132,13 +132,13 @@ public class Check_NotificationActivity extends BaseActivity {
 
         @Override
         protected Integer doInBackground(Integer... params) {
-            int OutBills = 0;
+            int CheckBills = 0;
             try {
-                OutBills = LookForBranch(ChracterSearch);
+                CheckBills = LookForBranch(ChracterSearch);
             } catch (Exception e) {
                 ViseLog.d("SelectOutLibraryGetOutLibraryBillsException " + e);
             }
-            return OutBills;
+            return CheckBills;
         }
 
         /**
