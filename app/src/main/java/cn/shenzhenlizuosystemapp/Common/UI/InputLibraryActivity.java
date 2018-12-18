@@ -52,6 +52,7 @@ import com.vise.log.ViseLog;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -66,6 +67,7 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildTag;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubmitDataBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryDetail;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.MaterialModeBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanInputXmlResult;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Stock_Return;
@@ -74,9 +76,11 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.ItemData;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.InputStockAdapter;
+import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.MaterialModeAdapter;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.WebBean.InputLibraryAllInfo;
+import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisMaterialModeXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.GetInputChildTag;
 import cn.shenzhenlizuosystemapp.Common.Xml.GetInputSnNumberXml;
@@ -106,6 +110,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private EditText Et_ScanNumber;
     private RecyclerView RV_GetInfoTable;
     private RecyclerView RV_ScanInfoTable;
+    private Spinner Sp_Label;
 
     private WebService webService;
     private InputLibraryObServer inputLibraryObServer;
@@ -209,6 +214,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
         TV_Save = $(R.id.TV_Save);
         Et_ScanNumber = $(R.id.Et_ScanNumber);
+        Sp_Label = $(R.id.Sp_Label);
     }
 
     @SuppressLint("ResourceAsColor")
@@ -494,9 +500,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         ScanTaskL.setOrientation(ScanTaskL.VERTICAL);
         RV_ScanInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
         RV_ScanInfoTable.setLayoutManager(ScanTaskL);
-        if (ConnectStr.ISSHOWNONEXECUTION) {
-            inputTaskRvDataList = DisposeTaskRvDataList(inputTaskRvDataList);
-        }
         scanTask_Input_rvAdapter = new ScanTask_InputRvAdapter(this, inputTaskRvDataList);
         RV_ScanInfoTable.setAdapter(scanTask_Input_rvAdapter);
         scanTask_Input_rvAdapter.setOnItemClickLitener(new ScanTask_InputRvAdapter.OnItemClickLitener() {
@@ -511,12 +514,12 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         if (RV_ScanInfoTableIndex != position) {
                             RV_ScanInfoTableIndex = position;
                         }
-                        scanTask_Input_rvAdapter.setSelection(position);
-                        scanTask_Input_rvAdapter.notifyDataSetChanged();//选中
                         GetNullXml(position);
                         if (RV_ScanInfoTableIndex != position) {
                             RV_ScanInfoTableIndex = position;
                         }
+                        GetMaterialMode getMaterialMode = new GetMaterialMode();
+                        getMaterialMode.execute(inputTaskRvDataList.get(position).getFMaterial());
                         scanTask_Input_rvAdapter.setSelection(position);
                         scanTask_Input_rvAdapter.notifyDataSetChanged();//选中
                         GetNullXml(position);
@@ -585,6 +588,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                     ViseLog.i("inputLibraryAllInfoList.get(0).getFInfo() = " + inputLibraryAllInfoList.get(0).getFInfo());
                     inputLibraryBills = InputLibraryXmlAnalysis.getSingleton().GetInputDetailXml(HeadinfoStr);
                     inputTaskRvDataList = InputLibraryXmlAnalysis.getSingleton().GetBodyInfo(BodyinfoStr);
+                    inputTaskRvDataList = DisposeTaskRvDataList(inputTaskRvDataList);
                     HeadinfoStr.close();
                     BodyinfoStr.close();
                     Stocks = webService.GetStocks(ConnectStr.ConnectionToString);
@@ -842,6 +846,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 } else {
                     stockBeanList.clear();
                 }
+                inStockCell.close();
             } catch (Exception e) {
                 ViseLog.i("AsyncGetStocksCellException = " + e.getMessage());
             }
@@ -1046,11 +1051,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             if (handlerMemoryActivity != null) {
                 switch (msg.what) {
                     case 1: {
-                        String Xml = msg.getData().getString("Xml");
-                        ViseLog.i("Xml = " + Xml);
-                        StartSpXml = Xml.substring(0, Xml.indexOf("<Show>"));
-                        EndSpXml = Xml.substring(Xml.indexOf("<BarcodeLib>"), Xml.length());
-//                        tools.show(MContect, "获取模版");
                         break;
                     }
                     case 2: {
@@ -1384,16 +1384,68 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
     private List DisposeTaskRvDataList(List<InputTaskRvData> disposeInputTaskRvDataList) {
         for (int index = 0; index < disposeInputTaskRvDataList.size(); index++) {
-            String NoSendQty = "0";
-            if (!TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFAuxQty()) && !TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFExecutedAuxQty())) {
-                int AuxQty = Integer.parseInt(disposeInputTaskRvDataList.get(index).getFAuxQty().split("\\.")[0]);
-                int ExecutedAuxQty = Integer.parseInt(disposeInputTaskRvDataList.get(index).getFExecutedAuxQty().split("\\.")[0]);
-                NoSendQty = String.valueOf(AuxQty - ExecutedAuxQty);
+            if (ConnectStr.ISSHOWNONEXECUTION) {
+                String NoSendQty = "0";
+                if (!TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFAuxQty()) && !TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFExecutedAuxQty())) {
+                    int AuxQty = Integer.parseInt(disposeInputTaskRvDataList.get(index).getFAuxQty().split("\\.")[0]);
+                    int ExecutedAuxQty = Integer.parseInt(disposeInputTaskRvDataList.get(index).getFExecutedAuxQty().split("\\.")[0]);
+                    NoSendQty = String.valueOf(AuxQty - ExecutedAuxQty);
+                }
+                if (Integer.parseInt(NoSendQty) <= 0) {
+                    disposeInputTaskRvDataList.remove(index);
+                }
             }
-            if (Integer.parseInt(NoSendQty) <= 0) {
-                disposeInputTaskRvDataList.remove(index);
+            if (!TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFIsClosed())) {
+                if (disposeInputTaskRvDataList.get(index).getFIsClosed().equals("1")) {
+                    disposeInputTaskRvDataList.remove(index);
+                }
             }
         }
         return disposeInputTaskRvDataList;
+    }
+
+    private class GetMaterialMode extends AsyncTask<String, Void, List<MaterialModeBean>> {
+
+        private WebService webService = WebService.getSingleton(MContect);
+
+        @Override
+        protected List<MaterialModeBean> doInBackground(String... params) {
+            String ModeXml = "";
+            List<MaterialModeBean> materialModeBeanList = new ArrayList<>();
+            List<AdapterReturn> adapterReturnList = new ArrayList<>();
+            try {
+                ModeXml = webService.GetMaterialLabelTemplet(ConnectStr.ConnectionToString, params[0]);
+                InputStream IS_ModeXml = new ByteArrayInputStream(ModeXml.getBytes("UTF-8"));
+                adapterReturnList = AnalysisReturnsXml.getSingleton().GetReturn(IS_ModeXml);
+                if (adapterReturnList.get(0).getFStatus().equals("1")) {
+                    InputStream IS_ModeInfoXml = new ByteArrayInputStream(adapterReturnList.get(0).getFInfo().getBytes("UTF-8"));
+                    materialModeBeanList = AnalysisMaterialModeXml.getSingleton().GetMaterialModeInfo(IS_ModeInfoXml);
+                } else {
+                    materialModeBeanList.clear();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                ViseLog.e("GetMaterialMode 异常 = " + e);
+            }
+            return materialModeBeanList;
+        }
+
+        protected void onPostExecute(List<MaterialModeBean> result) {
+            if (result.size() >= 0) {
+                MaterialModeAdapter InputStockAdapter = new MaterialModeAdapter(result, InputLibraryActivity.this);
+                Sp_Label.setAdapter(InputStockAdapter);
+                Sp_Label.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+            }
+        }
     }
 }

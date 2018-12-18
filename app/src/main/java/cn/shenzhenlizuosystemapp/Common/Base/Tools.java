@@ -106,7 +106,7 @@ public class Tools {
     }
 
     public void ShowDialog(Context context, String msg) {
-        if (!IsShowDialog){
+        if (!IsShowDialog) {
             View view = LayoutInflater.from(context).inflate(R.layout.quitwarning_layout, null, false);
             final Dialog dialog = new Dialog(context);
             dialog.setContentView(view);
@@ -179,9 +179,17 @@ public class Tools {
     }
 
     public void DisappearDialog() {
-        if (dialog != null){
+        if (dialog != null) {
             dialog.dismiss();
             dialog = null;
+        }
+    }
+
+    public static boolean IsObjectNull(Object t) {
+        if (t != null) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

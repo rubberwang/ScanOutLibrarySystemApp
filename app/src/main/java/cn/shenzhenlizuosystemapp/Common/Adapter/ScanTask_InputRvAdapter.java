@@ -2,19 +2,35 @@ package cn.shenzhenlizuosystemapp.Common.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.vise.log.ViseLog;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
+import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
+import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.InputStockAdapter;
+import cn.shenzhenlizuosystemapp.Common.UI.InputLibraryActivity;
+import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.InputStockXmlAnalysis;
 import cn.shenzhenlizuosystemapp.R;
 
 public class ScanTask_InputRvAdapter extends RecyclerView.Adapter {
@@ -51,21 +67,23 @@ public class ScanTask_InputRvAdapter extends RecyclerView.Adapter {
     //填充onCreateViewHolder方法返回的holder中的控件
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
+            String NoSendQty = "0";
+            int AuxQty = 0;
+            int ExecutedAuxQty = 0;
+            if (!TextUtils.isEmpty(datas.get(position).getFAuxQty()) && !TextUtils.isEmpty(datas.get(position).getFExecutedAuxQty())) {
+                AuxQty = Integer.parseInt(datas.get(position).getFAuxQty().split("\\.")[0]);
+                ExecutedAuxQty = Integer.parseInt(datas.get(position).getFExecutedAuxQty().split("\\.")[0]);
+                NoSendQty = String.valueOf(AuxQty - ExecutedAuxQty);
+            }
+            ((ViewHoders) holder).TV_noSend.setText(NoSendQty);
             ((ViewHoders) holder).TV_Material_Code.setText(datas.get(position).getFMaterial_Code());
             ((ViewHoders) holder).TV_Model.setText(datas.get(position).getFModel() + "" + datas.get(position).getFMaterial_Name());
             ((ViewHoders) holder).TV_BaseUnit_Name.setText(datas.get(position).getFBaseUnit_Name());
             ((ViewHoders) holder).TV_Unit_Name.setText(datas.get(position).getFUnit_Name());
-            ((ViewHoders) holder).TV_AuxQty.setText(datas.get(position).getFAuxQty());
-            ((ViewHoders) holder).TV_FExecutedAuxQty.setText(datas.get(position).getFExecutedAuxQty());
-            ((ViewHoders) holder).TV_ThisAuxQty.setText(datas.get(position).getFThisAuxQty());
-            String NoSendQty = "0";
-            if (!TextUtils.isEmpty(datas.get(position).getFAuxQty()) && !TextUtils.isEmpty(datas.get(position).getFExecutedAuxQty())) {
-                int AuxQty = Integer.parseInt(datas.get(position).getFAuxQty().split("\\.")[0]);
-                int ExecutedAuxQty = Integer.parseInt(datas.get(position).getFExecutedAuxQty().split("\\.")[0]);
-                NoSendQty = String.valueOf(AuxQty - ExecutedAuxQty);
-            }
-            ((ViewHoders) holder).TV_noSend.setText(NoSendQty);
-
+            ((ViewHoders) holder).TV_AuxQty.setText(String.valueOf(AuxQty));
+            ((ViewHoders) holder).TV_FExecutedAuxQty.setText(String.valueOf(ExecutedAuxQty));
+            ((ViewHoders) holder).TV_ThisAuxQty.setText(datas.get(position).getFThisAuxQty().split("\\.")[0]);
+            
             if (selected == position) {
                 holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.Thin_Bule));
             } else {
@@ -101,7 +119,6 @@ public class ScanTask_InputRvAdapter extends RecyclerView.Adapter {
         private TextView TV_FExecutedAuxQty;
         private TextView TV_ThisAuxQty;
         private TextView TV_noSend;
-        private Spinner Sp_Label;
 
         public ViewHoders(View itemView) {
             super(itemView);
@@ -113,7 +130,6 @@ public class ScanTask_InputRvAdapter extends RecyclerView.Adapter {
             TV_FExecutedAuxQty = (TextView) itemView.findViewById(R.id.TV_FExecutedAuxQty);
             TV_ThisAuxQty = (TextView) itemView.findViewById(R.id.TV_ThisAuxQty);
             TV_noSend = (TextView) itemView.findViewById(R.id.TV_noSend);
-            Sp_Label = (Spinner) itemView.findViewById(R.id.Sp_Label);
         }
     }
 
@@ -124,4 +140,5 @@ public class ScanTask_InputRvAdapter extends RecyclerView.Adapter {
     public int getselection() {
         return selected;
     }
+    
 }

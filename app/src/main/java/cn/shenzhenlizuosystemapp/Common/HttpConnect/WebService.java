@@ -291,5 +291,22 @@ public class WebService {
         String Result = object.toString();
         return Result;
     }
+
+    public String GetMaterialLabelTemplet(String ConnectionID,String MaterialID) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetMaterialLabelTemplet");
+        soapObject.addProperty("ConnectionID", ConnectionID);
+        soapObject.addProperty("MaterialID", MaterialID);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/GetMaterialLabelTemplet", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
 }
 
