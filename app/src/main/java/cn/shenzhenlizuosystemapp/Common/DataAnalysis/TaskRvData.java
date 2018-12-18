@@ -1,134 +1,157 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
 
 public class TaskRvData {
-    private String FGUID;
-    private String TV_materID;
-    private String TV_nameRoot;
-    private String TV_size;
-    private String TV_statistics;
-    private String TV_commonunit;
-    private String TV_alreadySend;
-    private String TV_thisSend;
-    private String TV_shouldSend;
-    private String TV_noSend;
+    private String FGuid;
     private String FMaterial;
-    private String FPartner;
+    private String FMaterial_Code;
+    private String FMaterial_Name;
+    private String FModel;
+    private String FBaseUnit_Name;
     private String FUnit;
+    private String FUnit_Name;
+    private String FUnitRate;
+    private String FBaseQty;
     private String FPrice;
+    private String FAuxQty;
+    private String FExecutedBaseQty;
+    private String FExecutedAuxQty;
+    private String FThisBaseQty;
+    private String FThisAuxQty;
+    private String FIsClosed;
 
-
-    public String getFPrice() {
-        return FPrice;
-    }
-
-    public void setFPrice(String FPrice) {
-
-        this.FPrice = FPrice;
-    }
-
-
-    public String getFUnit() {
-        return FUnit;
-    }
-
-    public void setFUnit(String FUnit) {
-        this.FUnit = FUnit;
-    }
-
-    public String getFPartner() {
-        return FPartner;
-    }
-
-    public void setFPartner(String FPartner) {
-        this.FPartner = FPartner;
+    public void setFGuid(String FGuid) {
+        this.FGuid = FGuid;
     }
 
     public void setFMaterial(String FMaterial) {
         this.FMaterial = FMaterial;
     }
 
+    public void setFMaterial_Code(String FMaterial_Code) {
+        this.FMaterial_Code = FMaterial_Code;
+    }
+
+    public void setFMaterial_Name(String FMaterial_Name) {
+        this.FMaterial_Name = FMaterial_Name;
+    }
+
+    public void setFModel(String FModel) {
+        this.FModel = FModel;
+    }
+
+    public void setFBaseUnit_Name(String FBaseUnit_Name) {
+        this.FBaseUnit_Name = FBaseUnit_Name;
+    }
+
+    public void setFUnit(String FUnit) {
+        this.FUnit = FUnit;
+    }
+
+    public void setFUnit_Name(String FUnit_Name) {
+        this.FUnit_Name = FUnit_Name;
+    }
+
+    public void setFUnitRate(String FUnitRate) {
+        this.FUnitRate = FUnitRate;
+    }
+
+    public void setFBaseQty(String FBaseQty) {
+        this.FBaseQty = FBaseQty;
+    }
+
+    public void setFPrice(String FPrice) {
+        this.FPrice = FPrice;
+    }
+
+    public void setFAuxQty(String FAuxQty) {
+        this.FAuxQty = FAuxQty;
+    }
+
+    public void setFExecutedBaseQty(String FExecutedBaseQty) {
+        this.FExecutedBaseQty = FExecutedBaseQty;
+    }
+
+    public void setFExecutedAuxQty(String FExecutedAuxQty) {
+        this.FExecutedAuxQty = FExecutedAuxQty;
+    }
+
+    public void setFThisBaseQty(String FThisBaseQty) {
+        this.FThisBaseQty = FThisBaseQty;
+    }
+
+    public void setFThisAuxQty(String FThisAuxQty) {
+        this.FThisAuxQty = FThisAuxQty;
+    }
+
+    public void setFIsClosed(String FIsClosed) {
+        this.FIsClosed = FIsClosed;
+    }
+
+    public String getFGuid() {
+        return FGuid;
+    }
+
     public String getFMaterial() {
         return FMaterial;
-
     }
 
-    public void setFGUID(String FGUID) {
-        this.FGUID = FGUID;
+    public String getFMaterial_Code() {
+        return FMaterial_Code;
     }
 
-    public String getFGUID() {
-        return FGUID;
+    public String getFMaterial_Name() {
+        return FMaterial_Name;
     }
 
-    public void setTV_materID(String TV_materID) {
-        this.TV_materID = TV_materID;
+    public String getFModel() {
+        return FModel;
     }
 
-    public void setTV_nameRoot(String TV_nameRoot) {
-        this.TV_nameRoot = TV_nameRoot;
+    public String getFBaseUnit_Name() {
+        return FBaseUnit_Name;
     }
 
-    public void setTV_size(String TV_size) {
-        this.TV_size = TV_size;
+    public String getFUnit() {
+        return FUnit;
     }
 
-    public void setTV_commonunit(String TV_commonunit) {
-        this.TV_commonunit = TV_commonunit;
+    public String getFUnit_Name() {
+        return FUnit_Name;
     }
 
-    public void setTV_statistics(String TV_statistics) {
-        this.TV_statistics = TV_statistics;
+    public String getFUnitRate() {
+        return FUnitRate;
     }
 
-    public void setTV_alreadySend(String TV_alreadySend) {
-        this.TV_alreadySend = TV_alreadySend;
+    public String getFBaseQty() {
+        return FBaseQty;
     }
 
-    public void setTV_thisSend(String TV_thisSend) {
-        this.TV_thisSend = TV_thisSend;
+    public String getFPrice() {
+        return FPrice;
     }
 
-    public void setTV_shouldSend(String TV_shouldSend) {
-        this.TV_shouldSend = TV_shouldSend;
+    public String getFAuxQty() {
+        return FAuxQty;
     }
 
-    public void setTV_noSend(String TV_noSend) {
-        this.TV_noSend = TV_noSend;
+    public String getFExecutedBaseQty() {
+        return FExecutedBaseQty;
     }
 
-    public String getTV_materID() {
-        return TV_materID;
+    public String getFExecutedAuxQty() {
+        return FExecutedAuxQty;
     }
 
-    public String getTV_nameRoot() {
-        return TV_nameRoot;
+    public String getFThisBaseQty() {
+        return FThisBaseQty;
     }
 
-    public String getTV_size() {
-        return TV_size;
+    public String getFThisAuxQty() {
+        return FThisAuxQty;
     }
 
-    public String getTV_commonunit() {
-        return TV_commonunit;
-    }
-
-    public String getTV_statistics() {
-        return TV_statistics;
-    }
-
-    public String getTV_alreadySend() {
-        return TV_alreadySend;
-    }
-
-    public String getTV_thisSend() {
-        return TV_thisSend;
-    }
-
-    public String getTV_shouldSend() {
-        return TV_shouldSend;
-    }
-
-    public String getTV_noSend() {
-        return TV_noSend;
+    public String getFIsClosed() {
+        return FIsClosed;
     }
 }

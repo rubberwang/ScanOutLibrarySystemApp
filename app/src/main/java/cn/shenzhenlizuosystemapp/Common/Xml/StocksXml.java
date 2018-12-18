@@ -67,7 +67,7 @@ public class StocksXml {
         public void startElement(String uri, String localName, String qName,
                                  Attributes attributes) throws SAXException {
             tag = localName;
-            if (localName.equals("Table")) {
+            if (localName.equals("Table0")) {
                 stockBean = new StockBean();
             }
         }
@@ -76,7 +76,7 @@ public class StocksXml {
         public void endElement(String uri, String localName, String qName)
                 throws SAXException {
             // 节点结束
-            if (localName.equals("Table")) {
+            if (localName.equals("Table0")) {
                 stockBeanList.add(stockBean);
                 stockBean = null;
             }

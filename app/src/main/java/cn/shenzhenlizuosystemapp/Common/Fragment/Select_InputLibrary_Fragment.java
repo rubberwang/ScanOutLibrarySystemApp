@@ -30,20 +30,23 @@ import javax.xml.parsers.SAXParserFactory;
 import cn.shenzhenlizuosystemapp.Common.Adapter.SelectInput_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.LoginResInfo;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.UI.InputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
+import cn.shenzhenlizuosystemapp.Common.WebBean.InputAllBean;
+import cn.shenzhenlizuosystemapp.Common.Xml.InputXmlAnalysis;
 import cn.shenzhenlizuosystemapp.R;
 
 public class Select_InputLibrary_Fragment extends Fragment {
 
     public static final String ARGS_PAGE = "SelectOutLibrary_Page";
-   private RecyclerView RV_InitSelectFull;
-   private WebService webService;
-   private Tools tools;
-   private ProgressDialog PD;
-   private List<QuitLibraryBill> outLibraryBills;
+    private RecyclerView RV_InitSelectFull;
+    private WebService webService;
+    private Tools tools;
+    private ProgressDialog PD;
+    private List<QuitLibraryBill> outLibraryBills;
 
     public static Select_InputLibrary_Fragment newInstance() {
         Select_InputLibrary_Fragment fragment = new Select_InputLibrary_Fragment();
@@ -86,7 +89,15 @@ public class Select_InputLibrary_Fragment extends Fragment {
                 OutBills = webService.GetLibraryNote(ConnectStr.ConnectionToString);
                 ViseLog.i("OutBills = " + OutBills);
                 in_withcode = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
-                outLibraryBills = getOutLibraryFromXMl(in_withcode);
+                List<InputAllBean> ResultXmlList = InputXmlAnalysis.getSingleton().GetAllInputList(in_withcode);
+                in_withcode.close();
+                if (ResultXmlList.get(0).getFStatus().equals("1")) {
+                    InputStream inputInfoStream = new ByteArrayInputStream(ResultXmlList.get(0).getFInfo().getBytes("UTF-8"));
+                    outLibraryBills = InputXmlAnalysis.getSingleton().GetInputInfoXml(inputInfoStream);
+                    inputInfoStream.close();
+                } else {
+                    outLibraryBills.clear();
+                }
             } catch (Exception e) {
                 ViseLog.d("SelectOutLibraryGetOutLibraryBillsException " + e);
             }
@@ -111,9 +122,9 @@ public class Select_InputLibrary_Fragment extends Fragment {
                     adapter.setOnItemClickLitener(new SelectInput_FullAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
-                            Intent intent = new Intent(getActivity(),InputLibraryActivity.class);
-                            intent.putExtra("FGUID",result.get(position).getFGuid());
-                            ViseLog.i("FGUID"+result.get(position).getFGuid());
+                            Intent intent = new Intent(getActivity(), InputLibraryActivity.class);
+                            intent.putExtra("FGUID", result.get(position).getFGuid());
+                            ViseLog.i("FGUID" + result.get(position).getFGuid());
                             startActivity(intent);
                         }
 
@@ -172,7 +183,7 @@ public class Select_InputLibrary_Fragment extends Fragment {
         public void startElement(String uri, String localName, String qName,
                                  Attributes attributes) throws SAXException {
             tag = localName;
-            if (localName.equals("Table")) {
+            if (localName.equals("Head")) {
                 Bill = new QuitLibraryBill();
             }
         }
@@ -181,7 +192,7 @@ public class Select_InputLibrary_Fragment extends Fragment {
         public void endElement(String uri, String localName, String qName)
                 throws SAXException {
             // 节点结束
-            if (localName.equals("Table")) {
+            if (localName.equals("Head")) {
                 Outbills.add(Bill);
                 Bill = null;
             }
@@ -205,7 +216,7 @@ public class Select_InputLibrary_Fragment extends Fragment {
                     Bill.setFTransactionType(data);
                 } else if (tag.equals("FTransactionType_Name")) {
                     Bill.setFTransactionType_Name(data);
-                }else if (tag.equals("FDate")) {
+                } else if (tag.equals("FDate")) {
                     Bill.setFDate(data);
                 }
             }
@@ -213,7 +224,7 @@ public class Select_InputLibrary_Fragment extends Fragment {
         }
     }
 
-    public  List<QuitLibraryBill> GetSelectBills() {
+    public List<QuitLibraryBill> GetSelectBills() {
         return this.outLibraryBills;
     }
 }

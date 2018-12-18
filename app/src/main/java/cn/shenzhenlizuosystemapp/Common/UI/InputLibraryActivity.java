@@ -49,32 +49,25 @@ import com.symbol.emdk.barcode.StatusData;
 import com.symbol.emdk.barcode.StatusData.ScannerStates;
 import com.vise.log.ViseLog;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-
 import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResult_RvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Adapter.ScanTask_RvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildTag;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubmitDataBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanXmlResult;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Stock_Return;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.SubBody;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TaskRvData;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
@@ -82,14 +75,14 @@ import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.ItemData;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.StockAdapter;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
+import cn.shenzhenlizuosystemapp.Common.WebBean.InputLibraryAllInfo;
+import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.GetChildTag;
 import cn.shenzhenlizuosystemapp.Common.Xml.GetSnNumberXml;
-import cn.shenzhenlizuosystemapp.Common.Xml.InputTaskXml;
-import cn.shenzhenlizuosystemapp.Common.Xml.StocksCallXml;
-import cn.shenzhenlizuosystemapp.Common.Xml.StocksXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.InputLibraryXmlAnalysis;
+import cn.shenzhenlizuosystemapp.Common.Xml.StockXmlAnalysis;
 import cn.shenzhenlizuosystemapp.R;
 
-//import cn.shenzhenlizuosystemapp.Common.LoginSpinnerAdapter.LoginAdapter;
 
 public class InputLibraryActivity extends BaseActivity implements EMDKListener, DataListener, StatusListener, ScannerConnectionListener {
 
@@ -118,7 +111,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private ScanResult_RvAdapter scanResult_rvAdapter;
     private ScanTask_RvAdapter scanTask_rvAdapter;
     private List<ItemData> SpStrList;
-    private List<TaskRvData> taskRvDataList;
+    private List<TaskRvData> taskRvDataList = null;
     private List<ScannerInfo> deviceList = null;
     private List<String> ScanResStrList = null;
     private List<StockBean> stockBeans = null;
@@ -185,7 +178,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         deviceList = new ArrayList<ScannerInfo>();
         SpStrList = new ArrayList<>();
         childTagList = new ArrayList<>();
-        taskRvDataList = new ArrayList<>();
         stockBeans = new ArrayList<>();
         InputSubmitDataBeanList = new ArrayList<>();
         subBodyList = new ArrayList<>();
@@ -262,8 +254,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         if (TextUtils.isEmpty(Et_ScanNumber.getText().toString())) {
                             tools.ShowDialog(MContect, "请输入数量在提交");
                         } else {
-                            String[] ShouldSend = taskRvDataList.get(RV_ScanInfoTableIndex).getTV_shouldSend().split("\\.");
-                            String[] AlreadySend = taskRvDataList.get(RV_ScanInfoTableIndex).getTV_alreadySend().split("\\.");
+                            String[] ShouldSend = taskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty().split("\\.");
+                            String[] AlreadySend = taskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty().split("\\.");
                             int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
                             if (NoSend >= Integer.parseInt(Et_ScanNumber.getText().toString()) && Integer.parseInt(Et_ScanNumber.getText().toString()) != 0) {
                                 IsEditNumber = false;
@@ -275,7 +267,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                             } else {
                                 tools.ShowDialog(MContect, "不能提交数量为0，输入数量超出未收数量，请重新输入！");
                             }
-
                         }
                     } else {
                         IsEditNumber = false;
@@ -510,8 +501,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         scanTask_rvAdapter.setOnItemClickLitener(new ScanTask_RvAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
-                if (Integer.parseInt(taskRvDataList.get(position).getTV_shouldSend().split("\\.")[0]) <= Integer.parseInt(taskRvDataList.get(position).getTV_thisSend().split("\\.")[0]) +
-                        Integer.parseInt(taskRvDataList.get(position).getTV_alreadySend().split("\\.")[0])) {
+                if (Integer.parseInt(taskRvDataList.get(position).getFAuxQty().split("\\.")[0]) <= Integer.parseInt(taskRvDataList.get(position).getFThisAuxQty().split("\\.")[0]) +
+                        Integer.parseInt(taskRvDataList.get(position).getFExecutedAuxQty().split("\\.")[0])) {
                     tools.ShowDialog(MContect, "这张单已扫描完成");
                 } else {
                     if (!IsScaning) {
@@ -579,21 +570,38 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         protected List<QuitLibraryDetail> doInBackground(Integer... params) {
             List<QuitLibraryDetail> outLibraryBills = new ArrayList<>();
             stockBeans = new ArrayList<>();
+            taskRvDataList = new ArrayList<>();
             String OutBills = "";
             String Stocks = "";
-            InputStream in_Heard = null;
-            InputStream in_Body = null;
             InputStream in_Stocks = null;
             try {
                 OutBills = webService.GetWareHouseData(ConnectStr.ConnectionToString, FGUID);
-                ViseLog.i("OutBills = " + OutBills);
-                in_Heard = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
-                outLibraryBills = GetInputArray(in_Heard);
-                in_Body = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
-                taskRvDataList = InputTaskXml.getSingleton().GetInputBodyXml(in_Body);
-                Stocks = webService.GetStocks(ConnectStr.ConnectionToString);
-                in_Stocks = new ByteArrayInputStream(Stocks.getBytes("UTF-8"));
-                stockBeans = StocksXml.getSingleton().GetStocksXml(in_Stocks);
+                InputStream InputAllInfoStream = new ByteArrayInputStream(OutBills.getBytes("UTF-8"));
+                List<InputLibraryAllInfo> inputLibraryAllInfoList = InputLibraryXmlAnalysis.getSingleton().GetInputAllInfoList(InputAllInfoStream);
+                if (inputLibraryAllInfoList.get(0).getFStatus().equals("1")) {
+                    InputStream HeadinfoStr = new ByteArrayInputStream(inputLibraryAllInfoList.get(0).getFInfo().getBytes("UTF-8"));
+                    InputStream BodyinfoStr = new ByteArrayInputStream(inputLibraryAllInfoList.get(0).getFInfo().getBytes("UTF-8"));
+                    ViseLog.i("inputLibraryAllInfoList.get(0).getFInfo() = " + inputLibraryAllInfoList.get(0).getFInfo());
+                    outLibraryBills = InputLibraryXmlAnalysis.getSingleton().GetInputDetailXml(HeadinfoStr);
+                    taskRvDataList = InputLibraryXmlAnalysis.getSingleton().GetBodyInfo(BodyinfoStr);
+                    HeadinfoStr.close();
+                    BodyinfoStr.close();
+                    Stocks = webService.GetStocks(ConnectStr.ConnectionToString);
+                    in_Stocks = new ByteArrayInputStream(Stocks.getBytes("UTF-8"));
+                    List<Stock_Return> stock_returnList = StockXmlAnalysis.getSingleton().GetXmlStockReturn(in_Stocks);
+                    if (stock_returnList.get(0).getFStatus().equals("1")) {
+                        InputStream In_StockInfo = new ByteArrayInputStream(stock_returnList.get(0).getFInfo().getBytes("UTF-8"));
+                        stockBeans = StockXmlAnalysis.getSingleton().GetXmlStockInfo(In_StockInfo);
+                    } else {
+                        stockBeans.clear();
+                    }
+                    ViseLog.i("Stocks = " + Stocks);
+                    return outLibraryBills;
+                } else {
+                    outLibraryBills.clear();
+                    return outLibraryBills;
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -609,7 +617,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             try {
                 if (result.size() >= 0) {
                     if (taskRvDataList.size() >= 0) {
-                        taskRvDataList.remove(0);
                         InitScanRecycler();
                     }
                     if (stockBeans.size() >= 0) {
@@ -636,86 +643,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         }
     }
 
-    public List GetInputArray(InputStream stream) throws SAXException, IOException, ParserConfigurationException {
-        SAXParserFactory factory = SAXParserFactory.newInstance();//创建SAX解析工厂
-        javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器
-        BodySAXHandler handler = new BodySAXHandler();//创建处理函数
-        parser.parse(stream, handler);//开始解析
-        List<QuitLibraryDetail> outbodys = handler.getBody();
-        return outbodys;
-    }
-
-    public class BodySAXHandler extends DefaultHandler {
-        private List<QuitLibraryDetail> OutBodys;
-        private QuitLibraryDetail outbody;// 当前解析的student
-        private String tag;// 当前解析的标签
-
-        public List<QuitLibraryDetail> getBody() {
-            if (OutBodys != null) {
-                return OutBodys;
-            }
-            return null;
-        }
-
-        @Override
-        public void startDocument() throws SAXException {
-            // 文档开始
-            OutBodys = new ArrayList<QuitLibraryDetail>();
-        }
-
-        @Override
-        public void endDocument() throws SAXException {
-        }
-
-        @Override
-        public void startElement(String uri, String localName, String qName,
-                                 Attributes attributes) throws SAXException {
-            tag = localName;
-            if (localName.equals("Table")) {
-                outbody = new QuitLibraryDetail();
-                ViseLog.i("创建outbody");
-            }
-        }
-
-        @Override
-        public void endElement(String uri, String localName, String qName)
-                throws SAXException {
-            // 节点结束
-            if (localName.equals("Table")) {
-                OutBodys.add(outbody);
-                outbody = null;
-            }
-            tag = null;
-        }
-
-        @Override
-        public void characters(char[] ch, int start, int length)
-                throws SAXException {
-            String data = new String(ch, start, length);
-            if (data != null && tag != null) {
-                if (tag.equals("HeadGuid")) {
-                    outbody.setFGuid(data);
-                    ViseLog.i(data);
-                } else if (tag.equals("FCode")) {
-                    outbody.setFCode(data);
-                } else if (tag.equals("FStock")) {
-                    outbody.setFStock(data);
-                } else if (tag.equals("FStock_Name")) {
-                    outbody.setFStock_Name(data);
-                } else if (tag.equals("FTransactionType")) {
-                    outbody.setFTransactionType(data);
-                } else if (tag.equals("FTransactionType_Name")) {
-                    outbody.setFTransactionType_Name(data);
-                } else if (tag.equals("FPartner")) {
-                    outbody.setFPartner(data);
-                } else if (tag.equals("FPartner_Name")) {
-                    outbody.setFPartner_Name(data);
-                }
-
-            }
-
-        }
-    }
 
     @Override
     public void onOpened(EMDKManager emdkManager) {
@@ -867,13 +794,13 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         protected void onPostExecute(String result) {
             if (result != null) {
                 ViseLog.i("ScanResultData" + String.valueOf(CheckResultList(result)));
-                int ThisSendSum = Integer.parseInt(taskRvDataList.get(scanTask_rvAdapter.getselection()).getTV_thisSend().split("\\.")[0]);
-                String[] ShouldSend = taskRvDataList.get(RV_ScanInfoTableIndex).getTV_shouldSend().split("\\.");
-                String[] AlreadySend = taskRvDataList.get(RV_ScanInfoTableIndex).getTV_alreadySend().split("\\.");
-                int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
-                if (ThisSendSum > NoSend) {
-
-                } else {
+                int NoSendQty = 0;
+                if (!TextUtils.isEmpty(taskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty()) && !TextUtils.isEmpty(taskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty())) {
+                    int AuxQty = Integer.parseInt(taskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty().split("\\.")[0]);
+                    int ExecutedAuxQty = Integer.parseInt(taskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty().split("\\.")[0]);
+                    NoSendQty = AuxQty - ExecutedAuxQty;
+                }
+                if (Integer.parseInt(taskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty().split("\\.")[0]) <= NoSendQty) {
                     if (IsScanFinish) {
                         tools.ShowDialog(MContect, "已扫描完，请点击提交在接着扫描");
                     } else {
@@ -907,7 +834,13 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             try {
                 String StocksCell = webService.GetStocksCell(ConnectStr.ConnectionToString, stockBeans.get(pos).getFGuid());
                 InputStream inStockCell = new ByteArrayInputStream(StocksCell.getBytes("UTF-8"));
-                stockBeanList = StocksCallXml.getSingleton().GetStocksCallXml(inStockCell);
+                List<AdapterReturn> stock_returns = AnalysisReturnsXml.getSingleton().GetReturn(inStockCell);
+                if (stock_returns.get(0).getFStatus().equals("1")) {
+                    InputStream In_Info = new ByteArrayInputStream(stock_returns.get(0).getFInfo().getBytes("UTF-8"));
+                    stockBeanList = StockXmlAnalysis.getSingleton().GetXmlStockInfo(In_Info);
+                } else {
+                    stockBeanList.clear();
+                }
             } catch (Exception e) {
                 ViseLog.i("AsyncGetStocksCellException = " + e.getMessage());
             }
@@ -947,7 +880,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 } else {
                     EndStr = addSpace(Res, MiddleStr);
                 }
-                ViseLog.i("State = " + State);
+                ViseLog.i("State = " + EndStr);
                 Res = webService.GetBarcodeAnalyze(taskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(), EndStr, ConnectStr.ConnectionToString, ConnectStr.USERNAME);
                 if (TextUtils.isEmpty(Res)) {
                     ViseLog.i("res为空" + Res);
@@ -1223,7 +1156,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     }
 
     private void GetNullXml(int pos) {
-        GetNullXmlSyncThread getNullXmlSyncThread = new GetNullXmlSyncThread(taskRvDataList.get(pos).getFGUID());
+        GetNullXmlSyncThread getNullXmlSyncThread = new GetNullXmlSyncThread(taskRvDataList.get(pos).getFGuid());
         getNullXmlSyncThread.start();
     }
 
@@ -1235,7 +1168,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < strs.length; i++) {
             sb.append(strs[i]);
-            if (i == 11) {
+            if (i == 4243) {
                 sb.append(AddStr);
             }
         }
@@ -1302,7 +1235,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 }
                 ViseLog.i("Number = " + Number);
                 InputSubmitDataBean inputSubmitDataBean = new InputSubmitDataBean();
-                inputSubmitDataBean.setFGuid(taskRvDataList.get(RV_ScanInfoTableIndex).getFGUID());
+                inputSubmitDataBean.setFGuid(taskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
                 inputSubmitDataBean.setFBillID(HeardID);
                 inputSubmitDataBean.setFMaterial(taskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial());
                 inputSubmitDataBean.setFUnit(taskRvDataList.get(RV_ScanInfoTableIndex).getFUnit());
@@ -1311,12 +1244,12 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 InputSubmitDataBeanList.add(inputSubmitDataBean);
                 SubBody subBody = new SubBody();
                 subBody.setFGuid("");
-                subBody.setFBillBodyID(taskRvDataList.get(RV_ScanInfoTableIndex).getFGUID());
+                subBody.setFBillBodyID(taskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
                 subBody.setFBarcodeLib(subBodys.get(0).getFBarcodeLib());
                 subBodyList.add(subBody);
-                int ThisSendSum = Integer.parseInt(taskRvDataList.get(scanTask_rvAdapter.getselection()).getTV_thisSend().split("\\.")[0]);
+                int ThisSendSum = Integer.parseInt(taskRvDataList.get(scanTask_rvAdapter.getselection()).getFThisAuxQty().split("\\.")[0]);
                 ViseLog.i("ThisSendSum = " + ThisSendSum);
-                taskRvDataList.get(scanTask_rvAdapter.getselection()).setTV_thisSend(String.valueOf(ThisSendSum + Number));
+//                taskRvDataList.get(scanTask_rvAdapter.getselection()).getFThisAuxQty(String.valueOf(ThisSendSum + Number));
                 if (!IsSave) {
                     stopScan();
                     scanTask_rvAdapter.setSelection(-1);
@@ -1335,15 +1268,15 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                 in_Str2.close();
                 tools.showshort(MContect, "提交成功");
                 IsSave = false;
-                int ThisNewSendSum = Integer.parseInt(taskRvDataList.get(scanTask_rvAdapter.getselection()).getTV_thisSend().split("\\.")[0]);
-                String[] ShouldSend = taskRvDataList.get(RV_ScanInfoTableIndex).getTV_shouldSend().split("\\.");
-                String[] AlreadySend = taskRvDataList.get(RV_ScanInfoTableIndex).getTV_alreadySend().split("\\.");
-                int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
-                if (ThisNewSendSum >= NoSend) {
-                    stopScan();
-                    scanTask_rvAdapter.setSelection(-1);
-                    scanTask_rvAdapter.notifyDataSetChanged();
-                }
+//                int ThisNewSendSum = Integer.parseInt(taskRvDataList.get(scanTask_rvAdapter.getselection()).getTV_thisSend().split("\\.")[0]);
+//                String[] ShouldSend = taskRvDataList.get(RV_ScanInfoTableIndex).getTV_shouldSend().split("\\.");
+//                String[] AlreadySend = taskRvDataList.get(RV_ScanInfoTableIndex).getTV_alreadySend().split("\\.");
+//                int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
+//                if (ThisNewSendSum >= NoSend) {
+//                    stopScan();
+//                    scanTask_rvAdapter.setSelection(-1);
+//                    scanTask_rvAdapter.notifyDataSetChanged();
+//                }
             } else {
                 tools.ShowDialog(MContect, "都还没开始扫描，无法提交");
             }
@@ -1450,10 +1383,13 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
     private List DisposeTaskRvDataList(List<TaskRvData> DisposeTaskRvDataList) {
         for (int index = 0; index < DisposeTaskRvDataList.size(); index++) {
-            String[] ShouldSend = DisposeTaskRvDataList.get(index).getTV_shouldSend().split("\\.");
-            String[] AlreadySend = DisposeTaskRvDataList.get(index).getTV_alreadySend().split("\\.");
-            int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
-            if (NoSend <= 0) {
+            String NoSendQty = "0";
+            if (!TextUtils.isEmpty(DisposeTaskRvDataList.get(index).getFAuxQty()) && !TextUtils.isEmpty(DisposeTaskRvDataList.get(index).getFExecutedAuxQty())) {
+                int AuxQty = Integer.parseInt(DisposeTaskRvDataList.get(index).getFAuxQty().split("\\.")[0]);
+                int ExecutedAuxQty = Integer.parseInt(DisposeTaskRvDataList.get(index).getFExecutedAuxQty().split("\\.")[0]);
+                NoSendQty = String.valueOf(AuxQty - ExecutedAuxQty);
+            }
+            if (Integer.parseInt(NoSendQty) <= 0) {
                 DisposeTaskRvDataList.remove(index);
             }
         }

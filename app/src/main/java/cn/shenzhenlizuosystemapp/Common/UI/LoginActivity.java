@@ -25,9 +25,10 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.vise.log.ViseLog;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,13 +38,15 @@ import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Json;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.JsonUitl;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.LoginResInfo;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.ItemData;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.LoginAdapter;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.WebBean.GetProjectResult;
+import cn.shenzhenlizuosystemapp.Common.Xml.GetLoginXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.LoginGetResXml;
 import cn.shenzhenlizuosystemapp.R;
 
 public class LoginActivity extends BaseActivity {
@@ -159,7 +162,6 @@ public class LoginActivity extends BaseActivity {
             }
         });
         ProjectNameAndConnectMap = new HashMap();
-        GetProject();
     }
 
     private void foucs() {
@@ -187,9 +189,14 @@ public class LoginActivity extends BaseActivity {
             public void run() {
                 try {
                     String result = httpRequest.getProject();
-                    GetProjectResult projectResult = (GetProjectResult) JsonUitl.stringToObject(result, GetProjectResult.class);
-                    for (GetProjectResult.Project bean : projectResult.Projects) {
-                        ProjectNameAndConnectMap.put(bean.ProjectName, bean.ConnecTionToString);
+                    InputStream LoginInfo = new ByteArrayInputStream(result.getBytes("UTF-8"));
+                    String resultInfo = GetLoginXml.getSingleton().GetInfoTag(LoginInfo);
+                    InputStream ProjectsInfo = new ByteArrayInputStream(resultInfo.getBytes("UTF-8"));
+                    List<GetProjectResult> projectResult = GetLoginXml.getSingleton().GetAPP_Project(ProjectsInfo);
+                    LoginInfo.close();
+                    ProjectsInfo.close();
+                    for (GetProjectResult getProjectResult : projectResult) {
+                        ProjectNameAndConnectMap.put(getProjectResult.getFName(), getProjectResult.getFGuid());
                     }
                     runOnUiThread(new Runnable() {
                         @Override
@@ -204,11 +211,9 @@ public class LoginActivity extends BaseActivity {
                             SpinnerProjet.setAdapter(loginAdapter);
                             SpinnerProjet.setSelection(GetSpinnerPos(tools.GetStringData(sharedPreferences, "Project")));
                             SpinnerProjet.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view,
                                                            int position, long id) {
-
                                     SelectProjectStr = itemData.get(position).getData();
                                     ViseLog.i("选择值" + SelectProjectStr);
                                 }
@@ -294,6 +299,7 @@ public class LoginActivity extends BaseActivity {
             } else {
                 ConnectStr.ISSHOWNONEXECUTION = false;
             }
+            GetProject();
             ViseLog.i("ISSHOWNONEXECUTION = " + ConnectStr.ISSHOWNONEXECUTION + "sharedPreferences = " + tools.GetStringData(sharedPreferences, "IsScanInput"));
         }
 
@@ -361,18 +367,24 @@ public class LoginActivity extends BaseActivity {
             Message msg = new Message();
             try {
                 String string = ProjectNameAndConnectMap.get(SelectProjectStr);
-                String Result = httpRequest.LoginIn(User, Paw, string);
-                ViseLog.i(string);
+                String Result = httpRequest.LoginIn(string, User, Paw);
+                InputStream ResIP = new ByteArrayInputStream(Result.getBytes("UTF-8"));
+                List<LoginResInfo> loginResInfoList = LoginGetResXml.getSingleton().GetResInfo(ResIP);
                 Log.i("MainActivity", "Res" + Result);
-                if (Result.equals("true")) {
+                if (loginResInfoList.get(0).getFStatus().equals("1")) {
                     msg.what = 1;
+                    msg.getData().putString("ConnectString", loginResInfoList.get(0).getFInfo());
+                    handler.sendMessage(msg);
+                }else {
+                    msg.what = 2;
+                    msg.getData().putString("LoginException", loginResInfoList.get(0).getFInfo());
                     handler.sendMessage(msg);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 ThreadStop();
                 msg.what = 2;
-                msg.getData().putString("LoginException",e.getMessage());
+                msg.getData().putString("LoginException", e.getMessage());
                 handler.sendMessage(msg);
                 ViseLog.d("UserModel Exception" + e);
             }
@@ -409,7 +421,7 @@ public class LoginActivity extends BaseActivity {
                         tools.showshort(LoginActivity.this, "登录成功");
                         tools.PutStringData("Project", SelectProjectStr, sharedPreferences);
                         ConnectStr.USERNAME = Edit_UserName.getText().toString();
-                        ConnectStr.ConnectionToString = ProjectNameAndConnectMap.get(SelectProjectStr);
+                        ConnectStr.ConnectionToString = msg.getData().getString("ConnectString");
                         startActivity(new Intent(LoginActivity.this, MainTabActivity.class));
                         ViewManager.getInstance().finishActivity(LoginActivity.this);
                         break;
