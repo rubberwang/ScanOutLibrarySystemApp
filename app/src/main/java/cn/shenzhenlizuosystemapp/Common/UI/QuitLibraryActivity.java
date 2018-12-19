@@ -89,7 +89,7 @@ import cn.shenzhenlizuosystemapp.Common.Xml.StocksCallXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.StocksXml;
 import cn.shenzhenlizuosystemapp.R;
 
-public class QuitLibraryActivity extends BaseActivity implements EMDKListener, DataListener, StatusListener, ScannerConnectionListener{
+public class QuitLibraryActivity extends BaseActivity implements EMDKListener, DataListener, StatusListener, ScannerConnectionListener {
 
     private TextView Back;
     private TextView TV_DeliverGoodsNumber;
@@ -488,7 +488,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
         RV_GetInfoTable.setLayoutManager(layoutManager);
-        scanResult_quitRvAdapter = new ScanResult_QuitRvAdapter(this,childQuitTagList);
+        scanResult_quitRvAdapter = new ScanResult_QuitRvAdapter(this, childQuitTagList);
         RV_GetInfoTable.setAdapter(scanResult_quitRvAdapter);
     }
 
@@ -501,7 +501,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         if (ConnectStr.ISSHOWNONEXECUTION) {
             QuittaskRvDataList = DisposeTaskRvDataList(QuittaskRvDataList);
         }
-        scanTask_Quit_rvAdapter = new ScanTask_QuitRvAdapter(this,QuittaskRvDataList);
+        scanTask_Quit_rvAdapter = new ScanTask_QuitRvAdapter(this, QuittaskRvDataList);
         RV_ScanInfoTable.setAdapter(scanTask_Quit_rvAdapter);
         scanTask_Quit_rvAdapter.setOnItemClickLitener(new ScanTask_QuitRvAdapter.OnItemClickLitener() {
             @Override
@@ -510,7 +510,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                         Integer.parseInt(QuittaskRvDataList.get(position).getTV_alreadySend().split("\\.")[0])) {
                     tools.ShowDialog(MContect, "这张单已扫描完成");
                 } else {
-                    if (!IsScaning){
+                    if (!IsScaning) {
 //                        if (scanTask_Quit_rvAdapter.getselection() == -1) {
                         if (RV_ScanInfoTableIndex != position) {
                             RV_ScanInfoTableIndex = position;
@@ -944,7 +944,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                     EndStr = addSpace(Res, MiddleStr);
                 }
                 ViseLog.i("State = " + State);
-                Res = webService.GetBarcodeAnalyze(QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFGUID(), EndStr, ConnectStr.ConnectionToString, ConnectStr.USERNAME);
+//                Res = webService.GetBarcodeAnalyze(QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFGUID(), EndStr, ConnectStr.ConnectionToString, ConnectStr.USERNAME);
                 if (TextUtils.isEmpty(Res)) {
                     ViseLog.i("res为空" + Res);
                     return "";
@@ -1197,7 +1197,8 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
             //执行耗时操作
             Message msg = new Message();
             try {
-                String Result = webService.GetBarcodeAnalyze(QuittaskRvDataList.get(RV_ScanInfoTableIndex).getTV_materID(), "", ConnectStr.ConnectionToString, ConnectStr.USERNAME);
+                String Result = "";
+//                String Result = webService.GetBarcodeAnalyze(QuittaskRvDataList.get(RV_ScanInfoTableIndex).getTV_materID(), "", ConnectStr.ConnectionToString, ConnectStr.USERNAME);
                 if (!TextUtils.isEmpty(Result)) {
                     msg.what = 1;
                     msg.getData().putString("Xml", Result);

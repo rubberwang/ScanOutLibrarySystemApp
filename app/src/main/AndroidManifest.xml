@@ -55,7 +55,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".Common.UI.InputLibraryActivity"
+            android:name=".Common.UI.NewInputLibraryActivity"
             android:label="@string/SelectGetLibrary"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />

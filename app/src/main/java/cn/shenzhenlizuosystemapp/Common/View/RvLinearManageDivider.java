@@ -12,6 +12,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.vise.log.ViseLog;
+
+import cn.shenzhenlizuosystemapp.Common.Base.Tools;
+
 public class RvLinearManageDivider extends RecyclerView.ItemDecoration {
 
     private Paint mPaint;
@@ -96,6 +100,7 @@ public class RvLinearManageDivider extends RecyclerView.ItemDecoration {
     /**
      * 绘制纵向列表时的分隔线  这时分隔线是横着的
      * 每次 left相同，top根据child变化，right相同，bottom也变化
+     *
      * @param canvas
      * @param parent
      */
@@ -121,6 +126,7 @@ public class RvLinearManageDivider extends RecyclerView.ItemDecoration {
     /**
      * 绘制横向列表时的分隔线  这时分隔线是竖着的
      * l、r 变化； t、b 不变
+     *
      * @param canvas
      * @param parent
      */

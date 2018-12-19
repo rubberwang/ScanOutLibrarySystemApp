@@ -34,6 +34,7 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.LoginResInfo;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.UI.InputLibraryActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.NewInputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.WebBean.InputAllBean;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputXmlAnalysis;
@@ -122,7 +123,7 @@ public class Select_InputLibrary_Fragment extends Fragment {
                     adapter.setOnItemClickLitener(new SelectInput_FullAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
-                            Intent intent = new Intent(getActivity(), InputLibraryActivity.class);
+                            Intent intent = new Intent(getActivity(), NewInputLibraryActivity.class);
                             intent.putExtra("FGUID", result.get(position).getFGuid());
                             ViseLog.i("FGUID" + result.get(position).getFGuid());
                             startActivity(intent);

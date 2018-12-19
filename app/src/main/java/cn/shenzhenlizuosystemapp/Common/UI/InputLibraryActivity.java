@@ -125,6 +125,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private List<InputSubmitDataBean> InputSubmitDataBeanList = null;
     private List<SubBody> subBodyList = null;
     private List<ChildTag> childTagList = null;
+    private List<MaterialModeBean> materialModeBeanList = new ArrayList<MaterialModeBean>();
     private Tools tools;
 
     /**
@@ -134,6 +135,7 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
     private int SpHouseIndex = 0;
     private int SpInputHouseSpaceIndex = 0;
     private int defaultIndex = 0;
+    private int Sp_LabelModeIndex = 0;
     private Scanner scanner = null;
     private BarcodeManager barcodeManager = null;
     private EMDKManager emdkManager = null;
@@ -510,11 +512,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                     tools.ShowDialog(MContect, "这张单已扫描完成");
                 } else {
                     if (!IsScaning) {
-//                        if (scanTask_Input_rvAdapter.getselection() == -1) {
-                        if (RV_ScanInfoTableIndex != position) {
-                            RV_ScanInfoTableIndex = position;
-                        }
-                        GetNullXml(position);
                         if (RV_ScanInfoTableIndex != position) {
                             RV_ScanInfoTableIndex = position;
                         }
@@ -523,7 +520,6 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                         scanTask_Input_rvAdapter.setSelection(position);
                         scanTask_Input_rvAdapter.notifyDataSetChanged();//选中
                         GetNullXml(position);
-//                        }
                     } else {
                         tools.show(MContect, "请扫描完当前任务");
                     }
@@ -887,7 +883,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
                     EndStr = addSpace(Res, MiddleStr);
                 }
                 ViseLog.i("State = " + EndStr);
-                Res = webService.GetBarcodeAnalyze(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(), EndStr, ConnectStr.ConnectionToString, ConnectStr.USERNAME);
+                Res = webService.GetBarcodeAnalyze(ConnectStr.ConnectionToString, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(), materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(),
+                        params[0], true);
                 if (TextUtils.isEmpty(Res)) {
                     ViseLog.i("res为空" + Res);
                     return "";
@@ -1138,7 +1135,8 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
             //执行耗时操作
             Message msg = new Message();
             try {
-                String Result = webService.GetBarcodeAnalyze(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(), "", ConnectStr.ConnectionToString, ConnectStr.USERNAME);
+                String Result = webService.GetBarcodeAnalyze(ConnectStr.ConnectionToString, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(), materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(),
+                        "", true);
                 if (!TextUtils.isEmpty(Result)) {
                     msg.what = 1;
                     msg.getData().putString("Xml", Result);
@@ -1432,12 +1430,15 @@ public class InputLibraryActivity extends BaseActivity implements EMDKListener, 
 
         protected void onPostExecute(List<MaterialModeBean> result) {
             if (result.size() >= 0) {
-                MaterialModeAdapter InputStockAdapter = new MaterialModeAdapter(result, InputLibraryActivity.this);
+                materialModeBeanList = result;
+                MaterialModeAdapter InputStockAdapter = new MaterialModeAdapter(materialModeBeanList, InputLibraryActivity.this);
                 Sp_Label.setAdapter(InputStockAdapter);
                 Sp_Label.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                        if (Sp_LabelModeIndex != i) {
+                            Sp_LabelModeIndex = i;
+                        }
                     }
 
                     @Override

@@ -160,7 +160,6 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.6">
 
-
                     <TextView
                         style="@style/ScanOutLibraryText"
                         android:layout_width="0dp"
@@ -177,7 +176,6 @@
                         android:overlapAnchor="false"
                         android:spinnerMode="dropdown">
                     </Spinner>
-
 
             </LinearLayout>
 

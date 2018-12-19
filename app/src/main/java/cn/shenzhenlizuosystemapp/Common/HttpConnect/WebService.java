@@ -197,13 +197,13 @@ public class WebService {
         return Result;
     }
 
-    public String GetBarcodeAnalyze(String MaterielID,String Data,String ConnectionToString,String UserName) throws IOException, XmlPullParserException, ClassCastException {
+    public String GetBarcodeAnalyze(String ConnectionID,String MaterialID,String LabelTempletID,String Barcodes,boolean AllowAddNew) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "BarcodeAnalyze");
-        
-        soapObject.addProperty("MaterielID", MaterielID);
-        soapObject.addProperty("UserName", UserName);
-        soapObject.addProperty("Data", Data);
-        soapObject.addProperty("ConnectionToString", ConnectionToString);
+        soapObject.addProperty("ConnectionID", ConnectionID);
+        soapObject.addProperty("MaterialID", MaterialID);
+        soapObject.addProperty("LabelTempletID", LabelTempletID);
+        soapObject.addProperty("Barcodes", Barcodes);
+        soapObject.addProperty("AllowAddNew", AllowAddNew);
         
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
@@ -304,6 +304,23 @@ public class WebService {
         envelope.setOutputSoapObject(soapObject);
         HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
         httpTransportSE.call("http://www.lzbarcode.com/GetMaterialLabelTemplet", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
+
+    public String GetLabelTempletBarcodes(String ConnectionID,String LabelTempletID) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetLabelTempletBarcodes");
+        soapObject.addProperty("ConnectionID", ConnectionID);
+        soapObject.addProperty("LabelTempletID", LabelTempletID);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/GetLabelTempletBarcodes", envelope);
         Object object = (Object) envelope.getResponse();
         String Result = object.toString();
         return Result;
