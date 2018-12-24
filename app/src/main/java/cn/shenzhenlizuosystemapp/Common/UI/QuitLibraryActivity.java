@@ -84,7 +84,7 @@ import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.Xml.GetQuitChildTag;
 import cn.shenzhenlizuosystemapp.Common.Xml.GetQuitSnNumberXml;
-import cn.shenzhenlizuosystemapp.Common.Xml.QuitTaskXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.QuitLibraryXmlAnalysis;
 import cn.shenzhenlizuosystemapp.Common.Xml.StocksCallXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.StocksXml;
 import cn.shenzhenlizuosystemapp.R;
@@ -259,8 +259,8 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                         if (TextUtils.isEmpty(Et_ScanNumber.getText().toString())) {
                             tools.ShowDialog(MContect, "请输入数量在提交");
                         } else {
-                            String[] ShouldSend = QuittaskRvDataList.get(RV_ScanInfoTableIndex).getTV_shouldSend().split("\\.");
-                            String[] AlreadySend = QuittaskRvDataList.get(RV_ScanInfoTableIndex).getTV_alreadySend().split("\\.");
+                            String[] ShouldSend = QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty().split("\\.");
+                            String[] AlreadySend = QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty().split("\\.");
                             int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
                             if (NoSend >= Integer.parseInt(Et_ScanNumber.getText().toString()) && Integer.parseInt(Et_ScanNumber.getText().toString()) != 0) {
                                 IsEditNumber = false;
@@ -506,8 +506,8 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         scanTask_Quit_rvAdapter.setOnItemClickLitener(new ScanTask_QuitRvAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
-                if (Integer.parseInt(QuittaskRvDataList.get(position).getTV_shouldSend().split("\\.")[0]) <= Integer.parseInt(QuittaskRvDataList.get(position).getTV_thisSend().split("\\.")[0]) +
-                        Integer.parseInt(QuittaskRvDataList.get(position).getTV_alreadySend().split("\\.")[0])) {
+                if (Integer.parseInt(QuittaskRvDataList.get(position).getFAuxQty().split("\\.")[0]) <= Integer.parseInt(QuittaskRvDataList.get(position).getFThisAuxQty().split("\\.")[0]) +
+                        Integer.parseInt(QuittaskRvDataList.get(position).getFExecutedAuxQty().split("\\.")[0])) {
                     tools.ShowDialog(MContect, "这张单已扫描完成");
                 } else {
                     if (!IsScaning) {
@@ -586,7 +586,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                 in_Heard = new ByteArrayInputStream(QuitBills.getBytes("UTF-8"));
                 outLibraryBills = GetInputArray(in_Heard);
                 in_Body = new ByteArrayInputStream(QuitBills.getBytes("UTF-8"));
-                QuittaskRvDataList = QuitTaskXml.getSingleton().GetInputBodyXml(in_Body);
+                //QuittaskRvDataList = QuitLibraryXmlAnalysis.getSingleton().GetQuitBodyXml(in_Body);
                 Stocks = webService.GetStocks(ConnectStr.ConnectionToString);
                 in_Stocks = new ByteArrayInputStream(Stocks.getBytes("UTF-8"));
                 stockBeans = StocksXml.getSingleton().GetStocksXml(in_Stocks);
@@ -863,9 +863,9 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         protected void onPostExecute(String result) {
             if (result != null) {
                 ViseLog.i("ScanResultData" + String.valueOf(CheckResultList(result)));
-                int ThisSendSum = Integer.parseInt(QuittaskRvDataList.get(scanTask_Quit_rvAdapter.getselection()).getTV_thisSend().split("\\.")[0]);
-                String[] ShouldSend = QuittaskRvDataList.get(RV_ScanInfoTableIndex).getTV_shouldSend().split("\\.");
-                String[] AlreadySend = QuittaskRvDataList.get(RV_ScanInfoTableIndex).getTV_alreadySend().split("\\.");
+                int ThisSendSum = Integer.parseInt(QuittaskRvDataList.get(scanTask_Quit_rvAdapter.getselection()).getFThisAuxQty().split("\\.")[0]);
+                String[] ShouldSend = QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty().split("\\.");
+                String[] AlreadySend = QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty().split("\\.");
                 int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
                 if (ThisSendSum > NoSend) {
 
@@ -1217,7 +1217,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
     }
 
     private void GetNullXml(int pos) {
-        GetNullXmlSyncThread getNullXmlSyncThread = new GetNullXmlSyncThread(QuittaskRvDataList.get(pos).getFGUID());
+        GetNullXmlSyncThread getNullXmlSyncThread = new GetNullXmlSyncThread(QuittaskRvDataList.get(pos).getFGuid());
         getNullXmlSyncThread.start();
     }
 
@@ -1296,7 +1296,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                 }
                 ViseLog.i("Number = " + Number);
                 QuitSubmitDataBean quitSubmitDataBean = new QuitSubmitDataBean();
-                quitSubmitDataBean.setFGuid(QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFGUID());
+                quitSubmitDataBean.setFGuid(QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
                 quitSubmitDataBean.setFBillID(HeardID);
                 quitSubmitDataBean.setFMaterial(QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial());
                 quitSubmitDataBean.setFUnit(QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFUnit());
@@ -1305,12 +1305,12 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
 
                 SubQuitBody subBody = new SubQuitBody();
                 subBody.setFGuid("");
-                subBody.setFBillBodyID(QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFGUID());
+                subBody.setFBillBodyID(QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
                 subBody.setFBarcodeLib(subBodys.get(0).getFBarcodeLib());
                 subQuitBodyList.add(subBody);
-                int ThisSendSum = Integer.parseInt(QuittaskRvDataList.get(scanTask_Quit_rvAdapter.getselection()).getTV_thisSend().split("\\.")[0]);
+                int ThisSendSum = Integer.parseInt(QuittaskRvDataList.get(scanTask_Quit_rvAdapter.getselection()).getFThisAuxQty().split("\\.")[0]);
                 ViseLog.i("ThisSendSum = " + ThisSendSum);
-                QuittaskRvDataList.get(scanTask_Quit_rvAdapter.getselection()).setTV_thisSend(String.valueOf(ThisSendSum + Number));
+                QuittaskRvDataList.get(scanTask_Quit_rvAdapter.getselection()).setFThisAuxQty(String.valueOf(ThisSendSum + Number));
                 if (!IsSave) {
                     stopScan();
                     scanTask_Quit_rvAdapter.setSelection(-1);
@@ -1329,9 +1329,9 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
                 in_Str2.close();
                 tools.showshort(MContect, "提交成功");
                 IsSave = false;
-                int ThisNewSendSum = Integer.parseInt(QuittaskRvDataList.get(scanTask_Quit_rvAdapter.getselection()).getTV_thisSend().split("\\.")[0]);
-                String[] ShouldSend = QuittaskRvDataList.get(RV_ScanInfoTableIndex).getTV_shouldSend().split("\\.");
-                String[] AlreadySend = QuittaskRvDataList.get(RV_ScanInfoTableIndex).getTV_alreadySend().split("\\.");
+                int ThisNewSendSum = Integer.parseInt(QuittaskRvDataList.get(scanTask_Quit_rvAdapter.getselection()).getFThisAuxQty().split("\\.")[0]);
+                String[] ShouldSend = QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty().split("\\.");
+                String[] AlreadySend = QuittaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty().split("\\.");
                 int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
                 if (ThisNewSendSum >= NoSend) {
                     stopScan();
@@ -1444,8 +1444,8 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
 
     private List DisposeTaskRvDataList(List<QuitTaskRvData> DisposeTaskRvDataList) {
         for (int index = 0; index < DisposeTaskRvDataList.size(); index++) {
-            String[] ShouldSend = DisposeTaskRvDataList.get(index).getTV_shouldSend().split("\\.");
-            String[] AlreadySend = DisposeTaskRvDataList.get(index).getTV_alreadySend().split("\\.");
+            String[] ShouldSend = DisposeTaskRvDataList.get(index).getFAuxQty().split("\\.");
+            String[] AlreadySend = DisposeTaskRvDataList.get(index).getFExecutedAuxQty().split("\\.");
             int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
             if (NoSend <= 0) {
                 DisposeTaskRvDataList.remove(index);

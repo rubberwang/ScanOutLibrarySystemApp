@@ -11,6 +11,7 @@
 
     <style name="ScanOutLibraryText">
         <item name="android:textColor">@color/Black</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textSize">11sp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">3dp</item>
@@ -75,13 +76,22 @@
         <item name="android:paddingLeft">7sp</item>
     </style>
 
+    <style name="ScanInputLibraryText">
+        <item name="android:textColor">@color/Black</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">3dp</item>
+    </style>
+
     <style name="SelectItemContentText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:textColor">@color/Black</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:textSize">15sp</item>
         <item name="android:gravity">center</item>
+    </style>
+    <style name="SpnStyle">
+        <item name="android:colorControlNormal">#000000</item>
     </style>
 
     <!--dialog主题-->

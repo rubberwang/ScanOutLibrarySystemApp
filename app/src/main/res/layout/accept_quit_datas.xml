@@ -23,15 +23,13 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/TV_materID"
+            android:id="@+id/TV_Material_Code"
             style="@style/SelectItemContentText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
             android:gravity="center_vertical"
             android:textSize="13sp" />
-
-
 
     </LinearLayout>
 
@@ -42,8 +40,6 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-
-
         <TextView
             style="@style/SelectItemText"
             android:layout_width="0dp"
@@ -53,25 +49,24 @@
             android:text="@string/nameRoot"
             android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/TV_nameRoot"
-            style="@style/SelectItemContentText"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:gravity="center_vertical"
-            android:textSize="13sp" />
+            android:layout_weight="4">
 
-        <TextView
-            android:id="@+id/TV_size"
-            style="@style/SelectItemContentText"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2.5"
-            android:gravity="center_vertical"
-            android:textSize="13sp" />
+            <TextView
+                android:id="@+id/TV_Model"
+                style="@style/SelectItemContentText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
+
 
 
     <LinearLayout
@@ -90,15 +85,13 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/TV_statistics"
+            android:id="@+id/TV_BaseUnit_Name"
             style="@style/SelectItemContentText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.5"
             android:gravity="center_vertical"
             android:textSize="13sp" />
-
-
 
         <TextView
             style="@style/SelectItemText"
@@ -110,7 +103,7 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/TV_commonunit"
+            android:id="@+id/TV_Unit_Name"
             style="@style/SelectItemContentText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -136,7 +129,7 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/TV_shouldSend"
+            android:id="@+id/TV_AuxQty"
             style="@style/SelectItemContentText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -154,27 +147,21 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/TV_alreadySend"
+            android:id="@+id/TV_FExecutedAuxQty"
             style="@style/SelectItemContentText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.5"
             android:gravity="center_vertical"
-
             android:textSize="13sp" />
 
-
     </LinearLayout>
-
-
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
-
 
         <TextView
             style="@style/SelectItemText"
@@ -186,7 +173,7 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/TV_thisSend"
+            android:id="@+id/TV_ThisAuxQty"
             style="@style/SelectItemContentText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -210,13 +197,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1.5"
             android:gravity="center_vertical"
-
             android:textSize="13sp" />
 
-
-
     </LinearLayout>
-
-
 
 </LinearLayout>

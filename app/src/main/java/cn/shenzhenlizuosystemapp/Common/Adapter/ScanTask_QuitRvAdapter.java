@@ -2,14 +2,24 @@ package cn.shenzhenlizuosystemapp.Common.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.vise.log.ViseLog;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
@@ -51,22 +61,22 @@ public class ScanTask_QuitRvAdapter extends RecyclerView.Adapter {
     //填充onCreateViewHolder方法返回的holder中的控件
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
-            String[] NameRoot = datas.get(position).getTV_nameRoot().split("\\.");
-            String[] ShouldSend = datas.get(position).getTV_shouldSend().split("\\.");
-            String[] AlreadySend = datas.get(position).getTV_alreadySend().split("\\.");
-            String[] ThisSend = datas.get(position).getTV_thisSend().split("\\.");
-
-            int NoSend = Integer.parseInt(ShouldSend[0]) - Integer.parseInt(AlreadySend[0]);
-
-            ((ViewHoders) holder).TV_materID.setText(datas.get(position).getTV_materID());
-            ((ViewHoders) holder).TV_nameRoot.setText(NameRoot[0]);
-            ((ViewHoders) holder).TV_statistics.setText(datas.get(position).getTV_statistics());
-            ((ViewHoders) holder).TV_size.setText(datas.get(position).getTV_size());
-            ((ViewHoders) holder).TV_commonunit.setText(datas.get(position).getTV_commonunit());
-            ((ViewHoders) holder).TV_alreadySend.setText(AlreadySend[0]);
-            ((ViewHoders) holder).TV_thisSend.setText(ThisSend[0]);
-            ((ViewHoders) holder).TV_shouldSend.setText(ShouldSend[0]);
-            ((ViewHoders) holder).TV_noSend.setText(NoSend + "");
+            String NoSendQty = "0";
+            int AuxQty = 0;
+            int ExecutedAuxQty = 0;
+            if (!TextUtils.isEmpty(datas.get(position).getFAuxQty()) && !TextUtils.isEmpty(datas.get(position).getFExecutedAuxQty())) {
+                AuxQty = Integer.parseInt(datas.get(position).getFAuxQty().split("\\.")[0]);
+                ExecutedAuxQty = Integer.parseInt(datas.get(position).getFExecutedAuxQty().split("\\.")[0]);
+                NoSendQty = String.valueOf(AuxQty - ExecutedAuxQty);
+            }
+            ((ViewHoders) holder).TV_noSend.setText(NoSendQty);
+            ((ViewHoders) holder).TV_Material_Code.setText(datas.get(position).getFMaterial_Code());
+            ((ViewHoders) holder).TV_Model.setText(datas.get(position).getFModel() + "" + datas.get(position).getFMaterial_Name());
+            ((ViewHoders) holder).TV_BaseUnit_Name.setText(datas.get(position).getFBaseUnit_Name());
+            ((ViewHoders) holder).TV_Unit_Name.setText(datas.get(position).getFUnit_Name());
+            ((ViewHoders) holder).TV_AuxQty.setText(String.valueOf(AuxQty));
+            ((ViewHoders) holder).TV_FExecutedAuxQty.setText(String.valueOf(ExecutedAuxQty));
+            ((ViewHoders) holder).TV_ThisAuxQty.setText(datas.get(position).getFThisAuxQty().split("\\.")[0]);
 
             if (selected == position) {
                 holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.Thin_Bule));
@@ -95,27 +105,25 @@ public class ScanTask_QuitRvAdapter extends RecyclerView.Adapter {
 
     class ViewHoders extends RecyclerView.ViewHolder {
 
-        private TextView TV_materID;
-        private TextView TV_nameRoot;
-        private TextView TV_statistics;
-        private TextView TV_shouldSend;
-        private TextView TV_alreadySend;
-        private TextView TV_thisSend;
+        private TextView TV_Material_Code;
+        private TextView TV_Model;
+        private TextView TV_BaseUnit_Name;
+        private TextView TV_Unit_Name;
+        private TextView TV_AuxQty;
+        private TextView TV_FExecutedAuxQty;
+        private TextView TV_ThisAuxQty;
         private TextView TV_noSend;
-        private TextView TV_size;
-        private TextView TV_commonunit;
 
         public ViewHoders(View itemView) {
             super(itemView);
-            TV_materID = (TextView) itemView.findViewById(R.id.TV_materID);
-            TV_nameRoot = (TextView) itemView.findViewById(R.id.TV_nameRoot);
-            TV_statistics = (TextView) itemView.findViewById(R.id.TV_statistics);
-            TV_shouldSend = (TextView) itemView.findViewById(R.id.TV_shouldSend);
-            TV_alreadySend = (TextView) itemView.findViewById(R.id.TV_alreadySend);
-            TV_thisSend = (TextView) itemView.findViewById(R.id.TV_thisSend);
+            TV_Material_Code = (TextView) itemView.findViewById(R.id.TV_Material_Code);
+            TV_Model = (TextView) itemView.findViewById(R.id.TV_Model);
+            TV_BaseUnit_Name = (TextView) itemView.findViewById(R.id.TV_BaseUnit_Name);
+            TV_Unit_Name = (TextView) itemView.findViewById(R.id.TV_Unit_Name);
+            TV_AuxQty = (TextView) itemView.findViewById(R.id.TV_AuxQty);
+            TV_FExecutedAuxQty = (TextView) itemView.findViewById(R.id.TV_FExecutedAuxQty);
+            TV_ThisAuxQty = (TextView) itemView.findViewById(R.id.TV_ThisAuxQty);
             TV_noSend = (TextView) itemView.findViewById(R.id.TV_noSend);
-            TV_size = (TextView) itemView.findViewById(R.id.TV_size);
-            TV_commonunit = (TextView) itemView.findViewById(R.id.TV_commonunit);
         }
     }
 
@@ -126,4 +134,5 @@ public class ScanTask_QuitRvAdapter extends RecyclerView.Adapter {
     public int getselection() {
         return selected;
     }
+
 }

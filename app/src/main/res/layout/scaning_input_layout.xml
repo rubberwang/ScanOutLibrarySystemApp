@@ -49,10 +49,11 @@
 
                 <TextView
                     android:id="@+id/TV_DeliverGoodsNumber"
-                    style="@style/ScanOutLibraryText"
+                    style="@style/ScanInputLibraryText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="5" />
+                    android:layout_weight="5"
+                    android:textSize="14sp"/>
 
                 <TextView
                     style="@style/ScanOutLibraryText"
@@ -63,10 +64,11 @@
 
                 <TextView
                     android:id="@+id/TV_BusType"
-                    style="@style/ScanOutLibraryText"
+                    style="@style/ScanInputLibraryText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="5" />
+                    android:layout_weight="5"
+                    android:textSize="14sp"/>
 
             </LinearLayout>
 
@@ -95,7 +97,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:overlapAnchor="false"
-                        android:spinnerMode="dropdown">
+                        android:spinnerMode="dropdown"
+                        android:theme="@style/SpnStyle"
+                        android:background="@drawable/border"
+                        >
                     </Spinner>
 
                 </LinearLayout>
@@ -118,7 +123,10 @@
                         android:layout_height="match_parent"
                         android:layout_weight="6.5"
                         android:overlapAnchor="false"
-                        android:spinnerMode="dropdown">
+                        android:spinnerMode="dropdown"
+                        android:theme="@style/SpnStyle"
+                        android:background="@drawable/border"
+                        >
                     </Spinner>
 
                 </LinearLayout>
@@ -140,17 +148,19 @@
 
                 <TextView
                     android:id="@+id/TV_Unit"
-                    style="@style/ScanOutLibraryText"
+                    style="@style/ScanInputLibraryText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="5" />
+                    android:layout_weight="5"
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/TV_Unit1"
-                    style="@style/ScanOutLibraryText"
+                    style="@style/ScanInputLibraryText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="8" />
+                    android:layout_weight="8"
+                    android:textSize="14sp"/>
 
             </LinearLayout>
 
@@ -172,7 +182,11 @@
                     android:layout_height="match_parent"
                     android:layout_weight="13"
                     android:overlapAnchor="false"
-                    android:spinnerMode="dropdown"></Spinner>
+                    android:spinnerMode="dropdown"
+                    android:theme="@style/SpnStyle"
+                    android:background="@drawable/border">
+
+                </Spinner>
 
             </LinearLayout>
 

@@ -326,7 +326,7 @@ public class LoginActivity extends BaseActivity {
             if (itemData != null) {
                 itemData = null;
             }
-            handler.removeCallbacks(getMainLooper().getThread());
+            handler.removeCallbacks(null);
             ViewManager.getInstance().finishActivity(LoginActivity.this);
         }
     }

@@ -37,7 +37,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".Common.UI.QuitLibraryActivity"
+            android:name=".Common.UI.NewQuitLibraryActivity"
             android:label="@string/OutLibrary"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />

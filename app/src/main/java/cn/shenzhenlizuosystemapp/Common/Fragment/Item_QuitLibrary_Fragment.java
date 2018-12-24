@@ -20,7 +20,7 @@ import cn.shenzhenlizuosystemapp.Common.Adapter.SelectQuit_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.UI.QuitLibraryActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.NewQuitLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -68,7 +68,7 @@ public class Item_QuitLibrary_Fragment extends Fragment {
             adapter.setOnItemClickLitener(new SelectQuit_FullAdapter.OnItemClickLitener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    Intent intent = new Intent(getActivity(),QuitLibraryActivity.class);
+                    Intent intent = new Intent(getActivity(),NewQuitLibraryActivity.class);
                     intent.putExtra("FGUID",selectOutLibraryList.get(position).getFGuid());
                     ViseLog.i("FGUID"+selectOutLibraryList.get(position).getFGuid());
                     startActivity(intent);

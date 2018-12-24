@@ -32,8 +32,10 @@ import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.UI.QuitLibraryActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.NewQuitLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
+import cn.shenzhenlizuosystemapp.Common.WebBean.QuitAllBean;
+import cn.shenzhenlizuosystemapp.Common.Xml.QuitXmlAnalysis;
 import cn.shenzhenlizuosystemapp.R;
 
 public class Select_QuitLibrary_Fragment extends Fragment {
@@ -43,16 +45,11 @@ public class Select_QuitLibrary_Fragment extends Fragment {
    private WebService webService;
    private Tools tools;
    private ProgressDialog PD;
-   private List<QuitLibraryBill> outLibraryBills;
+   private List<QuitLibraryBill> quitLibraryBills;
 
     public static Select_QuitLibrary_Fragment newInstance() {
         Select_QuitLibrary_Fragment fragment = new Select_QuitLibrary_Fragment();
         return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Nullable
@@ -65,20 +62,20 @@ public class Select_QuitLibrary_Fragment extends Fragment {
         PD = new ProgressDialog(this.getActivity());
         PD.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         PD.setCancelable(false);
-        GetOutLibraryBills();
+        GetQuitLibraryBills();
         return rootView;
     }
 
-    private void GetOutLibraryBills() {
-        GetOutLibraryBillsAsyncTask getOutLibraryBillsAsyncTask = new GetOutLibraryBillsAsyncTask(RV_InitSelectFull);
-        getOutLibraryBillsAsyncTask.execute();
+    private void GetQuitLibraryBills() {
+        GetQuitLibraryBillsAsyncTask getQuitLibraryBillsAsyncTask = new GetQuitLibraryBillsAsyncTask(RV_InitSelectFull);
+        getQuitLibraryBillsAsyncTask.execute();
     }
 
-    public class GetOutLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<QuitLibraryBill>> {
+    public class GetQuitLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<QuitLibraryBill>> {
 
         private RecyclerView recyclerView;
 
-        public GetOutLibraryBillsAsyncTask(RecyclerView recyclerView) {
+        public GetQuitLibraryBillsAsyncTask(RecyclerView recyclerView) {
             super();
             this.recyclerView = recyclerView;
         }
@@ -88,14 +85,22 @@ public class Select_QuitLibrary_Fragment extends Fragment {
             String QuitBills = "";
             try {
                 InputStream in_withcode = null;
-                QuitBills = webService.QuitLibraryNote(ConnectStr.ConnectionToString);
+                QuitBills = webService.GetLibraryNote(ConnectStr.ConnectionToString);
                 ViseLog.i("QuitBills = " + QuitBills);
                 in_withcode = new ByteArrayInputStream(QuitBills.getBytes("UTF-8"));
-                outLibraryBills = getOutLibraryFromXMl(in_withcode);
+                List<QuitAllBean> ResultXmlList = QuitXmlAnalysis.getSingleton().GetAllQuitList(in_withcode);
+                in_withcode.close();
+                if (ResultXmlList.get(0).getFStatus().equals("1")) {
+                    InputStream inputInfoStream = new ByteArrayInputStream(ResultXmlList.get(0).getFInfo().getBytes("UTF-8"));
+                    quitLibraryBills = QuitXmlAnalysis.getSingleton().GetQuitInfoXml(inputInfoStream);
+                    inputInfoStream.close();
+                }else {
+                    quitLibraryBills.clear();
+                }
             } catch (Exception e) {
-                ViseLog.d("SelectOutLibraryGetOutLibraryBillsException " + e);
+                ViseLog.d("SelectOutLibraryGetQuitLibraryBillsException " + e);
             }
-            return outLibraryBills;
+            return quitLibraryBills;
         }
 
         /**
@@ -116,7 +121,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
                     adapter.setOnItemClickLitener(new SelectQuit_FullAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
-                            Intent intent = new Intent(getActivity(),QuitLibraryActivity.class);
+                            Intent intent = new Intent(getActivity(),NewQuitLibraryActivity.class);
                             intent.putExtra("FGUID",result.get(position).getFGuid());
                             ViseLog.i("FGUID"+result.get(position).getFGuid());
                             startActivity(intent);
@@ -147,8 +152,8 @@ public class Select_QuitLibrary_Fragment extends Fragment {
         javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器
         SAXHandler handler = new SAXHandler();//创建处理函数
         parser.parse(stream, handler);//开始解析
-        List<QuitLibraryBill> OutLibrary = handler.getBills();
-        return OutLibrary;
+        List<QuitLibraryBill> QuitLibrary = handler.getBills();
+        return QuitLibrary;
     }
 
     public class SAXHandler extends DefaultHandler {
@@ -177,7 +182,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
         public void startElement(String uri, String localName, String qName,
                                  Attributes attributes) throws SAXException {
             tag = localName;
-            if (localName.equals("Table")) {
+            if (localName.equals("Head")) {
                 Bill = new QuitLibraryBill();
             }
         }
@@ -186,7 +191,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
         public void endElement(String uri, String localName, String qName)
                 throws SAXException {
             // 节点结束
-            if (localName.equals("Table")) {
+            if (localName.equals("Head")) {
                 Quitbills.add(Bill);
                 Bill = null;
             }
@@ -219,6 +224,6 @@ public class Select_QuitLibrary_Fragment extends Fragment {
     }
 
     public  List<QuitLibraryBill> GetSelectBills() {
-        return this.outLibraryBills;
+        return this.quitLibraryBills;
     }
 }

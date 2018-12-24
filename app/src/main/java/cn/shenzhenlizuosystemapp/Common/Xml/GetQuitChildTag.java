@@ -37,8 +37,8 @@ public class GetQuitChildTag {
         javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器
         BodySAXHandler handler = new BodySAXHandler();//创建处理函数
         parser.parse(stream, handler);//开始解析
-        List<ChildQuitTag> childTagsList = handler.getBody();
-        return childTagsList;
+        List<ChildQuitTag> childQuitTagsList = handler.getBody();
+        return childQuitTagsList;
     }
 
     public List getScanQuitXmlResult(InputStream stream) throws SAXException, IOException, ParserConfigurationException {
