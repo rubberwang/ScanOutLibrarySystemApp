@@ -28,7 +28,6 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.InputStockAdapter;
-import cn.shenzhenlizuosystemapp.Common.UI.InputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputStockXmlAnalysis;
 import cn.shenzhenlizuosystemapp.R;
@@ -67,21 +66,13 @@ public class ScanTask_InputRvAdapter extends RecyclerView.Adapter {
     //填充onCreateViewHolder方法返回的holder中的控件
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
-            String NoSendQty = "0";
-            int AuxQty = 0;
-            int ExecutedAuxQty = 0;
-            if (!TextUtils.isEmpty(datas.get(position).getFAuxQty()) && !TextUtils.isEmpty(datas.get(position).getFExecutedAuxQty())) {
-                AuxQty = Integer.parseInt(datas.get(position).getFAuxQty().split("\\.")[0]);
-                ExecutedAuxQty = Integer.parseInt(datas.get(position).getFExecutedAuxQty().split("\\.")[0]);
-                NoSendQty = String.valueOf(AuxQty - ExecutedAuxQty);
-            }
-            ((ViewHoders) holder).TV_noSend.setText(NoSendQty);
+            ((ViewHoders) holder).TV_noSend.setText(datas.get(position).getNoInput());
             ((ViewHoders) holder).TV_Material_Code.setText(datas.get(position).getFMaterial_Code());
             ((ViewHoders) holder).TV_Model.setText(datas.get(position).getFModel() + "" + datas.get(position).getFMaterial_Name());
             ((ViewHoders) holder).TV_BaseUnit_Name.setText(datas.get(position).getFBaseUnit_Name());
             ((ViewHoders) holder).TV_Unit_Name.setText(datas.get(position).getFUnit_Name());
-            ((ViewHoders) holder).TV_AuxQty.setText(String.valueOf(AuxQty));
-            ((ViewHoders) holder).TV_FExecutedAuxQty.setText(String.valueOf(ExecutedAuxQty));
+            ((ViewHoders) holder).TV_AuxQty.setText(datas.get(position).getFAuxQty());
+            ((ViewHoders) holder).TV_FExecutedAuxQty.setText(datas.get(position).getFExecutedAuxQty());
             ((ViewHoders) holder).TV_ThisAuxQty.setText(datas.get(position).getFThisAuxQty().split("\\.")[0]);
             
             if (selected == position) {
@@ -140,5 +131,6 @@ public class ScanTask_InputRvAdapter extends RecyclerView.Adapter {
     public int getselection() {
         return selected;
     }
+    
     
 }

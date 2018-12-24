@@ -18,6 +18,15 @@ public class InputTaskRvData {
     private String FThisBaseQty;
     private String FThisAuxQty;
     private String FIsClosed;
+    private String NoInput;
+
+    public String getNoInput() {
+        return NoInput;
+    }
+
+    public void setNoInput(String noInput) {
+        NoInput = noInput;
+    }
 
     public void setFGuid(String FGuid) {
         this.FGuid = FGuid;

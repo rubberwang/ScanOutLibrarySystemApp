@@ -112,4 +112,5 @@
     <string name="finish" translatable="false">完成</string>
     <string name="Save">保存</string>
     <string name="label">标签模板:</string>
+    <string name="Clear">清空</string>
 </resources>

@@ -19,7 +19,7 @@ public class ZebarTools {
         return zebarTools;
     }
 
-    public void SetZebarConfig(Context context,String ScanTagSum) {
+    public void SetZebarDWConfig(Context context, String ScanTagSum, String scanning_mode) {
         String profileName = "LiZuoProfile";
         Bundle bMain = new Bundle();
         bMain.putString("PROFILE_NAME", profileName);            // <- "Profile12" is a bundle
@@ -31,6 +31,8 @@ public class ZebarTools {
         Bundle bParams = new Bundle();
         bParams.putString("scanner_selection", "auto");
         bParams.putString("scanner_input_enabled", "true");
+        bParams.putString("picklist", "0");
+        bParams.putString("scanning_mode", scanning_mode);
         bParams.putString("multi_barcode_count", ScanTagSum);
         bConfig.putBundle("PARAM_LIST", bParams);
         bMain.putBundle("PLUGIN_CONFIG", bConfig);

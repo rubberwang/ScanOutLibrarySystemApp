@@ -78,11 +78,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
-        <!--<receiver android:name=".Common.BroadcastReceiver.ReceiveData_Recevier">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="cn.mm.jerryapp"></action>-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
+        <receiver android:name=".Common.BroadcastReceiver.ReceiveData_Recevier">
+            <intent-filter>
+                <action android:name="cn.shenzhenlizuosystemapp.action"></action>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

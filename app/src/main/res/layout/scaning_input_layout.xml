@@ -125,7 +125,6 @@
 
             </LinearLayout>
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -160,22 +159,20 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.6">
 
-                    <TextView
-                        style="@style/ScanOutLibraryText"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:text="@string/label"
-                         />
+                <TextView
+                    style="@style/ScanOutLibraryText"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:text="@string/label" />
 
-                    <Spinner
-                        android:id="@+id/Sp_Label"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="13"
-                        android:overlapAnchor="false"
-                        android:spinnerMode="dropdown">
-                    </Spinner>
+                <Spinner
+                    android:id="@+id/Sp_Label"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="13"
+                    android:overlapAnchor="false"
+                    android:spinnerMode="dropdown"></Spinner>
 
             </LinearLayout>
 
@@ -264,9 +261,9 @@
                     android:background="@drawable/edittext_background"
                     android:gravity="center_vertical"
                     android:inputType="number"
+                    android:paddingLeft="3dp"
                     android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:paddingLeft="3dp"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -283,21 +280,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1.5">
-
-            <TextView
-                android:id="@+id/TV_Scaning"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1.5"
-                android:background="@drawable/circularbead_purple"
-                android:gravity="center"
-                android:text="@string/scaning"
-                android:textColor="@color/White"
-                android:textSize="15sp"
-                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/TV_Save"
@@ -328,6 +310,22 @@
                 android:textColor="@color/White"
                 android:textSize="15sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/TV_Clear"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1.5"
+                android:background="@drawable/circularbead_purple"
+                android:gravity="center"
+                android:text="@string/Clear"
+                android:textColor="@color/White"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
 
             <TextView
                 android:id="@+id/TV_Cancel"

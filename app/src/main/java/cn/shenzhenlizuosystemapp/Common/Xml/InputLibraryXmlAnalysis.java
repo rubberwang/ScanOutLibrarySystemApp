@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarCodeHeadBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarcodeXmlBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
 import cn.shenzhenlizuosystemapp.Common.WebBean.InputLibraryAllInfo;
@@ -199,6 +201,14 @@ public class InputLibraryXmlAnalysis {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFIsClosed(parser.nextText());
                             }
+                        }else if (name.equalsIgnoreCase("FBaseQty")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFBaseQty(parser.nextText());
+                            }
+                        }else if (name.equalsIgnoreCase("FUnitRate")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFUnitRate(parser.nextText());
+                            }
                         }
                         break;
                     case XmlPullParser.END_TAG:
@@ -216,6 +226,116 @@ public class InputLibraryXmlAnalysis {
         } catch (Exception e) {
             e.printStackTrace();
             ViseLog.i("Body Exception = " + e);
+        }
+        return null;
+    }
+
+    public List<BarCodeHeadBean> GetBarCodeHead(InputStream inputStream) {
+        BarCodeHeadBean barCodeHeadBean = new BarCodeHeadBean();
+        List<BarCodeHeadBean> barCodeHeadBeanList = null;
+        XmlPullParser parser = Xml.newPullParser();
+        boolean FUnitRate = false;
+        boolean FBarcodeType = false;
+        boolean FQty = false;
+        boolean FGuid = false;
+        try {
+            parser.setInput(inputStream, "UTF-8");
+            int eventType = parser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                    case XmlPullParser.START_DOCUMENT:
+                        barCodeHeadBeanList = new ArrayList<BarCodeHeadBean>();
+                        break;
+                    case XmlPullParser.START_TAG:
+                        String name = parser.getName();
+                        if (name.equalsIgnoreCase("Barcode")) {
+                            barCodeHeadBean = new BarCodeHeadBean();
+                        } else if (name.equalsIgnoreCase("FCode")) {
+                            String FCode = parser.nextText();
+                            if (FCode.equals("FUnitRate")) {
+                                FUnitRate = true;
+                            } else if (FCode.equals("FBarcodeType")) {
+                                FBarcodeType = true;
+                            } else if (FCode.equals("FQty")) {
+                                FQty = true;
+                            } else if (FCode.equals("FGuid")) {
+                                FGuid = true;
+                            }
+                        } else if (name.equalsIgnoreCase("FContent")) {
+                            if (FUnitRate) {
+                                barCodeHeadBean.setFUnitRate(parser.nextText());
+                                FUnitRate = false;
+                            } else if (FBarcodeType) {
+                                barCodeHeadBean.setFBarcodeType(parser.nextText());
+                                FBarcodeType = false;
+                            } else if (FGuid) {
+                                barCodeHeadBean.setFGudi(parser.nextText());
+                                FGuid = false;
+                            } else if (FQty) {
+                                barCodeHeadBean.setFQty(parser.nextText());
+                                FQty = false;
+                            }
+                        }
+                        break;
+                    case XmlPullParser.END_TAG:
+                        if (parser.getName().equalsIgnoreCase("Barcode")
+                                && barCodeHeadBean != null) {
+                            barCodeHeadBeanList.add(barCodeHeadBean);
+                            barCodeHeadBean = null;
+                        }
+                        break;
+                }
+                eventType = parser.next();
+            }
+            inputStream.close();
+            return barCodeHeadBeanList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            ViseLog.i("GetBarCodeHead Exception = " + e);
+        }
+        return null;
+    }
+
+
+    public List<BarcodeXmlBean> GetBarCodeBody(InputStream inputStream) {
+        BarcodeXmlBean barcodeXmlBeans = new BarcodeXmlBean();
+        List<BarcodeXmlBean> barcodeXmlBeanList = null;
+        XmlPullParser parser = Xml.newPullParser();
+        try {
+            parser.setInput(inputStream, "UTF-8");
+            int eventType = parser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                    case XmlPullParser.START_DOCUMENT:
+                        barcodeXmlBeanList = new ArrayList<BarcodeXmlBean>();
+                        break;
+                    case XmlPullParser.START_TAG:
+                        String name = parser.getName();
+                        if (name.equalsIgnoreCase("Barcodes")) {
+                            barcodeXmlBeans = new BarcodeXmlBean();
+                        } else if (name.equalsIgnoreCase("FGuid")) {
+                            barcodeXmlBeans.setFGuid(parser.nextText());
+                        } else if (name.equalsIgnoreCase("FBarcodeName")) {
+                            barcodeXmlBeans.setFBarcodeName(parser.nextText());
+                        } else if (name.equalsIgnoreCase("FBarcodeContent")) {
+                            barcodeXmlBeans.setFBarcodeContent(parser.nextText());
+                        }
+                        break;
+                    case XmlPullParser.END_TAG:
+                        if (parser.getName().equalsIgnoreCase("Barcodes")
+                                && barcodeXmlBeans != null) {
+                            barcodeXmlBeanList.add(barcodeXmlBeans);
+                            barcodeXmlBeans = null;
+                        }
+                        break;
+                }
+                eventType = parser.next();
+            }
+            inputStream.close();
+            return barcodeXmlBeanList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            ViseLog.i("GetBarCodeBody Exception = " + e);
         }
         return null;
     }
