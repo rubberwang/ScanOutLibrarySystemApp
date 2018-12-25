@@ -86,7 +86,9 @@ public class NewInputLibraryActivity extends BaseActivity {
     private int RefreshStatu = 1;
     private boolean Is_Single = false;
     private String HeadID = "";
-    private int IsCheckFGuid = 1;
+    private boolean IsSerialNumber = true;
+    private boolean IsAddSerialNumber = false;
+
 
     //数组
     private List<ChildTag> childTagList = null;
@@ -140,10 +142,10 @@ public class NewInputLibraryActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        EventBus.getDefault().register(this);
+        MContect = new WeakReference<>(NewInputLibraryActivity.this).get();
+        EventBus.getDefault().register(MContect);
         Intent intent = getIntent();
         FGUID = intent.getStringExtra("FGUID");
-        MContect = new WeakReference<>(NewInputLibraryActivity.this).get();
         tools = Tools.getTools();
         inputLibraryObServer = new InputLibraryObServer();
         getLifecycle().addObserver(inputLibraryObServer);
@@ -388,7 +390,7 @@ public class NewInputLibraryActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         public void ON_DESTROY() {
-            EventBus.getDefault().unregister(this);
+            EventBus.getDefault().unregister(MContect);
         }
     }
 
@@ -442,7 +444,7 @@ public class NewInputLibraryActivity extends BaseActivity {
     }
 
     public class GetInputLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<InputLibraryDetail>> {
-        
+
         @Override
         protected List<InputLibraryDetail> doInBackground(Integer... params) {
             List<InputLibraryDetail> inputLibraryBills = new ArrayList<>();
@@ -514,38 +516,40 @@ public class NewInputLibraryActivity extends BaseActivity {
     }
 
     private List DisposeTaskRvDataList(List<InputTaskRvData> disposeInputTaskRvDataList) {
+        List<InputTaskRvData> removeList = new ArrayList<InputTaskRvData>();
         for (int index = 0; index < disposeInputTaskRvDataList.size(); index++) {
             String AddNoSendQty = "0";
-            int AddAuxQty = 0;
-            int AddExecutedAuxQty = 0;
+            float AddAuxQty = 0;
+            float AddExecutedAuxQty = 0;
             if (!TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFIsClosed())) {
                 if (disposeInputTaskRvDataList.get(index).getFIsClosed().equals("1")) {
-                    disposeInputTaskRvDataList.remove(index);
+                    removeList.add(disposeInputTaskRvDataList.get(index));
+                    continue;
                 }
-            } 
-//            .split("\\.")[0]
+            }
+            if (ConnectStr.ISSHOWNONEXECUTION) {
+                String NoSendQty = "0";
+                if (!TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFAuxQty()) && !TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFExecutedAuxQty())) {
+                    float AuxQty = Tools.StringOfFloat(disposeInputTaskRvDataList.get(index).getFAuxQty());
+                    float ExecutedAuxQty = Tools.StringOfFloat(disposeInputTaskRvDataList.get(index).getFExecutedAuxQty());
+                    NoSendQty = String.valueOf(AuxQty - ExecutedAuxQty);
+                }
+                if (Tools.StringOfFloat(NoSendQty) <= 0) {
+                    removeList.add(disposeInputTaskRvDataList.get(index));
+                    continue;
+                }
+            }
             if (!TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFAuxQty()) &&
                     !TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFExecutedAuxQty())) {
-                AddAuxQty = Integer.parseInt(disposeInputTaskRvDataList.get(index).getFAuxQty().split("\\.")[0]);
-                AddExecutedAuxQty = Integer.parseInt(disposeInputTaskRvDataList.get(index).getFExecutedAuxQty().split("\\.")[0]);
+                AddAuxQty = Tools.StringOfFloat(disposeInputTaskRvDataList.get(index).getFAuxQty());
+                AddExecutedAuxQty = Tools.StringOfFloat(disposeInputTaskRvDataList.get(index).getFExecutedAuxQty());
                 AddNoSendQty = String.valueOf(AddAuxQty - AddExecutedAuxQty);
             }
             disposeInputTaskRvDataList.get(index).setNoInput(AddNoSendQty);
             disposeInputTaskRvDataList.get(index).setFAuxQty(String.valueOf(AddAuxQty));
             disposeInputTaskRvDataList.get(index).setFExecutedAuxQty(String.valueOf(AddExecutedAuxQty));
-            if (ConnectStr.ISSHOWNONEXECUTION) {
-                String NoSendQty = "0";
-                if (!TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFAuxQty()) && !TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFExecutedAuxQty())) {
-                    int AuxQty = Integer.parseInt(disposeInputTaskRvDataList.get(index).getFAuxQty().split("\\.")[0]);
-                    int ExecutedAuxQty = Integer.parseInt(disposeInputTaskRvDataList.get(index).getFExecutedAuxQty().split("\\.")[0]);
-                    NoSendQty = String.valueOf(AuxQty - ExecutedAuxQty);
-                }
-                if (Integer.parseInt(NoSendQty) <= 0) {
-                    disposeInputTaskRvDataList.remove(index);
-                }
-            }
-           
         }
+        disposeInputTaskRvDataList.removeAll(removeList);
         return disposeInputTaskRvDataList;
     }
 
@@ -679,25 +683,35 @@ public class NewInputLibraryActivity extends BaseActivity {
      * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void messageEventBus(BarCodeMessage msg) {
-        String data = msg.data;
-        ViseLog.i("messageEventBus msg = " + data);
-        if (!Is_Single) {
-            data = data.replace("\n", "；");
-            data = data.substring(0, data.length() - 1);
-        }
-        ViseLog.i("messageEventBus msg = " + data);
-        BarCodeCheckPort barCodeCheckPort = new BarCodeCheckPort() {
-            @Override
-            public void onData(String Info) {
-                try {
-                    if (!Info.substring(0, 2).equals("EX")) {
-                        if (CheckGuid(CheckFGuid, FBarcodeLib)) {
+        if (scanTask_Input_rvAdapter.getselection() >= 0) {
+            String data = msg.data;
+            ViseLog.i("messageEventBus msg = " + data);
+            if (!Is_Single) {
+                data = data.replace("\n", "；");
+                data = data.substring(0, data.length() - 1);
+            }
+            ViseLog.i("messageEventBus msg = " + data);
+            BarCodeCheckPort barCodeCheckPort = new BarCodeCheckPort() {
+                @Override
+                public void onData(String Info) {
+                    try {
+                        if (!Info.substring(0, 2).equals("EX")) {
                             ViseLog.i("Info = " + Info);
                             InputStream IsBarCodeInfoHead = new ByteArrayInputStream(Info.getBytes("UTF-8"));
                             InputStream IsBarCodeInfoBody = new ByteArrayInputStream(Info.getBytes("UTF-8"));
                             List<BarCodeHeadBean> BarCodeInfoHeadList = InputLibraryXmlAnalysis.getSingleton().GetBarCodeHead(IsBarCodeInfoHead);
                             List<BarcodeXmlBean> barcodeXmlBeanList = InputLibraryXmlAnalysis.getSingleton().GetBarCodeBody(IsBarCodeInfoBody);
-                            if (!TextUtils.isEmpty(BarCodeInfoHeadList.get(3).getFQty())) {
+                            if (BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_SEQUENCE.toLowerCase())) {
+                                Is_InputNumber_Mode = true;
+                                ET_SumStatus(false);
+                                Tv_SaveStatusChanage(true);
+                                PutResultArray(barcodeXmlBeanList);
+                                Et_ScanNumber.setText("1.0");
+                                FBarcodeLib = BarCodeInfoHeadList.get(2).getFGudi();
+                                IsSerialNumber = false;
+                                IsAddSerialNumber = true;
+                                ViseLog.i("number = 1 序列号");
+                            } else if (!TextUtils.isEmpty(BarCodeInfoHeadList.get(3).getFQty())) {
                                 //算法  fqty * FUnitRate / baseqty
                                 float ThisPutSum = Tools.StringOfFloat(BarCodeInfoHeadList.get(3).getFQty()) * Tools.StringOfFloat(BarCodeInfoHeadList.get(0).getFUnitRate())
                                         / Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFUnitRate());
@@ -707,15 +721,7 @@ public class NewInputLibraryActivity extends BaseActivity {
                                 PutResultArray(barcodeXmlBeanList);
                                 Et_ScanNumber.setText(String.valueOf(ThisPutSum));
                                 FBarcodeLib = BarCodeInfoHeadList.get(2).getFGudi();
-                                ViseLog.i("有数量 = " + ThisPutSum);
-                            } else if (BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_SEQUENCE.toLowerCase())) {
-                                Is_InputNumber_Mode = true;
-                                ET_SumStatus(false);
-                                Tv_SaveStatusChanage(true);
-                                PutResultArray(barcodeXmlBeanList);
-                                Et_ScanNumber.setText("1");
-                                FBarcodeLib = BarCodeInfoHeadList.get(2).getFGudi();
-                                ViseLog.i("number = 1 序列号");
+                                ViseLog.i("有数量 = " + FBarcodeLib);
                             } else if (BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_COMMON) ||
                                     BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_BATCH.toLowerCase())) {
                                 Is_InputNumber_Mode = true;
@@ -728,62 +734,74 @@ public class NewInputLibraryActivity extends BaseActivity {
                                 IsBarCodeInfoHead.close();
                                 IsBarCodeInfoBody.close();
                             }
-                            CheckFGuid.add(FBarcodeLib);
                         } else {
-                            tools.ShowDialog(MContect, "此条码已经扫描过了");
+                            tools.ShowDialog(MContect, Info.substring(2, Info.length()));
                         }
-                    } else {
-                        tools.ShowDialog(MContect, Info.substring(2, Info.length()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        ViseLog.i("BarCodeCheckPort Exception = " + e);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    ViseLog.i("BarCodeCheckPort Exception = " + e);
                 }
-            }
-        };
-        BarCodeCheckTask barCodeCheckTask = new BarCodeCheckTask(barCodeCheckPort, webService, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(),
-                materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data);
-        barCodeCheckTask.execute();
+            };
+            BarCodeCheckTask barCodeCheckTask = new BarCodeCheckTask(barCodeCheckPort, webService, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(),
+                    materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data);
+            barCodeCheckTask.execute();
+        } else {
+            tools.ShowDialog(MContect, "请选择单据分路");
+        }
     }
 
     public void SubmitData() {
         try {
             if (Is_InputNumber_Mode) {
                 if (!TextUtils.isEmpty(Et_ScanNumber.getText().toString())) {
+                    if (CheckGuid(CheckFGuid, FBarcodeLib)) {
+                        IsSerialNumber = true;
+                        if ( Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getNoInput()) >=  Tools.StringOfFloat(Et_ScanNumber.getText().toString())) {
+                            if (IsAddSerialNumber) {
+                                CheckFGuid.add(FBarcodeLib);
+                                IsAddSerialNumber = false;
+                            }
+                            InputSubBodyBean subBodyBean = new InputSubBodyBean();
+                            subBodyBean.setFBillBodyID(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
+                            subBodyBean.setFBarcodeLib(FBarcodeLib);
+                            subBodyBean.setInputLibrarySum(String.valueOf(Et_ScanNumber.getText().toString()));
+                            subBodyBean.setFStockCellID(stockBeanList.get(SpInputHouseSpaceIndex).getFGuid());
+                            InputSubmitList.add(subBodyBean);
 
-                    InputSubBodyBean subBodyBean = new InputSubBodyBean();
-                    subBodyBean.setFBillBodyID(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
-                    subBodyBean.setFBarcodeLib(FBarcodeLib);
-                    subBodyBean.setInputLibrarySum(String.valueOf(Et_ScanNumber.getText().toString()).split("\\.")[0]);
-                    subBodyBean.setFStockCellID(stockBeanList.get(SpInputHouseSpaceIndex).getFGuid());
-                    InputSubmitList.add(subBodyBean);
+                            float Sum =  Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty()) +
+                                    Tools.StringOfFloat(Et_ScanNumber.getText().toString());
+                            String SetFThisAuxQty = String.valueOf(Sum);
+                            inputTaskRvDataList.get(RV_ScanInfoTableIndex).setFThisAuxQty(SetFThisAuxQty);
 
-                    //为最后生成入库单保存数据array
-                    int NewNoPut = Integer.parseInt(NoInputLibrary()) -
-                            (Integer.parseInt(Et_ScanNumber.getText().toString().split("\\.")[0]) + Integer.parseInt(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty().split("\\.")[0]));
-                    String SetNoInput = String.valueOf(NewNoPut).split("\\.")[0];
-                    inputTaskRvDataList.get(RV_ScanInfoTableIndex).setNoInput(SetNoInput);
+                            //为最后生成入库单保存数据array
+                            float NewNoPut = Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty()) - (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty()) +
+                                    Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty()));
+                            String SetNoInput = String.valueOf(NewNoPut);
+                            inputTaskRvDataList.get(RV_ScanInfoTableIndex).setNoInput(SetNoInput);
 
-                    int Sum = Integer.parseInt(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty().split("\\.")[0]) +
-                            Integer.parseInt(Et_ScanNumber.getText().toString().split("\\.")[0]);
-                    String SetFThisAuxQty = String.valueOf(Sum).split("\\.")[0];
-                    inputTaskRvDataList.get(RV_ScanInfoTableIndex).setFThisAuxQty(SetFThisAuxQty);
-
-                    scanTask_Input_rvAdapter.setSelection(-1);
-                    scanTask_Input_rvAdapter.notifyDataSetChanged();
-
-                    Is_InputNumber_Mode = false;
-                    ET_SumStatus(false);
-                    Tv_SaveStatusChanage(false);
-                    childTagList.clear();
-                    scanResult_Input_rvAdapter.notifyDataSetChanged();
-//                   
+                            if (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getNoInput()) <= 0) {
+                                scanTask_Input_rvAdapter.setSelection(-1);
+                            }
+                            scanTask_Input_rvAdapter.notifyDataSetChanged();
+                            Is_InputNumber_Mode = false;
+                            ET_SumStatus(false);
+                            Tv_SaveStatusChanage(false);
+                            childTagList.clear();
+                            scanResult_Input_rvAdapter.notifyDataSetChanged();
+                        } else {
+                            tools.ShowDialog(MContect, "提交数量不能大于未收数量");
+                        }
+                    } else {
+                        tools.ShowDialog(MContect, "此条码已经扫描过了");
+                    }
                 } else {
                     tools.ShowDialog(MContect, "入库数量为空");
                 }
             }
         } catch (Exception e) {
             ViseLog.i("SubmitData Exception = " + e);
+            tools.ShowDialog(MContect, "提交错误：" + e.getMessage());
         }
     }
 
@@ -801,10 +819,11 @@ public class NewInputLibraryActivity extends BaseActivity {
 
     public String NoInputLibrary() {
         if (!TextUtils.isEmpty(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty()) && !TextUtils.isEmpty(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty())) {
-            int AuxQty = Integer.parseInt(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty().split("\\.")[0]);
-            int ExecutedAuxQty = Integer.parseInt(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty().split("\\.")[0]);
-            ViseLog.i("NoInputLibrary = " + String.valueOf(AuxQty - ExecutedAuxQty));
-            return String.valueOf(AuxQty - ExecutedAuxQty);
+            float noSend =  Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty()) - (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty()) +
+                    Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty()));
+            String NoSendSum = String.valueOf(noSend);
+            ViseLog.i("NoInputLibrary = " + NoSendSum);
+            return NoSendSum;
         }
         return "";
     }
@@ -858,11 +877,10 @@ public class NewInputLibraryActivity extends BaseActivity {
     }
 
     public boolean CheckGuid(List<String> Check, String Result) {
-        if (IsCheckFGuid == 1) {
-            IsCheckFGuid = 2;
+        if (IsSerialNumber) {
             return true;
         }
-        if (Tools.IsObjectNull(Check) && Check.size() >= 0 && !TextUtils.isEmpty(Result)) {
+        if (Tools.IsObjectNull(Check) && !TextUtils.isEmpty(Result)) {
             if (!Check.contains(Result)) {
                 return true;
             } else {

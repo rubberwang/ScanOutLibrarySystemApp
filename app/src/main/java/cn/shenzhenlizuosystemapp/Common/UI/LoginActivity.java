@@ -424,7 +424,7 @@ public class LoginActivity extends BaseActivity {
                         ConnectStr.USERNAME = Edit_UserName.getText().toString();
                         ConnectStr.ConnectionToString = msg.getData().getString("ConnectString");
                         startActivity(new Intent(LoginActivity.this, MainTabActivity.class));
-                        ViewManager.getInstance().finishActivity(LoginActivity.this);
+//                        ViewManager.getInstance().finishActivity(LoginActivity.this);
                         break;
                     }
                     case 2: {

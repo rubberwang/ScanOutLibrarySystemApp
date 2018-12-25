@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.vise.log.ViseLog;
 
+import cn.shenzhenlizuosystemapp.Common.AsyncGetData.ClearUnlockTask;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.UnlockTask;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
@@ -89,8 +90,8 @@ public class SettingActivity extends BaseActivity {
         TV_UnLockAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UnlockTask unlockTask = new UnlockTask(WebService.getSingleton(SettingActivity.this));
-                unlockTask.execute();
+                ClearUnlockTask clearUnlockTask = new ClearUnlockTask(WebService.getSingleton(SettingActivity.this));
+                clearUnlockTask.execute();
             }
         });
         IsScanInput.setChecked(ConnectStr.ISSHOWNONEXECUTION);

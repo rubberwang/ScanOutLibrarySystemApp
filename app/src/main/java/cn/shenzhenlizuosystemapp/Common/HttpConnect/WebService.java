@@ -292,17 +292,17 @@ public class WebService {
         return Result;
     }
 
-    public String UnLockedBillBody(String ConnectionID) throws IOException, XmlPullParserException, ClassCastException {
-        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "UnLockedBillBody");
+    public String ClearLockedBillBody(String ConnectionID) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "ClearLockedBillBody");
         soapObject.addProperty("ConnectionID", ConnectionID);
-
+        
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
         envelope.bodyOut = soapObject;
         envelope.dotNet = true;
         envelope.setOutputSoapObject(soapObject);
         HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
-        httpTransportSE.call("http://www.lzbarcode.com/UnLockedBillBody", envelope);
+        httpTransportSE.call("http://www.lzbarcode.com/ClearLockedBillBody", envelope);
         Object object = (Object) envelope.getResponse();
         String Result = object.toString();
         return Result;
@@ -325,5 +325,22 @@ public class WebService {
         String Result = object.toString();
         return Result;
     }
+    
+    public String UnLockedBillBody(String ConnectionID) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "UnLockedBillBody");
+        soapObject.addProperty("ConnectionID", ConnectionID);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/UnLockedBillBody", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
+    
 }
 
