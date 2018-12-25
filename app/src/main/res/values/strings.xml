@@ -112,5 +112,6 @@
     <string name="finish" translatable="false">完成</string>
     <string name="Save">保存</string>
     <string name="label">标签模板:</string>
-    <string name="Clear">清空</string>
+    <string name="Clear">撤销</string>
+    <string name="UnLockAll">清空所有单据分录锁</string>
 </resources>

@@ -165,38 +165,6 @@ public class WebService {
         return Result;
     }
 
-
-    public String CheckWareHouseData (String ConnectionToString,String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
-        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetCheckStockNoticeBill");
-        soapObject.addProperty("ConnectionToString", ConnectionToString);
-        soapObject.addProperty("BillGuid", BillGuid);
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                SoapEnvelope.VER11);
-        envelope.bodyOut = soapObject;
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(soapObject);
-        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
-        httpTransportSE.call("http://www.lzbarcode.com/GetCheckStockNoticeBill", envelope);
-        Object object = (Object) envelope.getResponse();
-        String Result = object.toString();
-        return Result;
-    }
-
-    public String CommitLibraryNote (String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
-        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetAdjustStockNotices");
-        soapObject.addProperty("ConnectionToString", ConnectionToString);
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                SoapEnvelope.VER11);
-        envelope.bodyOut = soapObject;
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(soapObject);
-        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
-        httpTransportSE.call("http://www.lzbarcode.com/GetAdjustStockNotices", envelope);
-        Object object = (Object) envelope.getResponse();
-        String Result = object.toString();
-        return Result;
-    }
-
     public String GetBarcodeAnalyze(String ConnectionID,String MaterialID,String LabelTempletID,String Barcodes,boolean AllowAddNew) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "BarcodeAnalyze");
         soapObject.addProperty("ConnectionID", ConnectionID);
@@ -250,25 +218,6 @@ public class WebService {
         return Result;
     }
 
-    public String CreateInStockBill(String ConnectionToString,String UserName,String Stock,String StockCell,String InStockBill) throws IOException, XmlPullParserException, ClassCastException {
-        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "CreateInStockBill");
-
-        soapObject.addProperty("ConnectionToString", ConnectionToString);
-        soapObject.addProperty("UserName", UserName);
-        soapObject.addProperty("StockID", Stock);
-        soapObject.addProperty("StockCellID", StockCell);
-        soapObject.addProperty("InStockBill", InStockBill);
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                SoapEnvelope.VER11);
-        envelope.bodyOut = soapObject;
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(soapObject);
-        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
-        httpTransportSE.call("http://www.lzbarcode.com/CreateInStockBill", envelope);
-        Object object = (Object) envelope.getResponse();
-        String Result = object.toString();
-        return Result;
-    }
 
     public String CreateOutStockBill(String ConnectionToString,String inStockNoticeID,String UserName,String StockName,String StockCellName,String Products) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "CreateOutStockBill");
@@ -321,6 +270,57 @@ public class WebService {
         envelope.setOutputSoapObject(soapObject);
         HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
         httpTransportSE.call("http://www.lzbarcode.com/GetLabelTempletBarcodes", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
+
+    public String LockedBillBody(String ConnectionID,String BillBodyID) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "LockedBillBody");
+        soapObject.addProperty("ConnectionID", ConnectionID);
+        soapObject.addProperty("BillBodyID", BillBodyID);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/LockedBillBody", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
+
+    public String UnLockedBillBody(String ConnectionID) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "UnLockedBillBody");
+        soapObject.addProperty("ConnectionID", ConnectionID);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/UnLockedBillBody", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
+
+    public String CreatInStockBill(String ConnectionID,String UserID,String XmlData) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "CreatInStockBill");
+        soapObject.addProperty("ConnectionID", ConnectionID);
+        soapObject.addProperty("UserCode", UserID);
+        soapObject.addProperty("XmlData", XmlData);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/CreatInStockBill", envelope);
         Object object = (Object) envelope.getResponse();
         String Result = object.toString();
         return Result;

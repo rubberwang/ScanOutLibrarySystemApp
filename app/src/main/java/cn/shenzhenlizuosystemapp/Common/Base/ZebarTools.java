@@ -24,7 +24,7 @@ public class ZebarTools {
         Bundle bMain = new Bundle();
         bMain.putString("PROFILE_NAME", profileName);            // <- "Profile12" is a bundle
         bMain.putString("PROFILE_ENABLED", "true");              // <- that will be enabled
-        bMain.putString("CONFIG_MODE", "UPDATE");   // <- or created if necessary.
+        bMain.putString("CONFIG_MODE", "CREATE_IF_NOT_EXIST");   // <- or created if necessary.
         Bundle bConfig = new Bundle();
         bConfig.putString("PLUGIN_NAME", "BARCODE");
         bConfig.putString("RESET_CONFIG", "false");

@@ -18,10 +18,12 @@ import android.widget.Toast;
 
 import com.vise.log.ViseLog;
 
+import cn.shenzhenlizuosystemapp.Common.AsyncGetData.UnlockTask;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
+import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.R;
 
 public class SettingActivity extends BaseActivity {
@@ -32,6 +34,8 @@ public class SettingActivity extends BaseActivity {
     private EditText ET_InputPrinterIP;
     private EditText ET_InputPrinterPort;
     private CheckBox IsScanInput;
+    private TextView TV_UnLockAll;
+    
     private Tools tools;
     private SharedPreferences sharedPreferences;
     private ServerIPSettingObServer serverIPSettingObServer;
@@ -82,6 +86,13 @@ public class SettingActivity extends BaseActivity {
                 }
             }
         });
+        TV_UnLockAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UnlockTask unlockTask = new UnlockTask(WebService.getSingleton(SettingActivity.this));
+                unlockTask.execute();
+            }
+        });
         IsScanInput.setChecked(ConnectStr.ISSHOWNONEXECUTION);
     }
 
@@ -93,6 +104,7 @@ public class SettingActivity extends BaseActivity {
         ET_InputPrinterIP = $(R.id.ET_InputPrinterIP);
         ET_InputPrinterPort = $(R.id.ET_InputPrinterPort);
         IsScanInput = $(R.id.IsScanInput);
+        TV_UnLockAll = $(R.id.TV_UnLockAll);
     }
 
     private void DetectionSp() {

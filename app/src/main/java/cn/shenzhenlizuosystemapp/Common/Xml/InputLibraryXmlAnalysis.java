@@ -1,19 +1,26 @@
 package cn.shenzhenlizuosystemapp.Common.Xml;
 
+import android.os.Environment;
 import android.util.Xml;
 
 import com.vise.log.ViseLog;
 
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlSerializer;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarCodeHeadBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarcodeXmlBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryDetail;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubBodyBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubmitDataBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.SubBody;
 import cn.shenzhenlizuosystemapp.Common.WebBean.InputLibraryAllInfo;
 
 public class InputLibraryXmlAnalysis {
@@ -201,11 +208,11 @@ public class InputLibraryXmlAnalysis {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFIsClosed(parser.nextText());
                             }
-                        }else if (name.equalsIgnoreCase("FBaseQty")) {
+                        } else if (name.equalsIgnoreCase("FBaseQty")) {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFBaseQty(parser.nextText());
                             }
-                        }else if (name.equalsIgnoreCase("FUnitRate")) {
+                        } else if (name.equalsIgnoreCase("FUnitRate")) {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFUnitRate(parser.nextText());
                             }
@@ -338,5 +345,54 @@ public class InputLibraryXmlAnalysis {
             ViseLog.i("GetBarCodeBody Exception = " + e);
         }
         return null;
+    }
+
+    public String CreateInputXmlStr(String FGuid, String FStockID, List<InputSubBodyBean> inputSubBodyBeanList) {
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            StringWriter stringWriter = new StringWriter();
+            XmlSerializer serializer = Xml.newSerializer();
+            try {
+                serializer.setOutput(stringWriter);
+                serializer.startDocument("UTF-8", true);
+                serializer.startTag(null, "NewDataSet");
+                serializer.startTag(null, "BillHead");
+                serializer.startTag(null, "FGuid");
+                serializer.text(FGuid);
+                serializer.endTag(null, "FGuid");
+                serializer.startTag(null, "FStockID");
+                serializer.text(FStockID);
+                serializer.endTag(null, "FStockID");
+                serializer.endTag(null, "BillHead");
+                for (InputSubBodyBean inputSubBodyBean : inputSubBodyBeanList) {
+                    serializer.startTag(null, "SubBody");
+                    serializer.startTag(null, "FBillBodyID");
+                    serializer.text(inputSubBodyBean.getFBillBodyID());
+                    serializer.endTag(null, "FBillBodyID");
+                    serializer.startTag(null, "FBarcodeLib");
+                    serializer.text(inputSubBodyBean.getFBarcodeLib());
+                    serializer.endTag(null, "FBarcodeLib");
+                    serializer.startTag(null, "FStockCellID");
+                    serializer.text(inputSubBodyBean.getFStockCellID());
+                    serializer.endTag(null, "FStockCellID");
+                    serializer.startTag(null, "FAuxQty");
+                    serializer.text(inputSubBodyBean.getInputLibrarySum());
+                    serializer.endTag(null, "FAuxQty");
+                    serializer.endTag(null, "SubBody");
+                }
+                serializer.endTag(null, "NewDataSet");
+                serializer.endDocument();
+                stringWriter.close();
+                return String.valueOf(stringWriter);
+            } catch (Exception e) {
+                e.printStackTrace();
+                try {
+                    stringWriter.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        return "";
     }
 }

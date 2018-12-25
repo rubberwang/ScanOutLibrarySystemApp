@@ -48,7 +48,7 @@ public class ScanResult_InputRvAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
             ((ScanResult_InputRvAdapter.ViewHoders) holder).TV_scanData.setText(datas.get(position).getValue());
-            ((ScanResult_InputRvAdapter.ViewHoders) holder).Tv_TypeResult.setText(datas.get(position).getName());
+            ((ScanResult_InputRvAdapter.ViewHoders) holder).Tv_TypeResult.setText(datas.get(position).getName() + ":");
             if (mOnItemClickLitener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -67,7 +67,7 @@ public class ScanResult_InputRvAdapter extends RecyclerView.Adapter {
     public int getItemCount() {
         return datas.size();
     }
-    
+
     class ViewHoders extends RecyclerView.ViewHolder {
 
         private TextView TV_scanData;
@@ -76,7 +76,7 @@ public class ScanResult_InputRvAdapter extends RecyclerView.Adapter {
         public ViewHoders(View itemView) {
             super(itemView);
             TV_scanData = (TextView) itemView.findViewById(R.id.TV_scanData);
-            Tv_TypeResult = (TextView)itemView.findViewById(R.id.Tv_TypeResult);
+            Tv_TypeResult = (TextView) itemView.findViewById(R.id.Tv_TypeResult);
         }
     }
 
