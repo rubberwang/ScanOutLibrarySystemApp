@@ -48,10 +48,10 @@
     <string name="UpLoadTime">上传时间:</string>
     <string name="OutLibraryScanDetail">只显示未执行完的物料</string>
     <string name="AlreadyScanSum">已扫描箱数:</string>
-    <string name="Submit">提交</string>
+    <string name="Submit">提 交</string>
     <string name="PleaseInputBoxSum">请输入出库箱号</string>
     <string name="OutLibrary">出库</string>
-    <string name="Close">取消</string>
+    <string name="Close">取 消</string>
     <string name="ManualOperationInput">手动输入</string>
     <string name="Time">通知日期 ：</string>
     <string name="House">发货仓库：</string>
@@ -110,8 +110,8 @@
     <string name="scaningdata">扫码数据：</string>
     <string name="cutoff">/</string>
     <string name="finish" translatable="false">完成</string>
-    <string name="Save">保存</string>
+    <string name="Save">保 存</string>
     <string name="label">标签模板:</string>
-    <string name="Clear">撤销</string>
+    <string name="Clear">撤 回</string>
     <string name="UnLockAll">清空所有单据分录锁</string>
 </resources>

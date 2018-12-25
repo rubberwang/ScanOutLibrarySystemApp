@@ -200,7 +200,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
         if (Tools.IsObjectNull(childQuitTagList)){
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
+            //RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
             RV_GetInfoTable.setLayoutManager(layoutManager);
             scanResult_Quit_rvAdapter = new ScanResult_QuitRvAdapter(this, childQuitTagList);
             RV_GetInfoTable.setAdapter(scanResult_Quit_rvAdapter);

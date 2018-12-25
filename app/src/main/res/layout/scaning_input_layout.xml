@@ -24,20 +24,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="4.5"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="10"
             android:background="@color/ScanGray"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.6"
+                android:layout_weight="0.4"
                 android:orientation="horizontal">
 
                 <TextView
@@ -52,7 +52,7 @@
                     style="@style/ScanInputLibraryText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="5"
+                    android:layout_weight="8"
                     android:textSize="14sp" />
 
                 <TextView
@@ -67,7 +67,7 @@
                     style="@style/ScanInputLibraryText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="5"
+                    android:layout_weight="4"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -76,7 +76,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.6"
+                android:layout_weight="0.5"
                 android:orientation="horizontal">
 
                 <TextView
@@ -90,7 +90,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="5">
+                    android:layout_weight="8">
 
                     <Spinner
                         android:id="@+id/Sp_house"
@@ -99,7 +99,9 @@
                         android:background="@drawable/border"
                         android:overlapAnchor="false"
                         android:spinnerMode="dropdown"
-                        android:theme="@style/SpnStyle"></Spinner>
+                        android:theme="@style/SpnStyle">
+
+                    </Spinner>
 
                 </LinearLayout>
 
@@ -113,7 +115,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="6.5">
+                    android:layout_weight="5.5">
 
                     <Spinner
                         android:id="@+id/Sp_InputHouseSpace"
@@ -121,9 +123,12 @@
                         android:layout_height="match_parent"
                         android:layout_weight="6.5"
                         android:background="@drawable/border"
+                        android:layout_marginRight="1dp"
                         android:overlapAnchor="false"
                         android:spinnerMode="dropdown"
-                        android:theme="@style/SpnStyle"></Spinner>
+                        android:theme="@style/SpnStyle">
+
+                    </Spinner>
 
                 </LinearLayout>
 
@@ -132,7 +137,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.6"
+                android:layout_weight="0.4"
                 android:orientation="horizontal">
 
                 <TextView
@@ -147,7 +152,7 @@
                     style="@style/ScanInputLibraryText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="5"
+                    android:layout_weight="8"
                     android:textSize="14sp" />
 
                 <TextView
@@ -155,7 +160,7 @@
                     style="@style/ScanInputLibraryText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="8"
+                    android:layout_weight="7"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -163,7 +168,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.6">
+                android:layout_weight="0.5">
 
                 <TextView
                     style="@style/ScanOutLibraryText"
@@ -172,17 +177,51 @@
                     android:layout_weight="3"
                     android:text="@string/label" />
 
-                <Spinner
-                    android:id="@+id/Sp_Label"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="13"
-                    android:background="@drawable/border"
-                    android:overlapAnchor="false"
-                    android:spinnerMode="dropdown"
-                    android:theme="@style/SpnStyle">
+                    android:layout_weight="8">
 
-                </Spinner>
+                    <Spinner
+                        android:id="@+id/Sp_Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border"
+                        android:overlapAnchor="false"
+                        android:spinnerMode="dropdown"
+                        android:theme="@style/SpnStyle">
+
+                    </Spinner>
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/TV_ScanNumber"
+                    style="@style/ScanOutLibraryText"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"
+                    android:text="@string/ScanNumber"
+                     />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5.5">
+
+                <EditText
+                    android:id="@+id/Et_ScanNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edittext_background"
+                    android:layout_marginRight="1dp"
+                    android:inputType="number"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"/>
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -192,7 +231,7 @@
             android:id="@+id/spinnerScannerDevices"
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginTop="1px"
+            android:layout_marginTop="0px"
             android:visibility="invisible" />
 
     </LinearLayout>
@@ -200,7 +239,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:layout_weight="0.1"
         android:background="@color/Black"
         android:orientation="vertical">
@@ -211,7 +250,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="14"
+        android:layout_weight="7.5"
         android:orientation="vertical">
 
 
@@ -219,77 +258,62 @@
             android:id="@+id/RV_ScanInfoTable"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="9" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="3dp"
-            android:layout_weight="1.6"
-            android:background="@drawable/edittext_normal"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/functionbackground"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/TV_scandata"
-                    style="@style/ScanBlueText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/scaningdata"
-                    android:textColor="@color/Black" />
-
-                <TextView
-                    android:id="@+id/TV_scaningdata"
-                    style="@style/ScanBlueText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textColor="@color/Black" />
-
-                <TextView
-                    android:id="@+id/TV_ScanNumber"
-                    style="@style/ScanBlueText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.4"
-                    android:text="@string/ScanNumber"
-                    android:textColor="@color/Black" />
-
-                <EditText
-                    android:id="@+id/Et_ScanNumber"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_weight="1.5"
-                    android:background="@drawable/edittext_background"
-                    android:gravity="center_vertical"
-                    android:inputType="number"
-                    android:paddingLeft="3dp"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+            android:layout_weight="7" />
 
         </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.7"
+        android:background="@color/functionbackground">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/RV_GetInfoTable"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4.5"
-            android:background="@color/functionbackground" />
+            android:layout_height="match_parent"
+            android:background="@drawable/border"
+            />
+
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1.5">
+            android:layout_weight="2.5"
+            android:layout_margin="1dp"
+            android:background="@color/functionbackground">
+
+            <TextView
+                android:id="@+id/TV_Sumbit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1.5"
+                android:background="@drawable/circularbead_purple"
+                android:gravity="center"
+                android:text="@string/Save"
+                android:textColor="@color/White"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/TV_Cancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1.5"
+                android:background="@drawable/circularbead_purple"
+                android:gravity="center"
+                android:text="@string/Clear"
+                android:textColor="@color/White"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
 
             <TextView
                 android:id="@+id/TV_Save"
@@ -303,26 +327,13 @@
                 android:gravity="center"
                 android:text="@string/Submit"
                 android:textColor="@color/White"
-                android:textSize="15sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
+
+
 
             <TextView
                 android:id="@+id/TV_Clear"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1.5"
-                android:background="@drawable/circularbead_purple"
-                android:gravity="center"
-                android:text="@string/Close"
-                android:textColor="@color/White"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/TV_Sumbit"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
@@ -331,29 +342,14 @@
                 android:layout_weight="1.5"
                 android:background="@drawable/circularbead_purple"
                 android:gravity="center"
-                android:text="@string/Save"
+                android:text="@string/Close"
                 android:textColor="@color/White"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/TV_Cancel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1.5"
-                android:background="@drawable/circularbead_purple"
-                android:gravity="center"
-                android:text="@string/Clear"
-                android:textColor="@color/White"
-                android:textSize="15sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+
 
