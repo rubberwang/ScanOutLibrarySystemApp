@@ -85,7 +85,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
             String QuitBills = "";
             try {
                 InputStream in_withcode = null;
-                QuitBills = webService.GetLibraryNote(ConnectStr.ConnectionToString);
+                QuitBills = webService.GetQuitLibraryNote(ConnectStr.ConnectionToString);
                 ViseLog.i("QuitBills = " + QuitBills);
                 in_withcode = new ByteArrayInputStream(QuitBills.getBytes("UTF-8"));
                 List<QuitAllBean> ResultXmlList = QuitXmlAnalysis.getSingleton().GetAllQuitList(in_withcode);

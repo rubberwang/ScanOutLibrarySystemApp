@@ -355,13 +355,13 @@ public class NewQuitLibraryActivity extends BaseActivity{
             String Stocks = "";
             InputStream in_Stocks = null;
             try {
-                InputBills = webService.GetWareHouseData(ConnectStr.ConnectionToString, FGUID);
+                InputBills = webService.GetQuitWareHouseData(ConnectStr.ConnectionToString, FGUID);
                 InputStream InputAllInfoStream = new ByteArrayInputStream(InputBills.getBytes("UTF-8"));
-                List<QuitLibraryAllInfo> inputLibraryAllInfoList = QuitLibraryXmlAnalysis.getSingleton().GetQuitAllInfoList(InputAllInfoStream);
-                if (inputLibraryAllInfoList.get(0).getFStatus().equals("1")) {
-                    InputStream HeadinfoStr = new ByteArrayInputStream(inputLibraryAllInfoList.get(0).getFInfo().getBytes("UTF-8"));
-                    InputStream BodyinfoStr = new ByteArrayInputStream(inputLibraryAllInfoList.get(0).getFInfo().getBytes("UTF-8"));
-                    ViseLog.i("inputLibraryAllInfoList.get(0).getFInfo() = " + inputLibraryAllInfoList.get(0).getFInfo());
+                List<QuitLibraryAllInfo> quitLibraryAllInfoList = QuitLibraryXmlAnalysis.getSingleton().GetQuitAllInfoList(InputAllInfoStream);
+                if (quitLibraryAllInfoList.get(0).getFStatus().equals("1")) {
+                    InputStream HeadinfoStr = new ByteArrayInputStream(quitLibraryAllInfoList.get(0).getFInfo().getBytes("UTF-8"));
+                    InputStream BodyinfoStr = new ByteArrayInputStream(quitLibraryAllInfoList.get(0).getFInfo().getBytes("UTF-8"));
+                    ViseLog.i("QuitLibraryAllInfoList.get(0).getFInfo() = " + quitLibraryAllInfoList.get(0).getFInfo());
                     inputLibraryBills = QuitLibraryXmlAnalysis.getSingleton().GetQuitDetailXml(HeadinfoStr);
                     quitTaskRvDataList = QuitLibraryXmlAnalysis.getSingleton().GetBodyInfo(BodyinfoStr);
                     quitTaskRvDataList = DisposeTaskRvDataList(quitTaskRvDataList);
