@@ -53,7 +53,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="5"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
                 <TextView
                     style="@style/ScanOutLibraryText"
@@ -68,7 +68,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="5"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -96,12 +96,10 @@
                         android:id="@+id/Sp_house"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@drawable/border"
                         android:overlapAnchor="false"
                         android:spinnerMode="dropdown"
-                        android:theme="@style/SpnStyle"
-                        android:background="@drawable/border"
-                        >
-                    </Spinner>
+                        android:theme="@style/SpnStyle"></Spinner>
 
                 </LinearLayout>
 
@@ -122,12 +120,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="6.5"
+                        android:background="@drawable/border"
                         android:overlapAnchor="false"
                         android:spinnerMode="dropdown"
-                        android:theme="@style/SpnStyle"
-                        android:background="@drawable/border"
-                        >
-                    </Spinner>
+                        android:theme="@style/SpnStyle"></Spinner>
 
                 </LinearLayout>
 
@@ -152,7 +148,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="5"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/TV_Unit1"
@@ -160,7 +156,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="8"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -181,10 +177,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="13"
+                    android:background="@drawable/border"
                     android:overlapAnchor="false"
                     android:spinnerMode="dropdown"
-                    android:theme="@style/SpnStyle"
-                    android:background="@drawable/border">
+                    android:theme="@style/SpnStyle">
 
                 </Spinner>
 
@@ -311,6 +307,21 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/TV_Clear"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1.5"
+                android:background="@drawable/circularbead_purple"
+                android:gravity="center"
+                android:text="@string/Close"
+                android:textColor="@color/White"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/TV_Sumbit"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -326,22 +337,6 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/TV_Clear"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1.5"
-                android:background="@drawable/circularbead_purple"
-                android:gravity="center"
-                android:text="@string/Clear"
-                android:textColor="@color/White"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-
-            <TextView
                 android:id="@+id/TV_Cancel"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -351,7 +346,7 @@
                 android:layout_weight="1.5"
                 android:background="@drawable/circularbead_purple"
                 android:gravity="center"
-                android:text="@string/Close"
+                android:text="@string/Clear"
                 android:textColor="@color/White"
                 android:textSize="15sp"
                 android:textStyle="bold" />

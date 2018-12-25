@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
+import cn.shenzhenlizuosystemapp.Common.Base.DeviceUtils;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
@@ -161,6 +162,7 @@ public class LoginActivity extends BaseActivity {
             }
         });
         ProjectNameAndConnectMap = new HashMap();
+
     }
 
     private void foucs() {
@@ -374,7 +376,7 @@ public class LoginActivity extends BaseActivity {
                     msg.what = 1;
                     msg.getData().putString("ConnectString", loginResInfoList.get(0).getFInfo());
                     handler.sendMessage(msg);
-                }else {
+                } else {
                     msg.what = 2;
                     msg.getData().putString("LoginException", loginResInfoList.get(0).getFInfo());
                     handler.sendMessage(msg);

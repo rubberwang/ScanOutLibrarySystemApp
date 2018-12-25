@@ -149,34 +149,36 @@ public class Tools {
     }
 
     public void ShowOnClickDialog(Context context, String msg, View.OnClickListener OnEnsure, View.OnClickListener OnClose, boolean IsCancel) {
-        View view = LayoutInflater.from(context).inflate(R.layout.dialoglayout_cancel, null, false);
-        dialog = new Dialog(context);
-        dialog.setContentView(view);
-        TextView Tv_Ensure = view.findViewById(R.id.Tv_Ensure);
-        TextView Tv_Close = view.findViewById(R.id.Tv_Close);
-        TextView Tv_Msg = view.findViewById(R.id.TvMessageDialog);
-        Tv_Msg.setText(msg);
-        Tv_Ensure.setOnClickListener(OnEnsure);
-        if (IsCancel) {
-            Tv_Close.setVisibility(View.GONE);
+        synchronized (this){
+            View view = LayoutInflater.from(context).inflate(R.layout.dialoglayout_cancel, null, false);
+            dialog = new Dialog(context);
+            dialog.setContentView(view);
+            TextView Tv_Ensure = view.findViewById(R.id.Tv_Ensure);
+            TextView Tv_Close = view.findViewById(R.id.Tv_Close);
+            TextView Tv_Msg = view.findViewById(R.id.TvMessageDialog);
+            Tv_Msg.setText(msg);
+            Tv_Ensure.setOnClickListener(OnEnsure);
+            if (IsCancel) {
+                Tv_Close.setVisibility(View.GONE);
+            }
+            Tv_Close.setOnClickListener(OnClose);
+            Window dialogWindow = dialog.getWindow();
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            DisplayMetrics dm = context.getResources().getDisplayMetrics();
+            int screenWidth = dm.widthPixels;
+            int screenHeight = dm.heightPixels;
+            ViseLog.i("屏幕宽高" + screenWidth + "  " + screenHeight);
+            if (screenWidth > 900 && screenHeight > 1600) {
+                lp.width = 900; // 宽度
+                lp.height = 600; // 高度
+            } else {
+                lp.width = 520; // 宽度
+                lp.height = 400; // 高度
+            }
+            dialogWindow.setAttributes(lp);
+            dialog.setCancelable(false);
+            dialog.show();
         }
-        Tv_Close.setOnClickListener(OnClose);
-        Window dialogWindow = dialog.getWindow();
-        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        DisplayMetrics dm = context.getResources().getDisplayMetrics();
-        int screenWidth = dm.widthPixels;
-        int screenHeight = dm.heightPixels;
-        ViseLog.i("屏幕宽高" + screenWidth + "  " + screenHeight);
-        if (screenWidth > 900 && screenHeight > 1600) {
-            lp.width = 900; // 宽度
-            lp.height = 600; // 高度
-        } else {
-            lp.width = 520; // 宽度
-            lp.height = 400; // 高度
-        }
-        dialogWindow.setAttributes(lp);
-        dialog.setCancelable(false);
-        dialog.show();
     }
 
     public void DisappearDialog() {

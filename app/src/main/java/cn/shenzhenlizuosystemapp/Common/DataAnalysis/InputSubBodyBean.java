@@ -4,6 +4,15 @@ public class InputSubBodyBean {
     private String FBillBodyID;
     private String FBarcodeLib;
     private String InputLibrarySum;
+    private String FStockCellID;
+
+    public String getFStockCellID() {
+        return FStockCellID;
+    }
+
+    public void setFStockCellID(String FStockCellID) {
+        this.FStockCellID = FStockCellID;
+    }
 
     public String getInputLibrarySum() {
         return InputLibrarySum;

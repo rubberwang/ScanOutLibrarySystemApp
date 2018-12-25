@@ -24,14 +24,14 @@ import cn.shenzhenlizuosystemapp.Common.UI.NewInputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputTagModeAnalysis;
 
-public class BarCodeCheckTask extends AsyncTask<String, Void, String> {
+public  class BarCodeCheckTask extends AsyncTask<String, Void, String> {
 
     private BarCodeCheckPort barCodeCheckPort;
     private WebService webService;
     private String MaterialID;
     private String LabelTempletID;
     private String Barcodes;
-
+    
     public BarCodeCheckTask(BarCodeCheckPort barCodeCheckPort, WebService webService, String MaterialID
             , String LabelTempletID, String Barcodes) {
         this.barCodeCheckPort = barCodeCheckPort;
@@ -41,24 +41,25 @@ public class BarCodeCheckTask extends AsyncTask<String, Void, String> {
         this.Barcodes = Barcodes;
     }
 
+
     @Override
-    protected String doInBackground(String... params) {
+    protected String doInBackground(String... params)  {
         try {
 //            ViseLog.i("BarCodeCheckTask parms = " + ConnectStr.ConnectionToString + "," + MaterialID + "," + LabelTempletID + "," + Barcodes + "," + true);
             String StatuResStr = webService.GetBarcodeAnalyze(ConnectStr.ConnectionToString, MaterialID, LabelTempletID, Barcodes, true);
             ViseLog.i("BarCodeCheckTask StatuResStr = " + StatuResStr);
-            
             InputStream Is_statu = new ByteArrayInputStream(StatuResStr.getBytes("UTF-8"));
             List<AdapterReturn> statureslist = AnalysisReturnsXml.getSingleton().GetReturn(Is_statu);
             if (statureslist.get(0).getFStatus().equals("1")) {
                 ViseLog.i("BarCodeCheckTask StatuResStr = " + statureslist.get(0).getFInfo());
                 return statureslist.get(0).getFInfo();
+            } else {
+                return "EX"+statureslist.get(0).getFInfo();
             }
         } catch (Exception e) {
             ViseLog.i("BarCodeCheckTask Exception = " + e);
-            return "";
+            return "" + e;
         }
-        return "";
     }
 
     protected void onPostExecute(String result) {
