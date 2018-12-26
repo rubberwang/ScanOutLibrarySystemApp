@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/SelectOutLibraryItem"
     android:layout_width="match_parent"
-    android:layout_height="30dp"
-    android:layout_marginTop="2dp"
+    android:layout_height="20dp"
     android:orientation="vertical">
 
     <LinearLayout
