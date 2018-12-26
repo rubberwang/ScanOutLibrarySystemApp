@@ -12,14 +12,17 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
+import cn.shenzhenlizuosystemapp.Common.Port.UnlockPort;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
 
 public class ClearUnlockTask extends AsyncTask<String, Void, String> {
 
     private WebService webService;
+    private UnlockPort unlockPort;
 
-    public ClearUnlockTask(WebService webService) {
+    public ClearUnlockTask(WebService webService,UnlockPort unlockPort) {
         this.webService = webService;
+        this.unlockPort = unlockPort;
     }
 
     @Override
@@ -47,6 +50,7 @@ public class ClearUnlockTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         if (!TextUtils.isEmpty(result)) {
             ViseLog.i("解锁Info" + result);
+            unlockPort.onResult(result);
         }
     }
 }

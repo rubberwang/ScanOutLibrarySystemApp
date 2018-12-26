@@ -78,6 +78,18 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
+        <activity
+            android:name=".Common.UI.DirectAllot.AllotNotificationActivity"
+            android:label="@string/DirectCommit"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        
+        <activity
+            android:name=".Common.UI.DirectAllot.AllotMainActiivty"
+            android:label="@string/DircetAllotNotification"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <receiver android:name=".Common.BroadcastReceiver.ReceiveData_Recevier">
             <intent-filter>
                 <action android:name="cn.shenzhenlizuosystemapp.action"></action>

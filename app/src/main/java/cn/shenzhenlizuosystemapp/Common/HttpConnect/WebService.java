@@ -372,7 +372,22 @@ public class WebService {
         String Result = object.toString();
         return Result;
     }
-    
-    
+
+    public String GetAdjustStockNoticeBillsList (String ConnectionID,String AdjustStockType) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetAdjustStockNoticeBillsList");
+        soapObject.addProperty("ConnectionID", ConnectionID);
+        soapObject.addProperty("AdjustStockType", AdjustStockType);
+        
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/GetAdjustStockNoticeBillsList", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
 }
 

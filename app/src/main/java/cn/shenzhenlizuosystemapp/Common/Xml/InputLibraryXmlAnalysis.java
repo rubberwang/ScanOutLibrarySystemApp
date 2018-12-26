@@ -347,7 +347,7 @@ public class InputLibraryXmlAnalysis {
         return null;
     }
 
-    public String CreateInputXmlStr(String FGuid, String FStockID, List<InputSubBodyBean> inputSubBodyBeanList) {
+    public String   CreateInputXmlStr(String FGuid, String FStockID,String FStockCellID, List<InputSubBodyBean> inputSubBodyBeanList) {
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             StringWriter stringWriter = new StringWriter();
@@ -360,9 +360,14 @@ public class InputLibraryXmlAnalysis {
                 serializer.startTag(null, "FGuid");
                 serializer.text(FGuid);
                 serializer.endTag(null, "FGuid");
+                
                 serializer.startTag(null, "FStockID");
                 serializer.text(FStockID);
                 serializer.endTag(null, "FStockID");
+                
+                serializer.startTag(null, "FStockCellID");
+                serializer.text(FStockCellID);
+                serializer.endTag(null, "FStockCellID");
                 serializer.endTag(null, "BillHead");
                 for (InputSubBodyBean inputSubBodyBean : inputSubBodyBeanList) {
                     serializer.startTag(null, "SubBody");
@@ -372,9 +377,6 @@ public class InputLibraryXmlAnalysis {
                     serializer.startTag(null, "FBarcodeLib");
                     serializer.text(inputSubBodyBean.getFBarcodeLib());
                     serializer.endTag(null, "FBarcodeLib");
-                    serializer.startTag(null, "FStockCellID");
-                    serializer.text(inputSubBodyBean.getFStockCellID());
-                    serializer.endTag(null, "FStockCellID");
                     serializer.startTag(null, "FAuxQty");
                     serializer.text(inputSubBodyBean.getInputLibrarySum());
                     serializer.endTag(null, "FAuxQty");

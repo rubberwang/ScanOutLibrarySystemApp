@@ -25,6 +25,7 @@ import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
+import cn.shenzhenlizuosystemapp.Common.Port.UnlockPort;
 import cn.shenzhenlizuosystemapp.R;
 
 public class SettingActivity extends BaseActivity {
@@ -36,7 +37,7 @@ public class SettingActivity extends BaseActivity {
     private EditText ET_InputPrinterPort;
     private CheckBox IsScanInput;
     private TextView TV_UnLockAll;
-    
+
     private Tools tools;
     private SharedPreferences sharedPreferences;
     private ServerIPSettingObServer serverIPSettingObServer;
@@ -90,7 +91,17 @@ public class SettingActivity extends BaseActivity {
         TV_UnLockAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ClearUnlockTask clearUnlockTask = new ClearUnlockTask(WebService.getSingleton(SettingActivity.this));
+                UnlockPort unlockPort = new UnlockPort() {
+                    @Override
+                    public void onResult(String res) {
+                        if (res.equals("success")) {
+                            tools.ShowDialog(SettingActivity.this, "清除成功");
+                        } else {
+                            tools.ShowDialog(SettingActivity.this, "清除失败:" + res);
+                        }
+                    }
+                };
+                ClearUnlockTask clearUnlockTask = new ClearUnlockTask(WebService.getSingleton(SettingActivity.this),unlockPort);
                 clearUnlockTask.execute();
             }
         });
@@ -127,7 +138,7 @@ public class SettingActivity extends BaseActivity {
             tools.PutStringData("ServerIPAddress", IP_ET.getText().toString(), sharedPreferences);
             tools.PutStringData("ServerIPPort", ET_InputPrinterPort.getText().toString(), sharedPreferences);
             tools.show(this, "保存成功");
-            ViseLog.i("ET_InputPrinterIP = "+ET_InputPrinterIP.getText().toString());
+            ViseLog.i("ET_InputPrinterIP = " + ET_InputPrinterIP.getText().toString());
             ViewManager.getInstance().finishActivity(SettingActivity.this);//直接移除栈
         } else {
             tools.show(this, "请输入地址后再次点击保存");

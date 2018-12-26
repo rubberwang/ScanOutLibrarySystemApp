@@ -27,9 +27,10 @@ public class InputBillCreateTask extends AsyncTask<String, Void, String> {
     private InputBillCreate inputBillCreate;
     private MyProgressDialog myProgressDialog;
     private String FStockID;
+    private String FStockCallID;
     private List<InputSubBodyBean> inputSubBodyBeanList;
 
-    public InputBillCreateTask(String FGuid, String FStockID, List<InputSubBodyBean> inputSubBodyBeanList, WebService webService
+    public InputBillCreateTask(String FGuid, String FStockID, String FStockCallID, List<InputSubBodyBean> inputSubBodyBeanList, WebService webService
             , MyProgressDialog myProgressDialog, InputBillCreate inputBillCreate) {
         this.webService = webService;
         this.BodyID = FGuid;
@@ -37,6 +38,7 @@ public class InputBillCreateTask extends AsyncTask<String, Void, String> {
         this.myProgressDialog = myProgressDialog;
         this.inputSubBodyBeanList = inputSubBodyBeanList;
         this.FStockID = FStockID;
+        this.FStockCallID = FStockCallID;
     }
 
     @Override
@@ -49,7 +51,7 @@ public class InputBillCreateTask extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         try {
-            String DetailedListXml = InputLibraryXmlAnalysis.getSingleton().CreateInputXmlStr(BodyID, FStockID, inputSubBodyBeanList);
+            String DetailedListXml = InputLibraryXmlAnalysis.getSingleton().CreateInputXmlStr(BodyID, FStockID, FStockCallID, inputSubBodyBeanList);
             ViseLog.i("入库最后上传XML = " + DetailedListXml + "," + BodyID + FStockID);
             String StatuResult = webService.CreatInStockBill(ConnectStr.ConnectionToString, ConnectStr.USERNAME, DetailedListXml);
             ViseLog.i("入库最后Result = " + StatuResult);

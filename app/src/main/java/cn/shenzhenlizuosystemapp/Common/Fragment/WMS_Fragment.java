@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import cn.shenzhenlizuosystemapp.Common.Adapter.Wms_RvAdapter;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.WmsSelectData;
+import cn.shenzhenlizuosystemapp.Common.UI.DirectAllot.AllotNotificationActivity;
 import cn.shenzhenlizuosystemapp.Common.UI.Input_NotificationActivity;
 import cn.shenzhenlizuosystemapp.Common.UI.Quit_NotificationActivity;
 import cn.shenzhenlizuosystemapp.Common.UI.Check_NotificationActivity;
@@ -82,11 +83,15 @@ public class WMS_Fragment extends Fragment {
             public void onItemClick(View view, int position) {
                 switch (position) {
                     case 0:{
-                        startActivity(new Intent(getActivity(), Input_NotificationActivity.class));
+                        startActivity(new Intent(getActivity(), Input_NotificationActivity.class));//入库通知
                         break;
                     }
                     case 1: {
-                        startActivity(new Intent(getActivity(), Quit_NotificationActivity.class));
+                        startActivity(new Intent(getActivity(), Quit_NotificationActivity.class));//出库通知
+                        break;
+                    }
+                    case 2: {
+                        startActivity(new Intent(getActivity(), AllotNotificationActivity.class));//直接调拨通知
                         break;
                     }
                     case 3: {
