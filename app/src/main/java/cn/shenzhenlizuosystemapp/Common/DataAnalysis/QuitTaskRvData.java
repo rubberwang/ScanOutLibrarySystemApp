@@ -18,6 +18,15 @@ public class QuitTaskRvData {
     private String FThisBaseQty;
     private String FThisAuxQty;
     private String FIsClosed;
+    private String NoSend;
+
+    public String getNoSend(){
+        return NoSend;
+    }
+
+    public void setNoSend(String noSend) {
+                NoSend = noSend;
+           }
 
     public void setFGuid(String FGuid) {
         this.FGuid = FGuid;

@@ -107,14 +107,14 @@ public class LoginActivity extends BaseActivity {
                 }
                 lastClickTime = System.currentTimeMillis();
                 if (b) {
-                    if (TextUtils.isEmpty(Edit_PassWord.getText().toString())) {
-                        tools.show(LoginActivity.this, "请输入用户名 密码后在勾选保存");
+                    if (TextUtils.isEmpty(Edit_PassWord.getText().toString()) || TextUtils.isEmpty(Edit_UserName.getText().toString())) {
+                        tools.show(LoginActivity.this, "请输入用户名和密码后在勾选保存");
                         IsPassWord_CB.setChecked(false);
                     } else {
-                        tools.PutStringData("Paw", Edit_PassWord.getText().toString(), sharedPreferences);
-                        tools.PutStringData("User", Edit_UserName.getText().toString(), sharedPreferences);
+                        IsUserName_CB.setChecked(true);
+                        IsPassWord_CB.setChecked(true);
                     }
-                } else {
+                }else {
                     tools.PutStringData("Paw", "", sharedPreferences);
                 }
             }
@@ -131,14 +131,12 @@ public class LoginActivity extends BaseActivity {
                         tools.show(LoginActivity.this, "请输入用户名后在勾选保存");
                         IsUserName_CB.setChecked(false);
                     } else {
-                        tools.PutStringData("User", Edit_UserName.getText().toString(), sharedPreferences);
+                        IsUserName_CB.setChecked(true);
+
                     }
-                } else {
-                    if (TextUtils.isEmpty(Edit_UserName.getText().toString())) {
-                        tools.PutStringData("Paw", "", sharedPreferences);
-                        IsPassWord_CB.setChecked(false);
-                    }
+                }else{
                     tools.PutStringData("User", "", sharedPreferences);
+                    tools.PutStringData("Paw", "", sharedPreferences);
                 }
             }
         });
@@ -245,28 +243,24 @@ public class LoginActivity extends BaseActivity {
 
     private void DetectionHistoryUser() {
         String IS_UserName = tools.GetStringData(sharedPreferences, "User");
-        if (TextUtils.isEmpty(IS_UserName)) {
-            IsUserName_CB.setChecked(false);
-        } else {
-            IsUserName_CB.setChecked(true);
-            Edit_UserName.setText(IS_UserName);
-        }
+        //String PassWord = tools.GetStringData(sharedPreferences, "Paw");
+        String user = tools.GetStringData(sharedPreferences, "User");
+        Edit_UserName.setText(user);
+        //Edit_PassWord.setText(PassWord);
+        //ViseLog.i("恢复用户保存的密码");
+        IsUserName_CB.setChecked(true);
         foucs();
     }
 
 
     private void DetectionHistoryUserPwd() {
         String paw = tools.GetStringData(sharedPreferences, "Paw");
-        if (TextUtils.isEmpty(paw)) {
-            IsPassWord_CB.setChecked(false);
-        } else {
-            IsPassWord_CB.setChecked(true);
-            String PassWord = tools.GetStringData(sharedPreferences, "Paw");
-            String user = tools.GetStringData(sharedPreferences, "User");
-            Edit_UserName.setText(user);
-            Edit_PassWord.setText(PassWord);
-            ViseLog.i("恢复用户保存的密码");
-        }
+        String PassWord = tools.GetStringData(sharedPreferences, "Paw");
+        String user = tools.GetStringData(sharedPreferences, "User");
+        Edit_UserName.setText(user);
+        Edit_PassWord.setText(PassWord);
+        ViseLog.i("恢复用户保存的密码");
+        IsPassWord_CB.setChecked(true);
         foucs();
     }
 
@@ -291,6 +285,7 @@ public class LoginActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_START)
         public void ON_START() {
+            GetProject();
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
@@ -300,7 +295,6 @@ public class LoginActivity extends BaseActivity {
             } else {
                 ConnectStr.ISSHOWNONEXECUTION = false;
             }
-            GetProject();
             ViseLog.i("ISSHOWNONEXECUTION = " + ConnectStr.ISSHOWNONEXECUTION + "sharedPreferences = " + tools.GetStringData(sharedPreferences, "IsScanInput"));
         }
 
@@ -423,6 +417,8 @@ public class LoginActivity extends BaseActivity {
                         tools.PutStringData("Project", SelectProjectStr, sharedPreferences);
                         ConnectStr.USERNAME = Edit_UserName.getText().toString();
                         ConnectStr.ConnectionToString = msg.getData().getString("ConnectString");
+                        tools.PutStringData("Paw", Edit_PassWord.getText().toString(), sharedPreferences);
+                        tools.PutStringData("User", Edit_UserName.getText().toString(), sharedPreferences);
                         startActivity(new Intent(LoginActivity.this, MainTabActivity.class));
 //                        ViewManager.getInstance().finishActivity(LoginActivity.this);
                         break;

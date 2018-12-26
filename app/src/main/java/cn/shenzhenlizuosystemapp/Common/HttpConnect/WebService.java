@@ -84,26 +84,26 @@ public class WebService {
     }
 
 
-    public String QuitLibraryNote(String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
-        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetOutStockNotices");
-        soapObject.addProperty("ConnectionToString", ConnectionToString);
+    public String GetQuitLibraryNote(String ConnectionID) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetOutStockNoticeBillsList");
+        soapObject.addProperty("ConnectionID", ConnectionID);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
         envelope.bodyOut = soapObject;
         envelope.dotNet = true;
         envelope.setOutputSoapObject(soapObject);
         HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
-        httpTransportSE.call("http://www.lzbarcode.com/GetOutStockNotices", envelope);
+        httpTransportSE.call("http://www.lzbarcode.com/GetOutStockNoticeBillsList", envelope);
         Object object = (Object) envelope.getResponse();
         String Result = object.toString();
         return Result;
     }
 
 
-    public String QuitWareHouseData (String ConnectionToString,String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
+    public String GetQuitWareHouseData (String ConnectionToString,String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetOutStockNoticeBill");
-        soapObject.addProperty("ConnectionToString", ConnectionToString);
-        soapObject.addProperty("BillGuid", BillGuid);
+        soapObject.addProperty("ConnectionID", ConnectionToString);
+        soapObject.addProperty("BillID", BillGuid);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
         envelope.bodyOut = soapObject;

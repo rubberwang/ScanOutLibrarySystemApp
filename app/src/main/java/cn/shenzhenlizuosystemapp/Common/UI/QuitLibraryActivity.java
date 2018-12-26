@@ -581,7 +581,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
             InputStream in_Body = null;
             InputStream in_Stocks = null;
             try {
-                QuitBills = webService.QuitWareHouseData(ConnectStr.ConnectionToString, FGUID);
+                QuitBills = webService.GetQuitWareHouseData(ConnectStr.ConnectionToString, FGUID);
                 ViseLog.i("QuitBills = " + QuitBills);
                 in_Heard = new ByteArrayInputStream(QuitBills.getBytes("UTF-8"));
                 outLibraryBills = GetInputArray(in_Heard);
