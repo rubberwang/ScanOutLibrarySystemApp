@@ -17,7 +17,7 @@ public class ScanResult_InputRvAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private List<ChildTag> datas;
-    private ScanResult_InputRvAdapter.OnItemClickLitener mOnItemClickLitener;
+    private OnItemClickLitener mOnItemClickLitener;
     private int selected = -1;
 
     public ScanResult_InputRvAdapter(Context context, List<ChildTag> data) {
@@ -31,14 +31,14 @@ public class ScanResult_InputRvAdapter extends RecyclerView.Adapter {
         void onItemLongClick(View view, int position);
     }
 
-    public void setOnItemClickLitener(ScanResult_InputRvAdapter.OnItemClickLitener mOnItemClickLitener) {
+    public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener) {
         this.mOnItemClickLitener = mOnItemClickLitener;
     }
 
     @Override
     //重写onCreateViewHolder方法，返回一个自定义的ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ScanResult_InputRvAdapter.ViewHoders viewHoders = new ScanResult_InputRvAdapter.ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.scaning_result_item, parent, false));
+        ViewHoders viewHoders = new ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.scaning_result_item, parent, false));
         return viewHoders;
     }
 
@@ -47,8 +47,8 @@ public class ScanResult_InputRvAdapter extends RecyclerView.Adapter {
     //填充onCreateViewHolder方法返回的holder中的控件
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
-            ((ScanResult_InputRvAdapter.ViewHoders) holder).TV_scanData.setText(datas.get(position).getValue());
-            ((ScanResult_InputRvAdapter.ViewHoders) holder).Tv_TypeResult.setText(datas.get(position).getName() + ":");
+            ((ViewHoders) holder).TV_scanData.setText(datas.get(position).getValue());
+            ((ViewHoders) holder).Tv_TypeResult.setText(datas.get(position).getName() + ":");
             if (mOnItemClickLitener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

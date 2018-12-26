@@ -3,6 +3,7 @@ package cn.shenzhenlizuosystemapp.Common.Base;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
+
 import com.vise.log.ViseLog;
 import com.vise.log.inner.LogcatTree;
 

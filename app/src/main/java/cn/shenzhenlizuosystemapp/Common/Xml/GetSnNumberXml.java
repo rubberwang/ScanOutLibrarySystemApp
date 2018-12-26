@@ -12,69 +12,69 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitSubmitDataBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.SubQuitBody;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubmitDataBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.SubBody;
 
-public class GetQuitSnNumberXml {
+public class GetSnNumberXml {
 
-    private volatile static GetQuitSnNumberXml getChildTag;
+    private volatile static GetSnNumberXml getChildTag;
 
-    public static GetQuitSnNumberXml getSingleton() {
+    public static GetSnNumberXml getSingleton() {
         if (getChildTag == null) {
-            synchronized (GetQuitSnNumberXml.class) {
+            synchronized (GetSnNumberXml.class) {
                 if (getChildTag == null) {
-                    getChildTag = new GetQuitSnNumberXml();
+                    getChildTag = new GetSnNumberXml();
                 }
             }
         }
         return getChildTag;
     }
 
-    public static List<QuitSubmitDataBean> ReadPullXML(InputStream inputStream) {
+    public static List<InputSubmitDataBean> ReadPullXML(InputStream inputStream) {
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setInput(inputStream, "UTF-8");
             int eventType = parser.getEventType();
-            QuitSubmitDataBean quitSubmitDataBean = null;
-            List<QuitSubmitDataBean> quitSubmitDataBeanList = null;
+            InputSubmitDataBean inputSubmitDataBean = null;
+            List<InputSubmitDataBean> inputSubmitDataBeanList = null;
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
-                        quitSubmitDataBeanList = new ArrayList<>();
+                        inputSubmitDataBeanList = new ArrayList<>();
                         break;
                     case XmlPullParser.START_TAG:
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("BarcodeLib")) {
-                            quitSubmitDataBean = new QuitSubmitDataBean();
+                            inputSubmitDataBean = new InputSubmitDataBean();
                         } else if ("FQty".equals(parser.getName())) {
                             String Sum = parser.nextText();
-                            quitSubmitDataBean.setFQty(Sum);
+                            inputSubmitDataBean.setFQty(Sum);
                         }
                         break;
                     case XmlPullParser.END_TAG:
                         if (parser.getName().equalsIgnoreCase("BarcodeLib")
-                                && quitSubmitDataBean != null) {
-                            quitSubmitDataBeanList.add(quitSubmitDataBean);
-                            quitSubmitDataBean = null;
+                                && inputSubmitDataBean != null) {
+                            inputSubmitDataBeanList.add(inputSubmitDataBean);
+                            inputSubmitDataBean = null;
                         }
                         break;
                 }
                 eventType = parser.next();
             }
             inputStream.close();
-            return quitSubmitDataBeanList;
+            return inputSubmitDataBeanList;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-    public static List<SubQuitBody> ReadSubBodyPullXML(InputStream inputStream) {
+    public static List<SubBody> ReadSubBodyPullXML(InputStream inputStream) {
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setInput(inputStream, "UTF-8");
             int eventType = parser.getEventType();
-            SubQuitBody subQuitBody = null;
-            List<SubQuitBody> subBodyList = null;
+            SubBody subBody = null;
+            List<SubBody> subBodyList = null;
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
@@ -83,17 +83,17 @@ public class GetQuitSnNumberXml {
                     case XmlPullParser.START_TAG:
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("BarcodeLib")) {
-                            subQuitBody = new SubQuitBody();
+                            subBody = new SubBody();
                         } else if ("FGuid".equals(parser.getName())) {
                             String Sum = parser.nextText();
-                            subQuitBody.setFBarcodeLib(Sum);
+                            subBody.setFBarcodeLib(Sum);
                         }
                         break;
                     case XmlPullParser.END_TAG:
                         if (parser.getName().equalsIgnoreCase("BarcodeLib")
-                                && subQuitBody != null) {
-                            subBodyList.add(subQuitBody);
-                            subQuitBody = null;
+                                && subBody != null) {
+                            subBodyList.add(subBody);
+                            subBody = null;
                         }
                         break;
                 }
@@ -106,9 +106,9 @@ public class GetQuitSnNumberXml {
         }
         return null;
     }
+    
 
-
-    public String CreateInputXmlStr(String FGuid, String FPartner, String FTransactionType, List<QuitSubmitDataBean> inputSubmitDataBeans, List<SubQuitBody> subBodyList) {
+    public String CreateInputXmlStr(String FGuid, String FPartner, String FTransactionType, List<InputSubmitDataBean> inputSubmitDataBeans, List<SubBody> subBodyList) {
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             StringWriter stringWriter = new StringWriter();
@@ -168,6 +168,32 @@ public class GetQuitSnNumberXml {
                 serializer.endDocument();
                 stringWriter.close();
                 return String.valueOf(stringWriter);
+                // persons标签开始
+//                serializer.startTag(null, "NewDataSet");
+//                for (int i = 0; i < Guid.size(); i++) {
+//                    serializer.startTag(null, "Material");
+//                    serializer.startTag(null, "Guid");
+//                    serializer.text(Guid.get(i));
+//                    serializer.endTag(null, "Guid");
+//                    serializer.startTag(null, "BodyID");
+//                    serializer.text(BodyID.get(i));
+//                    serializer.endTag(null, "BodyID");
+//                    serializer.endTag(null, "Material");
+//                }
+//                for (int index = 0; index < inputSubmitDataBeans.size(); index++) {
+//                    serializer.startTag(null, "SerialNum");
+//                    serializer.startTag(null, "SN");
+//                    serializer.text(inputSubmitDataBeans.get(index).getSn());
+//                    serializer.endTag(null, "SN");
+//                    serializer.startTag(null, "MaterialId");
+//                    serializer.text(Guid.get(index));
+//                    serializer.endTag(null, "MaterialId");
+//                    serializer.startTag(null, "Qty");
+//                    serializer.text(inputSubmitDataBeans.get(index).getNumber());
+//                    serializer.endTag(null, "Qty");
+//                    serializer.endTag(null, "SerialNum");
+//                }
+//                serializer.endTag(null, "NewDataSet");
             } catch (Exception e) {
                 e.printStackTrace();
                 try {

@@ -17,7 +17,7 @@ public class SelectQuit_FullAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private List<QuitLibraryBill> datas;
-    private SelectQuit_FullAdapter.OnItemClickLitener mOnItemClickLitener;
+    private OnItemClickLitener mOnItemClickLitener;
     private int selected = -1;
 
     public SelectQuit_FullAdapter(Context context, List<QuitLibraryBill> data) {
@@ -31,7 +31,7 @@ public class SelectQuit_FullAdapter extends RecyclerView.Adapter {
         void onItemLongClick(View view, int position);
     }
 
-    public void setOnItemClickLitener(SelectQuit_FullAdapter.OnItemClickLitener mOnItemClickLitener) {
+    public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener) {
         this.mOnItemClickLitener = mOnItemClickLitener;
     }
 
@@ -39,7 +39,7 @@ public class SelectQuit_FullAdapter extends RecyclerView.Adapter {
     @Override
     //重写onCreateViewHolder方法，返回一个自定义的ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        SelectQuit_FullAdapter.ViewHoders viewHoders = new SelectQuit_FullAdapter.ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.quit_library, parent, false));
+        ViewHoders viewHoders = new ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.quit_library, parent, false));
         return viewHoders;
     }
 
@@ -48,10 +48,10 @@ public class SelectQuit_FullAdapter extends RecyclerView.Adapter {
     //填充onCreateViewHolder方法返回的holder中的控件
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
-            ((SelectQuit_FullAdapter.ViewHoders) holder).TV_BillSum.setText(datas.get(position).getFCode());
-            ((SelectQuit_FullAdapter.ViewHoders) holder).TV_WarehouseName.setText(datas.get(position).getFStock_Name());
-            ((SelectQuit_FullAdapter.ViewHoders) holder).TV_OutType.setText(datas.get(position).getFTransactionType_Name());
-            ((SelectQuit_FullAdapter.ViewHoders) holder).TV_CreateTime.setText(datas.get(position).getFDate());
+            ((ViewHoders) holder).TV_BillSum.setText(datas.get(position).getFCode());
+            ((ViewHoders) holder).TV_WarehouseName.setText(datas.get(position).getFStock_Name());
+            ((ViewHoders) holder).TV_OutType.setText(datas.get(position).getFTransactionType_Name());
+            ((ViewHoders) holder).TV_CreateTime.setText(datas.get(position).getFDate());
             if (mOnItemClickLitener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

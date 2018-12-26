@@ -420,7 +420,6 @@ public class LoginActivity extends BaseActivity {
                         tools.PutStringData("Paw", Edit_PassWord.getText().toString(), sharedPreferences);
                         tools.PutStringData("User", Edit_UserName.getText().toString(), sharedPreferences);
                         startActivity(new Intent(LoginActivity.this, MainTabActivity.class));
-//                        ViewManager.getInstance().finishActivity(LoginActivity.this);
                         break;
                     }
                     case 2: {
