@@ -205,7 +205,7 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
         TV_Unit = $(R.id.TV_Unit);
         RV_GetInfoTable = $(R.id.RV_GetInfoTable);
         RV_ScanInfoTable = $(R.id.RV_ScanInfoTable);
-        TV_Scaning = $(R.id.TV_Scaning);
+        //TV_Scaning = $(R.id.TV_Scaning);
         spinnerScannerDevices = $(R.id.spinnerScannerDevices);
         Sp_QuitHouseSpace = $(R.id.Sp_QuitHouseSpace);
         TV_Cancel = $(R.id.TV_Cancel);
@@ -1388,20 +1388,20 @@ public class QuitLibraryActivity extends BaseActivity implements EMDKListener, D
             //执行耗时操作
             Message msg = new Message();
             try {
-                String DetailedListXml = GetQuitSnNumberXml.getSingleton().CreateInputXmlStr(HeardID, FPartner, BusinessType, QuitSubmitDataBeanList, subQuitBodyList);
-                ViseLog.i("DetailedListXml = " + DetailedListXml + " Sp_house.getSelectedItem().toString() = " + stockBeans.get(SpHouseIndex).getFName()
-                        + "Sp_InputHouseSpace.getSelectedItem().toString() = " + stockBeanList.get(SpInputHouseSpaceIndex).getFName());
-
-                String Result = webService.CreateOutStockBill(ConnectStr.ConnectionToString, HeardID,
-                        ConnectStr.USERNAME, stockBeans.get(SpHouseIndex).getFName(), stockBeanList.get(SpInputHouseSpaceIndex).getFName(), DetailedListXml);
-                ViseLog.i("SumbitResult = " + Result);
-                if (Result.equals("Success")) {
-                    msg.what = 4;
-                    handler.sendMessage(msg);
-                } else {
-                    msg.what = 5;
-                    handler.sendMessage(msg);
-                }
+//                String DetailedListXml = GetQuitSnNumberXml.getSingleton().CreateInputXmlStr(HeardID, FPartner, BusinessType, QuitSubmitDataBeanList, subQuitBodyList);
+//                ViseLog.i("DetailedListXml = " + DetailedListXml + " Sp_house.getSelectedItem().toString() = " + stockBeans.get(SpHouseIndex).getFName()
+//                        + "Sp_InputHouseSpace.getSelectedItem().toString() = " + stockBeanList.get(SpInputHouseSpaceIndex).getFName());
+//
+//                String Result = webService.CreateOutStockBill(ConnectStr.ConnectionToString, HeardID,
+//                        ConnectStr.USERNAME, stockBeans.get(SpHouseIndex).getFName(), stockBeanList.get(SpInputHouseSpaceIndex).getFName(), DetailedListXml);
+//                ViseLog.i("SumbitResult = " + Result);
+//                if (Result.equals("Success")) {
+//                    msg.what = 4;
+//                    handler.sendMessage(msg);
+//                } else {
+//                    msg.what = 5;
+//                    handler.sendMessage(msg);
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
                 ViseLog.d("GetNullXmlSyncThread Exception" + e);

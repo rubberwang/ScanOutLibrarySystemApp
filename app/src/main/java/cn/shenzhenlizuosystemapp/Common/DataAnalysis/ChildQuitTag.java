@@ -4,9 +4,19 @@ public class ChildQuitTag {
 
     private String Guid;
     private String Name;
+    private String BarcodeNumber;
     private String Value;
 
+    public void setBarcodeNumber(String barcodeNumber) {
+        BarcodeNumber = barcodeNumber;
+    }
+
+    public String getBarcodeNumber() {
+        return BarcodeNumber;
+    }
+
     public String getGuid() {
+
         return Guid;
     }
 

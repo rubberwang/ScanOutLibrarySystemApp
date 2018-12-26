@@ -167,7 +167,7 @@ public class NewInputLibraryActivity extends BaseActivity {
         TV_Unit = $(R.id.TV_Unit);
         RV_GetInfoTable = $(R.id.RV_GetInfoTable);
         RV_ScanInfoTable = $(R.id.RV_ScanInfoTable);
-        TV_Scaning = $(R.id.TV_Scaning);
+        //TV_Scaning = $(R.id.TV_Scaning);
         spinnerScannerDevices = $(R.id.spinnerScannerDevices);
         Sp_InputHouseSpace = $(R.id.Sp_InputHouseSpace);
         TV_Cancel = $(R.id.TV_Cancel);

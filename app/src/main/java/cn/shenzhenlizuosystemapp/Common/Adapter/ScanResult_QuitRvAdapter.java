@@ -48,7 +48,7 @@ public class ScanResult_QuitRvAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
             ((ViewHoders) holder).TV_scanData.setText(datas.get(position).getValue());
-            ((ViewHoders) holder).Tv_TypeResult.setText(datas.get(position).getName());
+            ((ViewHoders) holder).Tv_TypeResult.setText(datas.get(position).getName() + ":");
             if (mOnItemClickLitener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -67,7 +67,7 @@ public class ScanResult_QuitRvAdapter extends RecyclerView.Adapter {
     public int getItemCount() {
         return datas.size();
     }
-    
+
     class ViewHoders extends RecyclerView.ViewHolder {
 
         private TextView TV_scanData;

@@ -8,7 +8,7 @@
         android:id="@+id/TV_QuitSpinner"
         android:layout_width="match_parent"
         android:layout_height="25dp"
-        android:paddingTop="3dp"
+        android:paddingTop="6dp"
         android:paddingLeft="3dp"/>
 
     <View
@@ -18,6 +18,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
+        android:layout_marginTop="3.2dp"
         android:background="@color/Black">
     </View>
 

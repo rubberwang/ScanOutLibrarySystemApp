@@ -10,6 +10,7 @@ import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildQuitTag;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.MaterialModeBean;
 
 public class QuitTagModeAnalysis {
     private volatile static QuitTagModeAnalysis quitLibraryXmlAnalysis;
@@ -49,6 +50,10 @@ public class QuitTagModeAnalysis {
                             if (Tools.IsObjectNull(childQuitTags)) {
                                 childQuitTags.setName(parser.nextText());
                             }
+                        } else if ("FRowIndex".equals(parser.getName())) {
+                            if (Tools.IsObjectNull(childQuitTags)) {
+                                childQuitTags.setBarcodeNumber(parser.nextText());
+                            }
                         }
                         break;
                     case XmlPullParser.END_TAG:
@@ -69,4 +74,6 @@ public class QuitTagModeAnalysis {
         return null;
     }
     
+
+
 }
