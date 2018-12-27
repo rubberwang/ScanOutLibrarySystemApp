@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -39,6 +40,7 @@ import cn.shenzhenlizuosystemapp.Common.AsyncGetData.InputBillCreateTask;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.InputBodyLockTask;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.UnlockTask;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
+import cn.shenzhenlizuosystemapp.Common.Base.Myapplication;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.Base.ZebarTools;
@@ -57,11 +59,13 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Stock_Return;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.Port.BarCodeCheckPort;
+import cn.shenzhenlizuosystemapp.Common.Port.EditSumPort;
 import cn.shenzhenlizuosystemapp.Common.Port.InputBillCreate;
 import cn.shenzhenlizuosystemapp.Common.Port.InputTagModePort;
 import cn.shenzhenlizuosystemapp.Common.Port.LockResultPort;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.InputStockAdapter;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.MaterialModeAdapter;
+import cn.shenzhenlizuosystemapp.Common.View.EditSumDialog;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.WebBean.InputLibraryAllInfo;
@@ -106,6 +110,7 @@ public class NewInputLibraryActivity extends BaseActivity {
     private WebService webService;
     private ScanResult_InputRvAdapter scanResult_Input_rvAdapter;
     private ScanTask_InputRvAdapter scanTask_Input_rvAdapter;
+    private EditSumPort editSumPort;
 
     //控件
     private TextView Back;
@@ -118,9 +123,6 @@ public class NewInputLibraryActivity extends BaseActivity {
     private TextView TV_Scaning;
     private TextView TV_Cancel;
     private TextView TV_Sumbit;
-    private TextView TV_Save;
-    private TextView TV_Clear;
-    private EditText Et_ScanNumber;
     private RecyclerView RV_GetInfoTable;
     private RecyclerView RV_ScanInfoTable;
     private Spinner Sp_Label;
@@ -147,6 +149,7 @@ public class NewInputLibraryActivity extends BaseActivity {
         Intent intent = getIntent();
         FGUID = intent.getStringExtra("FGUID");
         tools = Tools.getTools();
+        tools.PutStringData("NewInputLibraryActivityFGUID", FGUID, tools.InitSharedPreferences(MContect));
         inputLibraryObServer = new InputLibraryObServer();
         getLifecycle().addObserver(inputLibraryObServer);
         webService = WebService.getSingleton(MContect);
@@ -156,6 +159,15 @@ public class NewInputLibraryActivity extends BaseActivity {
         Drawable drawable = getResources().getDrawable(R.drawable.circularbead_gray);
         TV_Sumbit.setBackground(drawable);
         TV_Sumbit.setTextColor(getResources().getColor(R.color.Black));
+        editSumPort = new EditSumPort() {
+            @Override
+            public void OnEnSure(String Sum) {
+                EditSumDialog.getSingleton().Dismiss();
+                SubmitData(Sum);
+                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.toggleSoftInput(0, 0);
+            }
+        };
     }
 
     @Override
@@ -167,22 +179,17 @@ public class NewInputLibraryActivity extends BaseActivity {
         TV_Unit = $(R.id.TV_Unit);
         RV_GetInfoTable = $(R.id.RV_GetInfoTable);
         RV_ScanInfoTable = $(R.id.RV_ScanInfoTable);
-        //TV_Scaning = $(R.id.TV_Scaning);
         spinnerScannerDevices = $(R.id.spinnerScannerDevices);
         Sp_InputHouseSpace = $(R.id.Sp_InputHouseSpace);
         TV_Cancel = $(R.id.TV_Cancel);
         TV_Sumbit = $(R.id.TV_Sumbit);
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
-        TV_Save = $(R.id.TV_Save);
-        Et_ScanNumber = $(R.id.Et_ScanNumber);
         Sp_Label = $(R.id.Sp_Label);
-        TV_Clear = $(R.id.TV_Clear);
     }
 
     private void InitClick() {
-        Et_ScanNumber.setFocusable(false);
-        Et_ScanNumber.setFocusableInTouchMode(false);
-        Tv_SaveStatusChanage(false);
+//        Et_ScanNumber.setFocusable(false);
+//        Et_ScanNumber.setFocusableInTouchMode(false);
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
 
@@ -226,42 +233,6 @@ public class NewInputLibraryActivity extends BaseActivity {
                         }
                     }, new View.OnClickListener() {
 
-                        @Override
-                        public void onClick(View view) {
-                            tools.DisappearDialog();
-                        }
-                    }, false);
-                } 
-            }
-        });
-
-        TV_Save.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                if (Is_InputNumber_Mode) {
-                    SubmitData();
-                }
-            }
-        });
-
-        TV_Clear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Is_InputNumber_Mode) {
-                    tools.ShowOnClickDialog(MContect, "确定清空本次扫描数据吗？", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Is_InputNumber_Mode = false;
-                            Tv_SaveStatusChanage(false);
-                            ET_SumStatus(false);
-                            childTagList.clear();
-                            scanResult_Input_rvAdapter.notifyDataSetChanged();
-                            scanTask_Input_rvAdapter.setSelection(-1);
-                            scanTask_Input_rvAdapter.notifyDataSetChanged();
-                            tools.DisappearDialog();
-                        }
-                    }, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             tools.DisappearDialog();
@@ -378,6 +349,7 @@ public class NewInputLibraryActivity extends BaseActivity {
     class InputLibraryObServer implements LifecycleObserver {
         @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
         public void ON_CREATE() {
+            ZebarTools.getZebarTools().SetZebarDWConfig(MContect, "1", "1");
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_START)
@@ -392,6 +364,7 @@ public class NewInputLibraryActivity extends BaseActivity {
         public void ON_PAUSE() {
             UnlockTask unlockTask = new UnlockTask(webService);
             unlockTask.execute();
+            EditSumDialog.getSingleton().Dismiss();
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -530,12 +503,7 @@ public class NewInputLibraryActivity extends BaseActivity {
             String AddNoSendQty = "0";
             float AddAuxQty = 0;
             float AddExecutedAuxQty = 0;
-            if (!TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFIsClosed())) {
-                if (disposeInputTaskRvDataList.get(index).getFIsClosed().equals("1")) {
-                    removeList.add(disposeInputTaskRvDataList.get(index));
-                    continue;
-                }
-            }
+
             if (ConnectStr.ISSHOWNONEXECUTION) {
                 String NoSendQty = "0";
                 if (!TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFAuxQty()) && !TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFExecutedAuxQty())) {
@@ -546,6 +514,12 @@ public class NewInputLibraryActivity extends BaseActivity {
                 if (Tools.StringOfFloat(NoSendQty) <= 0) {
                     removeList.add(disposeInputTaskRvDataList.get(index));
                     continue;
+                }
+                if (!TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFIsClosed())) {
+                    if (disposeInputTaskRvDataList.get(index).getFIsClosed().equals("1")) {
+                        removeList.add(disposeInputTaskRvDataList.get(index));
+                        continue;
+                    }
                 }
             }
             if (!TextUtils.isEmpty(disposeInputTaskRvDataList.get(index).getFAuxQty()) &&
@@ -692,87 +666,83 @@ public class NewInputLibraryActivity extends BaseActivity {
      * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void messageEventBus(BarCodeMessage msg) {
-        if (scanTask_Input_rvAdapter.getselection() >= 0) {
-            String data = msg.data;
-            ViseLog.i("messageEventBus msg = " + data);
-            if (!Is_Single) {
-                data = data.replace("\n", "；");
-                data = data.substring(0, data.length() - 1);
-            }
-            ViseLog.i("messageEventBus msg = " + data);
-            BarCodeCheckPort barCodeCheckPort = new BarCodeCheckPort() {
-                @Override
-                public void onData(String Info) {
-                    try {
-                        if (!Info.substring(0, 2).equals("EX")) {
-                            ViseLog.i("Info = " + Info);
-                            InputStream IsBarCodeInfoHead = new ByteArrayInputStream(Info.getBytes("UTF-8"));
-                            InputStream IsBarCodeInfoBody = new ByteArrayInputStream(Info.getBytes("UTF-8"));
-                            List<BarCodeHeadBean> BarCodeInfoHeadList = InputLibraryXmlAnalysis.getSingleton().GetBarCodeHead(IsBarCodeInfoHead);
-                            List<BarcodeXmlBean> barcodeXmlBeanList = InputLibraryXmlAnalysis.getSingleton().GetBarCodeBody(IsBarCodeInfoBody);
-                            if (BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_SEQUENCE.toLowerCase())) {
-                                Is_InputNumber_Mode = true;
-                                ET_SumStatus(false);
-                                Tv_SaveStatusChanage(true);
-                                PutResultArray(barcodeXmlBeanList);
-                                Et_ScanNumber.setText("1.0");
-                                FBarcodeLib = BarCodeInfoHeadList.get(2).getFGudi();
-                                IsSerialNumber = false;
-                                IsAddSerialNumber = true;
-                                ViseLog.i("number = 1 序列号");
-                            } else if (!TextUtils.isEmpty(BarCodeInfoHeadList.get(3).getFQty())) {
-                                //算法  fqty * FUnitRate / baseqty
-                                float ThisPutSum = Tools.StringOfFloat(BarCodeInfoHeadList.get(3).getFQty()) * Tools.StringOfFloat(BarCodeInfoHeadList.get(0).getFUnitRate())
-                                        / Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFUnitRate());
-                                Is_InputNumber_Mode = true;
-                                Tv_SaveStatusChanage(true);
-                                ET_SumStatus(false);
-                                PutResultArray(barcodeXmlBeanList);
-                                Et_ScanNumber.setText(String.valueOf(ThisPutSum));
-                                FBarcodeLib = BarCodeInfoHeadList.get(2).getFGudi();
-                                ViseLog.i("有数量 = " + FBarcodeLib);
-                            } else if (BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_COMMON) ||
-                                    BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_BATCH.toLowerCase())) {
-                                Is_InputNumber_Mode = true;
-                                ET_SumStatus(true);
-                                Tv_SaveStatusChanage(true);
-                                PutResultArray(barcodeXmlBeanList);
-                                Et_ScanNumber.setText(NoInputLibrary());
-                                FBarcodeLib = BarCodeInfoHeadList.get(2).getFGudi();
-                                ViseLog.i("通用号 FBarcodeLib =" + FBarcodeLib);
-                                IsBarCodeInfoHead.close();
-                                IsBarCodeInfoBody.close();
-                            }
-                        } else {
-                            tools.ShowDialog(MContect, Info.substring(2, Info.length()));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        ViseLog.i("BarCodeCheckPort Exception = " + e);
-                    }
+        if (!Is_InputNumber_Mode){
+            if (scanTask_Input_rvAdapter.getselection() >= 0) {
+                String data = msg.data;
+                ViseLog.i("messageEventBus msg = " + data);
+                if (!Is_Single) {
+                    data = data.replace("\n", "；");
+                    data = data.substring(0, data.length() - 1);
                 }
-            };
-            BarCodeCheckTask barCodeCheckTask = new BarCodeCheckTask(barCodeCheckPort, webService, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(),
-                    materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data);
-            barCodeCheckTask.execute();
-        } else {
+                ViseLog.i("messageEventBus msg = " + data);
+                BarCodeCheckPort barCodeCheckPort = new BarCodeCheckPort() {
+                    @Override
+                    public void onData(String Info) {
+                        try {
+                            if (!Info.substring(0, 2).equals("EX")) {
+                                ViseLog.i("Info = " + Info);
+                                InputStream IsBarCodeInfoHead = new ByteArrayInputStream(Info.getBytes("UTF-8"));
+                                InputStream IsBarCodeInfoBody = new ByteArrayInputStream(Info.getBytes("UTF-8"));
+                                List<BarCodeHeadBean> BarCodeInfoHeadList = InputLibraryXmlAnalysis.getSingleton().GetBarCodeHead(IsBarCodeInfoHead);
+                                List<BarcodeXmlBean> barcodeXmlBeanList = InputLibraryXmlAnalysis.getSingleton().GetBarCodeBody(IsBarCodeInfoBody);
+                                if (BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_SEQUENCE.toLowerCase())) {
+                                    Is_InputNumber_Mode = true;
+                                    PutResultArray(barcodeXmlBeanList);
+                                    FBarcodeLib = BarCodeInfoHeadList.get(2).getFGudi();
+                                    IsSerialNumber = false;
+                                    IsAddSerialNumber = true;
+                                    SubmitData("1.0");
+                                    ViseLog.i("number = 1 序列号");
+                                } else if (!TextUtils.isEmpty(BarCodeInfoHeadList.get(3).getFQty())) {
+                                    //算法  fqty * FUnitRate / baseqty
+                                    float ThisPutSum = Tools.StringOfFloat(BarCodeInfoHeadList.get(3).getFQty()) * Tools.StringOfFloat(BarCodeInfoHeadList.get(0).getFUnitRate())
+                                            / Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFUnitRate());
+                                    Is_InputNumber_Mode = true;
+                                    PutResultArray(barcodeXmlBeanList);
+                                    FBarcodeLib = BarCodeInfoHeadList.get(2).getFGudi();
+                                    ShowEditSumDialog(String.valueOf(ThisPutSum));
+                                    ViseLog.i("有数量 = " + FBarcodeLib);
+                                } else if (BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_COMMON) ||
+                                        BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_BATCH.toLowerCase())) {
+                                    Is_InputNumber_Mode = true;
+                                    PutResultArray(barcodeXmlBeanList);
+                                    FBarcodeLib = BarCodeInfoHeadList.get(2).getFGudi();
+                                    IsBarCodeInfoHead.close();
+                                    IsBarCodeInfoBody.close();
+                                    ShowEditSumDialog(NoInputLibrary());
+                                    ViseLog.i("通用号 FBarcodeLib =" + FBarcodeLib);
+                                }
+                            } else {
+                                tools.ShowDialog(MContect, Info.substring(2, Info.length()));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            ViseLog.i("BarCodeCheckPort Exception = " + e);
+                        }
+                    }
+                };
+                BarCodeCheckTask barCodeCheckTask = new BarCodeCheckTask(barCodeCheckPort, webService, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(),
+                        materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data);
+                barCodeCheckTask.execute();
+            } else {
 //            tools.ShowDialog(MContect, "请选择单据分路");
-            if (!TextUtils.isEmpty(msg.data)) {
-                int pos = GetSpinnerPos(stockBeanList, msg.data);
-                if (pos != -1) {
-                    Sp_InputHouseSpace.setSelection(pos);
+                if (!TextUtils.isEmpty(msg.data)) {
+                    int pos = GetSpinnerPos(stockBeanList, msg.data);
+                    if (pos != -1) {
+                        Sp_InputHouseSpace.setSelection(pos);
+                    }
                 }
             }
         }
     }
 
-    public void SubmitData() {
+    public void SubmitData(String InputSum) {
         try {
             if (Is_InputNumber_Mode) {
-                if (!TextUtils.isEmpty(Et_ScanNumber.getText().toString())) {
+                if (!TextUtils.isEmpty(InputSum) && Tools.StringOfFloat(InputSum) > 0) {
                     if (CheckGuid(CheckFGuid, FBarcodeLib)) {
                         IsSerialNumber = true;
-                        if (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getNoInput()) >= Tools.StringOfFloat(Et_ScanNumber.getText().toString())) {
+                        if (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getNoInput()) >= Tools.StringOfFloat(InputSum)) {
                             if (IsAddSerialNumber) {
                                 CheckFGuid.add(FBarcodeLib);
                                 IsAddSerialNumber = false;
@@ -791,12 +761,11 @@ public class NewInputLibraryActivity extends BaseActivity {
                             InputSubBodyBean subBodyBean = new InputSubBodyBean();
                             subBodyBean.setFBillBodyID(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
                             subBodyBean.setFBarcodeLib(FBarcodeLib);
-                            subBodyBean.setInputLibrarySum(String.valueOf(Et_ScanNumber.getText().toString()));
-//                            subBodyBean.setFStockCellID(stockBeanList.get(SpInputHouseSpaceIndex).getFGuid());
+                            subBodyBean.setInputLibrarySum(InputSum);
                             InputSubmitList.add(subBodyBean);
 
                             float Sum = Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty()) +
-                                    Tools.StringOfFloat(Et_ScanNumber.getText().toString());
+                                    Tools.StringOfFloat(InputSum);
                             String SetFThisAuxQty = String.valueOf(Sum);
                             inputTaskRvDataList.get(RV_ScanInfoTableIndex).setFThisAuxQty(SetFThisAuxQty);
 
@@ -811,8 +780,6 @@ public class NewInputLibraryActivity extends BaseActivity {
                             }
                             scanTask_Input_rvAdapter.notifyDataSetChanged();
                             Is_InputNumber_Mode = false;
-                            ET_SumStatus(false);
-                            Tv_SaveStatusChanage(false);
                             childTagList.clear();
                             scanResult_Input_rvAdapter.notifyDataSetChanged();
                         } else {
@@ -822,28 +789,12 @@ public class NewInputLibraryActivity extends BaseActivity {
                         tools.ShowDialog(MContect, "此条码已经扫描过了");
                     }
                 } else {
-                    tools.ShowDialog(MContect, "入库数量为空");
+                    tools.ShowDialog(MContect, "入库数量为空或小于0");
                 }
             }
         } catch (Exception e) {
             ViseLog.i("SubmitData Exception = " + e);
             tools.ShowDialog(MContect, "提交错误：" + e.getMessage());
-        }
-    }
-
-    public void Tv_SaveStatusChanage(boolean is_click) {
-        if (is_click) {
-            Drawable drawable = getResources().getDrawable(R.drawable.circularbead_purple);
-            TV_Save.setBackground(drawable);
-            TV_Clear.setBackground(drawable);
-            TV_Save.setTextColor(getResources().getColor(R.color.White));
-            TV_Clear.setTextColor(getResources().getColor(R.color.White));
-        } else {
-            Drawable drawable = getResources().getDrawable(R.drawable.circularbead_gray);
-            TV_Save.setBackground(drawable);
-            TV_Clear.setBackground(drawable);
-            TV_Save.setTextColor(getResources().getColor(R.color.Black));
-            TV_Clear.setTextColor(getResources().getColor(R.color.Black));
         }
     }
 
@@ -871,14 +822,6 @@ public class NewInputLibraryActivity extends BaseActivity {
         }
     }
 
-    private void ET_SumStatus(boolean is) {
-        if (!is) {
-            Et_ScanNumber.setText("");
-        }
-        Et_ScanNumber.setFocusable(is);
-        Et_ScanNumber.setFocusableInTouchMode(is);
-    }
-
     private void CreateBillData() {
 
         InputBillCreate inputBillCreate = new InputBillCreate() {
@@ -891,13 +834,10 @@ public class NewInputLibraryActivity extends BaseActivity {
                         @Override
                         public void onClick(View view) {
                             tools.DisappearDialog();
-                            Sp_house.setEnabled(true);
-                            Sp_InputHouseSpace.setEnabled(true);
-                            scanTask_Input_rvAdapter.setSelection(-1);
-                            scanTask_Input_rvAdapter.notifyDataSetChanged();//选中
-                            InputSubmitList.clear();
-                            GetInputLibraryBillsAsyncTask getInputLibraryBillsAsyncTask = new GetInputLibraryBillsAsyncTask();
-                            getInputLibraryBillsAsyncTask.execute();
+                            finish();
+                            Intent intent = new Intent(NewInputLibraryActivity.this, NewInputLibraryActivity.class);
+                            intent.putExtra("FGUID", tools.GetStringData(tools.InitSharedPreferences(NewInputLibraryActivity.this), "NewInputLibraryActivityFGUID"));
+                            startActivity(intent);
                         }
                     }, new View.OnClickListener() {
                         @Override
@@ -927,5 +867,26 @@ public class NewInputLibraryActivity extends BaseActivity {
         } else {
             return false;
         }
+    }
+
+    private void ShowEditSumDialog(String Sum) {
+        EditSumDialog.getSingleton().Show(MContect, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial_Code(), editSumPort, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditSumDialog.getSingleton().Dismiss();
+                CleanData();
+                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.toggleSoftInput(0, 0);
+            }
+        }, Sum);
+    }
+
+    private void CleanData() {
+        Is_InputNumber_Mode = false;
+        childTagList.clear();
+        scanResult_Input_rvAdapter.notifyDataSetChanged();
+        scanTask_Input_rvAdapter.setSelection(-1);
+        scanTask_Input_rvAdapter.notifyDataSetChanged();
+        ViseLog.i("Click CleanData");
     }
 }

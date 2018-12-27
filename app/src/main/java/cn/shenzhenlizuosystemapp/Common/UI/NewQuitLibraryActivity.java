@@ -378,6 +378,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
     class QuitLibraryObServer implements LifecycleObserver {
         @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
         public void ON_CREATE() {
+            ZebarTools.getZebarTools().SetZebarDWConfig(MContect, "1", "1");
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_START)

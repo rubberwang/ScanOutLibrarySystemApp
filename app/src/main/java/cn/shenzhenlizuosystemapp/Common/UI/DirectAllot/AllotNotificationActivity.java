@@ -19,6 +19,7 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotNotificationBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.Fragment.Item_DirectAllot_Fragment;
 import cn.shenzhenlizuosystemapp.Common.Fragment.Item_InputLibrary_Fragment;
@@ -36,8 +37,8 @@ public class AllotNotificationActivity extends BaseActivity{
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     private Select_DirectAllot_Fragment select_directAllot_fragment;
-    private List<InputLibraryBill> inputLibraryBills;
-    private List<InputLibraryBill> SearchResultList;
+    private List<DirectAllotNotificationBean> directAllotNotificationBeanList;
+    private List<DirectAllotNotificationBean> SearchResultList;
     private Tools tools;
     private AllotNotificationActivity MContect = null;
 
@@ -94,22 +95,23 @@ public class AllotNotificationActivity extends BaseActivity{
 
     private int LookForBranch(String ChracterSearch) {
         try {
-            inputLibraryBills = select_directAllot_fragment.GetSelectBills();
-            if (inputLibraryBills.size() >= 0) {
+            directAllotNotificationBeanList = select_directAllot_fragment.GetSelectBills();
+            if (directAllotNotificationBeanList.size() >= 0) {
                 SearchResultList.clear();
-                for (int i = 0; i < inputLibraryBills.size(); i++) {
-                    String BoxNumber = inputLibraryBills.get(i).getFCode();
-                    Log.i("huangmin", "BoxNumber " + BoxNumber.charAt(0));
+                for (int i = 0; i < directAllotNotificationBeanList.size(); i++) {
+                    String BoxNumber = directAllotNotificationBeanList.get(i).getFCode();
                     if (BoxNumber.equals(ChracterSearch) || BoxNumber.contains(ChracterSearch)) {
-                        InputLibraryBill inputLibraryBill = new InputLibraryBill();
-                        inputLibraryBill.setFCode(inputLibraryBills.get(i).getFCode());
-                        inputLibraryBill.setFDate(inputLibraryBills.get(i).getFDate());
-                        inputLibraryBill.setFTransactionType_Name(inputLibraryBills.get(i).getFTransactionType_Name());
-                        inputLibraryBill.setFTransactionType(inputLibraryBills.get(i).getFTransactionType());
-                        inputLibraryBill.setFStock_Name(inputLibraryBills.get(i).getFStock_Name());
-                        inputLibraryBill.setFStock(inputLibraryBills.get(i).getFStock());
-                        inputLibraryBill.setFGuid(inputLibraryBills.get(i).getFGuid());
-                        SearchResultList.add(inputLibraryBill);
+                        DirectAllotNotificationBean directAllotNotificationBean = new DirectAllotNotificationBean();
+                        directAllotNotificationBean.setFGuid(directAllotNotificationBeanList.get(i).getFGuid());
+                        directAllotNotificationBean.setFCode(directAllotNotificationBeanList.get(i).getFCode());
+                        directAllotNotificationBean.setFDate(directAllotNotificationBeanList.get(i).getFDate());
+                        directAllotNotificationBean.setFTransactionType_Name(directAllotNotificationBeanList.get(i).getFTransactionType_Name());
+                        directAllotNotificationBean.setFTransactionType(directAllotNotificationBeanList.get(i).getFTransactionType());
+                        directAllotNotificationBean.setFOutStock_Name(directAllotNotificationBeanList.get(i).getFOutStock_Name());
+                        directAllotNotificationBean.setFOutStock(directAllotNotificationBeanList.get(i).getFOutStock());
+                        directAllotNotificationBean.setFInStock_Name(directAllotNotificationBeanList.get(i).getFInStock_Name());
+                        directAllotNotificationBean.setFInStock(directAllotNotificationBeanList.get(i).getFInStock());
+                        SearchResultList.add(directAllotNotificationBean);
                     }
                 }
                 return 1;
@@ -150,7 +152,7 @@ public class AllotNotificationActivity extends BaseActivity{
                 if (result == 1) {
                     Item_DirectAllot_Fragment itemInputLibraryFragment = Item_DirectAllot_Fragment.newInstance(SearchResultList);
                     FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.F_SelectOut, itemInputLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                    fragmentManager.beginTransaction().replace(R.id.FL_SelectDirectAllot, itemInputLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                     ViseLog.d("搜索成功");
                 } else {
                     tools.showshort(MContect, "搜索错误请重新搜索");

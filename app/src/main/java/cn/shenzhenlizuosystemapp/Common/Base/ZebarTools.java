@@ -34,8 +34,19 @@ public class ZebarTools {
         bParams.putString("picklist", "0");
         bParams.putString("scanning_mode", scanning_mode);
         bParams.putString("multi_barcode_count", ScanTagSum);
+
+        Bundle bundleApp3 = new Bundle();
+        bundleApp3.putString("PACKAGE_NAME", "cn.shenzhenlizuosystemapp");
+        bundleApp3.putStringArray("ACTIVITY_LIST", new String[]{"*"});
+
+        bMain.putParcelableArray("APP_LIST", new Bundle[]{
+                bundleApp3
+        });
+        
         bConfig.putBundle("PARAM_LIST", bParams);
         bMain.putBundle("PLUGIN_CONFIG", bConfig);
+        
+       
         Intent i = new Intent();
         i.setAction("com.symbol.datawedge.api.ACTION");
         i.putExtra("com.symbol.datawedge.api.SET_CONFIG", bMain);

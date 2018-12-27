@@ -27,16 +27,20 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
+import cn.shenzhenlizuosystemapp.Common.Adapter.DirectAllotNotification_Adapter;
 import cn.shenzhenlizuosystemapp.Common.Adapter.SelectInput_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotNotificationBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
+import cn.shenzhenlizuosystemapp.Common.UI.DirectAllot.AllotMainActiivty;
 import cn.shenzhenlizuosystemapp.Common.UI.NewInputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.WebBean.InputAllBean;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.DirectAllor.AnalyAllXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputXmlAnalysis;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -47,7 +51,7 @@ public class Select_DirectAllot_Fragment extends Fragment {
     private WebService webService;
     private Tools tools;
     private ProgressDialog PD;
-    private List<InputLibraryBill> inputLibraryBills;
+    private List<DirectAllotNotificationBean> directAllotNotificationBeanList;
 
     public static Select_DirectAllot_Fragment newInstance() {
         Select_DirectAllot_Fragment fragment = new Select_DirectAllot_Fragment();
@@ -73,7 +77,7 @@ public class Select_DirectAllot_Fragment extends Fragment {
         getInputLibraryBillsAsyncTask.execute();
     }
 
-    public class GetInputLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<InputLibraryBill>> {
+    public class GetInputLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<DirectAllotNotificationBean>> {
 
         private RecyclerView recyclerView;
 
@@ -83,7 +87,7 @@ public class Select_DirectAllot_Fragment extends Fragment {
         }
 
         @Override
-        protected List<InputLibraryBill> doInBackground(Integer... params) {
+        protected List<DirectAllotNotificationBean> doInBackground(Integer... params) {
             String DirectAllotBills = "";
             try {
                 InputStream in_withcode = null;
@@ -95,15 +99,15 @@ public class Select_DirectAllot_Fragment extends Fragment {
                 if (ResultXmlList.get(0).getFStatus().equals("1")) {
                     InputStream inputInfoStream = new ByteArrayInputStream(ResultXmlList.get(0).getFInfo().getBytes("UTF-8"));
                     ViseLog.i("ResultXmlList.get(0).getFInfo() = " + ResultXmlList.get(0).getFInfo());
-                    inputLibraryBills = InputXmlAnalysis.getSingleton().GetInputInfoXml(inputInfoStream);
+                    directAllotNotificationBeanList = AnalyAllXml.getSingleton().GetDirectAllotNotification(inputInfoStream);
                     inputInfoStream.close();
                 } else {
-                    inputLibraryBills.clear();
+                    directAllotNotificationBeanList.clear();
                 }
             } catch (Exception e) {
-                ViseLog.d("SelectInputLibraryGetInputLibraryBillsException " + e);
+                ViseLog.d("GetInputLibraryBillsAsyncTask Exception " + e);
             }
-            return inputLibraryBills;
+            return directAllotNotificationBeanList;
         }
 
         /**
@@ -111,7 +115,7 @@ public class Select_DirectAllot_Fragment extends Fragment {
          * 在doInBackground方法执行结束之后在运行，并且运行在UI线程当中 可以对UI空间进行设置
          */
         @Override
-        protected void onPostExecute(final List<InputLibraryBill> result) {
+        protected void onPostExecute(final List<DirectAllotNotificationBean> result) {
             try {
                 PD.dismiss();
                 if (result.size() >= 0) {
@@ -119,14 +123,14 @@ public class Select_DirectAllot_Fragment extends Fragment {
                     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     recyclerView.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
                     recyclerView.setLayoutManager(layoutManager);
-                    SelectInput_FullAdapter adapter = new SelectInput_FullAdapter(getActivity(), result);
+                    DirectAllotNotification_Adapter adapter = new DirectAllotNotification_Adapter(getActivity(), result);
                     recyclerView.setAdapter(adapter);
-                    adapter.setOnItemClickLitener(new SelectInput_FullAdapter.OnItemClickLitener() {
+                    adapter.setOnItemClickLitener(new DirectAllotNotification_Adapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
-                            Intent intent = new Intent(getActivity(), NewInputLibraryActivity.class);
+                            Intent intent = new Intent(getActivity(), AllotMainActiivty.class);
                             intent.putExtra("FGUID", result.get(position).getFGuid());
-                            ViseLog.i("FGUID" + result.get(position).getFGuid());
+                            ViseLog.i("DirectAllot FGUID" + result.get(position).getFGuid());
                             startActivity(intent);
                         }
 
@@ -136,10 +140,10 @@ public class Select_DirectAllot_Fragment extends Fragment {
                     });
                 }
             } catch (Exception e) {
-                ViseLog.d("Select适配RV数据错误" + e);
+                ViseLog.d("DirectAllot Select适配RV数据错误" + e);
                 tools.showshort(getActivity(), "出库数据加载错误，请重新打开");
             }
-            ViseLog.i("出库单返回数据" + result);
+            ViseLog.i("DirectAllot 出库单返回数据" + result);
         }
 
         //该方法运行在UI线程当中,并且运行在UI线程当中 可以对UI空间进行设置
@@ -150,83 +154,7 @@ public class Select_DirectAllot_Fragment extends Fragment {
         }
     }
 
-    public List getOutLibraryFromXMl(InputStream stream) throws SAXException, IOException, ParserConfigurationException {
-        SAXParserFactory factory = SAXParserFactory.newInstance();//创建SAX解析工厂
-        javax.xml.parsers.SAXParser parser = factory.newSAXParser();//创建SAX解析器
-        SAXHandler handler = new SAXHandler();//创建处理函数
-        parser.parse(stream, handler);//开始解析
-        List<InputLibraryBill> OutLibrary = handler.getBills();
-        return OutLibrary;
-    }
-
-    public class SAXHandler extends DefaultHandler {
-        private List<InputLibraryBill> Inputbills;
-        private InputLibraryBill Bill;// 当前解析的student
-        private String tag;// 当前解析的标签
-
-        public List<InputLibraryBill> getBills() {
-            if (Inputbills != null) {
-                return Inputbills;
-            }
-            return null;
-        }
-
-        @Override
-        public void startDocument() throws SAXException {
-            // 文档开始
-            Inputbills = new ArrayList<InputLibraryBill>();
-        }
-
-        @Override
-        public void endDocument() throws SAXException {
-        }
-
-        @Override
-        public void startElement(String uri, String localName, String qName,
-                                 Attributes attributes) throws SAXException {
-            tag = localName;
-            if (localName.equals("Head")) {
-                Bill = new InputLibraryBill();
-            }
-        }
-
-        @Override
-        public void endElement(String uri, String localName, String qName)
-                throws SAXException {
-            // 节点结束
-            if (localName.equals("Head")) {
-                Inputbills.add(Bill);
-                Bill = null;
-            }
-            tag = null;
-        }
-
-        @Override
-        public void characters(char[] ch, int start, int length)
-                throws SAXException {
-            String data = new String(ch, start, length);
-            if (data != null && tag != null) {
-                if (tag.equals("FGuid")) {
-                    Bill.setFGuid(data);
-                } else if (tag.equals("FCode")) {
-                    Bill.setFCode(data);
-                } else if (tag.equals("FStock")) {
-                    Bill.setFStock(data);
-                } else if (tag.equals("FStock_Name")) {
-                    Bill.setFStock_Name(data);
-                } else if (tag.equals("FTransactionType")) {
-                    Bill.setFTransactionType(data);
-                } else if (tag.equals("FTransactionType_Name")) {
-                    Bill.setFTransactionType_Name(data);
-                } else if (tag.equals("FDate")) {
-                    Bill.setFDate(data);
-                }
-            }
-
-        }
-    }
-
-    public List<InputLibraryBill> GetSelectBills() {
-        return this.inputLibraryBills;
+    public List<DirectAllotNotificationBean> GetSelectBills() {
+        return this.directAllotNotificationBeanList;
     }
 }

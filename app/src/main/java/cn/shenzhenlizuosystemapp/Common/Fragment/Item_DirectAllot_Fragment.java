@@ -15,34 +15,37 @@ import com.vise.log.ViseLog;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.shenzhenlizuosystemapp.Common.Adapter.DirectAllotNotification_Adapter;
 import cn.shenzhenlizuosystemapp.Common.Adapter.SelectInput_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotNotificationBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
+import cn.shenzhenlizuosystemapp.Common.UI.DirectAllot.AllotMainActiivty;
 import cn.shenzhenlizuosystemapp.Common.UI.NewInputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
 
 public class Item_DirectAllot_Fragment extends Fragment {
 
-    private static List<InputLibraryBill> selectInputLibraryList;
-    private RecyclerView RV_CastAbout;
+    private static List<DirectAllotNotificationBean> directAllotNotificationBeanList;
+    private RecyclerView RV_SearchSelectDirectAllot;
     private ProgressDialog PD;
     private Tools tools;
     private WebService webService;
 
-    public static Item_DirectAllot_Fragment newInstance(List<InputLibraryBill> selectInputLibraryData) {
-        selectInputLibraryList = new ArrayList<InputLibraryBill>();
-        selectInputLibraryList.clear();
-        Item_DirectAllot_Fragment.selectInputLibraryList = selectInputLibraryData;
+    public static Item_DirectAllot_Fragment newInstance(List<DirectAllotNotificationBean> SearchDirectAllotList) {
+        directAllotNotificationBeanList = new ArrayList<DirectAllotNotificationBean>();
+        directAllotNotificationBeanList.clear();
+        Item_DirectAllot_Fragment.directAllotNotificationBeanList = SearchDirectAllotList;
         return new Item_DirectAllot_Fragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.init_select_quitlibrary, container, false);
-        RV_CastAbout = view.findViewById(R.id.RV_InitSelectFull);
+        View view = inflater.inflate(R.layout.direct_allot_fragment, container, false);
+        RV_SearchSelectDirectAllot = view.findViewById(R.id.RV_SelectDirectAllot);
         tools = new Tools();
         webService = new WebService(this.getActivity());
         PD = new ProgressDialog(this.getActivity());
@@ -51,25 +54,25 @@ public class Item_DirectAllot_Fragment extends Fragment {
         try {
             ToLoadData();
         } catch (Exception e) {
-            ViseLog.d("CastAboutFragment适配数据异常" + e);
+            ViseLog.d("Item_DirectAllot_Fragment 适配数据异常" + e);
         }
         return view;
     }
 
     private void ToLoadData() {
-        if (selectInputLibraryList.size() >= 0) {
+        if (directAllotNotificationBeanList.size() >= 0) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            RV_CastAbout.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
-            RV_CastAbout.setLayoutManager(layoutManager);
-            SelectInput_FullAdapter adapter = new SelectInput_FullAdapter(getActivity(), selectInputLibraryList);
-            RV_CastAbout.setAdapter(adapter);
-            adapter.setOnItemClickLitener(new SelectInput_FullAdapter.OnItemClickLitener() {
+            RV_SearchSelectDirectAllot.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
+            RV_SearchSelectDirectAllot.setLayoutManager(layoutManager);
+            DirectAllotNotification_Adapter adapter = new DirectAllotNotification_Adapter(getActivity(), directAllotNotificationBeanList);
+            RV_SearchSelectDirectAllot.setAdapter(adapter);
+            adapter.setOnItemClickLitener(new DirectAllotNotification_Adapter.OnItemClickLitener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    Intent intent = new Intent(getActivity(),NewInputLibraryActivity.class);
-                    intent.putExtra("FGUID",selectInputLibraryList.get(position).getFGuid());
-                    ViseLog.i("FGUID"+selectInputLibraryList.get(position).getFGuid());
+                    Intent intent = new Intent(getActivity(),AllotMainActiivty.class);
+                    intent.putExtra("FGUID",directAllotNotificationBeanList.get(position).getFGuid());
+                    ViseLog.i("FGUID"+directAllotNotificationBeanList.get(position).getFGuid());
                     startActivity(intent);
                 }
 

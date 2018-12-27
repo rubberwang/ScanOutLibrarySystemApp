@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/SelectOutLibraryItem"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_marginTop="10dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/SelectItemText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/DirectAllotNotification_FCode"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/TV_DirectAllotNotification_FCode"
+            style="@style/SelectItemContentText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:gravity="center_vertical"
+            android:textSize="13sp" />
+
+        <TextView
+            style="@style/SelectItemText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/DirectAllotNotification_FData"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/TV_DirectAllotNotification_FData"
+            style="@style/SelectItemContentText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:gravity="center_vertical"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/SelectItemText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/DirectAllotNotification_FOutStockName"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/TV_DirectAllotNotification_FOutStockName"
+            style="@style/SelectItemContentText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:gravity="center_vertical"
+
+            android:textSize="13sp" />
+
+        <TextView
+            style="@style/SelectItemText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/DirectAllotNotification_FInStockName"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/TV_DirectAllotNotification_FInStockName"
+            style="@style/SelectItemContentText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:gravity="center_vertical"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+</LinearLayout>
