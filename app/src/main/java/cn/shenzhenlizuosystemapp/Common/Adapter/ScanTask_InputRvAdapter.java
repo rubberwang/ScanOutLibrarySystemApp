@@ -22,14 +22,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
+
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
-import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.InputStockAdapter;
-import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
-import cn.shenzhenlizuosystemapp.Common.Xml.InputStockXmlAnalysis;
 import cn.shenzhenlizuosystemapp.R;
 
 public class ScanTask_InputRvAdapter extends RecyclerView.Adapter {

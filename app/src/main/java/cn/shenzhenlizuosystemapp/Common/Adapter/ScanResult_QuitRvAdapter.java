@@ -38,7 +38,7 @@ public class ScanResult_QuitRvAdapter extends RecyclerView.Adapter {
     @Override
     //重写onCreateViewHolder方法，返回一个自定义的ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ViewHoders viewHoders = new ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.scaning_result_item, parent, false));
+        ViewHoders viewHoders = new ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.scaning_quitresult_item, parent, false));
         return viewHoders;
     }
 
@@ -76,7 +76,7 @@ public class ScanResult_QuitRvAdapter extends RecyclerView.Adapter {
         public ViewHoders(View itemView) {
             super(itemView);
             TV_scanData = (TextView) itemView.findViewById(R.id.TV_scanData);
-            Tv_TypeResult = (TextView)itemView.findViewById(R.id.Tv_TypeResult);
+            Tv_TypeResult = (TextView) itemView.findViewById(R.id.Tv_TypeResult);
         }
     }
 

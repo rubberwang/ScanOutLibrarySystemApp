@@ -1,8 +1,8 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
 
 public class QuitAdapterReturn {
-    private String FStatus;
-    private String FInfo;
+    private String FStatus;//状态
+    private String FInfo;//信息
 
     public String getFStatus() {
         return FStatus;

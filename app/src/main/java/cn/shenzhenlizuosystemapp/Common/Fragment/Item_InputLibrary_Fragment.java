@@ -41,7 +41,7 @@ public class Item_InputLibrary_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.init_select_quitlibrary, container, false);
+        View view = inflater.inflate(R.layout.init_select_inputlibrary, container, false);
         RV_CastAbout = view.findViewById(R.id.RV_InitSelectFull);
         tools = new Tools();
         webService = new WebService(this.getActivity());

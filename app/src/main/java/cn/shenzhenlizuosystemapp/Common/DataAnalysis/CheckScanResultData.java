@@ -1,6 +1,6 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
 
-public class ScanResultData {
+public class CheckScanResultData {
 
     private String ScanData;
     private String Name;

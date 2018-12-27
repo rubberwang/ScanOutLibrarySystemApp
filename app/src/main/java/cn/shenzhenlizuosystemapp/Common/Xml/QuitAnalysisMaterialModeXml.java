@@ -9,39 +9,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.MaterialModeBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitMaterialModeBean;
 
-public class AnalysisMaterialModeXml {
+public class QuitAnalysisMaterialModeXml {
 
-    private volatile static AnalysisMaterialModeXml analysisMaterialModeXml;
+    private volatile static QuitAnalysisMaterialModeXml analysisMaterialModeXml;
 
-    public static AnalysisMaterialModeXml getSingleton() {
+    public static QuitAnalysisMaterialModeXml getSingleton() {
         if (analysisMaterialModeXml == null) {
-            synchronized (AnalysisMaterialModeXml.class) {
+            synchronized (QuitAnalysisMaterialModeXml.class) {
                 if (analysisMaterialModeXml == null) {
-                    analysisMaterialModeXml = new AnalysisMaterialModeXml();
+                    analysisMaterialModeXml = new QuitAnalysisMaterialModeXml();
                 }
             }
         }
         return analysisMaterialModeXml;
     }
 
-    public static List<MaterialModeBean> GetMaterialModeInfo(InputStream inputStream) {
+    public static List<QuitMaterialModeBean> GetMaterialModeInfo(InputStream inputStream) {
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setInput(inputStream, "UTF-8");
             int eventType = parser.getEventType();
-            MaterialModeBean materialModeBean = null;
-            List<MaterialModeBean> materialModeBeanList = null;
+            QuitMaterialModeBean materialModeBean = null;
+            List<QuitMaterialModeBean> materialModeBeanList = null;
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
-                        materialModeBeanList = new ArrayList<MaterialModeBean>();
+                        materialModeBeanList = new ArrayList<QuitMaterialModeBean>();
                         break;
                     case XmlPullParser.START_TAG:
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("Table0")) {
-                            materialModeBean = new MaterialModeBean();
+                            materialModeBean = new QuitMaterialModeBean();
                         } else if ("FGuid".equals(parser.getName())) {
                             if (Tools.IsObjectNull(materialModeBean)) {
                                 materialModeBean.setFGuid(parser.nextText());

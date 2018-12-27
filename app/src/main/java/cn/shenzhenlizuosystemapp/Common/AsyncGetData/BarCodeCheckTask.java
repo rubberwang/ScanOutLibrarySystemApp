@@ -50,14 +50,14 @@ public  class BarCodeCheckTask extends AsyncTask<String, Void, String> {
             ViseLog.i("BarCodeCheckTask StatuResStr = " + StatuResStr);
             InputStream Is_statu = new ByteArrayInputStream(StatuResStr.getBytes("UTF-8"));
             List<AdapterReturn> statureslist = AnalysisReturnsXml.getSingleton().GetReturn(Is_statu);
-            if (statureslist.get(0).getFStatus().equals("1")) {
+            if (statureslist.get(0).getFStatus().equals("1")) {//判断条码解析接口返回状态是否为1
                 ViseLog.i("BarCodeCheckTask StatuResStr = " + statureslist.get(0).getFInfo());
-                return statureslist.get(0).getFInfo();
+                return statureslist.get(0).getFInfo();//获取条码接口传来的信息
             } else {
                 return "EX"+statureslist.get(0).getFInfo();
             }
         } catch (Exception e) {
-            ViseLog.i("BarCodeCheckTask Exception = " + e);
+            ViseLog.i("BarCodeCheckTask Exception = " + e);//抛出条码解析接口返回异常
             return "" + e;
         }
     }

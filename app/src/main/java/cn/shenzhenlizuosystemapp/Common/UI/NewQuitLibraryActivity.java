@@ -52,9 +52,9 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitSubBodyBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitSubmitDataBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitTaskRvData;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.MaterialModeBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Stock_Return;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitMaterialModeBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitStockBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitStock_Return;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.Port.QuitBarCodeCheckPort;
 import cn.shenzhenlizuosystemapp.Common.Port.QuitBillCreate;
@@ -65,7 +65,7 @@ import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.QuitMaterialModeAdapter;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.WebBean.QuitLibraryAllInfo;
-import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisMaterialModeXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.QuitAnalysisMaterialModeXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.QuitLibraryXmlAnalysis;
 import cn.shenzhenlizuosystemapp.Common.Xml.QuitStockXmlAnalysis;
@@ -88,14 +88,14 @@ public class NewQuitLibraryActivity extends BaseActivity{
     private String HeadID = "";
     private boolean IsSerialNumber = true;
     private boolean IsAddSerialNumber = false;
-
+    private boolean IsSave = false;
 
     //数组
     private List<ChildQuitTag> childQuitTagList = null;
     private List<QuitTaskRvData> quitTaskRvDataList = null;
-    private List<StockBean> stockBeans = null;
-    private List<StockBean> stockBeanList = null;
-    private List<MaterialModeBean> materialModeBeanList = new ArrayList<MaterialModeBean>();
+    private List<QuitStockBean> stockBeans = null;
+    private List<QuitStockBean> stockBeanList = null;
+    private List<QuitMaterialModeBean> materialModeBeanList = new ArrayList<QuitMaterialModeBean>();
     private List<QuitSubBodyBean> QuitSubmitList = new ArrayList<QuitSubBodyBean>();
     private List<String> CheckFGuid = new ArrayList<String>();
 
@@ -126,7 +126,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
     private Spinner Sp_Label;
     private MyProgressDialog myProgressDialog;
 
-    private int GetSpinnerPos(List<StockBean> Datas, String value) {
+    private int GetSpinnerPos(List<QuitStockBean> Datas, String value) {
         for (int i = 0; i < Datas.size(); i++) {
             if (Datas.get(i).getFName().equals(value)) {
                 return i;
@@ -151,9 +151,11 @@ public class NewQuitLibraryActivity extends BaseActivity{
         getLifecycle().addObserver(quitLibraryObServer);
         webService = WebService.getSingleton(MContect);
         InitClick();
-        InitRecycler();
         GetQuitLibraryBillsAsyncTask getQuitLibraryBillsAsyncTask = new GetQuitLibraryBillsAsyncTask();
         getQuitLibraryBillsAsyncTask.execute();
+        Drawable drawable = getResources().getDrawable(R.drawable.circularbead_gray);
+        TV_Sumbit.setBackground(drawable);
+        TV_Sumbit.setTextColor(getResources().getColor(R.color.Black));
     }
 
     @Override
@@ -214,20 +216,22 @@ public class NewQuitLibraryActivity extends BaseActivity{
 
             @Override
             public void onClick(View view) {
-                tools.ShowOnClickDialog(MContect, "确认保存吗？", new View.OnClickListener() {
+                if (IsSave) {
+                    tools.ShowOnClickDialog(MContect, "确认保存吗？", new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View view) {
-                        CreateBillData();
-                        tools.DisappearDialog();
-                    }
-                }, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            CreateBillData();
+                            tools.DisappearDialog();
+                        }
+                    }, new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View view) {
-                        tools.DisappearDialog();
-                    }
-                }, false);
+                        @Override
+                        public void onClick(View view) {
+                            tools.DisappearDialog();
+                        }
+                    }, false);
+                }
             }
         });
 
@@ -275,7 +279,6 @@ public class NewQuitLibraryActivity extends BaseActivity{
         if (Tools.IsObjectNull(childQuitTagList)){
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            //RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
             RV_GetInfoTable.setLayoutManager(layoutManager);
             scanResult_Quit_rvAdapter = new ScanResult_QuitRvAdapter(this, childQuitTagList);
             RV_GetInfoTable.setAdapter(scanResult_Quit_rvAdapter);
@@ -303,13 +306,14 @@ public class NewQuitLibraryActivity extends BaseActivity{
         RV_ScanInfoTable.setAdapter(scanTask_quit_rvAdapter);
         scanTask_quit_rvAdapter.setOnItemClickLitener(new ScanTask_QuitRvAdapter.OnItemClickLitener() {
             @Override
-            public void onItemClick(View view,final int position) {
+            public void onItemClick(View view, final int position) {
                 if (Integer.parseInt(quitTaskRvDataList.get(position).getFAuxQty().split("\\.")[0]) <= Integer.parseInt(quitTaskRvDataList.get(position).getFThisAuxQty().split("\\.")[0]) +
                         Integer.parseInt(quitTaskRvDataList.get(position).getFExecutedAuxQty().split("\\.")[0])) {
                     tools.ShowDialog(MContect, "这张单已扫描完成");
                 } else {
                     if (!Is_QuitNumber_Mode) {
-                        LockResultPort lockResultPort = new LockResultPort() {
+                        if (scanTask_quit_rvAdapter.getselection()!=position){
+                            LockResultPort lockResultPort = new LockResultPort() {
                             @Override
                             public void onStatusResult(String res) {
                                 myProgressDialog.dismiss();
@@ -328,6 +332,12 @@ public class NewQuitLibraryActivity extends BaseActivity{
                         };
                         QuitBodyLockTask quitBodyLockTask = new QuitBodyLockTask(lockResultPort, webService, quitTaskRvDataList.get(position).getFGuid(), myProgressDialog);
                         quitBodyLockTask.execute();
+                        } else {
+                            childQuitTagList.clear();
+                            scanResult_Quit_rvAdapter.notifyDataSetChanged();
+                            scanTask_quit_rvAdapter.setSelection(-1);
+                            scanTask_quit_rvAdapter.notifyDataSetChanged();//取消选中
+                        }
                     } else {
                         tools.ShowDialog(MContect, "检测到有扫描数据，请先清空或提交");
                     }
@@ -340,7 +350,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
         });
     }
 
-    private void InitSp(List<StockBean> stockBeans, String StockName) {
+    private void InitSp(List<QuitStockBean> stockBeans, String StockName) {
         if (stockBeans.size() >= 0) {
             QuitStockAdapter QuitStockAdapter = new QuitStockAdapter(stockBeans, NewQuitLibraryActivity.this);
             Sp_house.setAdapter(QuitStockAdapter);
@@ -394,7 +404,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
         }
     }
 
-    private class AsyncGetStocksCell extends AsyncTask<String, Void, List<StockBean>> {
+    private class AsyncGetStocksCell extends AsyncTask<String, Void, List<QuitStockBean>> {
 
         private int pos = 0;
 
@@ -403,7 +413,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
         }
 
         @Override
-        protected List<StockBean> doInBackground(String... params) {
+        protected List<QuitStockBean> doInBackground(String... params) {
             stockBeanList = new ArrayList<>();
             try {
                 String StocksCell = webService.GetStocksCell(ConnectStr.ConnectionToString, stockBeans.get(pos).getFGuid());
@@ -422,7 +432,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
             return stockBeanList;
         }
 
-        protected void onPostExecute(List<StockBean> result) {
+        protected void onPostExecute(List<QuitStockBean> result) {
             if (result.size() >= 0) {
                 QuitStockAdapter QuitStockAdapter = new QuitStockAdapter(result, NewQuitLibraryActivity.this);
                 Sp_QuitHouseSpace.setAdapter(QuitStockAdapter);
@@ -436,7 +446,6 @@ public class NewQuitLibraryActivity extends BaseActivity{
 
                     @Override
                     public void onNothingSelected(AdapterView<?> adapterView) {
-
                     }
                 });
             }
@@ -468,7 +477,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
                     BodyinfoStr.close();
                     Stocks = webService.GetStocks(ConnectStr.ConnectionToString);
                     in_Stocks = new ByteArrayInputStream(Stocks.getBytes("UTF-8"));
-                    List<Stock_Return> stock_returnList = QuitStockXmlAnalysis.getSingleton().GetXmlStockReturn(in_Stocks);
+                    List<QuitStock_Return> stock_returnList = QuitStockXmlAnalysis.getSingleton().GetXmlStockReturn(in_Stocks);
                     if (stock_returnList.get(0).getFStatus().equals("1")) {
                         InputStream In_StockInfo = new ByteArrayInputStream(stock_returnList.get(0).getFInfo().getBytes("UTF-8"));
                         stockBeans = QuitStockXmlAnalysis.getSingleton().GetXmlStockInfo(In_StockInfo);
@@ -569,12 +578,12 @@ public class NewQuitLibraryActivity extends BaseActivity{
         }, false);
     }
 
-    private class GetMaterialMode extends AsyncTask<String, Void, List<MaterialModeBean>> {
+    private class GetMaterialMode extends AsyncTask<String, Void, List<QuitMaterialModeBean>> {
 
         @Override
-        protected List<MaterialModeBean> doInBackground(String... params) {
+        protected List<QuitMaterialModeBean> doInBackground(String... params) {
             String ModeXml = "";
-            List<MaterialModeBean> materialModeBeanList = new ArrayList<>();
+            List<QuitMaterialModeBean> materialModeBeanList = new ArrayList<>();
             List<AdapterReturn> adapterReturnList;
             try {
                 ModeXml = webService.GetMaterialLabelTemplet(ConnectStr.ConnectionToString, params[0]);
@@ -583,7 +592,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
                 IS_ModeXml.close();
                 if (adapterReturnList.get(0).getFStatus().equals("1")) {
                     InputStream IS_ModeInfoXml = new ByteArrayInputStream(adapterReturnList.get(0).getFInfo().getBytes("UTF-8"));
-                    materialModeBeanList = AnalysisMaterialModeXml.getSingleton().GetMaterialModeInfo(IS_ModeInfoXml);
+                    materialModeBeanList = QuitAnalysisMaterialModeXml.getSingleton().GetMaterialModeInfo(IS_ModeInfoXml);
                     IS_ModeInfoXml.close();
                 } else {
                     materialModeBeanList.clear();
@@ -595,7 +604,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
             return materialModeBeanList;
         }
 
-        protected void onPostExecute(List<MaterialModeBean> result) {
+        protected void onPostExecute(List<QuitMaterialModeBean> result) {
             if (result.size() >= 0) {
                 materialModeBeanList = result;
                 QuitMaterialModeAdapter QuitStockAdapter = new QuitMaterialModeAdapter(materialModeBeanList, NewQuitLibraryActivity.this);
@@ -747,7 +756,12 @@ public class NewQuitLibraryActivity extends BaseActivity{
                     materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data);
             barCodeCheckTask.execute();
         } else {
-            tools.ShowDialog(MContect, "请选择单据分路");
+            if (!TextUtils.isEmpty(msg.data)) {
+                int pos = GetSpinnerPos(stockBeanList, msg.data);
+                if (pos != -1) {
+                    Sp_QuitHouseSpace.setSelection(pos);
+                }
+            }
         }
     }
 
@@ -757,19 +771,30 @@ public class NewQuitLibraryActivity extends BaseActivity{
                 if (!TextUtils.isEmpty(Et_ScanNumber.getText().toString())) {
                     if (CheckGuid(CheckFGuid, FBarcodeLib)) {
                         IsSerialNumber = true;
-                        if ( Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getNoSend()) >=  Tools.StringOfFloat(Et_ScanNumber.getText().toString())) {
+                        if (Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getNoSend()) >= Tools.StringOfFloat(Et_ScanNumber.getText().toString())) {
                             if (IsAddSerialNumber) {
                                 CheckFGuid.add(FBarcodeLib);
                                 IsAddSerialNumber = false;
                             }
+                            Sp_house.setEnabled(false);
+                            Sp_QuitHouseSpace.setEnabled(false);
+                            Drawable drawable_border = getResources().getDrawable(R.drawable.border);
+                            Sp_house.setBackground(drawable_border);
+                            Sp_QuitHouseSpace.setBackground(drawable_border);
+
+                            IsSave = true;
+                            Drawable drawable_purple = getResources().getDrawable(R.drawable.circularbead_purple);
+                            TV_Sumbit.setBackground(drawable_purple);
+                            TV_Sumbit.setTextColor(getResources().getColor(R.color.White));
+
                             QuitSubBodyBean subBodyBean = new QuitSubBodyBean();
                             subBodyBean.setFBillBodyID(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
                             subBodyBean.setFBarcodeLib(FBarcodeLib);
                             subBodyBean.setInputLibrarySum(String.valueOf(Et_ScanNumber.getText().toString()));
-                            subBodyBean.setFStockCellID(stockBeanList.get(SpQuitHouseSpaceIndex).getFGuid());
+
                             QuitSubmitList.add(subBodyBean);
 
-                            float Sum =  Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty()) +
+                            float Sum = Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty()) +
                                     Tools.StringOfFloat(Et_ScanNumber.getText().toString());
                             String SetFThisAuxQty = String.valueOf(Sum);
                             quitTaskRvDataList.get(RV_ScanInfoTableIndex).setFThisAuxQty(SetFThisAuxQty);
@@ -809,20 +834,24 @@ public class NewQuitLibraryActivity extends BaseActivity{
         if (is_click) {
             Drawable drawable = getResources().getDrawable(R.drawable.circularbead_purple);
             TV_Save.setBackground(drawable);
+            TV_Clear.setBackground(drawable);
             TV_Save.setTextColor(getResources().getColor(R.color.White));
+            TV_Clear.setTextColor(getResources().getColor(R.color.White));
         } else {
-            Drawable drawable = getResources().getDrawable(R.color.gray_64);
+            Drawable drawable = getResources().getDrawable(R.drawable.circularbead_gray);
             TV_Save.setBackground(drawable);
+            TV_Clear.setBackground(drawable);
             TV_Save.setTextColor(getResources().getColor(R.color.Black));
+            TV_Clear.setTextColor(getResources().getColor(R.color.Black));
         }
     }
 
     public String NoInputLibrary() {
         if (!TextUtils.isEmpty(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty()) && !TextUtils.isEmpty(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty())) {
-            float noSend =  Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty()) - (Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty()) +
+            float noSend = Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty()) - (Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty()) +
                     Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty()));
             String NoSendSum = String.valueOf(noSend);
-            ViseLog.i("NoInputLibrary = " + NoSendSum);
+            ViseLog.i("NoQuitLibrary = " + NoSendSum);
             return NoSendSum;
         }
         return "";
@@ -850,6 +879,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
     }
 
     private void CreateBillData() {
+
         QuitBillCreate inputBillCreate = new QuitBillCreate() {
             @Override
             public void onResult(String Info) {
@@ -860,7 +890,13 @@ public class NewQuitLibraryActivity extends BaseActivity{
                         @Override
                         public void onClick(View view) {
                             tools.DisappearDialog();
-                            ViewManager.getInstance().finishActivity(NewQuitLibraryActivity.this);
+                            Sp_house.setEnabled(true);
+                            Sp_QuitHouseSpace.setEnabled(true);
+                            scanTask_quit_rvAdapter.setSelection(-1);
+                            scanTask_quit_rvAdapter.notifyDataSetChanged();//选中
+                            QuitSubmitList.clear();
+                            GetQuitLibraryBillsAsyncTask getInputLibraryBillsAsyncTask = new GetQuitLibraryBillsAsyncTask();
+                            getInputLibraryBillsAsyncTask.execute();
                         }
                     }, new View.OnClickListener() {
                         @Override
@@ -872,8 +908,9 @@ public class NewQuitLibraryActivity extends BaseActivity{
             }
         };
         QuitBillCreateTask inputBillCreateTask = new QuitBillCreateTask(HeadID, stockBeans.get(SpHouseIndex).getFGuid()
-                , QuitSubmitList, webService, myProgressDialog, inputBillCreate);
+,stockBeanList.get(SpQuitHouseSpaceIndex).getFGuid(),QuitSubmitList, webService, myProgressDialog, inputBillCreate);
         inputBillCreateTask.execute();
+
     }
 
     public boolean CheckGuid(List<String> Check, String Result) {

@@ -10,12 +10,12 @@ import java.io.InputStream;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitAdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.Port.LockResultPort;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
-import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.QuitAnalysisReturnsXml;
 
 public class QuitBodyLockTask extends AsyncTask<String, Void, String> {
 
@@ -43,7 +43,7 @@ public class QuitBodyLockTask extends AsyncTask<String, Void, String> {
         try {
             String StatuResult = webService.LockedBillBody(ConnectStr.ConnectionToString, BodyID);
             InputStream Is_StatusResult = new ByteArrayInputStream(StatuResult.getBytes("UTF-8"));
-            List<AdapterReturn> adapterReturnList = AnalysisReturnsXml.getSingleton().GetReturn(Is_StatusResult);
+            List<QuitAdapterReturn> adapterReturnList = QuitAnalysisReturnsXml.getSingleton().GetReturn(Is_StatusResult);
             if (adapterReturnList.get(0).getFStatus().equals("1")) {
                 return "Success";
             } else {

@@ -20,9 +20,9 @@ public class ReceiveData_Recevier extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        if (action.equals(ConnectStr.BarCodeAction)) {
-            String ScanResultStr = intent.getStringExtra(DATA_STRING_TAG);
-            EventBus.getDefault().post(new BarCodeMessage(ScanResultStr));
+        if (action.equals(ConnectStr.BarCodeAction)) {//判断是否为扫描action
+            String ScanResultStr = intent.getStringExtra(DATA_STRING_TAG);//通过intent传输
+            EventBus.getDefault().post(new BarCodeMessage(ScanResultStr));//回调？
         }
     }
 }

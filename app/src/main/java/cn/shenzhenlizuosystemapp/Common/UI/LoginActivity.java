@@ -111,7 +111,7 @@ public class LoginActivity extends BaseActivity {
                          tools.show(LoginActivity.this, "请输入用户名 密码后在勾选保存");
                         IsPassWord_CB.setChecked(false);
                     } else {
-
+                            IsUserName_CB.setChecked(true);
                     }
                 }else {
                     tools.PutStringData("Paw", "", sharedPreferences);
@@ -150,6 +150,7 @@ public class LoginActivity extends BaseActivity {
                         tools.PutStringData("Paw", Edit_PassWord.getText().toString(), sharedPreferences);
                     }else {
                         tools.PutStringData("User", Edit_UserName.getText().toString(), sharedPreferences);
+                        IsUserName_CB.setChecked(true);
                     }
                 }else{
                     if (IsPassWord_CB.isChecked()){
@@ -310,7 +311,7 @@ public class LoginActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
         public void ON_RESUME() {
-            if (tools.GetStringData(sharedPreferences, "IsScanInput").equals("true")) {
+            if (tools.GetStringData(sharedPreferences, "IsScanInput").equals("true")) {//如果设置里面勾选了过滤完成单
                 ConnectStr.ISSHOWNONEXECUTION = true;
             } else {
                 ConnectStr.ISSHOWNONEXECUTION = false;

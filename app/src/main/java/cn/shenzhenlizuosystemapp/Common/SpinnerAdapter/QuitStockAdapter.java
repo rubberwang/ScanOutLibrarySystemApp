@@ -7,17 +7,19 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.vise.log.ViseLog;
+
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitStockBean;
 import cn.shenzhenlizuosystemapp.R;
 
 public class QuitStockAdapter extends BaseAdapter {
 
-    List<StockBean> data;
+    List<QuitStockBean> data;
     Context context;
 
-    public QuitStockAdapter(List<StockBean> itemData, Context context) {
+    public QuitStockAdapter(List<QuitStockBean> itemData, Context context) {
         this.data = itemData;
         this.context = context;
     }

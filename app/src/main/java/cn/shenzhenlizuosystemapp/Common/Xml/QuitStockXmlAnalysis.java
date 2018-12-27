@@ -10,8 +10,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Stock_Return;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitStockBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitStock_Return;
 
 public class QuitStockXmlAnalysis {
 
@@ -28,9 +28,9 @@ public class QuitStockXmlAnalysis {
         return quitStockXmlAnalysis;
     }
 
-    public List<Stock_Return> GetXmlStockReturn(InputStream inputStream) {
-        Stock_Return stock_return = null;
-        List<Stock_Return> stock_returnsList = null;
+    public List<QuitStock_Return> GetXmlStockReturn(InputStream inputStream) {
+        QuitStock_Return stock_return = null;
+        List<QuitStock_Return> stock_returnsList = null;
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setInput(inputStream, "UTF-8");
@@ -38,12 +38,12 @@ public class QuitStockXmlAnalysis {
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
-                        stock_returnsList = new ArrayList<Stock_Return>();
+                        stock_returnsList = new ArrayList<QuitStock_Return>();
                         break;
                     case XmlPullParser.START_TAG:
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("T_Return")) {
-                            stock_return = new Stock_Return();
+                            stock_return = new QuitStock_Return();
                         } else if (name.equalsIgnoreCase("FStatus")) {
                             stock_return.setFStatus(parser.nextText());
                         } else if (name.equalsIgnoreCase("FInfo")) {
@@ -68,9 +68,9 @@ public class QuitStockXmlAnalysis {
         return null;
     }
 
-    public List<StockBean> GetXmlStockInfo(InputStream inputStream) {
-        StockBean stockBeans = null;
-        List<StockBean> stockBeanList = null;
+    public List<QuitStockBean> GetXmlStockInfo(InputStream inputStream) {
+        QuitStockBean stockBeans = null;
+        List<QuitStockBean> stockBeanList = null;
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setInput(inputStream, "UTF-8");
@@ -78,12 +78,12 @@ public class QuitStockXmlAnalysis {
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
-                        stockBeanList = new ArrayList<StockBean>();
+                        stockBeanList = new ArrayList<QuitStockBean>();
                         break;
                     case XmlPullParser.START_TAG:
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("Table0")) {
-                            stockBeans = new StockBean();
+                            stockBeans = new QuitStockBean();
                         } else if (name.equalsIgnoreCase("FGuid")) {
                             stockBeans.setFGuid(parser.nextText());
                         } else if (name.equalsIgnoreCase("FName")) {

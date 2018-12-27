@@ -1,6 +1,6 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
 
-public class SubQuitBody {
+public class QuitSubBody {
     private String FGuid;
     private String FBillBodyID;
     private String FBarcodeLib;

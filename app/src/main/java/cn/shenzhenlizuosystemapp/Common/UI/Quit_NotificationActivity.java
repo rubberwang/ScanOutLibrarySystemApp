@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.vise.log.ViseLog;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class Quit_NotificationActivity extends BaseActivity {
 
     private LinearLayout LL_BackMainTable;
     private Select_QuitLibrary_Fragment selectQuitLibraryFragment;
-    private List<QuitLibraryBill> outLibraryBills;
+    private List<QuitLibraryBill> quitLibraryBills;
     private List<QuitLibraryBill> SearchResultList;
     private Tools tools;
     private Quit_NotificationActivity MContect = null;
@@ -46,9 +47,9 @@ public class Quit_NotificationActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        SearchResultList = new ArrayList<>();
         MContect = new WeakReference<>(Quit_NotificationActivity.this).get();
-        tools  = new Tools();
+        SearchResultList = new ArrayList<>();
+        tools = new Tools();
         InitFragment();
         InitClick();
     }
@@ -59,28 +60,28 @@ public class Quit_NotificationActivity extends BaseActivity {
         PD.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         PD.setCancelable(false);
         LL_BackMainTable = $(R.id.LL_BackMainTable);
-        TV_CastAbout=$(R.id.TV_CastAbout);
+        TV_CastAbout = $(R.id.TV_CastAbout);
         ET_CastAbout = $(R.id.ET_CastAbout);
         Back = $(R.id.Back);
     }
 
-    private void InitClick(){
+    private void InitClick() {
         TV_CastAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ToLoad(ET_CastAbout.getText().toString());
-                ViseLog.i("搜索内容"+ET_CastAbout.getText().toString());
+                ViseLog.i("搜索内容" + ET_CastAbout.getText().toString());
             }
         });
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 ViewManager.getInstance().finishActivity(Quit_NotificationActivity.this);
             }
         });
     }
 
-    private void InitFragment(){
+    private void InitFragment() {
         if (LL_BackMainTable.getVisibility() == View.VISIBLE) {
             LL_BackMainTable.setVisibility(View.GONE);
         }
@@ -96,23 +97,22 @@ public class Quit_NotificationActivity extends BaseActivity {
 
     private int LookForBranch(String ChracterSearch) {
         try {
-            outLibraryBills = selectQuitLibraryFragment.GetSelectBills();
-            if (outLibraryBills.size() >= 0) {
+            quitLibraryBills = selectQuitLibraryFragment.GetSelectBills();
+            if (quitLibraryBills.size() >= 0) {
                 SearchResultList.clear();
-                for (int i = 0; i < outLibraryBills.size(); i++) {
-                    String BoxNumber = outLibraryBills.get(i).getFCode();
+                for (int i = 0; i < quitLibraryBills.size(); i++) {
+                    String BoxNumber = quitLibraryBills.get(i).getFCode();
                     Log.i("huangmin", "BoxNumber " + BoxNumber.charAt(0));
-//                    ||BoxNumber.substring(2,
                     if (BoxNumber.equals(ChracterSearch) || BoxNumber.contains(ChracterSearch)) {
-                        QuitLibraryBill outLibraryBill = new QuitLibraryBill();
-                        outLibraryBill.setFCode(outLibraryBills.get(i).getFCode());
-                        outLibraryBill.setFDate(outLibraryBills.get(i).getFDate());
-                        outLibraryBill.setFTransactionType_Name(outLibraryBills.get(i).getFTransactionType_Name());
-                        outLibraryBill.setFTransactionType(outLibraryBills.get(i).getFTransactionType());
-                        outLibraryBill.setFStock_Name(outLibraryBills.get(i).getFStock_Name());
-                        outLibraryBill.setFStock(outLibraryBills.get(i).getFStock());
-                        outLibraryBill.setFGuid(outLibraryBills.get(i).getFGuid());
-                        SearchResultList.add(outLibraryBill);
+                        QuitLibraryBill quitLibraryBill = new QuitLibraryBill();
+                        quitLibraryBill.setFCode(quitLibraryBills.get(i).getFCode());
+                        quitLibraryBill.setFDate(quitLibraryBills.get(i).getFDate());
+                        quitLibraryBill.setFTransactionType_Name(quitLibraryBills.get(i).getFTransactionType_Name());
+                        quitLibraryBill.setFTransactionType(quitLibraryBills.get(i).getFTransactionType());
+                        quitLibraryBill.setFStock_Name(quitLibraryBills.get(i).getFStock_Name());
+                        quitLibraryBill.setFStock(quitLibraryBills.get(i).getFStock());
+                        quitLibraryBill.setFGuid(quitLibraryBills.get(i).getFGuid());
+                        SearchResultList.add(quitLibraryBill);
                     }
                 }
                 return 1;
@@ -124,7 +124,6 @@ public class Quit_NotificationActivity extends BaseActivity {
         }
         return 0;
     }
-
 
 
     public class ToLoadOutLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, Integer> {
@@ -142,7 +141,7 @@ public class Quit_NotificationActivity extends BaseActivity {
             try {
                 QuitBills = LookForBranch(ChracterSearch);
             } catch (Exception e) {
-                ViseLog.d("SelectOutLibraryGetOutLibraryBillsException " + e);
+                ViseLog.d("SelectQuitLibraryGetQuitLibraryBillsException " + e);
             }
             return QuitBills;
         }
@@ -190,8 +189,8 @@ public class Quit_NotificationActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         super.onKeyDown(keyCode, event);
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            if(getFragmentManager().getBackStackEntryCount()==0){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (getFragmentManager().getBackStackEntryCount() == 0) {
                 ViewManager.getInstance().finishActivity(this);
                 return true;
             }

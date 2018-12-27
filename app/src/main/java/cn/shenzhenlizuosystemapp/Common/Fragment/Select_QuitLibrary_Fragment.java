@@ -98,7 +98,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
                     quitLibraryBills.clear();
                 }
             } catch (Exception e) {
-                ViseLog.d("SelectOutLibraryGetQuitLibraryBillsException " + e);
+                ViseLog.d("SelectQuitLibraryGetQuitLibraryBillsException " + e);
             }
             return quitLibraryBills;
         }
@@ -223,7 +223,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
         }
     }
 
-    public  List<QuitLibraryBill> GetSelectBills() {
+    public List<QuitLibraryBill> GetSelectBills() {
         return this.quitLibraryBills;
     }
 }

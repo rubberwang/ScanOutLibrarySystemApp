@@ -279,7 +279,6 @@ public class NewInputLibraryActivity extends BaseActivity {
         if (Tools.IsObjectNull(childTagList)) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
             RV_GetInfoTable.setLayoutManager(layoutManager);
             scanResult_Input_rvAdapter = new ScanResult_InputRvAdapter(this, childTagList);
             RV_GetInfoTable.setAdapter(scanResult_Input_rvAdapter);

@@ -22,8 +22,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
+
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitTaskRvData;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -126,5 +125,6 @@ public class ScanTask_QuitRvAdapter extends RecyclerView.Adapter {
     public int getselection() {
         return selected;
     }
+
 
 }

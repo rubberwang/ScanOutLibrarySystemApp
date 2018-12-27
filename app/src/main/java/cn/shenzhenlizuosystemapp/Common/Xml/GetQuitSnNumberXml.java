@@ -1,19 +1,15 @@
 package cn.shenzhenlizuosystemapp.Common.Xml;
 
-import android.os.Environment;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlSerializer;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitSubBody;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitSubmitDataBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.SubQuitBody;
 
 public class GetQuitSnNumberXml {
 
@@ -68,13 +64,13 @@ public class GetQuitSnNumberXml {
         }
         return null;
     }
-    public static List<SubQuitBody> ReadSubBodyPullXML(InputStream inputStream) {
+    public static List<QuitSubBody> ReadSubBodyPullXML(InputStream inputStream) {
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setInput(inputStream, "UTF-8");
             int eventType = parser.getEventType();
-            SubQuitBody subQuitBody = null;
-            List<SubQuitBody> subBodyList = null;
+            QuitSubBody quitSubBody = null;
+            List<QuitSubBody> subBodyList = null;
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
@@ -83,17 +79,17 @@ public class GetQuitSnNumberXml {
                     case XmlPullParser.START_TAG:
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("BarcodeLib")) {
-                            subQuitBody = new SubQuitBody();
+                            quitSubBody = new QuitSubBody();
                         } else if ("FGuid".equals(parser.getName())) {
                             String Sum = parser.nextText();
-                            subQuitBody.setFBarcodeLib(Sum);
+                            quitSubBody.setFBarcodeLib(Sum);
                         }
                         break;
                     case XmlPullParser.END_TAG:
                         if (parser.getName().equalsIgnoreCase("BarcodeLib")
-                                && subQuitBody != null) {
-                            subBodyList.add(subQuitBody);
-                            subQuitBody = null;
+                                && quitSubBody != null) {
+                            subBodyList.add(quitSubBody);
+                            quitSubBody = null;
                         }
                         break;
                 }

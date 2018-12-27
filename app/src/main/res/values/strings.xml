@@ -55,7 +55,7 @@
     <string name="ManualOperationInput">手动输入</string>
     <string name="Time">通知日期 ：</string>
     <string name="House">发货仓库：</string>
-    <string name="BusType">业务类型：</string>
+    <string name="BusType">类型:</string>
     <string name="Unit">往来单位：</string>
     <string name="BoxNumber">箱数：</string>
     <string name="ConnectPrint">重新连接打印机</string>
@@ -84,7 +84,7 @@
     <string name="InputLibraryType">入库类型:</string>
     <string name="OutLibraryTime">创建时间:</string>
     <string name="CommitStyle">调拨方式:</string>
-    <string name="InputWareHouse">入库仓库:</string>
+    <string name="InputWareHouse">收货仓库:</string>
     <string name="OutWareHouse">出库仓库:</string>
     <string name="DirectCommit">直接调拨</string>
     <string name="InputCommit">入库调拨</string>

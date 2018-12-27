@@ -15,7 +15,6 @@ import com.vise.log.ViseLog;
 import java.util.ArrayList;
 import java.util.List;
 
-//import cn.shenzhenlizuosystemapp.Common.Adapter.SelectInput_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Adapter.SelectQuit_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryBill;
@@ -26,16 +25,16 @@ import cn.shenzhenlizuosystemapp.R;
 
 public class Item_QuitLibrary_Fragment extends Fragment {
 
-    private static List<QuitLibraryBill> selectOutLibraryList;
+    private static List<QuitLibraryBill> selectQuitLibraryList;
     private RecyclerView RV_CastAbout;
     private ProgressDialog PD;
     private Tools tools;
     private WebService webService;
 
-    public static Item_QuitLibrary_Fragment newInstance(List<QuitLibraryBill> selectOutLibraryData) {
-        selectOutLibraryList = new ArrayList<QuitLibraryBill>();
-        selectOutLibraryList.clear();
-        Item_QuitLibrary_Fragment.selectOutLibraryList = selectOutLibraryData;
+    public static Item_QuitLibrary_Fragment newInstance(List<QuitLibraryBill> selectQuitLibraryData) {
+        selectQuitLibraryList = new ArrayList<QuitLibraryBill>();
+        selectQuitLibraryList.clear();
+        Item_QuitLibrary_Fragment.selectQuitLibraryList = selectQuitLibraryData;
         return new Item_QuitLibrary_Fragment();
     }
 
@@ -58,19 +57,19 @@ public class Item_QuitLibrary_Fragment extends Fragment {
     }
 
     private void ToLoadData() {
-        if (selectOutLibraryList.size() >= 0) {
+        if (selectQuitLibraryList.size() >= 0) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             RV_CastAbout.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
             RV_CastAbout.setLayoutManager(layoutManager);
-            SelectQuit_FullAdapter adapter = new SelectQuit_FullAdapter(getActivity(), selectOutLibraryList);
+            SelectQuit_FullAdapter adapter = new SelectQuit_FullAdapter(getActivity(), selectQuitLibraryList);
             RV_CastAbout.setAdapter(adapter);
             adapter.setOnItemClickLitener(new SelectQuit_FullAdapter.OnItemClickLitener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     Intent intent = new Intent(getActivity(),NewQuitLibraryActivity.class);
-                    intent.putExtra("FGUID",selectOutLibraryList.get(position).getFGuid());
-                    ViseLog.i("FGUID"+selectOutLibraryList.get(position).getFGuid());
+                    intent.putExtra("FGUID",selectQuitLibraryList.get(position).getFGuid());
+                    ViseLog.i("FGUID"+selectQuitLibraryList.get(position).getFGuid());
                     startActivity(intent);
                 }
 

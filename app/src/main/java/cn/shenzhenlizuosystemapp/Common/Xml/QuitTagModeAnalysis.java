@@ -10,7 +10,6 @@ import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildQuitTag;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.MaterialModeBean;
 
 public class QuitTagModeAnalysis {
     private volatile static QuitTagModeAnalysis quitLibraryXmlAnalysis;

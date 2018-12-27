@@ -26,7 +26,7 @@ public class QuitTaskRvData {
 
     public void setNoSend(String noSend) {
                 NoSend = noSend;
-           }
+    }
 
     public void setFGuid(String FGuid) {
         this.FGuid = FGuid;

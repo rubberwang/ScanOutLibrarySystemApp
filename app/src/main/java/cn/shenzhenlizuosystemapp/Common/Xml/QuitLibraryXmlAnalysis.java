@@ -347,7 +347,7 @@ public class QuitLibraryXmlAnalysis {
         return null;
     }
 
-    public String CreateQuitXmlStr(String FGuid, String FStockID, List<QuitSubBodyBean> quitSubBodyBeanList) {
+    public String CreateQuitXmlStr(String FGuid, String FStockID,String FStockCellID, List<QuitSubBodyBean> quitSubBodyBeanList) {
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             StringWriter stringWriter = new StringWriter();
@@ -360,9 +360,14 @@ public class QuitLibraryXmlAnalysis {
                 serializer.startTag(null, "FGuid");
                 serializer.text(FGuid);
                 serializer.endTag(null, "FGuid");
+
                 serializer.startTag(null, "FStockID");
                 serializer.text(FStockID);
                 serializer.endTag(null, "FStockID");
+
+                serializer.startTag(null, "FStockCellID");
+                serializer.text(FStockCellID);
+                serializer.endTag(null, "FStockCellID");
                 serializer.endTag(null, "BillHead");
                 for (QuitSubBodyBean quitSubBodyBean : quitSubBodyBeanList) {
                     serializer.startTag(null, "SubBody");
@@ -372,9 +377,6 @@ public class QuitLibraryXmlAnalysis {
                     serializer.startTag(null, "FBarcodeLib");
                     serializer.text(quitSubBodyBean.getFBarcodeLib());
                     serializer.endTag(null, "FBarcodeLib");
-                    serializer.startTag(null, "FStockCellID");
-                    serializer.text(quitSubBodyBean.getFStockCellID());
-                    serializer.endTag(null, "FStockCellID");
                     serializer.startTag(null, "FAuxQty");
                     serializer.text(quitSubBodyBean.getInputLibrarySum());
                     serializer.endTag(null, "FAuxQty");

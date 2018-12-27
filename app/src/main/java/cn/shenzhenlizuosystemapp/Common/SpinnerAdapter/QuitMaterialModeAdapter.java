@@ -9,15 +9,15 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.MaterialModeBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitMaterialModeBean;
 import cn.shenzhenlizuosystemapp.R;
 
 public class QuitMaterialModeAdapter extends BaseAdapter {
 
-    private List<MaterialModeBean> data;
+    private List<QuitMaterialModeBean> data;
     private Context context;
 
-    public QuitMaterialModeAdapter(List<MaterialModeBean> itemData, Context context) {
+    public QuitMaterialModeAdapter(List<QuitMaterialModeBean> itemData, Context context) {
         this.data = itemData;
         this.context = context;
     }

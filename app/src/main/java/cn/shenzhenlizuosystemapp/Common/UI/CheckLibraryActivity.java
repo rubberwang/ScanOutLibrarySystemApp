@@ -20,8 +20,8 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResult_InputRvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckScanResultData;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.EventBusScanDataMsg;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ScanResultData;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -32,7 +32,7 @@ public class CheckLibraryActivity extends BaseActivity {
     private ScanResult_InputRvAdapter scanResultRvAdapter;
 
     private OutLibraryObServer outLibraryObServer;
-    private List<ScanResultData> scanResultData;
+    private List<CheckScanResultData> checkScanResultData;
 
     @Override
     protected int inflateLayout() {
@@ -41,7 +41,7 @@ public class CheckLibraryActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        scanResultData = new ArrayList<>();
+        checkScanResultData = new ArrayList<>();
         outLibraryObServer = new OutLibraryObServer();
         getLifecycle().addObserver(outLibraryObServer);
         EventBus.getDefault().register(this);
@@ -60,7 +60,7 @@ public class CheckLibraryActivity extends BaseActivity {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
         RV_GetInfoTable.setLayoutManager(layoutManager);
-//        scanResultRvAdapter = new ScanResult_InputRvAdapter(this, scanResultData);
+//        scanResultRvAdapter = new ScanResult_InputRvAdapter(this, checkScanResultData);
         RV_GetInfoTable.setAdapter(scanResultRvAdapter);
         scanResultRvAdapter.setOnItemClickLitener(new ScanResult_InputRvAdapter.OnItemClickLitener() {
             @Override
@@ -116,9 +116,9 @@ public class CheckLibraryActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void messageEventBus(EventBusScanDataMsg event) {
         ViseLog.i("EventBus = " + event.ScanDataMsg);
-        ScanResultData scanResult = new ScanResultData();
+        CheckScanResultData scanResult = new CheckScanResultData();
         scanResult.setScanData(event.ScanDataMsg);
-        scanResultData.add(scanResult);
+        checkScanResultData.add(scanResult);
         scanResultRvAdapter.notifyDataSetChanged();
     }
 }
