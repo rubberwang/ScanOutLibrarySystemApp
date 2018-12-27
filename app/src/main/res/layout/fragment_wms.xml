@@ -24,12 +24,11 @@
         android:layout_weight="1"
         android:background="@color/Hui">
 
-        <ImageView
+        <com.youth.banner.Banner
+            android:id="@+id/banner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/lizi"
-            android:scaleType="fitXY" 
-            android:layout_margin="3dp"/>
+        />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

@@ -51,6 +51,7 @@
     <string name="Submit">提 交</string>
     <string name="PleaseInputBoxSum">请输入出库箱号</string>
     <string name="OutLibrary">出库</string>
+    <string name="OutLibraryTime">业务日期</string>
     <string name="Close">取 消</string>
     <string name="ManualOperationInput">手动输入</string>
     <string name="Time">通知日期 ：</string>
@@ -82,7 +83,6 @@
     <string name="OutLibraryWarehouse">仓库名称:</string>
     <string name="OutLibraryType">出库类型:</string>
     <string name="InputLibraryType">入库类型:</string>
-    <string name="OutLibraryTime">创建时间:</string>
     <string name="CommitStyle">调拨方式:</string>
     <string name="InputWareHouse">收货仓库:</string>
     <string name="OutWareHouse">出库仓库:</string>
