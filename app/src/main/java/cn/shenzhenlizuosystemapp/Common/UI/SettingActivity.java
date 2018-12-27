@@ -26,6 +26,7 @@ import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.Port.UnlockPort;
+import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.R;
 
 public class SettingActivity extends BaseActivity {
@@ -37,6 +38,7 @@ public class SettingActivity extends BaseActivity {
     private EditText ET_InputPrinterPort;
     private CheckBox IsScanInput;
     private TextView TV_UnLockAll;
+    private MyProgressDialog myProgressDialog;
 
     private Tools tools;
     private SharedPreferences sharedPreferences;
@@ -91,13 +93,16 @@ public class SettingActivity extends BaseActivity {
         TV_UnLockAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                myProgressDialog.ShowPD("正在清除...");
                 UnlockPort unlockPort = new UnlockPort() {
                     @Override
                     public void onResult(String res) {
                         if (res.equals("success")) {
                             tools.ShowDialog(SettingActivity.this, "清除成功");
+                            myProgressDialog.dismiss();
                         } else {
                             tools.ShowDialog(SettingActivity.this, "清除失败:" + res);
+                            myProgressDialog.dismiss();
                         }
                     }
                 };
@@ -117,6 +122,7 @@ public class SettingActivity extends BaseActivity {
         ET_InputPrinterPort = $(R.id.ET_InputPrinterPort);
         IsScanInput = $(R.id.IsScanInput);
         TV_UnLockAll = $(R.id.TV_UnLockAll);
+        myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
     }
 
     private void DetectionSp() {
