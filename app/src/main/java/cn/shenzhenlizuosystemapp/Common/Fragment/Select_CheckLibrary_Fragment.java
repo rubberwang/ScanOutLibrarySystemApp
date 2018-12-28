@@ -34,6 +34,8 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.UI.CheckLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
+import cn.shenzhenlizuosystemapp.Common.WebBean.CheckAllBean;
+import cn.shenzhenlizuosystemapp.Common.Xml.CheckXmlAnalysis;
 import cn.shenzhenlizuosystemapp.R;
 
 public class Select_CheckLibrary_Fragment extends Fragment {
@@ -43,16 +45,11 @@ public class Select_CheckLibrary_Fragment extends Fragment {
    private WebService webService;
    private Tools tools;
    private ProgressDialog PD;
-   private List<CheckLibraryBill> outLibraryBills;
+   private List<CheckLibraryBill> checkLibraryBills;
 
     public static Select_CheckLibrary_Fragment newInstance() {
         Select_CheckLibrary_Fragment fragment = new Select_CheckLibrary_Fragment();
         return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Nullable
@@ -88,14 +85,22 @@ public class Select_CheckLibrary_Fragment extends Fragment {
             String CheckBills = "";
             try {
                 InputStream in_withcode = null;
-                CheckBills = webService.CheckLibraryNote(ConnectStr.ConnectionToString);
+                CheckBills = webService.GetCheckLibraryNote(ConnectStr.ConnectionToString);
                 ViseLog.i("CheckBills = " + CheckBills);
                 in_withcode = new ByteArrayInputStream(CheckBills.getBytes("UTF-8"));
-                outLibraryBills = getOutLibraryFromXMl(in_withcode);
+                List<CheckAllBean> ResultXmlList = CheckXmlAnalysis.getSingleton().GetAllCheckList(in_withcode);
+                in_withcode.close();
+                if (ResultXmlList.get(0).getFStatus().equals("1")) {
+                    InputStream inputInfoStream = new ByteArrayInputStream(ResultXmlList.get(0).getFInfo().getBytes("UTF-8"));
+                    checkLibraryBills = CheckXmlAnalysis.getSingleton().GetCheckInfoXml(inputInfoStream);
+                    inputInfoStream.close();
+                } else {
+                    checkLibraryBills.clear();
+                }
             } catch (Exception e) {
                 ViseLog.d("SelectOutLibraryGetOutLibraryBillsException " + e);
             }
-            return outLibraryBills;
+            return checkLibraryBills;
         }
 
         /**
@@ -116,7 +121,10 @@ public class Select_CheckLibrary_Fragment extends Fragment {
                     adapter.setOnItemClickLitener(new SelectCheck_FullAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
-                            startActivity(new Intent(getActivity(),CheckLibraryActivity.class));
+                            Intent intent = (new Intent(getActivity(),CheckLibraryActivity.class));
+                            intent.putExtra("FGUID", result.get(position).getFGuid());
+                            ViseLog.i("FGUID" + result.get(position).getFGuid());
+                            startActivity(intent);
                         }
 
                         @Override
@@ -203,7 +211,11 @@ public class Select_CheckLibrary_Fragment extends Fragment {
                     Bill.setFStock(data);
                 } else if (tag.equals("FStock_Name")) {
                     Bill.setFStock_Name(data);
-                }else if (tag.equals("FDate")) {
+                } else if (tag.equals("FTransactionType")) {
+                    Bill.setFTransactionType(data);
+                } else if (tag.equals("FTransactionType_Name")) {
+                    Bill.setFTransactionType_Name(data);
+                } else if (tag.equals("FDate")) {
                     Bill.setFDate(data);
                 }
             }
@@ -212,6 +224,6 @@ public class Select_CheckLibrary_Fragment extends Fragment {
     }
 
     public  List<CheckLibraryBill> GetSelectBills() {
-        return this.outLibraryBills;
+        return this.checkLibraryBills;
     }
 }

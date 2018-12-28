@@ -84,39 +84,6 @@ public class WebService {
     }
 
 
-    public String QuitLibraryNote(String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
-        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetOutStockNotices");
-        soapObject.addProperty("ConnectionToString", ConnectionToString);
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                SoapEnvelope.VER11);
-        envelope.bodyOut = soapObject;
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(soapObject);
-        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
-        httpTransportSE.call("http://www.lzbarcode.com/GetOutStockNotices", envelope);
-        Object object = (Object) envelope.getResponse();
-        String Result = object.toString();
-        return Result;
-    }
-
-
-    public String QuitWareHouseData (String ConnectionToString,String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
-        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetOutStockNoticeBill");
-        soapObject.addProperty("ConnectionToString", ConnectionToString);
-        soapObject.addProperty("BillGuid", BillGuid);
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                SoapEnvelope.VER11);
-        envelope.bodyOut = soapObject;
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(soapObject);
-        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
-        httpTransportSE.call("http://www.lzbarcode.com/GetOutStockNoticeBill", envelope);
-        Object object = (Object) envelope.getResponse();
-        String Result = object.toString();
-        return Result;
-    }
-
-
     public String GetLibraryNote(String ConnectionID) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetInStockNoticeBillsList");
         soapObject.addProperty("ConnectionID", ConnectionID);
@@ -150,16 +117,33 @@ public class WebService {
     }
 
 
-    public String CheckLibraryNote(String ConnectionToString) throws IOException, XmlPullParserException, ClassCastException {
-        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetCheckStockNotices");
-        soapObject.addProperty("ConnectionToString", ConnectionToString);
+    public String GetCheckLibraryNote(String ConnectionID) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetInStockNoticeBillsList");
+        soapObject.addProperty("ConnectionID", ConnectionID);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
         envelope.bodyOut = soapObject;
         envelope.dotNet = true;
         envelope.setOutputSoapObject(soapObject);
         HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
-        httpTransportSE.call("http://www.lzbarcode.com/GetCheckStockNotices", envelope);
+        httpTransportSE.call("http://www.lzbarcode.com/GetInStockNoticeBillsList", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
+
+    public String GetCheckWareHouseData(String ConnectionToString,String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetCheckStockBill");
+        soapObject.addProperty("ConnectionID", ConnectionToString);
+        soapObject.addProperty("BillID", BillGuid);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/GetCheckStockBill", envelope);
         Object object = (Object) envelope.getResponse();
         String Result = object.toString();
         return Result;

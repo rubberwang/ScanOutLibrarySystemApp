@@ -3,6 +3,7 @@ package cn.shenzhenlizuosystemapp.Common.UI;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
+import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -17,8 +18,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResult_InputRvAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResult_CheckRvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
+import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckScanResultData;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.EventBusScanDataMsg;
@@ -28,15 +30,17 @@ import cn.shenzhenlizuosystemapp.R;
 public class CheckLibraryActivity extends BaseActivity {
 
     private TextView Back;
+    private Tools tools = null;
+    private Context MContect;
     private RecyclerView RV_GetInfoTable;
-    private ScanResult_InputRvAdapter scanResultRvAdapter;
+    private ScanResult_CheckRvAdapter scanResultRvAdapter;
 
     private OutLibraryObServer outLibraryObServer;
     private List<CheckScanResultData> checkScanResultData;
 
     @Override
     protected int inflateLayout() {
-        return R.layout.checkwork_layout;
+        return R.layout.scaning_check_layout;
     }
 
     @Override
@@ -58,14 +62,12 @@ public class CheckLibraryActivity extends BaseActivity {
     private void InitRecycler() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        RV_GetInfoTable.addItemDecoration(new RvLinearManageDivider(this, LinearLayoutManager.VERTICAL));
-        RV_GetInfoTable.setLayoutManager(layoutManager);
-//        scanResultRvAdapter = new ScanResult_InputRvAdapter(this, checkScanResultData);
+        RV_GetInfoTable.setLayoutManager(layoutManager);;
         RV_GetInfoTable.setAdapter(scanResultRvAdapter);
-        scanResultRvAdapter.setOnItemClickLitener(new ScanResult_InputRvAdapter.OnItemClickLitener() {
+        scanResultRvAdapter.setOnItemClickLitener(new ScanResult_CheckRvAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                    tools.ShowDialog(MContect, "这张单已扫描完成");
             }
 
             @Override

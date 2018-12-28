@@ -19,8 +19,8 @@ import cn.shenzhenlizuosystemapp.Common.Adapter.SelectCheck_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.UI.CheckLibraryActivity;
+import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
 
 public class Item_CheckLibrary_Fragment extends Fragment {
@@ -67,7 +67,10 @@ public class Item_CheckLibrary_Fragment extends Fragment {
             adapter.setOnItemClickLitener(new SelectCheck_FullAdapter.OnItemClickLitener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    startActivity(new Intent(getActivity(),CheckLibraryActivity.class));
+                    Intent intent = (new Intent(getActivity(),CheckLibraryActivity.class));
+                    intent.putExtra("FGUID",selectSumLibraryList.get(position).getFGuid());
+                    ViseLog.i("FGUID"+selectSumLibraryList.get(position).getFGuid());
+                    startActivity(intent);
                 }
 
                 @Override

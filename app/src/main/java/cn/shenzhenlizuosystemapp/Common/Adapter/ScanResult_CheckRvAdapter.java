@@ -10,17 +10,17 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildCheckTag;
 import cn.shenzhenlizuosystemapp.R;
 
-public class SelectCheck_FullAdapter extends RecyclerView.Adapter {
+public class ScanResult_CheckRvAdapter extends RecyclerView.Adapter {
 
     private Context context;
-    private List<CheckLibraryBill> datas;
+    private List<ChildCheckTag> datas;
     private OnItemClickLitener mOnItemClickLitener;
     private int selected = -1;
 
-    public SelectCheck_FullAdapter(Context context, List<CheckLibraryBill> data) {
+    public ScanResult_CheckRvAdapter(Context context, List<ChildCheckTag> data) {
         this.context = context;
         this.datas = data;
     }
@@ -35,11 +35,10 @@ public class SelectCheck_FullAdapter extends RecyclerView.Adapter {
         this.mOnItemClickLitener = mOnItemClickLitener;
     }
 
-
     @Override
     //重写onCreateViewHolder方法，返回一个自定义的ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ViewHoders viewHoders = new ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.check_library, parent, false));
+        ViewHoders viewHoders = new ViewHoders(LayoutInflater.from(parent.getContext()).inflate(R.layout.scaning_result_item, parent, false));
         return viewHoders;
     }
 
@@ -48,10 +47,8 @@ public class SelectCheck_FullAdapter extends RecyclerView.Adapter {
     //填充onCreateViewHolder方法返回的holder中的控件
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
-            ((ViewHoders) holder).TV_BillSum.setText(datas.get(position).getFCode());
-            ((ViewHoders) holder).TV_WarehouseName.setText(datas.get(position).getFStock_Name());
-            ((ViewHoders) holder).TV_CheckType.setText(datas.get(position).getFTransactionType_Name());
-            ((ViewHoders) holder).TV_CreateTime.setText(datas.get(position).getFDate());
+            ((ViewHoders) holder).TV_scanData.setText(datas.get(position).getValue());
+            ((ViewHoders) holder).Tv_TypeResult.setText(datas.get(position).getName() + ":");
             if (mOnItemClickLitener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -70,20 +67,16 @@ public class SelectCheck_FullAdapter extends RecyclerView.Adapter {
     public int getItemCount() {
         return datas.size();
     }
-    
+
     class ViewHoders extends RecyclerView.ViewHolder {
 
-        private TextView TV_BillSum;
-        private TextView TV_WarehouseName;
-        private TextView TV_CheckType;
-        private TextView TV_CreateTime;
+        private TextView TV_scanData;
+        private TextView Tv_TypeResult;
 
         public ViewHoders(View itemView) {
             super(itemView);
-            TV_BillSum = (TextView) itemView.findViewById(R.id.TV_BillSum);
-            TV_WarehouseName = (TextView) itemView.findViewById(R.id.TV_WarehouseName);
-            TV_CheckType = (TextView) itemView.findViewById(R.id.TV_CheckType);
-            TV_CreateTime = (TextView) itemView.findViewById(R.id.TV_CreateTime);
+            TV_scanData = (TextView) itemView.findViewById(R.id.TV_scanData);
+            Tv_TypeResult = (TextView) itemView.findViewById(R.id.Tv_TypeResult);
         }
     }
 

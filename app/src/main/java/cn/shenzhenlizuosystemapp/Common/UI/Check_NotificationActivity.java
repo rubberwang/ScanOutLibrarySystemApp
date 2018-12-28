@@ -136,7 +136,7 @@ public class Check_NotificationActivity extends BaseActivity {
             try {
                 CheckBills = LookForBranch(ChracterSearch);
             } catch (Exception e) {
-                ViseLog.d("SelectOutLibraryGetOutLibraryBillsException " + e);
+                ViseLog.d("SelectCheckLibraryGetCheckLibraryBillsException " + e);
             }
             return CheckBills;
         }

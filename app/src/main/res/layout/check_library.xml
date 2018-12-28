@@ -37,17 +37,18 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/OutLibraryWarehouse"
+            android:text="@string/OutLibraryTime"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/TV_WarehouseName"
+            android:id="@+id/TV_CreateTime"
             style="@style/SelectItemContentText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.5"
             android:gravity="center_vertical"
             android:textSize="13sp" />
+
 
     </LinearLayout>
 
@@ -65,11 +66,11 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/OutLibraryTime"
+            android:text="@string/CheckLibraryType"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/TV_CreateTime"
+            android:id="@+id/TV_CheckType"
             style="@style/SelectItemContentText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -78,11 +79,23 @@
             android:textSize="13sp" />
 
         <TextView
+            style="@style/SelectItemText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2.5"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/OutLibraryWarehouse"
+            android:textSize="12sp" />
 
-            />
+        <TextView
+            android:id="@+id/TV_WarehouseName"
+            style="@style/SelectItemContentText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:gravity="center_vertical"
+            android:textSize="13sp" />
+
 
     </LinearLayout>
 

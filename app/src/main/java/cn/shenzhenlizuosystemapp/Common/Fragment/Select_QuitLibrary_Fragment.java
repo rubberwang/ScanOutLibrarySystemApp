@@ -123,7 +123,7 @@ public class Select_QuitLibrary_Fragment extends Fragment {
                         public void onItemClick(View view, int position) {
                             Intent intent = new Intent(getActivity(),NewQuitLibraryActivity.class);
                             intent.putExtra("FGUID",result.get(position).getFGuid());
-                            ViseLog.i("FGUID"+result.get(position).getFGuid());
+                            ViseLog.i("FGUID = "+result.get(position).getFGuid());
                             startActivity(intent);
                         }
 
