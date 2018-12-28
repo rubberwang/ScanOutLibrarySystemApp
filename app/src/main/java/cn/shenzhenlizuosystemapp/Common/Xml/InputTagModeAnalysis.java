@@ -53,6 +53,8 @@ public class InputTagModeAnalysis {
                             if (Tools.IsObjectNull(childTags)) {
                                 childTags.setBarcodeNumber(parser.nextText());
                             }
+                        } else if ("FIsMust".equals(parser.getName())) {
+                            childTags.setFIsMust(parser.nextText());
                         }
                         break;
                     case XmlPullParser.END_TAG:
@@ -72,7 +74,6 @@ public class InputTagModeAnalysis {
         }
         return null;
     }
-    
-    
-    
+
+
 }

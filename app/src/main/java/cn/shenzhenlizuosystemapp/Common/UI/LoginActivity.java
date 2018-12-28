@@ -59,6 +59,7 @@ public class LoginActivity extends BaseActivity {
     private boolean IsNetWork = false;
     private static final int FAST_CLICK_DELAY_TIME = 500;//快速点击间隔
     private SharedPreferences sharedPreferences;
+    private LoginAdapter loginAdapter;
 
     private AlertDialog alertDialog;
     private EditText Edit_UserName;
@@ -69,6 +70,7 @@ public class LoginActivity extends BaseActivity {
     private Button Quit_But;
     private ImageView SettingServer_Img;
     private ImageView Img_Setting;
+    private TextView Tv_Setting;
 
     private Spinner SpinnerProjet;
     private Button btnLogin;
@@ -93,7 +95,6 @@ public class LoginActivity extends BaseActivity {
 
     public void initData() {
         tools = new Tools();
-        httpRequest = new WebService(this);
         logInObServer = new LogInObServer();
         getLifecycle().addObserver(logInObServer);
         sharedPreferences = tools.InitSharedPreferences(this);
@@ -108,12 +109,12 @@ public class LoginActivity extends BaseActivity {
                 lastClickTime = System.currentTimeMillis();
                 if (b) {
                     if (TextUtils.isEmpty(Edit_PassWord.getText().toString()) || TextUtils.isEmpty(Edit_UserName.getText().toString())) {
-                         tools.show(LoginActivity.this, "请输入用户名 密码后在勾选保存");
+                        tools.show(LoginActivity.this, "请输入用户名 密码后在勾选保存");
                         IsPassWord_CB.setChecked(false);
                     } else {
-                            IsUserName_CB.setChecked(true);
+                        IsUserName_CB.setChecked(true);
                     }
-                }else {
+                } else {
                     tools.PutStringData("Paw", "", sharedPreferences);
                 }
             }
@@ -131,9 +132,9 @@ public class LoginActivity extends BaseActivity {
                         IsUserName_CB.setChecked(false);
                     } else {
 
-                            }
+                    }
                 } else {
-                     if (TextUtils.isEmpty(Edit_UserName.getText().toString())) {
+                    if (TextUtils.isEmpty(Edit_UserName.getText().toString())) {
 
                     }
                     tools.PutStringData("User", "", sharedPreferences);
@@ -144,21 +145,20 @@ public class LoginActivity extends BaseActivity {
         LogIn_But.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (IsUserName_CB.isChecked()){
-                    if (IsPassWord_CB.isChecked()){
+                if (IsUserName_CB.isChecked()) {
+                    if (IsPassWord_CB.isChecked()) {
                         tools.PutStringData("User", Edit_UserName.getText().toString(), sharedPreferences);
                         tools.PutStringData("Paw", Edit_PassWord.getText().toString(), sharedPreferences);
-                    }else {
+                    } else {
                         tools.PutStringData("User", Edit_UserName.getText().toString(), sharedPreferences);
                         IsUserName_CB.setChecked(true);
                     }
-                }else{
-                    if (IsPassWord_CB.isChecked()){
+                } else {
+                    if (IsPassWord_CB.isChecked()) {
                         tools.PutStringData("User", Edit_UserName.getText().toString(), sharedPreferences);
                         tools.PutStringData("Paw", Edit_PassWord.getText().toString(), sharedPreferences);
-                    }
-                    else {
-                        tools.PutStringData("User","",sharedPreferences);
+                    } else {
+                        tools.PutStringData("User", "", sharedPreferences);
                         tools.PutStringData("Paw", "", sharedPreferences);
                     }
                 }
@@ -177,8 +177,13 @@ public class LoginActivity extends BaseActivity {
                 startActivity(new Intent(LoginActivity.this, SettingActivity.class));
             }
         });
+        Tv_Setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, SettingActivity.class));
+            }
+        });
         ProjectNameAndConnectMap = new HashMap();
-
     }
 
     private void foucs() {
@@ -224,7 +229,7 @@ public class LoginActivity extends BaseActivity {
                                 itemData1.setData(getSpinnerData().get(i));
                                 itemData.add(itemData1);
                             }
-                            LoginAdapter loginAdapter = new LoginAdapter(itemData, LoginActivity.this);
+                            loginAdapter = new LoginAdapter(itemData, LoginActivity.this);
                             SpinnerProjet.setAdapter(loginAdapter);
                             SpinnerProjet.setSelection(GetSpinnerPos(tools.GetStringData(sharedPreferences, "Project")));
                             SpinnerProjet.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -295,6 +300,7 @@ public class LoginActivity extends BaseActivity {
         btnLogin = (Button) findViewById(R.id.LogIn_But);
         SpinnerProjet = (Spinner) findViewById(R.id.sp);
         Img_Setting = $(R.id.Img_Setting);
+        Tv_Setting = $(R.id.Tv_Setting);
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
     }
 
@@ -306,11 +312,12 @@ public class LoginActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_START)
         public void ON_START() {
-            GetProject();
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
         public void ON_RESUME() {
+            httpRequest = new WebService(LoginActivity.this);
+            GetProject();
             if (tools.GetStringData(sharedPreferences, "IsScanInput").equals("true")) {//如果设置里面勾选了过滤完成单
                 ConnectStr.ISSHOWNONEXECUTION = true;
             } else {
@@ -321,7 +328,10 @@ public class LoginActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         public void ON_PAUSE() {
-
+            if (Tools.IsObjectNull(itemData) && Tools.IsObjectNull(loginAdapter)) {
+                itemData.clear();
+                loginAdapter.notifyDataSetChanged();
+            }
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -442,8 +452,8 @@ public class LoginActivity extends BaseActivity {
                         break;
                     }
                     case 2: {
-                        tools.PutStringData("User","",sharedPreferences);
-                        tools.PutStringData("Paw","",sharedPreferences);
+                        tools.PutStringData("User", "", sharedPreferences);
+                        tools.PutStringData("Paw", "", sharedPreferences);
                         IsUserName_CB.setChecked(false);
                         IsPassWord_CB.setChecked(false);
                         myProgressDialog.dismiss();

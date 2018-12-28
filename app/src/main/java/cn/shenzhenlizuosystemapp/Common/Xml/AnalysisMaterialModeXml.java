@@ -50,6 +50,10 @@ public class AnalysisMaterialModeXml {
                             if (Tools.IsObjectNull(materialModeBean)) {
                                 materialModeBean.setFName(parser.nextText());
                             }
+                        } else if ("FBarcodeCount".equals(parser.getName())) {
+                            if (Tools.IsObjectNull(materialModeBean)) {
+                                materialModeBean.setFBarCoeeCount(parser.nextText());
+                            }
                         }
                         break;
                     case XmlPullParser.END_TAG:

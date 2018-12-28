@@ -49,6 +49,9 @@ public class ScanResult_InputRvAdapter extends RecyclerView.Adapter {
         try {
             ((ViewHoders) holder).TV_scanData.setText(datas.get(position).getValue());
             ((ViewHoders) holder).Tv_TypeResult.setText(datas.get(position).getName() + ":");
+            if (datas.get(position).getFIsMust().equals("1")){
+                ((ViewHoders) holder).Tv_TypeResult.setTextColor(context.getResources().getColor(R.color.ToastRed));
+            }
             if (mOnItemClickLitener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

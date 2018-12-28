@@ -9,15 +9,15 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.MaterialModeBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
 import cn.shenzhenlizuosystemapp.R;
 
-public class MaterialModeAdapter extends BaseAdapter {
+public class DirectAllotStockAdapter extends BaseAdapter {
 
-    private List<MaterialModeBean> data;
-    private Context context;
+    List<StockBean> data;
+    Context context;
 
-    public MaterialModeAdapter(List<MaterialModeBean> itemData, Context context) {
+    public DirectAllotStockAdapter(List<StockBean> itemData, Context context) {
         this.data = itemData;
         this.context = context;
     }
@@ -41,9 +41,7 @@ public class MaterialModeAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = LayoutInflater.from(context).inflate(R.layout.input_spinner, null);
         TextView textView = view.findViewById(R.id.TV_InputSpinner);
-        TextView TV_BarCodeConunt = view.findViewById(R.id.TV_BarCodeConunt);
         textView.setText(data.get(i).getFName());
-        TV_BarCodeConunt.setText("  /" + data.get(i).getFBarCoeeCount() + "个码");
         return view;
     }
 }

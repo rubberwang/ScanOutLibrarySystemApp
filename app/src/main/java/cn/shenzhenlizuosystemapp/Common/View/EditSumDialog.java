@@ -20,6 +20,8 @@ import android.widget.TextView;
 
 import com.vise.log.ViseLog;
 
+import org.w3c.dom.Text;
+
 import java.lang.ref.WeakReference;
 
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
@@ -46,7 +48,7 @@ public class EditSumDialog {
         return editSumDialog;
     }
 
-    public void Show(final Context context, String Code, final EditSumPort editSumPort, View.OnClickListener Cancel, String DefaultSum) {
+    public void Show(final Context context, String Code, final EditSumPort editSumPort, View.OnClickListener Cancel, String DefaultSum, String SumUnit) {
         if (editSumPort != null) {
             if (!Is_Show) {
                 Is_Show = true;
@@ -57,15 +59,17 @@ public class EditSumDialog {
                 final EditText Ed_Sum = view.findViewById(R.id.Ed_Sum);
                 TextView TV_Ensure = view.findViewById(R.id.TV_Ensure);
                 TextView TV_Cancel = view.findViewById(R.id.TV_Cancel);
+                TextView Tv_SumUnit = view.findViewById(R.id.Tv_SumUnit);
                 Tv_TheCurrentMaterialCode.setText(Code);
+                Tv_SumUnit.setText(SumUnit);
                 Ed_Sum.setText(DefaultSum);
                 Ed_Sum.setSelection(DefaultSum.length());
                 Handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        showKeyboard(Ed_Sum,context);
+                        showKeyboard(Ed_Sum, context);
                     }
-                },300);
+                }, 300);
                 TV_Ensure.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -107,9 +111,9 @@ public class EditSumDialog {
         }
     }
 
-    public void showKeyboard(EditText editText,Context context) {
+    public void showKeyboard(EditText editText, Context context) {
         //其中editText为dialog中的输入框的 EditText 
-        if(editText!=null){
+        if (editText != null) {
             //设置可获得焦点
             editText.setFocusable(true);
             editText.setFocusableInTouchMode(true);
@@ -124,7 +128,7 @@ public class EditSumDialog {
     Handler Handler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                
+
             }
             super.handleMessage(msg);
         }

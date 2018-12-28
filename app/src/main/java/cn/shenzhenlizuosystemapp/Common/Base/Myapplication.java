@@ -20,17 +20,13 @@ public class Myapplication extends Application {
 
     private static Context BaseApplication;
     public static Myapplication myapplication;
-    public static List<?> images=new ArrayList<>();
 
     @Override
 
     public void onCreate() {
         super.onCreate();
-        myapplication = this;
-        Integer[]resource = {R.drawable.lizi3,R.drawable.lizi,R.drawable.lizi2};
-        List list = Arrays.asList(resource);
-        images = new ArrayList(list);
         BaseApplication = getApplicationContext();
+      
         ViseLog.getLogConfig()
                 .configAllowLog(true)//是否输出日志
                 .configShowBorders(true)//是否排版显示
@@ -43,11 +39,6 @@ public class Myapplication extends Application {
     public static Context getContext() {
         return BaseApplication;
     }
-
-    public static Myapplication GetMyAppLication() {
-        return new Myapplication();
-    }
-
 
 
     @Override

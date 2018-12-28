@@ -394,6 +394,7 @@
                 android:layout_weight="3" />
 
             <TextView
+                android:id="@+id/Tv_Setting"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1.7"

@@ -224,7 +224,6 @@
 
                 </LinearLayout>
 
-
                 <TextView
                     android:id="@+id/TV_ScanNumber"
                     style="@style/ScanOutLibraryText"
@@ -305,63 +304,27 @@
             android:id="@+id/TV_DirectAllotSumbit"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_margin="8dp"
             android:layout_weight="1.5"
             android:background="@drawable/circularbead_purple"
             android:gravity="center"
             android:text="@string/Save"
             android:textColor="@color/White"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/TV_DirectAllotCancel"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_margin="8dp"
             android:layout_weight="1.5"
             android:background="@drawable/circularbead_purple"
             android:gravity="center"
             android:text="@string/Clear"
             android:textColor="@color/White"
             android:textSize="20sp"
-            android:textStyle="bold" />
-
-
-        <TextView
-            android:id="@+id/TV_DirectAllotSave"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1.5"
-            android:background="@drawable/circularbead_purple"
-            android:gravity="center"
-            android:text="@string/Submit"
-            android:textColor="@color/White"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-
-        <TextView
-            android:id="@+id/TV_DirectAllotClear"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1.5"
-            android:background="@drawable/circularbead_purple"
-            android:gravity="center"
-            android:text="@string/Close"
-            android:textColor="@color/White"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
     </LinearLayout>
 

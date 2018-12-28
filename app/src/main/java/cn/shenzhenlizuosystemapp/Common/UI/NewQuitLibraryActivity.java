@@ -76,7 +76,7 @@ import cn.shenzhenlizuosystemapp.Common.Xml.QuitStockXmlAnalysis;
 import cn.shenzhenlizuosystemapp.Common.Xml.QuitTagModeAnalysis;
 import cn.shenzhenlizuosystemapp.R;
 
-public class NewQuitLibraryActivity extends BaseActivity{
+public class NewQuitLibraryActivity extends BaseActivity {
 
     //标示符
     private String FGUID = "";
@@ -247,7 +247,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
      * 标签模版列表适配
      * ***/
     private void InitRecycler() {
-        if (Tools.IsObjectNull(childQuitTagList)){
+        if (Tools.IsObjectNull(childQuitTagList)) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             RV_GetInfoTable.setLayoutManager(layoutManager);
@@ -283,26 +283,26 @@ public class NewQuitLibraryActivity extends BaseActivity{
                     tools.ShowDialog(MContect, "这张单已扫描完成");
                 } else {
                     if (!Is_QuitNumber_Mode) {
-                        if (scanTask_quit_rvAdapter.getselection()!=position){
+                        if (scanTask_quit_rvAdapter.getselection() != position) {
                             LockResultPort lockResultPort = new LockResultPort() {
-                            @Override
-                            public void onStatusResult(String res) {
-                                myProgressDialog.dismiss();
-                                if (res.equals("Success")) {
-                                    if (RV_ScanInfoTableIndex != position) {
-                                        RV_ScanInfoTableIndex = position;
+                                @Override
+                                public void onStatusResult(String res) {
+                                    myProgressDialog.dismiss();
+                                    if (res.equals("Success")) {
+                                        if (RV_ScanInfoTableIndex != position) {
+                                            RV_ScanInfoTableIndex = position;
+                                        }
+                                        GetMaterialMode getMaterialMode = new GetMaterialMode();
+                                        getMaterialMode.execute(quitTaskRvDataList.get(position).getFMaterial());
+                                        scanTask_quit_rvAdapter.setSelection(position);
+                                        scanTask_quit_rvAdapter.notifyDataSetChanged();//选中
+                                    } else {
+                                        tools.ShowDialog(MContect, res);
                                     }
-                                    GetMaterialMode getMaterialMode = new GetMaterialMode();
-                                    getMaterialMode.execute(quitTaskRvDataList.get(position).getFMaterial());
-                                    scanTask_quit_rvAdapter.setSelection(position);
-                                    scanTask_quit_rvAdapter.notifyDataSetChanged();//选中
-                                } else {
-                                    tools.ShowDialog(MContect, res);
                                 }
-                            }
-                        };
-                        QuitBodyLockTask quitBodyLockTask = new QuitBodyLockTask(lockResultPort, webService, quitTaskRvDataList.get(position).getFGuid(), myProgressDialog);
-                        quitBodyLockTask.execute();
+                            };
+                            QuitBodyLockTask quitBodyLockTask = new QuitBodyLockTask(lockResultPort, webService, quitTaskRvDataList.get(position).getFGuid(), myProgressDialog);
+                            quitBodyLockTask.execute();
                         } else {
                             childQuitTagList.clear();
                             scanResult_Quit_rvAdapter.notifyDataSetChanged();
@@ -565,7 +565,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
                 adapterReturnList = AnalysisReturnsXml.getSingleton().GetReturn(IS_ModeXml);
                 IS_ModeXml.close();
                 if (adapterReturnList.get(0).getFStatus().equals("1")) {
-                    ViseLog.i("标签模板 = "+adapterReturnList.get(0).getFInfo());
+                    ViseLog.i("标签模板 = " + adapterReturnList.get(0).getFInfo());
                     InputStream IS_ModeInfoXml = new ByteArrayInputStream(adapterReturnList.get(0).getFInfo().getBytes("UTF-8"));
                     materialModeBeanList = QuitAnalysisMaterialModeXml.getSingleton().GetMaterialModeInfo(IS_ModeInfoXml);
                     IS_ModeInfoXml.close();
@@ -850,7 +850,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
             }
         };
         QuitBillCreateTask inputBillCreateTask = new QuitBillCreateTask(HeadID, stockBeans.get(SpHouseIndex).getFGuid()
-,stockBeanList.get(SpQuitHouseSpaceIndex).getFGuid(),QuitSubmitList, webService, myProgressDialog, inputBillCreate);
+                , stockBeanList.get(SpQuitHouseSpaceIndex).getFGuid(), QuitSubmitList, webService, myProgressDialog, inputBillCreate);
         inputBillCreateTask.execute();
 
     }
@@ -879,7 +879,7 @@ public class NewQuitLibraryActivity extends BaseActivity{
                 InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.toggleSoftInput(0, 0);
             }
-        }, Sum);
+        }, Sum, quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFUnit_Name());
     }
 
     private void CleanData() {

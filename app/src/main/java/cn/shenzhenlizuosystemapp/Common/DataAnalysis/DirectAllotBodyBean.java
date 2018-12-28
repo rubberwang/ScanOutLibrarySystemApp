@@ -18,6 +18,15 @@ public class DirectAllotBodyBean {
     private String FIsClosed;
     private String FThisBaseQty;
     private String FThisAuxQty;
+    private String FNotAllotQty;
+
+    public String getFNotAllotQty() {
+        return FNotAllotQty;
+    }
+
+    public void setFNotAllotQty(String FNotAllotQty) {
+        this.FNotAllotQty = FNotAllotQty;
+    }
 
     public void setFGuid(String FGuid) {
         this.FGuid = FGuid;

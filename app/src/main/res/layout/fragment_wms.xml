@@ -21,11 +21,11 @@
 
     <LinearLayout
         style="@style/ConventionPercent"
-        android:layout_weight="1"
+        android:layout_weight="1.2"
         android:background="@color/Hui">
 
         <com.youth.banner.Banner
-            android:id="@+id/banner"
+            android:id="@+id/B_WMS"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
         />

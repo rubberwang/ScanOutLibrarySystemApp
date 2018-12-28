@@ -124,4 +124,8 @@
     <string name="DirectAllotNotification_FInStockName">调入仓库:</string>
     <string name="PleaseInputSum">请输入数量:</string>
     <string name="TheCurrentMaterialCode">料号:</string>
+    <string name="ShouldAllot">应调数量:</string>
+    <string name="AlreadyAllot">已调数量:</string>
+    <string name="ThisAllot">本次调货:</string>
+    <string name="NotAllot">未调数量:</string>
 </resources>

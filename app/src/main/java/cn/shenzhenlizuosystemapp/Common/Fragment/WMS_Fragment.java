@@ -17,13 +17,18 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.Transformer;
+import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Adapter.Wms_RvAdapter;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.WmsSelectData;
+import cn.shenzhenlizuosystemapp.Common.ImageTool.TransformationUtils;
 import cn.shenzhenlizuosystemapp.Common.UI.DirectAllot.AllotNotificationActivity;
 import cn.shenzhenlizuosystemapp.Common.UI.Input_NotificationActivity;
 import cn.shenzhenlizuosystemapp.Common.UI.Quit_NotificationActivity;
@@ -34,16 +39,18 @@ import cn.shenzhenlizuosystemapp.R;
 
 import static cn.shenzhenlizuosystemapp.Common.Base.Myapplication.myapplication;
 
-public class WMS_Fragment extends Fragment {
+public class WMS_Fragment extends Fragment implements OnBannerListener {
 
     public static final String ARGS_PAGE = "WMS_Page";
     private RecyclerView Rv_WmsModuleSelect;
     private TextView Back;
-    //private  List<Integer> images;
+    private Banner WMS_Banner;
 
     private ArrayList<WmsSelectData> List_wmsSelectData;
-    private String[] Describe = {"入库作业", "出库作业", "直接调拨", "盘点作业","调拨出库","调拨入库"};
-    private int[] R_Img = {R.drawable.gethouse, R.drawable.puthouse, R.drawable.changehouse, R.drawable.pdacheck,R.drawable.changeput,R.drawable.changeget};
+    private String[] Describe = {"入库作业", "出库作业", "直接调拨", "盘点作业", "调拨出库", "调拨入库"};
+    private int[] R_Img = {R.drawable.gethouse, R.drawable.puthouse, R.drawable.changehouse, R.drawable.pdacheck, R.drawable.changeput, R.drawable.changeget};
+    private ArrayList<Integer> BannerPathList;
+    private ArrayList<String> BannerTitleList;
 
     public static MES_Fragment newInstance() {
         MES_Fragment fragment = new MES_Fragment();
@@ -55,9 +62,10 @@ public class WMS_Fragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    public class GlideImageLoader extends ImageLoader {
-        public void displayImage(Context context, Object path, ImageView imageView){
-            Glide.with(context).load(path).into(imageView);
+
+    public class WMS_BannerImageLoader extends ImageLoader {
+        public void displayImage(Context context, Object path, ImageView imageView) {
+            Glide.with(context).load(path).placeholder(R.drawable.loading).error(R.drawable.can).dontAnimate().fitCenter().into(imageView);
         }
     }
 
@@ -66,25 +74,43 @@ public class WMS_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_wms, container, false);
         Rv_WmsModuleSelect = rootView.findViewById(R.id.Rv_WmsModuleSelect);
+        WMS_Banner = rootView.findViewById(R.id.B_WMS);
         Back = rootView.findViewById(R.id.Back);
-        Banner banner = rootView.findViewById(R.id.banner);
-        banner.setImageLoader(new GlideImageLoader());
-        banner.setImages(myapplication.images);
-        banner.start();
         List_wmsSelectData = new ArrayList<>();
         InitRecycler();
         InitClick();
-
+        InitBanner();
         return rootView;
     }
 
-    private void InitClick(){
+    private void InitClick() {
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 cn.shenzhenlizuosystemapp.Common.Base.ViewManager.getInstance().finishActivity(getActivity());
             }
         });
+    }
+
+    private void InitBanner() {
+        BannerPathList = new ArrayList<>();
+        BannerTitleList = new ArrayList<>();
+        BannerPathList.add(R.drawable.lizi);
+        BannerPathList.add(R.drawable.lizi2);
+        BannerPathList.add(R.drawable.lizi3);
+        BannerTitleList.add("广告图1");
+        BannerTitleList.add("广告图2");
+        BannerTitleList.add("广告图3");
+        WMS_Banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);
+        WMS_Banner.setImageLoader(new WMS_BannerImageLoader());
+        WMS_Banner.setImages(BannerPathList);
+        WMS_Banner.setBannerAnimation(Transformer.Default);
+        WMS_Banner.setBannerTitles(BannerTitleList);
+        WMS_Banner.setDelayTime(5 * 1000);
+        WMS_Banner.isAutoPlay(true);
+        WMS_Banner.setIndicatorGravity(BannerConfig.CENTER)
+                .setOnBannerListener(this)
+                .start();
     }
 
     private void InitRecycler() {
@@ -104,7 +130,7 @@ public class WMS_Fragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 switch (position) {
-                    case 0:{
+                    case 0: {
                         startActivity(new Intent(getActivity(), Input_NotificationActivity.class));//入库通知
                         break;
                     }
@@ -117,7 +143,7 @@ public class WMS_Fragment extends Fragment {
                         break;
                     }
                     case 3: {
-                        startActivity(new Intent(getActivity(),Check_NotificationActivity.class));
+                        startActivity(new Intent(getActivity(), Check_NotificationActivity.class));
                     }
                 }
             }
@@ -127,4 +153,10 @@ public class WMS_Fragment extends Fragment {
             }
         });
     }
+
+    @Override
+    public void OnBannerClick(int position) {
+
+    }
+
 }

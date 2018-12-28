@@ -253,15 +253,6 @@ public class NewInputLibraryActivity extends BaseActivity {
             RV_GetInfoTable.setLayoutManager(layoutManager);
             scanResult_Input_rvAdapter = new ScanResult_InputRvAdapter(this, childTagList);
             RV_GetInfoTable.setAdapter(scanResult_Input_rvAdapter);
-            if (childTagList.size() == 1) {
-                Is_Single = true;
-                ZebarTools.getZebarTools().SetZebarDWConfig(MContect, "1", "1");
-                ViseLog.i("Zebar单条码格式");
-            } else {
-                Is_Single = false;
-                ZebarTools.getZebarTools().SetZebarDWConfig(MContect, String.valueOf(childTagList.size()), "3");
-                ViseLog.i("Zebar多条码格式");
-            }
         }
     }
 
@@ -567,6 +558,7 @@ public class NewInputLibraryActivity extends BaseActivity {
                 if (adapterReturnList.get(0).getFStatus().equals("1")) {
                     InputStream IS_ModeInfoXml = new ByteArrayInputStream(adapterReturnList.get(0).getFInfo().getBytes("UTF-8"));
                     materialModeBeanList = AnalysisMaterialModeXml.getSingleton().GetMaterialModeInfo(IS_ModeInfoXml);
+                    ViseLog.i("materialModeBeanList info = " + adapterReturnList.get(0).getFStatus());
                     IS_ModeInfoXml.close();
                 } else {
                     materialModeBeanList.clear();
@@ -589,6 +581,17 @@ public class NewInputLibraryActivity extends BaseActivity {
                         if (Sp_LabelModeIndex != i) {
                             Sp_LabelModeIndex = i;
                         }
+
+                        if (materialModeBeanList.get(i).getFBarCoeeCount().equals("1") || materialModeBeanList.get(i).getFBarCoeeCount().equals("0")) {
+                            Is_Single = true;
+                            ZebarTools.getZebarTools().SetZebarDWConfig(MContect, "1", "1");
+                            ViseLog.i("Zebar单条码格式");
+                        } else {
+                            Is_Single = false;
+                            ZebarTools.getZebarTools().SetZebarDWConfig(MContect, materialModeBeanList.get(i).getFBarCoeeCount(), "3");
+                            ViseLog.i("Zebar多条码格式");
+                        }
+
                         InputTagMode inputTagMode = new InputTagMode(materialModeBeanList.get(i).getFGuid(), webService);
                         inputTagMode.execute();
                     }
@@ -647,15 +650,6 @@ public class NewInputLibraryActivity extends BaseActivity {
                 } else {
                     scanResult_Input_rvAdapter = new ScanResult_InputRvAdapter(MContect, childTagList);
                     RV_GetInfoTable.setAdapter(scanResult_Input_rvAdapter);
-                    if (childTagList.size() == 1) {
-                        Is_Single = true;
-                        ZebarTools.getZebarTools().SetZebarDWConfig(MContect, "1", "1");
-                        ViseLog.i("Zebar单条码格式");
-                    } else {
-                        Is_Single = false;
-                        ZebarTools.getZebarTools().SetZebarDWConfig(MContect, String.valueOf(childTagList.size()), "3");
-                        ViseLog.i("Zebar多条码格式");
-                    }
                 }
             }
         }
@@ -666,7 +660,7 @@ public class NewInputLibraryActivity extends BaseActivity {
      * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void messageEventBus(BarCodeMessage msg) {
-        if (!Is_InputNumber_Mode){
+        if (!Is_InputNumber_Mode) {
             if (scanTask_Input_rvAdapter.getselection() >= 0) {
                 String data = msg.data;
                 ViseLog.i("messageEventBus msg = " + data);
@@ -878,7 +872,7 @@ public class NewInputLibraryActivity extends BaseActivity {
                 InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.toggleSoftInput(0, 0);
             }
-        }, Sum);
+        }, Sum, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFUnit_Name());
     }
 
     private void CleanData() {
