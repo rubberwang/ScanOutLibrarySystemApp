@@ -253,15 +253,6 @@ public class NewQuitLibraryActivity extends BaseActivity {
             RV_GetInfoTable.setLayoutManager(layoutManager);
             scanResult_Quit_rvAdapter = new ScanResult_QuitRvAdapter(this, childQuitTagList);
             RV_GetInfoTable.setAdapter(scanResult_Quit_rvAdapter);
-            if (childQuitTagList.size() == 1) {
-                Is_Single = true;
-                ZebarTools.getZebarTools().SetZebarDWConfig(MContect, "1", "1");
-                ViseLog.i("Zebar单条码格式");
-            } else {
-                Is_Single = false;
-                ZebarTools.getZebarTools().SetZebarDWConfig(MContect, String.valueOf(childQuitTagList.size()), "3");
-                ViseLog.i("Zebar多条码格式");
-            }
         }
     }
 
@@ -565,9 +556,9 @@ public class NewQuitLibraryActivity extends BaseActivity {
                 adapterReturnList = AnalysisReturnsXml.getSingleton().GetReturn(IS_ModeXml);
                 IS_ModeXml.close();
                 if (adapterReturnList.get(0).getFStatus().equals("1")) {
-                    ViseLog.i("标签模板 = " + adapterReturnList.get(0).getFInfo());
                     InputStream IS_ModeInfoXml = new ByteArrayInputStream(adapterReturnList.get(0).getFInfo().getBytes("UTF-8"));
                     materialModeBeanList = QuitAnalysisMaterialModeXml.getSingleton().GetMaterialModeInfo(IS_ModeInfoXml);
+                    ViseLog.i("标签模板 = " + adapterReturnList.get(0).getFInfo());
                     IS_ModeInfoXml.close();
                 } else {
                     materialModeBeanList.clear();
@@ -590,6 +581,17 @@ public class NewQuitLibraryActivity extends BaseActivity {
                         if (Sp_LabelModeIndex != i) {
                             Sp_LabelModeIndex = i;
                         }
+
+                        if (materialModeBeanList.get(i).getFBarCoeeCount().equals("1") || materialModeBeanList.get(i).getFBarCoeeCount().equals("0")) {
+                            Is_Single = true;
+                            ZebarTools.getZebarTools().SetZebarDWConfig(MContect, "1", "1");
+                            ViseLog.i("Zebar单条码格式");
+                        } else {
+                            Is_Single = false;
+                            ZebarTools.getZebarTools().SetZebarDWConfig(MContect, materialModeBeanList.get(i).getFBarCoeeCount(), "3");
+                            ViseLog.i("Zebar多条码格式");
+                        }
+
                         QuitTagMode quitTagMode = new QuitTagMode(materialModeBeanList.get(i).getFGuid(), webService);
                         quitTagMode.execute();
                     }
@@ -648,15 +650,6 @@ public class NewQuitLibraryActivity extends BaseActivity {
                 } else {
                     scanResult_Quit_rvAdapter = new ScanResult_QuitRvAdapter(MContect, childQuitTagList);
                     RV_GetInfoTable.setAdapter(scanResult_Quit_rvAdapter);
-                    if (childQuitTagList.size() == 1) {
-                        Is_Single = true;
-                        ZebarTools.getZebarTools().SetZebarDWConfig(MContect, "1", "1");
-                        ViseLog.i("Zebar单条码格式");
-                    } else {
-                        Is_Single = false;
-                        ZebarTools.getZebarTools().SetZebarDWConfig(MContect, String.valueOf(childQuitTagList.size()), "3");
-                        ViseLog.i("Zebar多条码格式");
-                    }
                 }
             }
         }

@@ -45,7 +45,7 @@ public class QuitBarCodeCheckTask extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         try {
-//            ViseLog.i("BarCodeCheckTask parms = " + ConnectStr.ConnectionToString + "," + MaterialID + "," + LabelTempletID + "," + Barcodes + "," + true);
+            ViseLog.i("BarCodeCheckTask parms = " + ConnectStr.ConnectionToString + "," + MaterialID + "," + LabelTempletID + "," + Barcodes + "," + true);
             String StatuResStr = webService.GetBarcodeAnalyze(ConnectStr.ConnectionToString,MaterialID, LabelTempletID, Barcodes, false);
             ViseLog.i("QuitBarCodeCheckTask QuitStatuResStr = " + StatuResStr);
             InputStream Is_statu = new ByteArrayInputStream(StatuResStr.getBytes("UTF-8"));

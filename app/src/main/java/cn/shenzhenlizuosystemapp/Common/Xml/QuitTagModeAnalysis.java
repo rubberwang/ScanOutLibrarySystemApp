@@ -53,6 +53,8 @@ public class QuitTagModeAnalysis {
                             if (Tools.IsObjectNull(childQuitTags)) {
                                 childQuitTags.setBarcodeNumber(parser.nextText());
                             }
+                        } else if ("FIsMust".equals(parser.getName())) {
+                            childQuitTags.setFIsMust(parser.nextText());
                         }
                         break;
                     case XmlPullParser.END_TAG:
@@ -72,7 +74,6 @@ public class QuitTagModeAnalysis {
         }
         return null;
     }
-    
 
 
 }

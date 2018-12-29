@@ -41,7 +41,9 @@ public class QuitMaterialModeAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = LayoutInflater.from(context).inflate(R.layout.quit_spinner, null);
         TextView textView = view.findViewById(R.id.TV_QuitSpinner);
+        TextView TV_BarCodeConunt = view.findViewById(R.id.TV_BarCodeConunt);
         textView.setText(data.get(i).getFName());
+        TV_BarCodeConunt.setText("  /" + data.get(i).getFBarCoeeCount() + "个码");
         return view;
     }
 }
