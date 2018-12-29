@@ -743,9 +743,10 @@ public class NewInputLibraryActivity extends BaseActivity {
                             }
                             Sp_house.setEnabled(false);
                             Sp_InputHouseSpace.setEnabled(false);
-                            Drawable drawable_border = getResources().getDrawable(R.drawable.border);
-                            Sp_house.setBackground(drawable_border);
-                            Sp_InputHouseSpace.setBackground(drawable_border);
+                            Drawable Borderhouse = getResources().getDrawable(R.drawable.border);
+                            Sp_house.setBackground(Borderhouse);
+                            Drawable BorderInputHouseSpace = getResources().getDrawable(R.drawable.border);
+                            Sp_InputHouseSpace.setBackground(BorderInputHouseSpace);
 
                             IsSave = true;
                             Drawable drawable_purple = getResources().getDrawable(R.drawable.circularbead_purple);

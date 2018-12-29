@@ -3,11 +3,9 @@ package cn.shenzhenlizuosystemapp.Common.UI.DirectAllot;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.vise.log.ViseLog;
@@ -19,13 +17,9 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotNotificationBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.Fragment.Item_DirectAllot_Fragment;
-import cn.shenzhenlizuosystemapp.Common.Fragment.Item_InputLibrary_Fragment;
 import cn.shenzhenlizuosystemapp.Common.Fragment.Select_DirectAllot_Fragment;
-import cn.shenzhenlizuosystemapp.Common.Fragment.Select_InputLibrary_Fragment;
-import cn.shenzhenlizuosystemapp.Common.UI.Input_NotificationActivity;
 import cn.shenzhenlizuosystemapp.R;
 
 public class AllotNotificationActivity extends BaseActivity{
@@ -37,8 +31,8 @@ public class AllotNotificationActivity extends BaseActivity{
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     private Select_DirectAllot_Fragment select_directAllot_fragment;
-    private List<DirectAllotNotificationBean> directAllotNotificationBeanList;
-    private List<DirectAllotNotificationBean> SearchResultList;
+    private List<DirectAllotLibraryBill> directAllotLibraryBillList;
+    private List<DirectAllotLibraryBill> SearchResultList;
     private Tools tools;
     private AllotNotificationActivity MContect = null;
 
@@ -95,23 +89,23 @@ public class AllotNotificationActivity extends BaseActivity{
 
     private int LookForBranch(String ChracterSearch) {
         try {
-            directAllotNotificationBeanList = select_directAllot_fragment.GetSelectBills();
-            if (directAllotNotificationBeanList.size() >= 0) {
+            directAllotLibraryBillList = select_directAllot_fragment.GetSelectBills();
+            if (directAllotLibraryBillList.size() >= 0) {
                 SearchResultList.clear();
-                for (int i = 0; i < directAllotNotificationBeanList.size(); i++) {
-                    String BoxNumber = directAllotNotificationBeanList.get(i).getFCode();
+                for (int i = 0; i < directAllotLibraryBillList.size(); i++) {
+                    String BoxNumber = directAllotLibraryBillList.get(i).getFCode();
                     if (BoxNumber.equals(ChracterSearch) || BoxNumber.contains(ChracterSearch)) {
-                        DirectAllotNotificationBean directAllotNotificationBean = new DirectAllotNotificationBean();
-                        directAllotNotificationBean.setFGuid(directAllotNotificationBeanList.get(i).getFGuid());
-                        directAllotNotificationBean.setFCode(directAllotNotificationBeanList.get(i).getFCode());
-                        directAllotNotificationBean.setFDate(directAllotNotificationBeanList.get(i).getFDate());
-                        directAllotNotificationBean.setFTransactionType_Name(directAllotNotificationBeanList.get(i).getFTransactionType_Name());
-                        directAllotNotificationBean.setFTransactionType(directAllotNotificationBeanList.get(i).getFTransactionType());
-                        directAllotNotificationBean.setFOutStock_Name(directAllotNotificationBeanList.get(i).getFOutStock_Name());
-                        directAllotNotificationBean.setFOutStock(directAllotNotificationBeanList.get(i).getFOutStock());
-                        directAllotNotificationBean.setFInStock_Name(directAllotNotificationBeanList.get(i).getFInStock_Name());
-                        directAllotNotificationBean.setFInStock(directAllotNotificationBeanList.get(i).getFInStock());
-                        SearchResultList.add(directAllotNotificationBean);
+                        DirectAllotLibraryBill directAllotLibraryBill = new DirectAllotLibraryBill();
+                        directAllotLibraryBill.setFGuid(directAllotLibraryBillList.get(i).getFGuid());
+                        directAllotLibraryBill.setFCode(directAllotLibraryBillList.get(i).getFCode());
+                        directAllotLibraryBill.setFDate(directAllotLibraryBillList.get(i).getFDate());
+                        directAllotLibraryBill.setFTransactionType_Name(directAllotLibraryBillList.get(i).getFTransactionType_Name());
+                        directAllotLibraryBill.setFTransactionType(directAllotLibraryBillList.get(i).getFTransactionType());
+                        directAllotLibraryBill.setFOutStock_Name(directAllotLibraryBillList.get(i).getFOutStock_Name());
+                        directAllotLibraryBill.setFOutStock(directAllotLibraryBillList.get(i).getFOutStock());
+                        directAllotLibraryBill.setFInStock_Name(directAllotLibraryBillList.get(i).getFInStock_Name());
+                        directAllotLibraryBill.setFInStock(directAllotLibraryBillList.get(i).getFInStock());
+                        SearchResultList.add(directAllotLibraryBill);
                     }
                 }
                 return 1;

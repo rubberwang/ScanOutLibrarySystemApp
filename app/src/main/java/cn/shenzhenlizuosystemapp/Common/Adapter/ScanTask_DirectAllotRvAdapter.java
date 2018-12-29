@@ -12,18 +12,17 @@ import com.vise.log.ViseLog;
 
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotBodyBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotTaskRvData;
 import cn.shenzhenlizuosystemapp.R;
 
 public class ScanTask_DirectAllotRvAdapter extends RecyclerView.Adapter {
 
     private Context context;
-    private List<DirectAllotBodyBean> datas;
+    private List<DirectAllotTaskRvData> datas;
     private OnItemClickLitener mOnItemClickLitener;
     private int selected = -1;
 
-    public ScanTask_DirectAllotRvAdapter(Context context, List<DirectAllotBodyBean> data) {
+    public ScanTask_DirectAllotRvAdapter(Context context, List<DirectAllotTaskRvData> data) {
         this.context = context;
         this.datas = data;
     }

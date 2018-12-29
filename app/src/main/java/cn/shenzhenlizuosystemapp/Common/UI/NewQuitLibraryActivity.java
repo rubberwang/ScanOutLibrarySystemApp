@@ -743,9 +743,10 @@ public class NewQuitLibraryActivity extends BaseActivity {
                             }
                             Sp_house.setEnabled(false);
                             Sp_QuitHouseSpace.setEnabled(false);
-                            Drawable drawable_border = getResources().getDrawable(R.drawable.border);
-                            Sp_house.setBackground(drawable_border);
-                            Sp_QuitHouseSpace.setBackground(drawable_border);
+                            Drawable Borderhouse = getResources().getDrawable(R.drawable.border);
+                            Sp_house.setBackground(Borderhouse);
+                            Drawable BorderInputHouseSpace = getResources().getDrawable(R.drawable.border);
+                            Sp_QuitHouseSpace.setBackground(BorderInputHouseSpace);
 
                             IsSave = true;
                             Drawable drawable_purple = getResources().getDrawable(R.drawable.circularbead_purple);
@@ -774,8 +775,8 @@ public class NewQuitLibraryActivity extends BaseActivity {
                             }
                             scanTask_quit_rvAdapter.notifyDataSetChanged();
                             Is_QuitNumber_Mode = false;
-                            childQuitTagList.clear();
-                            scanResult_Quit_rvAdapter.notifyDataSetChanged();
+                            //childQuitTagList.clear();
+                            //scanResult_Quit_rvAdapter.notifyDataSetChanged();
                         } else {
                             tools.ShowDialog(MContect, "提交数量不能大于未收数量");
                         }

@@ -1,6 +1,6 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
 
-public class DirectAllotHeadBean {
+public class DirectAllotLibraryBill {
     private String FGuid;
     private String FCode;
     private String FDate;

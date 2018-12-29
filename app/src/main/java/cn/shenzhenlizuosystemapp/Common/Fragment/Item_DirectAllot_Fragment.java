@@ -15,29 +15,26 @@ import com.vise.log.ViseLog;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.DirectAllotNotification_Adapter;
-import cn.shenzhenlizuosystemapp.Common.Adapter.SelectInput_FullAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.SelectDirectAllot_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotNotificationBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.UI.DirectAllot.AllotMainActiivty;
-import cn.shenzhenlizuosystemapp.Common.UI.NewInputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
 
 public class Item_DirectAllot_Fragment extends Fragment {
 
-    private static List<DirectAllotNotificationBean> directAllotNotificationBeanList;
+    private static List<DirectAllotLibraryBill> directAllotLibraryBillList;
     private RecyclerView RV_SearchSelectDirectAllot;
     private ProgressDialog PD;
     private Tools tools;
     private WebService webService;
 
-    public static Item_DirectAllot_Fragment newInstance(List<DirectAllotNotificationBean> SearchDirectAllotList) {
-        directAllotNotificationBeanList = new ArrayList<DirectAllotNotificationBean>();
-        directAllotNotificationBeanList.clear();
-        Item_DirectAllot_Fragment.directAllotNotificationBeanList = SearchDirectAllotList;
+    public static Item_DirectAllot_Fragment newInstance(List<DirectAllotLibraryBill> SearchDirectAllotList) {
+        directAllotLibraryBillList = new ArrayList<DirectAllotLibraryBill>();
+        directAllotLibraryBillList.clear();
+        Item_DirectAllot_Fragment.directAllotLibraryBillList = SearchDirectAllotList;
         return new Item_DirectAllot_Fragment();
     }
 
@@ -60,19 +57,19 @@ public class Item_DirectAllot_Fragment extends Fragment {
     }
 
     private void ToLoadData() {
-        if (directAllotNotificationBeanList.size() >= 0) {
+        if (directAllotLibraryBillList.size() >= 0) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             RV_SearchSelectDirectAllot.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
             RV_SearchSelectDirectAllot.setLayoutManager(layoutManager);
-            DirectAllotNotification_Adapter adapter = new DirectAllotNotification_Adapter(getActivity(), directAllotNotificationBeanList);
+            SelectDirectAllot_FullAdapter adapter = new SelectDirectAllot_FullAdapter(getActivity(), directAllotLibraryBillList);
             RV_SearchSelectDirectAllot.setAdapter(adapter);
-            adapter.setOnItemClickLitener(new DirectAllotNotification_Adapter.OnItemClickLitener() {
+            adapter.setOnItemClickLitener(new SelectDirectAllot_FullAdapter.OnItemClickLitener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     Intent intent = new Intent(getActivity(),AllotMainActiivty.class);
-                    intent.putExtra("FGUID",directAllotNotificationBeanList.get(position).getFGuid());
-                    ViseLog.i("FGUID"+directAllotNotificationBeanList.get(position).getFGuid());
+                    intent.putExtra("FGUID", directAllotLibraryBillList.get(position).getFGuid());
+                    ViseLog.i("FGUID"+ directAllotLibraryBillList.get(position).getFGuid());
                     startActivity(intent);
                 }
 

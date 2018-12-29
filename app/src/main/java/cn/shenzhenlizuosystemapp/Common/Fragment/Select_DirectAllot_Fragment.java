@@ -14,34 +14,20 @@ import android.view.ViewGroup;
 
 import com.vise.log.ViseLog;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-
-import cn.shenzhenlizuosystemapp.Common.Adapter.DirectAllotNotification_Adapter;
-import cn.shenzhenlizuosystemapp.Common.Adapter.SelectInput_FullAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.SelectDirectAllot_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotNotificationBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.UI.DirectAllot.AllotMainActiivty;
-import cn.shenzhenlizuosystemapp.Common.UI.NewInputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
-import cn.shenzhenlizuosystemapp.Common.WebBean.InputAllBean;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
-import cn.shenzhenlizuosystemapp.Common.Xml.DirectAllor.AnalyAllXml;
-import cn.shenzhenlizuosystemapp.Common.Xml.InputXmlAnalysis;
+import cn.shenzhenlizuosystemapp.Common.Xml.DirectAllor.DirectAllotLibraryXmlAnalysis;
 import cn.shenzhenlizuosystemapp.R;
 
 public class Select_DirectAllot_Fragment extends Fragment {
@@ -51,7 +37,7 @@ public class Select_DirectAllot_Fragment extends Fragment {
     private WebService webService;
     private Tools tools;
     private ProgressDialog PD;
-    private List<DirectAllotNotificationBean> directAllotNotificationBeanList;
+    private List<DirectAllotLibraryBill> directAllotLibraryBillList;
 
     public static Select_DirectAllot_Fragment newInstance() {
         Select_DirectAllot_Fragment fragment = new Select_DirectAllot_Fragment();
@@ -77,7 +63,7 @@ public class Select_DirectAllot_Fragment extends Fragment {
         getInputLibraryBillsAsyncTask.execute();
     }
 
-    public class GetInputLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<DirectAllotNotificationBean>> {
+    public class GetInputLibraryBillsAsyncTask extends AsyncTask<Integer, Integer, List<DirectAllotLibraryBill>> {
 
         private RecyclerView recyclerView;
 
@@ -87,7 +73,7 @@ public class Select_DirectAllot_Fragment extends Fragment {
         }
 
         @Override
-        protected List<DirectAllotNotificationBean> doInBackground(Integer... params) {
+        protected List<DirectAllotLibraryBill> doInBackground(Integer... params) {
             String DirectAllotBills = "";
             try {
                 InputStream in_withcode = null;
@@ -99,15 +85,15 @@ public class Select_DirectAllot_Fragment extends Fragment {
                 if (ResultXmlList.get(0).getFStatus().equals("1")) {
                     InputStream inputInfoStream = new ByteArrayInputStream(ResultXmlList.get(0).getFInfo().getBytes("UTF-8"));
                     ViseLog.i("ResultXmlList.get(0).getFInfo() = " + ResultXmlList.get(0).getFInfo());
-                    directAllotNotificationBeanList = AnalyAllXml.getSingleton().GetDirectAllotNotification(inputInfoStream);
+                    directAllotLibraryBillList = DirectAllotLibraryXmlAnalysis.getSingleton().GetDirectAllotNotification(inputInfoStream);
                     inputInfoStream.close();
                 } else {
-                    directAllotNotificationBeanList.clear();
+                    directAllotLibraryBillList.clear();
                 }
             } catch (Exception e) {
                 ViseLog.d("GetInputLibraryBillsAsyncTask Exception " + e);
             }
-            return directAllotNotificationBeanList;
+            return directAllotLibraryBillList;
         }
 
         /**
@@ -115,7 +101,7 @@ public class Select_DirectAllot_Fragment extends Fragment {
          * 在doInBackground方法执行结束之后在运行，并且运行在UI线程当中 可以对UI空间进行设置
          */
         @Override
-        protected void onPostExecute(final List<DirectAllotNotificationBean> result) {
+        protected void onPostExecute(final List<DirectAllotLibraryBill> result) {
             try {
                 PD.dismiss();
                 if (result.size() >= 0) {
@@ -123,9 +109,9 @@ public class Select_DirectAllot_Fragment extends Fragment {
                     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     recyclerView.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
                     recyclerView.setLayoutManager(layoutManager);
-                    DirectAllotNotification_Adapter adapter = new DirectAllotNotification_Adapter(getActivity(), result);
+                    SelectDirectAllot_FullAdapter adapter = new SelectDirectAllot_FullAdapter(getActivity(), result);
                     recyclerView.setAdapter(adapter);
-                    adapter.setOnItemClickLitener(new DirectAllotNotification_Adapter.OnItemClickLitener() {
+                    adapter.setOnItemClickLitener(new SelectDirectAllot_FullAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
                             Intent intent = new Intent(getActivity(), AllotMainActiivty.class);
@@ -154,7 +140,7 @@ public class Select_DirectAllot_Fragment extends Fragment {
         }
     }
 
-    public List<DirectAllotNotificationBean> GetSelectBills() {
-        return this.directAllotNotificationBeanList;
+    public List<DirectAllotLibraryBill> GetSelectBills() {
+        return this.directAllotLibraryBillList;
     }
 }

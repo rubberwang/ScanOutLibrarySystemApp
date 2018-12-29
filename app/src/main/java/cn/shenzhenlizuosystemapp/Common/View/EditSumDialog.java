@@ -3,12 +3,8 @@ package cn.shenzhenlizuosystemapp.Common.View;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,15 +16,7 @@ import android.widget.TextView;
 
 import com.vise.log.ViseLog;
 
-import org.w3c.dom.Text;
-
-import java.lang.ref.WeakReference;
-
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.Port.EditSumPort;
-import cn.shenzhenlizuosystemapp.Common.UI.LoginActivity;
-import cn.shenzhenlizuosystemapp.Common.UI.MainTabActivity;
-import cn.shenzhenlizuosystemapp.Common.Xml.DirectAllor.AnalyAllXml;
 import cn.shenzhenlizuosystemapp.R;
 
 public class EditSumDialog {

@@ -1,6 +1,6 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
 
-public class DirectAllotNotificationBean {
+public class DirectAllotDetail {
     private String FGuid;
     private String FCode;
     private String FDate;

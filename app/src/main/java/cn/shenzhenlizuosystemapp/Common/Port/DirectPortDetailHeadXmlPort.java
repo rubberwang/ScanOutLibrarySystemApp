@@ -2,11 +2,10 @@ package cn.shenzhenlizuosystemapp.Common.Port;
 
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotBodyBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotHeadBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotDetail;
 
 public interface DirectPortDetailHeadXmlPort {
     
-    void OnHead(List<DirectAllotHeadBean> directAllotHeadBeanList);
+    void OnHead(List<DirectAllotDetail> directAllotDetailList);
 
 }

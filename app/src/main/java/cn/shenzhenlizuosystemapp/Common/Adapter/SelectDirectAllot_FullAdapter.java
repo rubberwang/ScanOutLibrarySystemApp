@@ -10,18 +10,17 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotNotificationBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotLibraryBill;
 import cn.shenzhenlizuosystemapp.R;
 
-public class DirectAllotNotification_Adapter extends RecyclerView.Adapter {
+public class SelectDirectAllot_FullAdapter extends RecyclerView.Adapter {
 
     private Context context;
-    private List<DirectAllotNotificationBean> datas;
+    private List<DirectAllotLibraryBill> datas;
     private OnItemClickLitener mOnItemClickLitener;
     private int selected = -1;
 
-    public DirectAllotNotification_Adapter(Context context, List<DirectAllotNotificationBean> data) {
+    public SelectDirectAllot_FullAdapter(Context context, List<DirectAllotLibraryBill> data) {
         this.context = context;
         this.datas = data;
     }
