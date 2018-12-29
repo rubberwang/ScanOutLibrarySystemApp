@@ -67,7 +67,7 @@ public class ScanTask_InputRvAdapter extends RecyclerView.Adapter {
             ((ViewHoders) holder).TV_Unit_Name.setText(datas.get(position).getFUnit_Name());
             ((ViewHoders) holder).TV_AuxQty.setText(datas.get(position).getFAuxQty());
             ((ViewHoders) holder).TV_FExecutedAuxQty.setText(datas.get(position).getFExecutedAuxQty());
-            ((ViewHoders) holder).TV_ThisAuxQty.setText(datas.get(position).getFThisAuxQty().split("\\.")[0]);
+            ((ViewHoders) holder).TV_ThisAuxQty.setText(datas.get(position).getFThisAuxQty());
             
             if (selected == position) {
                 holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.Thin_Bule));

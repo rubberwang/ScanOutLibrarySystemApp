@@ -58,7 +58,7 @@
                     style="@style/ScanOutLibraryText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="3"
+                    android:layout_weight="1.6"
                     android:text="@string/BusType" />
 
                 <TextView
@@ -66,7 +66,8 @@
                     style="@style/ScanInputLibraryText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="4"
+                    android:layout_weight="5"
+                    android:paddingLeft="3dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -214,11 +215,11 @@
                         android:id="@+id/Sp_DirectAllotLabel"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginBottom="2dp"
                         android:layout_marginRight="6dp"
                         android:background="@drawable/border"
                         android:overlapAnchor="false"
                         android:spinnerMode="dropdown"
-                        android:layout_marginBottom="2dp"
                         android:theme="@style/SpnStyle">
 
                     </Spinner>
@@ -250,6 +251,11 @@
             android:layout_weight="7" />
 
     </LinearLayout>
+
+    <EditText
+        android:id="@+id/ET_SuckUp"
+        android:layout_width="1px"
+        android:layout_height="1px" />
 
     <LinearLayout
         android:layout_width="match_parent"

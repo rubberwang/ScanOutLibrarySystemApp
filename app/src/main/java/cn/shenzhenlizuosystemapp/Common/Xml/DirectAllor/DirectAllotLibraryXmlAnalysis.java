@@ -14,14 +14,18 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.shenzhenlizuosystemapp.Common.AsyncGetData.DirectAllotTask.CreatAdjustStockBill;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarCodeHeadBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarcodeXmlBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CreateAdjustStockBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotSubBodyBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotSubmitDataBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotTaskRvData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubBodyBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.SubBody;
+import cn.shenzhenlizuosystemapp.Common.WebBean.DirectAllotAllBean;
 import cn.shenzhenlizuosystemapp.Common.WebBean.InputLibraryAllInfo;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.Port.DirectPortDetailBodyXmlPort;
@@ -171,8 +175,8 @@ public class DirectAllotLibraryXmlAnalysis {
                     case XmlPullParser.END_TAG:
                         if (parser.getName().equalsIgnoreCase("Head")
                                 && (directAllotDetail != null)) {
-                                directAllotDetailList.add(directAllotDetail);
-                                directAllotDetail = null;
+                            directAllotDetailList.add(directAllotDetail);
+                            directAllotDetail = null;
                         }
                         break;
                 }
@@ -238,7 +242,7 @@ public class DirectAllotLibraryXmlAnalysis {
                             if (Tools.IsObjectNull(directAllotTaskRvData)) {
                                 directAllotTaskRvData.setFUnitRate(parser.nextText());
                             }
-                        }else if (name.equalsIgnoreCase("FPrice")) {
+                        } else if (name.equalsIgnoreCase("FPrice")) {
                             if (Tools.IsObjectNull(directAllotTaskRvData)) {
                                 directAllotTaskRvData.setFPrice(parser.nextText());
                             }
@@ -246,27 +250,27 @@ public class DirectAllotLibraryXmlAnalysis {
                             if (Tools.IsObjectNull(directAllotTaskRvData)) {
                                 directAllotTaskRvData.setFAuxQty(parser.nextText());
                             }
-                        }else if (name.equalsIgnoreCase("FBaseQty")) {
+                        } else if (name.equalsIgnoreCase("FBaseQty")) {
                             if (Tools.IsObjectNull(directAllotTaskRvData)) {
                                 directAllotTaskRvData.setFBaseQty(parser.nextText());
                             }
-                        }else if (name.equalsIgnoreCase("FExecutedBaseQty")) {
+                        } else if (name.equalsIgnoreCase("FExecutedBaseQty")) {
                             if (Tools.IsObjectNull(directAllotTaskRvData)) {
                                 directAllotTaskRvData.setFExecutedBaseQty(parser.nextText());
                             }
-                        }else if (name.equalsIgnoreCase("FExecutedAuxQty")) {
+                        } else if (name.equalsIgnoreCase("FExecutedAuxQty")) {
                             if (Tools.IsObjectNull(directAllotTaskRvData)) {
                                 directAllotTaskRvData.setFExecutedAuxQty(parser.nextText());
                             }
-                        }else if (name.equalsIgnoreCase("FIsClosed")) {
+                        } else if (name.equalsIgnoreCase("FIsClosed")) {
                             if (Tools.IsObjectNull(directAllotTaskRvData)) {
                                 directAllotTaskRvData.setFIsClosed(parser.nextText());
                             }
-                        }else if (name.equalsIgnoreCase("FThisBaseQty")) {
+                        } else if (name.equalsIgnoreCase("FThisBaseQty")) {
                             if (Tools.IsObjectNull(directAllotTaskRvData)) {
                                 directAllotTaskRvData.setFThisBaseQty(parser.nextText());
                             }
-                        }else if (name.equalsIgnoreCase("FThisAuxQty")) {
+                        } else if (name.equalsIgnoreCase("FThisAuxQty")) {
                             if (Tools.IsObjectNull(directAllotTaskRvData)) {
                                 directAllotTaskRvData.setFThisAuxQty(parser.nextText());
                             }
@@ -288,5 +292,63 @@ public class DirectAllotLibraryXmlAnalysis {
             e.printStackTrace();
             ViseLog.i("GetBarCodeBody Exception = " + e);
         }
+    }
+
+    public static String CreateAdjustStockBillXmlStr(String FGuid, String FTransactionTypeID, String FOutStockID,String FOutStockCellID, String FInStockID, String FInStockCellID, List<CreateAdjustStockBean> createAdjustStockBeanList) {
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            StringWriter stringWriter = new StringWriter();
+            XmlSerializer serializer = Xml.newSerializer();
+            try {
+                serializer.setOutput(stringWriter);
+                serializer.startDocument("UTF-8", true);
+                serializer.startTag(null, "NewDataSet");
+                serializer.startTag(null, "BillHead");
+                serializer.startTag(null, "FGuid");
+                serializer.text(FGuid);
+                serializer.endTag(null, "FGuid");
+                serializer.startTag(null, "FTransactionTypeID");
+                serializer.text(FTransactionTypeID);
+                serializer.endTag(null, "FTransactionTypeID");
+                serializer.startTag(null, "FOutStockID");
+                serializer.text(FOutStockID);
+                serializer.endTag(null, "FOutStockID");
+                serializer.startTag(null, "FOutStockCellID");
+                serializer.text(FOutStockCellID);
+                serializer.endTag(null, "FOutStockCellID");
+                serializer.startTag(null, "FInStockID");
+                serializer.text(FInStockID);
+                serializer.endTag(null, "FInStockID");
+                serializer.startTag(null, "FInStockCellID");
+                serializer.text(FInStockCellID);
+                serializer.endTag(null, "FInStockCellID");
+                serializer.endTag(null, "BillHead");
+                for (CreateAdjustStockBean adjustStockBean : createAdjustStockBeanList) {
+                    serializer.startTag(null, "SubBody");
+                    serializer.startTag(null, "FBillBodyID");
+                    serializer.text(adjustStockBean.getFBillBodyID());
+                    serializer.endTag(null, "FBillBodyID");
+                    serializer.startTag(null, "FBarcodeLib");
+                    serializer.text(adjustStockBean.getFBarcodeLib());
+                    serializer.endTag(null, "FBarcodeLib");
+                    serializer.startTag(null, "FAuxQty");
+                    serializer.text(adjustStockBean.getFAuxQty());
+                    serializer.endTag(null, "FAuxQty");
+                    serializer.endTag(null, "SubBody");
+                }
+                serializer.endTag(null, "NewDataSet");
+                serializer.endDocument();
+                stringWriter.close();
+                return String.valueOf(stringWriter);
+            } catch (Exception e) {
+                e.printStackTrace();
+                try {
+                    stringWriter.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        return "";
     }
 }

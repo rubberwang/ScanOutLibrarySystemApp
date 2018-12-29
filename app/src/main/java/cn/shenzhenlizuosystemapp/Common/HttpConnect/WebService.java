@@ -387,5 +387,24 @@ public class WebService {
         String Result = object.toString();
         return Result;
     }
+    
+    public String CreatAdjustStockBill(String ConnectionID,String UserCode,String XmlData) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "CreatAdjustStockBill");
+        soapObject.addProperty("ConnectionID", ConnectionID);
+        soapObject.addProperty("UserCode", UserCode);
+        soapObject.addProperty("XmlData", XmlData);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/CreatAdjustStockBill", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
+    
 }
 

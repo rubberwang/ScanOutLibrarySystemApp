@@ -128,4 +128,5 @@
     <string name="AlreadyAllot">已调数量:</string>
     <string name="ThisAllot">本次调货:</string>
     <string name="NotAllot">未调数量:</string>
+    <string name="Refresh">刷新</string>
 </resources>

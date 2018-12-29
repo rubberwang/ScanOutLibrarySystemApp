@@ -1,5 +1,8 @@
 package cn.shenzhenlizuosystemapp.Common.UI.DirectAllot;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -11,11 +14,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.vise.log.ViseLog;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -30,16 +35,20 @@ import cn.shenzhenlizuosystemapp.Common.Adapter.ScanTask_DirectAllotRvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Adapter.ScanTask_InputRvAdapter;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.BarCodeCheckTask;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.DirectAllotTask.AllotDetailTask;
+import cn.shenzhenlizuosystemapp.Common.AsyncGetData.DirectAllotTask.CreatAdjustStockBill;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.InputBillCreateTask;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.InputBodyLockTask;
+import cn.shenzhenlizuosystemapp.Common.AsyncGetData.UnlockTask;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
+import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.Base.ZebarTools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarCodeHeadBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarCodeMessage;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarcodeXmlBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildTag;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CreateAdjustStockBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubBodyBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
@@ -47,11 +56,13 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.MaterialModeBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.Port.BarCodeCheckPort;
+import cn.shenzhenlizuosystemapp.Common.Port.CreatAdjustStockBillPort;
 import cn.shenzhenlizuosystemapp.Common.Port.EditSumPort;
 import cn.shenzhenlizuosystemapp.Common.Port.InputBillCreate;
 import cn.shenzhenlizuosystemapp.Common.Port.GetLabelTempletBaecodesPort;
 import cn.shenzhenlizuosystemapp.Common.Port.LockResultPort;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.MaterialModeAdapter;
+import cn.shenzhenlizuosystemapp.Common.UI.NewInputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.EditSumDialog;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
@@ -83,17 +94,13 @@ public class AllotMainActiivty extends BaseActivity {
     private RecyclerView RV_ScanInfoTable;
     private RecyclerView RV_ResInfoTable;
     private MyProgressDialog myProgressDialog;
+    private EditText ET_SuckUp;
 
     private String BillID;
     private int scanTask_directAllotRvIndex = -1;
     private int Sp_DirectAllotLabelIndex = -1;
     private int Sp_DirectAllotNotification_FOutStockCellIndex = -1;
     private int Sp_DirectAllotNotification_FInStockCellIndex = -1;
-    private int RV_ScanInfoTableIndex = 0;
-    private int SpHouseIndex = 0;
-    private int SpInputHouseSpaceIndex = 0;
-    private int Sp_LabelModeIndex = 0;
-    private boolean Is_InputNumber_Mode = false;
     private String FBarcodeLib = "";
     private String ILSum = "";
     private int RefreshStatu = 1;
@@ -104,30 +111,22 @@ public class AllotMainActiivty extends BaseActivity {
     private boolean IsAddSerialNumber = false;
     private boolean IsSave = false;
 
-    //数组
-    private List<ChildTag> childTagList = null;
-    private List<InputTaskRvData> inputTaskRvDataList = null;
-    private List<StockBean> stockBeans = null;
-    private List<StockBean> stockBeanList = null;
-    private List<MaterialModeBean> materialModeBeanList = new ArrayList<MaterialModeBean>();
-    private List<InputSubBodyBean> InputSubmitList = new ArrayList<InputSubBodyBean>();
+    private List<CreateAdjustStockBean> InputSubmitList = new ArrayList<CreateAdjustStockBean>();
     private List<String> CheckFGuid = new ArrayList<String>();
-
-    //类
-    private Context MContect;
-    private Tools tools = null;
-    private WebService webService;
-    private ScanTask_DirectAllotRvAdapter scanTask_directAllotRvAdapter;
-    private ScanResult_InputRvAdapter scanResult_Input_rvAdapter;
-    private ScanTask_InputRvAdapter scanTask_Input_rvAdapter;
-    private EditSumPort editSumPort;
-
     private List<DirectAllotTaskRvData> directAllotTaskRvDataList;
     private List<MaterialModeBean> MaterialModeBeanList;
     private List<DirectAllotDetail> directAllotDetailList;
     private List<StockBean> OutStockBeanList;
     private List<StockBean> InStockBeanList;
     private List<ChildTag> ChildTagList;
+
+    private Context MContect;
+    private Tools tools = null;
+    private WebService webService;
+    private EditSumPort editSumPort;
+    private ScanTask_DirectAllotRvAdapter scanTask_directAllotRvAdapter;
+    private ScanResult_InputRvAdapter scanResult_Input_rvAdapter;
+    private DirectAllotObServer directAllotObServer;
 
     private int GetSpinnerPos(List<StockBean> Datas, String value) {
         for (int i = 0; i < Datas.size(); i++) {
@@ -145,13 +144,17 @@ public class AllotMainActiivty extends BaseActivity {
 
     @Override
     public void initData() {
+        directAllotObServer = new DirectAllotObServer();
+        getLifecycle().addObserver(directAllotObServer);
         MContect = new WeakReference<>(AllotMainActiivty.this).get();
-        Intent intent = getIntent();
+        EventBus.getDefault().register(MContect);
         tools = Tools.getTools();
         BillID = getIntent().getStringExtra("FGUID");
+        tools.PutStringData("AllotMainActiivtyFGUID", BillID, tools.InitSharedPreferences(MContect));
         webService = WebService.getSingleton(MContect);
         tools = Tools.getTools();
         GetAllotDetail();
+        InitClick();
         editSumPort = new EditSumPort() {
             @Override
             public void OnEnSure(String Sum) {
@@ -161,6 +164,9 @@ public class AllotMainActiivty extends BaseActivity {
                 inputManager.toggleSoftInput(0, 0);
             }
         };
+        ET_SuckUp.setFocusable(true);
+        ET_SuckUp.setFocusableInTouchMode(true);
+        ET_SuckUp.requestFocus();
     }
 
     @Override
@@ -177,6 +183,83 @@ public class AllotMainActiivty extends BaseActivity {
         RV_ScanInfoTable = $(R.id.RV_ScanInfoTable);
         RV_ResInfoTable = $(R.id.RV_ResInfoTable);
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
+        ET_SuckUp = $(R.id.ET_SuckUp);
+    }
+
+    class DirectAllotObServer implements LifecycleObserver {
+        @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        public void ON_CREATE() {
+            ZebarTools.getZebarTools().SetZebarDWConfig(MContect, "1", "1");
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_START)
+        public void ON_START() {
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+        public void ON_RESUME() {
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+        public void ON_PAUSE() {
+            UnlockTask unlockTask = new UnlockTask(webService);
+            unlockTask.execute();
+            EditSumDialog.getSingleton().Dismiss();
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+        public void ON_STOP() {
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        public void ON_DESTROY() {
+            EventBus.getDefault().unregister(MContect);
+        }
+    }
+
+    private void InitClick() {
+        TV_DirectAllotSumbit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (IsSave) {
+                    tools.ShowOnClickDialog(MContect, "确定保存吗？", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            myProgressDialog.ShowPD("保存中");
+                            CreateBillData();
+                            tools.DisappearDialog();
+                        }
+                    }, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            tools.DisappearDialog();
+                        }
+                    }, false);
+                } else {
+                    tools.ShowDialog(MContect, "没有提交数据，无法保存");
+                }
+            }
+        });
+
+        TV_DirectAllotCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        tools.DisappearDialog();
+                        ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
+                    }
+                }, new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        tools.DisappearDialog();
+                    }
+                }, false);
+            }
+        });
     }
 
     private void GetAllotDetail() {
@@ -208,8 +291,9 @@ public class AllotMainActiivty extends BaseActivity {
                                 TV_BusType.setText(directAllotHeadBeanList.get(0).getFTransactionType_Name());
                                 Tv_DirectAllotNotification_FOutStock.setText(directAllotHeadBeanList.get(0).getFOutStock_Name());
                                 Tv_DirectAllotNotification_FInStock.setText(directAllotHeadBeanList.get(0).getFInStock_Name());
+                                HeadID = directAllotHeadBeanList.get(0).getFGuid();
                                 InitSotckCellSp();
-        }
+                            }
                         };
                         InputStream IS_DirectAllotHead = new ByteArrayInputStream(res.getBytes("UTF-8"));
                         DirectAllotLibraryXmlAnalysis.getSingleton().GetDirectAllotDetailHeadInfo(IS_DirectAllotHead, directPortDetailHeadXmlPort);
@@ -339,32 +423,6 @@ public class AllotMainActiivty extends BaseActivity {
         }
     }
 
-    private MyHandler AllotHandle = new MyHandler(AllotMainActiivty.this);
-
-    class MyHandler extends Handler {
-        // 弱引用 ，防止内存泄露
-        private WeakReference<AllotMainActiivty> weakReference;
-
-        public MyHandler(AllotMainActiivty AllotMainActiivty) {
-            weakReference = new WeakReference<>(AllotMainActiivty);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            AllotMainActiivty handlerMemoryActivity = weakReference.get();
-            if (handlerMemoryActivity != null) {
-                switch (msg.what) {
-                    case 1: {
-                        break;
-                    }
-                }
-            } else {
-                ViseLog.i("没有得到Activity实例不进行操作");
-            }
-        }
-    }
-
     private List<DirectAllotTaskRvData> DisposeTaskTableList(List<DirectAllotTaskRvData> directAllotTaskRvDataList) {
         List<DirectAllotTaskRvData> removeList = new ArrayList<DirectAllotTaskRvData>();
         for (int index = 0; index < directAllotTaskRvDataList.size(); index++) {
@@ -398,8 +456,11 @@ public class AllotMainActiivty extends BaseActivity {
             directAllotTaskRvDataList.get(index).setFNotAllotQty(AddNoSendQty);
             directAllotTaskRvDataList.get(index).setFAuxQty(String.valueOf(AddAuxQty));
             directAllotTaskRvDataList.get(index).setFExecutedAuxQty(String.valueOf(AddExecutedAuxQty));
+            directAllotTaskRvDataList.get(index).setFThisAuxQty(String.valueOf(Tools.StringOfFloat(directAllotTaskRvDataList.get(index).getFThisAuxQty())));
         }
-        directAllotTaskRvDataList.removeAll(removeList);
+        if (removeList.size() > 0) {
+            directAllotTaskRvDataList.removeAll(removeList);
+        }
         return directAllotTaskRvDataList;
     }
 
@@ -527,11 +588,13 @@ public class AllotMainActiivty extends BaseActivity {
                                     Is_ExistScanValue = true;
                                     PutResultArray(barcodeXmlBeanList);
                                     FBarcodeLib = BarCodeInfoHeadList.get(2).getFGudi();
-                                    IsBarCodeInfoHead.close();
-                                    IsBarCodeInfoBody.close();
                                     ShowEditSumDialog(NoInputLibrary());
                                     ViseLog.i("通用号 FBarcodeLib =" + FBarcodeLib);
                                 }
+                                Sp_DirectAllotNotification_FInStockCell.setEnabled(false);
+                                Sp_DirectAllotNotification_FOutStockCell.setEnabled(false);
+                                IsBarCodeInfoHead.close();
+                                IsBarCodeInfoBody.close();
                             } else {
                                 tools.ShowDialog(MContect, Info.substring(2, Info.length()));
                             }
@@ -545,7 +608,6 @@ public class AllotMainActiivty extends BaseActivity {
                         MaterialModeBeanList.get(Sp_DirectAllotLabelIndex).getFGuid(), data);
                 barCodeCheckTask.execute();
             } else {
-//            tools.ShowDialog(MContect, "请选择单据分路");
                 if (!TextUtils.isEmpty(msg.data)) {
                     int InPos = GetSpinnerPos(InStockBeanList, msg.data);
                     if (InPos != -1) {
@@ -573,41 +635,39 @@ public class AllotMainActiivty extends BaseActivity {
                                 CheckFGuid.add(FBarcodeLib);
                                 IsAddSerialNumber = false;
                             }
-                            Sp_DirectAllotNotification_FInStockCell.setEnabled(false);
-                            Sp_DirectAllotNotification_FOutStockCell.setEnabled(false);
-                            Drawable drawable_border = getResources().getDrawable(R.drawable.border);
-                            Sp_DirectAllotNotification_FInStockCell.setBackground(drawable_border);
-                            Sp_DirectAllotNotification_FOutStockCell.setBackground(drawable_border);
+
+                            Drawable FInStockCell_border = getResources().getDrawable(R.drawable.border);
+                            Sp_DirectAllotNotification_FInStockCell.setBackground(FInStockCell_border);
+                            Drawable FOutStockCell_border = getResources().getDrawable(R.drawable.border);
+                            Sp_DirectAllotNotification_FOutStockCell.setBackground(FOutStockCell_border);
 
                             IsSave = true;
                             Drawable drawable_purple = getResources().getDrawable(R.drawable.circularbead_purple);
                             TV_DirectAllotSumbit.setBackground(drawable_purple);
                             TV_DirectAllotSumbit.setTextColor(getResources().getColor(R.color.White));
 
-                            InputSubBodyBean subBodyBean = new InputSubBodyBean();
-                            subBodyBean.setFBillBodyID(directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFGuid());
-                            subBodyBean.setFBarcodeLib(FBarcodeLib);
-                            subBodyBean.setInputLibrarySum(InputSum);
-                            InputSubmitList.add(subBodyBean);
+                            CreateAdjustStockBean createAdjustStockBean = new CreateAdjustStockBean();
+                            createAdjustStockBean.setFBillBodyID(directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFGuid());
+                            createAdjustStockBean.setFBarcodeLib(FBarcodeLib);
+                            createAdjustStockBean.setFAuxQty(InputSum);
+                            InputSubmitList.add(createAdjustStockBean);
 
-                            float Sum = Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty()) +
+                            float Sum = Tools.StringOfFloat(directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFThisAuxQty()) +
                                     Tools.StringOfFloat(InputSum);
                             String SetFThisAuxQty = String.valueOf(Sum);
-                            inputTaskRvDataList.get(RV_ScanInfoTableIndex).setFThisAuxQty(SetFThisAuxQty);
+                            directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).setFThisAuxQty(SetFThisAuxQty);
 
                             //为最后生成入库单保存数据array
-                            float NewNoPut = Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty()) - (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty()) +
-                                    Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty()));
+                            float NewNoPut = Tools.StringOfFloat(directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFAuxQty()) - (Tools.StringOfFloat(directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFExecutedAuxQty()) +
+                                    Tools.StringOfFloat(directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFThisAuxQty()));
                             String SetNoInput = String.valueOf(NewNoPut);
-                            inputTaskRvDataList.get(RV_ScanInfoTableIndex).setNoInput(SetNoInput);
+                            directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).setFNotAllotQty(SetNoInput);
 
-                            if (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getNoInput()) <= 0) {
-                                scanTask_Input_rvAdapter.setSelection(-1);
+                            if (Tools.StringOfFloat(directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFNotAllotQty()) <= 0) {
+                                scanTask_directAllotRvAdapter.setSelection(-1);
                             }
-                            scanTask_Input_rvAdapter.notifyDataSetChanged();
-                            Is_InputNumber_Mode = false;
-//                            childTagList.clear();
-//                            scanResult_Input_rvAdapter.notifyDataSetChanged();
+                            scanTask_directAllotRvAdapter.notifyDataSetChanged();
+                            Is_ExistScanValue = false;
                         } else {
                             tools.ShowDialog(MContect, "提交数量不能大于未收数量");
                         }
@@ -649,20 +709,21 @@ public class AllotMainActiivty extends BaseActivity {
     }
 
     private void CreateBillData() {
-
-        InputBillCreate inputBillCreate = new InputBillCreate() {
+        CreatAdjustStockBillPort creatAdjustStockBillPort = new CreatAdjustStockBillPort() {
             @Override
-            public void onResult(String Info) {
-                if (Info.substring(0, 2).equals("EX")) {
-                    tools.ShowDialog(MContect, Info.substring(2, Info.length()));
+            public void OnResult(String res) {
+                String ResInfo = res.substring(0, 2);
+                if (ResInfo.equals("EX")) {
+                    tools.ShowDialog(MContect, res.substring(2, res.length()));
                 } else {
-                    tools.ShowOnClickDialog(MContect, Info, new View.OnClickListener() {
+                    tools.ShowOnClickDialog(MContect, res, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            myProgressDialog.dismiss();
                             tools.DisappearDialog();
                             finish();
                             Intent intent = new Intent(AllotMainActiivty.this, AllotMainActiivty.class);
-                            intent.putExtra("FGUID", tools.GetStringData(tools.InitSharedPreferences(AllotMainActiivty.this), "NewInputLibraryActivityFGUID"));
+                            intent.putExtra("FGUID", tools.GetStringData(tools.InitSharedPreferences(AllotMainActiivty.this), "AllotMainActiivtyFGUID"));
                             startActivity(intent);
                         }
                     }, new View.OnClickListener() {
@@ -674,8 +735,9 @@ public class AllotMainActiivty extends BaseActivity {
                 }
             }
         };
-        InputBillCreateTask inputBillCreateTask = new InputBillCreateTask(HeadID, stockBeans.get(SpHouseIndex).getFGuid(), stockBeanList.get(SpInputHouseSpaceIndex).getFGuid()
-                , InputSubmitList, webService, myProgressDialog, inputBillCreate);
+        CreatAdjustStockBill inputBillCreateTask = new CreatAdjustStockBill(creatAdjustStockBillPort, webService, HeadID, directAllotDetailList.get(0).getFTransactionType(),
+                directAllotDetailList.get(0).getFInStock(), directAllotDetailList.get(0).getFOutStock(), InStockBeanList.get(Sp_DirectAllotNotification_FInStockCellIndex).getFGuid(),
+                OutStockBeanList.get(Sp_DirectAllotNotification_FOutStockCellIndex).getFGuid(), InputSubmitList);
         inputBillCreateTask.execute();
 
     }
@@ -708,11 +770,27 @@ public class AllotMainActiivty extends BaseActivity {
     }
 
     private void CleanData() {
-        Is_InputNumber_Mode = false;
-        childTagList.clear();
+        Is_ExistScanValue = false;
+        ChildTagList.clear();
         scanResult_Input_rvAdapter.notifyDataSetChanged();
-        scanTask_Input_rvAdapter.setSelection(-1);
-        scanTask_Input_rvAdapter.notifyDataSetChanged();
+        scanTask_directAllotRvAdapter.setSelection(-1);
+        scanTask_directAllotRvAdapter.notifyDataSetChanged();
         ViseLog.i("Click CleanData");
+    }
+
+    @Override
+    public void onBackPressed() {
+        tools.ShowOnClickDialog(MContect, "是否退出调拨界面，退出数据将清空", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tools.DisappearDialog();
+                ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tools.DisappearDialog();
+            }
+        }, false);
     }
 }
