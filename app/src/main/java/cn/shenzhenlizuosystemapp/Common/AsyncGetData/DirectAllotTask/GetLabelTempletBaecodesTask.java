@@ -35,8 +35,8 @@ public class GetLabelTempletBaecodesTask extends AsyncTask<String, Void, String>
     @Override
     protected String doInBackground(String... params) {
         try {
-            String StatuResStr = webService.GetMaterialLabelTemplet(ConnectStr.ConnectionToString, LabelTempletID);
-            ViseLog.i("GetLabelTempletBaecodesTask StatuResStr = " + StatuResStr);
+            String StatuResStr = webService.GetLabelTempletBarcodes(ConnectStr.ConnectionToString, LabelTempletID);
+            ViseLog.i("GetLabelTempletBaecodesTask StatuResStr = " + ConnectStr.ConnectionToString + "," + LabelTempletID);
             InputStream Is_statu = new ByteArrayInputStream(StatuResStr.getBytes("UTF-8"));
             List<AdapterReturn> statureslist = AnalysisReturnsXml.getSingleton().GetReturn(Is_statu);
             Is_statu.close();

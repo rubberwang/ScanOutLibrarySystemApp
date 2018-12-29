@@ -39,7 +39,7 @@ public class DirectAllotStockAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        view = LayoutInflater.from(context).inflate(R.layout.input_spinner, null);
+        view = LayoutInflater.from(context).inflate(R.layout.allot_sp_item, null);
         TextView textView = view.findViewById(R.id.TV_InputSpinner);
         textView.setText(data.get(i).getFName());
         return view;

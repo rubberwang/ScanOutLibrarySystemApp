@@ -774,8 +774,8 @@ public class NewInputLibraryActivity extends BaseActivity {
                             }
                             scanTask_Input_rvAdapter.notifyDataSetChanged();
                             Is_InputNumber_Mode = false;
-                            childTagList.clear();
-                            scanResult_Input_rvAdapter.notifyDataSetChanged();
+//                            childTagList.clear();
+//                            scanResult_Input_rvAdapter.notifyDataSetChanged();
                         } else {
                             tools.ShowDialog(MContect, "提交数量不能大于未收数量");
                         }
