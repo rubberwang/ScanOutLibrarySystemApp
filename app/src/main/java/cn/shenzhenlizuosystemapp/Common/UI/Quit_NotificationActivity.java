@@ -30,6 +30,7 @@ public class Quit_NotificationActivity extends BaseActivity {
     private TextView TV_CastAbout;
     private EditText ET_CastAbout;
     private TextView Back;
+    private TextView TV_Refresh;
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
@@ -63,6 +64,7 @@ public class Quit_NotificationActivity extends BaseActivity {
         TV_CastAbout = $(R.id.TV_CastAbout);
         ET_CastAbout = $(R.id.ET_CastAbout);
         Back = $(R.id.Back);
+        TV_Refresh = $(R.id.TV_Refresh);
     }
 
     private void InitClick() {
@@ -77,6 +79,12 @@ public class Quit_NotificationActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 ViewManager.getInstance().finishActivity(Quit_NotificationActivity.this);
+            }
+        });
+        TV_Refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InitFragment();
             }
         });
     }

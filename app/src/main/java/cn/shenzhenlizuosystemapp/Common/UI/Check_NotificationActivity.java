@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.vise.log.ViseLog;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class Check_NotificationActivity extends BaseActivity {
     private TextView TV_CastAbout;
     private EditText ET_CastAbout;
     private TextView Back;
+    private TextView TV_Refresh;
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
@@ -37,6 +39,7 @@ public class Check_NotificationActivity extends BaseActivity {
     private List<CheckLibraryBill> outLibraryBills;
     private List<CheckLibraryBill> SearchResultList;
     private Tools tools;
+    private Check_NotificationActivity MContect = null;
 
     @Override
     protected int inflateLayout() {
@@ -45,6 +48,7 @@ public class Check_NotificationActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        MContect = new WeakReference<>(Check_NotificationActivity.this).get();
         SearchResultList = new ArrayList<>();
         tools = new Tools();
         InitFragment();
@@ -60,6 +64,7 @@ public class Check_NotificationActivity extends BaseActivity {
         TV_CastAbout = $(R.id.TV_CastAbout);
         ET_CastAbout = $(R.id.ET_CastAbout);
         Back = $(R.id.Back);
+        TV_Refresh = $(R.id.TV_Refresh);
     }
 
     private void InitClick() {
@@ -74,6 +79,12 @@ public class Check_NotificationActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 ViewManager.getInstance().finishActivity(Check_NotificationActivity.this);
+            }
+        });
+        TV_Refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InitFragment();
             }
         });
     }
@@ -104,6 +115,8 @@ public class Check_NotificationActivity extends BaseActivity {
                         CheckLibraryBill outLibraryBill = new CheckLibraryBill();
                         outLibraryBill.setFCode(outLibraryBills.get(i).getFCode());
                         outLibraryBill.setFDate(outLibraryBills.get(i).getFDate());
+                        outLibraryBill.setFTransactionType_Name(outLibraryBills.get(i).getFTransactionType_Name());
+                        outLibraryBill.setFTransactionType(outLibraryBills.get(i).getFTransactionType());
                         outLibraryBill.setFStock_Name(outLibraryBills.get(i).getFStock_Name());
                         outLibraryBill.setFStock(outLibraryBills.get(i).getFStock());
                         outLibraryBill.setFGuid(outLibraryBills.get(i).getFGuid());
@@ -152,7 +165,7 @@ public class Check_NotificationActivity extends BaseActivity {
                 if (result == 1) {
                     Item_CheckLibrary_Fragment searchInputLibraryFragment = Item_CheckLibrary_Fragment.newInstance(SearchResultList);
                     FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.F_SelectOut, searchInputLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                    fragmentManager.beginTransaction().replace(R.id.F_SelectSum, searchInputLibraryFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                     LL_BackMainTable.setVisibility(View.VISIBLE);
                     TextView TV_BackMainTable = (TextView) LL_BackMainTable.findViewById(R.id.TV_BackMainTable);
                     TV_BackMainTable.setOnClickListener(new View.OnClickListener() {
