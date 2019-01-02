@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.vise.log.ViseLog;
 
+import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Port.EditSumPort;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -24,6 +25,8 @@ public class EditSumDialog {
     private volatile static EditSumDialog editSumDialog;
     private boolean Is_Show = false;
     private Dialog dialog = null;
+    private TextView Tv_ErrorHint;
+    private EditText Ed_Sum;
 
     public static EditSumDialog getSingleton() {
         if (editSumDialog == null) {
@@ -44,10 +47,11 @@ public class EditSumDialog {
                 dialog = new Dialog(context);
                 dialog.setContentView(view);
                 TextView Tv_TheCurrentMaterialCode = view.findViewById(R.id.Tv_TheCurrentMaterialCode);
-                final EditText Ed_Sum = view.findViewById(R.id.Ed_Sum);
+                Ed_Sum = view.findViewById(R.id.Ed_Sum);
                 TextView TV_Ensure = view.findViewById(R.id.TV_Ensure);
                 TextView TV_Cancel = view.findViewById(R.id.TV_Cancel);
                 TextView Tv_SumUnit = view.findViewById(R.id.Tv_SumUnit);
+                Tv_ErrorHint = view.findViewById(R.id.Tv_ErrorHint);
                 Tv_TheCurrentMaterialCode.setText(Code);
                 Tv_SumUnit.setText(SumUnit);
                 Ed_Sum.setText(DefaultSum);
@@ -62,7 +66,6 @@ public class EditSumDialog {
                     @Override
                     public void onClick(View view) {
                         editSumPort.OnEnSure(Ed_Sum.getText().toString());
-                        Dismiss();
                     }
                 });
                 TV_Cancel.setOnClickListener(Cancel);
@@ -91,11 +94,23 @@ public class EditSumDialog {
         }
     }
 
+    public void ShowErrorInfo(String ErrorInfo) {
+        if (Tools.IsObjectNull(Tv_ErrorHint)) {
+            Tv_ErrorHint.setText(ErrorInfo);
+            Tv_ErrorHint.setVisibility(View.VISIBLE);
+        }
+        if (Tools.IsObjectNull(Ed_Sum)) {
+            Ed_Sum.setText("");
+        }
+    }
+
     public void Dismiss() {
         if (dialog != null) {
             Is_Show = false;
             dialog.dismiss();
             dialog = null;
+            Ed_Sum = null;
+            Tv_ErrorHint = null;
         }
     }
 

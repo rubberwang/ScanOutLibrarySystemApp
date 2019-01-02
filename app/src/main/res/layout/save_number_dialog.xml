@@ -78,7 +78,7 @@
                 android:layout_weight="7"
                 android:background="@drawable/edittext_background"
                 android:inputType="number"
-                android:paddingLeft="3dp"/>
+                android:paddingLeft="3dp" />
 
             <TextView
                 android:id="@+id/Tv_SumUnit"
@@ -86,16 +86,24 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.6"
                 android:gravity="center_vertical"
-                android:paddingLeft="3dp"
-               />
+                android:paddingLeft="3dp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.1"
+            android:layout_weight="0.3"
             android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/Tv_ErrorHint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:textColor="@color/ToastRed"
+                android:textSize="12dp"
+                android:visibility="invisible" />
 
         </LinearLayout>
 
