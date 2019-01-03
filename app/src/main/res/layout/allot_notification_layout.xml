@@ -15,8 +15,7 @@
             android:id="@+id/BarText"
             style="@style/AppCustomBarText"
             android:gravity="center_vertical"
-            android:paddingLeft="50dp"
-            android:text="@string/DircetAllotNotification" />
+            android:paddingLeft="50dp" />
     </LinearLayout>
 
 

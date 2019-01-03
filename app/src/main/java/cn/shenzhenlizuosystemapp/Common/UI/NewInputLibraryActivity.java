@@ -203,7 +203,28 @@ public class NewInputLibraryActivity extends BaseActivity {
             @Override
 
             public void onClick(View v) {
-                ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
+                if (Tools.IsObjectNull(childTagList)){
+                    if (childTagList.size()>0){
+                        tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                tools.DisappearDialog();
+                                ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
+                            }
+                        }, new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                tools.DisappearDialog();
+                            }
+                        }, false);
+                    }else {
+                        ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
+                    }
+                }else {
+                    ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
+                }
             }
         });
 
@@ -211,20 +232,28 @@ public class NewInputLibraryActivity extends BaseActivity {
 
             @Override
             public void onClick(View view) {
-                tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
+                if (Tools.IsObjectNull(childTagList)){
+                    if (childTagList.size()>0){
+                        tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View view) {
-                        tools.DisappearDialog();
+                            @Override
+                            public void onClick(View view) {
+                                tools.DisappearDialog();
+                                ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
+                            }
+                        }, new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                tools.DisappearDialog();
+                            }
+                        }, false);
+                    }else {
                         ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
                     }
-                }, new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-                        tools.DisappearDialog();
-                    }
-                }, false);
+                }else {
+                    ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
+                }
             }
         });
 
@@ -538,18 +567,28 @@ public class NewInputLibraryActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        tools.ShowOnClickDialog(MContect, "是否退出入库界面，退出数据将清空", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tools.DisappearDialog();
+        if (Tools.IsObjectNull(childTagList)){
+            if (childTagList.size()>0){
+                tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        tools.DisappearDialog();
+                        ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
+                    }
+                }, new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        tools.DisappearDialog();
+                    }
+                }, false);
+            }else {
                 ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
             }
-        }, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tools.DisappearDialog();
-            }
-        }, false);
+        }else {
+            ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
+        }
     }
 
     private class GetMaterialMode extends AsyncTask<String, Void, List<MaterialModeBean>> {
@@ -725,7 +764,7 @@ public class NewInputLibraryActivity extends BaseActivity {
                     }
                 };
                 BarCodeCheckTask barCodeCheckTask = new BarCodeCheckTask(barCodeCheckPort, webService, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(),
-                        materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data);
+                        materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data,true);
                 barCodeCheckTask.execute();
             } else {
                 if (!TextUtils.isEmpty(msg.data)) {

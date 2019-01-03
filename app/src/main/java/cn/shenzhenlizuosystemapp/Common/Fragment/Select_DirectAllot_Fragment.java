@@ -38,9 +38,11 @@ public class Select_DirectAllot_Fragment extends Fragment {
     private Tools tools;
     private ProgressDialog PD;
     private List<DirectAllotLibraryBill> directAllotLibraryBillList;
+    private static String Type;
 
-    public static Select_DirectAllot_Fragment newInstance() {
+    public static Select_DirectAllot_Fragment newInstance(String Type) {
         Select_DirectAllot_Fragment fragment = new Select_DirectAllot_Fragment();
+        Select_DirectAllot_Fragment.Type = Type;
         return fragment;
     }
 
@@ -77,7 +79,7 @@ public class Select_DirectAllot_Fragment extends Fragment {
             String DirectAllotBills = "";
             try {
                 InputStream in_withcode = null;
-                DirectAllotBills = webService.GetAdjustStockNoticeBillsList(ConnectStr.ConnectionToString, "0");
+                DirectAllotBills = webService.GetAdjustStockNoticeBillsList(ConnectStr.ConnectionToString, Type);
                 ViseLog.i("DirectAllotBills = " + DirectAllotBills);
                 in_withcode = new ByteArrayInputStream(DirectAllotBills.getBytes("UTF-8"));
                 List<AdapterReturn> ResultXmlList = AnalysisReturnsXml.getSingleton().GetReturn(in_withcode);
@@ -116,7 +118,7 @@ public class Select_DirectAllot_Fragment extends Fragment {
                         public void onItemClick(View view, int position) {
                             Intent intent = new Intent(getActivity(), AllotMainActiivty.class);
                             intent.putExtra("FGUID", result.get(position).getFGuid());
-                            ViseLog.i("DirectAllot FGUID" + result.get(position).getFGuid());
+                            intent.putExtra("Type", Type);
                             startActivity(intent);
                         }
 

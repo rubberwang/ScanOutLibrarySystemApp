@@ -29,6 +29,7 @@ public class AllotNotificationActivity extends BaseActivity {
     private EditText ET_CastAbout;
     private TextView Back;
     private TextView TV_Refresh;
+    private TextView BarText;
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
@@ -37,6 +38,7 @@ public class AllotNotificationActivity extends BaseActivity {
     private List<DirectAllotLibraryBill> SearchResultList;
     private Tools tools;
     private AllotNotificationActivity MContect = null;
+    private String Type;
 
     @Override
     protected int inflateLayout() {
@@ -45,11 +47,26 @@ public class AllotNotificationActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        Type = getIntent().getStringExtra("Type");
         MContect = new WeakReference<>(AllotNotificationActivity.this).get();
         SearchResultList = new ArrayList<>();
         tools = new Tools();
         InitFragment();
         InitClick();
+        switch (Type) {
+            case "0": {
+                BarText.setText(R.string.DircetAllotNotification);
+                break;
+            }
+            case "-1": {
+                BarText.setText(R.string.OutAllotNotification);
+                break;
+            }
+            case "1": {
+                BarText.setText(R.string.InAllotNotification);
+                break;
+            }
+        }
     }
 
     @Override
@@ -61,6 +78,7 @@ public class AllotNotificationActivity extends BaseActivity {
         ET_CastAbout = $(R.id.ET_CastAbout);
         Back = $(R.id.Back);
         TV_Refresh = $(R.id.TV_Refresh);
+        BarText = $(R.id.BarText);
     }
 
     private void InitClick() {
@@ -80,13 +98,13 @@ public class AllotNotificationActivity extends BaseActivity {
         TV_Refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InitFragment();    
+                InitFragment();
             }
         });
     }
 
     private void InitFragment() {
-        select_directAllot_fragment = Select_DirectAllot_Fragment.newInstance();
+        select_directAllot_fragment = Select_DirectAllot_Fragment.newInstance(Type);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.FL_SelectDirectAllot, select_directAllot_fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
     }

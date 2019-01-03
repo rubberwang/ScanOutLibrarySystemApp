@@ -91,6 +91,18 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
+        <activity
+            android:name=".Common.UI.OutAllot.OutAllotNotificationActivity"
+            android:label="@string/OutAllotNotification"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".Common.UI.OutAllot.OutAllotActivity"
+            android:label="@string/OutAllotScan"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <receiver android:name=".Common.BroadcastReceiver.ReceiveData_Recevier">
             <intent-filter>
                 <action android:name="cn.shenzhenlizuosystemapp.action"></action>

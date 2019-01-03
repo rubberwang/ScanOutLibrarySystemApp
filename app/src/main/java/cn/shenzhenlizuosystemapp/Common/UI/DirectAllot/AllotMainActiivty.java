@@ -87,6 +87,7 @@ public class AllotMainActiivty extends BaseActivity {
     private TextView TV_DirectAllotSumbit;
     private TextView TV_DirectAllotCancel;
     private TextView Tv_DirectAllotNotification_FOutStock;
+    private TextView BarText;
     private Spinner Sp_DirectAllotNotification_FOutStockCell;
     private TextView Tv_DirectAllotNotification_FInStock;
     private Spinner Sp_DirectAllotNotification_FInStockCell;
@@ -95,6 +96,7 @@ public class AllotMainActiivty extends BaseActivity {
     private RecyclerView RV_ResInfoTable;
     private MyProgressDialog myProgressDialog;
     private EditText ET_SuckUp;
+    private TextView Back;
 
     private String BillID;
     private int scanTask_directAllotRvIndex = -1;
@@ -110,6 +112,7 @@ public class AllotMainActiivty extends BaseActivity {
     private boolean IsSerialNumber = true;
     private boolean IsAddSerialNumber = false;
     private boolean IsSave = false;
+    private String Type;
 
     private List<CreateAdjustStockBean> InputSubmitList = new ArrayList<CreateAdjustStockBean>();
     private List<String> CheckFGuid = new ArrayList<String>();
@@ -150,7 +153,9 @@ public class AllotMainActiivty extends BaseActivity {
         EventBus.getDefault().register(MContect);
         tools = Tools.getTools();
         BillID = getIntent().getStringExtra("FGUID");
+        Type = getIntent().getStringExtra("Type");
         tools.PutStringData("AllotMainActiivtyFGUID", BillID, tools.InitSharedPreferences(MContect));
+        tools.PutStringData("Type", Type, tools.InitSharedPreferences(MContect));
         webService = WebService.getSingleton(MContect);
         tools = Tools.getTools();
         GetAllotDetail();
@@ -158,15 +163,39 @@ public class AllotMainActiivty extends BaseActivity {
         editSumPort = new EditSumPort() {
             @Override
             public void OnEnSure(String Sum) {
-                EditSumDialog.getSingleton().Dismiss();
-                SubmitData(Sum);
-                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.toggleSoftInput(0, 0);
+                if (Tools.StringOfFloat(Sum) <= Tools.StringOfFloat(directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFNotAllotQty()) && Tools.StringOfFloat(Sum) > 0) {
+                    EditSumDialog.getSingleton().Dismiss();
+                    SubmitData(Sum);
+                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.toggleSoftInput(0, 0);
+                } else {
+                    EditSumDialog.getSingleton().ShowErrorInfo("输入数据有误");
+                }
             }
         };
         ET_SuckUp.setFocusable(true);
         ET_SuckUp.setFocusableInTouchMode(true);
         ET_SuckUp.requestFocus();
+        switch (Type) {
+            case "0": {
+                BarText.setText(R.string.DircetAllotAction);
+                break;
+            }
+            case "-1": {
+                Drawable FInStockCell_border = getResources().getDrawable(R.drawable.border);
+                Sp_DirectAllotNotification_FInStockCell.setBackground(FInStockCell_border);
+                Sp_DirectAllotNotification_FInStockCell.setEnabled(false);
+                BarText.setText(R.string.OutAllotScan);
+                break;
+            }
+            case "1": {
+                Drawable FInStockCell_border = getResources().getDrawable(R.drawable.border);
+                Sp_DirectAllotNotification_FOutStockCell.setBackground(FInStockCell_border);
+                Sp_DirectAllotNotification_FOutStockCell.setEnabled(false);
+                BarText.setText(R.string.InAllotScan);
+                break;
+            }
+        }
     }
 
     @Override
@@ -184,6 +213,8 @@ public class AllotMainActiivty extends BaseActivity {
         RV_ResInfoTable = $(R.id.RV_ResInfoTable);
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
         ET_SuckUp = $(R.id.ET_SuckUp);
+        BarText = $(R.id.BarText);
+        Back = $(R.id.Back);
     }
 
     class DirectAllotObServer implements LifecycleObserver {
@@ -241,23 +272,59 @@ public class AllotMainActiivty extends BaseActivity {
             }
         });
 
+        Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Tools.IsObjectNull(ChildTagList)){
+                    if (ChildTagList.size()>0){
+                        tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                tools.DisappearDialog();
+                                ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
+                            }
+                        }, new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                tools.DisappearDialog();
+                            }
+                        }, false);
+                    }else {
+                        ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
+                    }
+                }else {
+                    ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
+                }
+            }
+        });
+
         TV_DirectAllotCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
+                if (Tools.IsObjectNull(ChildTagList)){
+                    if (ChildTagList.size()>0){
+                        tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View view) {
-                        tools.DisappearDialog();
+                            @Override
+                            public void onClick(View view) {
+                                tools.DisappearDialog();
+                                ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
+                            }
+                        }, new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                tools.DisappearDialog();
+                            }
+                        }, false);
+                    }else {
                         ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
                     }
-                }, new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-                        tools.DisappearDialog();
-                    }
-                }, false);
+                }else {
+                    ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
+                }
             }
         });
     }
@@ -305,7 +372,7 @@ public class AllotMainActiivty extends BaseActivity {
                 }
             }
         };
-        AllotDetailTask allotDetailTask = new AllotDetailTask(allotDetailPort, webService, BillID, "0");
+        AllotDetailTask allotDetailTask = new AllotDetailTask(allotDetailPort, webService, BillID, Type);
         allotDetailTask.execute();
     }
 
@@ -605,7 +672,7 @@ public class AllotMainActiivty extends BaseActivity {
                     }
                 };
                 BarCodeCheckTask barCodeCheckTask = new BarCodeCheckTask(barCodeCheckPort, webService, directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFMaterial(),
-                        MaterialModeBeanList.get(Sp_DirectAllotLabelIndex).getFGuid(), data);
+                        MaterialModeBeanList.get(Sp_DirectAllotLabelIndex).getFGuid(), data, false);
                 barCodeCheckTask.execute();
             } else {
                 if (!TextUtils.isEmpty(msg.data)) {
@@ -724,6 +791,7 @@ public class AllotMainActiivty extends BaseActivity {
                             finish();
                             Intent intent = new Intent(AllotMainActiivty.this, AllotMainActiivty.class);
                             intent.putExtra("FGUID", tools.GetStringData(tools.InitSharedPreferences(AllotMainActiivty.this), "AllotMainActiivtyFGUID"));
+                            intent.putExtra("Type", tools.GetStringData(tools.InitSharedPreferences(AllotMainActiivty.this), "Type"));
                             startActivity(intent);
                         }
                     }, new View.OnClickListener() {
@@ -780,17 +848,27 @@ public class AllotMainActiivty extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        tools.ShowOnClickDialog(MContect, "是否退出调拨界面，退出数据将清空", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tools.DisappearDialog();
+        if (Tools.IsObjectNull(ChildTagList)){
+            if (ChildTagList.size()>0){
+                tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        tools.DisappearDialog();
+                        ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
+                    }
+                }, new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        tools.DisappearDialog();
+                    }
+                }, false);
+            }else {
                 ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
             }
-        }, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tools.DisappearDialog();
-            }
-        }, false);
+        }else {
+            ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
+        }
     }
 }

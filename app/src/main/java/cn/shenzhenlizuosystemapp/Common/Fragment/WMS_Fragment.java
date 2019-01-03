@@ -31,6 +31,7 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.WmsSelectData;
 import cn.shenzhenlizuosystemapp.Common.ImageTool.TransformationUtils;
 import cn.shenzhenlizuosystemapp.Common.UI.DirectAllot.AllotNotificationActivity;
 import cn.shenzhenlizuosystemapp.Common.UI.Input_NotificationActivity;
+
 import cn.shenzhenlizuosystemapp.Common.UI.Quit_NotificationActivity;
 import cn.shenzhenlizuosystemapp.Common.UI.Check_NotificationActivity;
 import cn.shenzhenlizuosystemapp.Common.View.*;
@@ -98,9 +99,9 @@ public class WMS_Fragment extends Fragment implements OnBannerListener {
         BannerPathList.add(R.drawable.lizi);
         BannerPathList.add(R.drawable.lizi2);
         BannerPathList.add(R.drawable.lizi3);
-        BannerTitleList.add("广告图1");
-        BannerTitleList.add("广告图2");
-        BannerTitleList.add("广告图3");
+        BannerTitleList.add("深圳立卓科技");
+        BannerTitleList.add("深圳立卓科技");
+        BannerTitleList.add("深圳立卓科技");
         WMS_Banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);
         WMS_Banner.setImageLoader(new WMS_BannerImageLoader());
         WMS_Banner.setImages(BannerPathList);
@@ -139,11 +140,26 @@ public class WMS_Fragment extends Fragment implements OnBannerListener {
                         break;
                     }
                     case 2: {
-                        startActivity(new Intent(getActivity(), AllotNotificationActivity.class));//直接调拨通知
+                        Intent intent = new Intent(getActivity(), AllotNotificationActivity.class);
+                        intent.putExtra("Type", "0");
+                        startActivity(intent);
                         break;
                     }
                     case 3: {
                         startActivity(new Intent(getActivity(), Check_NotificationActivity.class));
+                        break;
+                    }
+                    case 4: {
+                        Intent intent = new Intent(getActivity(), AllotNotificationActivity.class);
+                        intent.putExtra("Type", "-1");
+                        startActivity(intent);
+                        break;
+                    }
+                    case 5: {
+                        Intent intent = new Intent(getActivity(), AllotNotificationActivity.class);
+                        intent.putExtra("Type", "1");
+                        startActivity(intent);
+                        break;
                     }
                 }
             }

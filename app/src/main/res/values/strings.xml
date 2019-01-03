@@ -129,4 +129,8 @@
     <string name="ThisAllot">本次调货:</string>
     <string name="NotAllot">未调数量:</string>
     <string name="Refresh">刷新</string>
+    <string name="OutAllotNotification">调拨出库通知</string>
+    <string name="InAllotNotification">调拨入库通知</string>
+    <string name="OutAllotScan">调拨出库扫描</string>
+    <string name="InAllotScan">调拨入库扫描</string>
 </resources>

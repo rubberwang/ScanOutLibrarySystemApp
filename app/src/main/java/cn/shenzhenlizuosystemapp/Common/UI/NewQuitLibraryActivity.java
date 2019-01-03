@@ -194,7 +194,28 @@ public class NewQuitLibraryActivity extends BaseActivity {
             @Override
 
             public void onClick(View v) {
-                ViewManager.getInstance().finishActivity(NewQuitLibraryActivity.this);
+                if(Tools.IsObjectNull(childQuitTagList)){
+                    if (childQuitTagList.size()>0){
+                        tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                tools.DisappearDialog();
+                                ViewManager.getInstance().finishActivity(NewQuitLibraryActivity.this);
+                            }
+                        }, new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                tools.DisappearDialog();
+                            }
+                        }, false);
+                    }else {
+                        ViewManager.getInstance().finishActivity(NewQuitLibraryActivity.this);
+                    }
+                }else {
+                    ViewManager.getInstance().finishActivity(NewQuitLibraryActivity.this);
+                }
             }
         });
 
@@ -202,20 +223,28 @@ public class NewQuitLibraryActivity extends BaseActivity {
 
             @Override
             public void onClick(View view) {
-                tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
+                if(Tools.IsObjectNull(childQuitTagList)){
+                    if (childQuitTagList.size()>0){
+                        tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View view) {
-                        tools.DisappearDialog();
+                            @Override
+                            public void onClick(View view) {
+                                tools.DisappearDialog();
+                                ViewManager.getInstance().finishActivity(NewQuitLibraryActivity.this);
+                            }
+                        }, new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                tools.DisappearDialog();
+                            }
+                        }, false);
+                    }else {
                         ViewManager.getInstance().finishActivity(NewQuitLibraryActivity.this);
                     }
-                }, new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-                        tools.DisappearDialog();
-                    }
-                }, false);
+                }else {
+                    ViewManager.getInstance().finishActivity(NewQuitLibraryActivity.this);
+                }
             }
         });
 
@@ -529,18 +558,28 @@ public class NewQuitLibraryActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        tools.ShowOnClickDialog(MContect, "是否退出出库界面，退出数据将清空", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tools.DisappearDialog();
+        if(Tools.IsObjectNull(childQuitTagList)){
+            if (childQuitTagList.size()>0){
+                tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        tools.DisappearDialog();
+                        ViewManager.getInstance().finishActivity(NewQuitLibraryActivity.this);
+                    }
+                }, new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        tools.DisappearDialog();
+                    }
+                }, false);
+            }else {
                 ViewManager.getInstance().finishActivity(NewQuitLibraryActivity.this);
             }
-        }, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tools.DisappearDialog();
-            }
-        }, false);
+        }else {
+            ViewManager.getInstance().finishActivity(NewQuitLibraryActivity.this);
+        }
     }
 
     private class GetMaterialMode extends AsyncTask<String, Void, List<QuitMaterialModeBean>> {
