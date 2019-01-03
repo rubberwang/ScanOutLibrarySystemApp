@@ -127,6 +127,7 @@ public class NewQuitLibraryActivity extends BaseActivity {
     private RecyclerView RV_ScanInfoTable;
     private Spinner Sp_Label;
     private MyProgressDialog myProgressDialog;
+    private EditText ET_SuckUp;
 
     private int GetSpinnerPos(List<QuitStockBean> Datas, String value) {
         for (int i = 0; i < Datas.size(); i++) {
@@ -162,12 +163,19 @@ public class NewQuitLibraryActivity extends BaseActivity {
         editSumPort = new EditSumPort() {
             @Override
             public void OnEnSure(String Sum) {
+                if (Tools.StringOfFloat(Sum) <= Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getNoSend()) && Tools.StringOfFloat(Sum) > 0) {
                 EditSumDialog.getSingleton().Dismiss();
                 SubmitData(Sum);
                 InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.toggleSoftInput(0, 0);
+                } else {
+                    EditSumDialog.getSingleton().ShowErrorInfo("输入数据有误");
+                }
             }
         };
+        ET_SuckUp.setFocusable(true);
+        ET_SuckUp.setFocusableInTouchMode(true);
+        ET_SuckUp.requestFocus();
     }
 
     @Override
@@ -185,6 +193,7 @@ public class NewQuitLibraryActivity extends BaseActivity {
         TV_Sumbit = $(R.id.TV_Sumbit);
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
         Sp_Label = $(R.id.Sp_Label);
+        ET_SuckUp = $(R.id.ET_SuckUp);
     }
 
     private void InitClick() {
