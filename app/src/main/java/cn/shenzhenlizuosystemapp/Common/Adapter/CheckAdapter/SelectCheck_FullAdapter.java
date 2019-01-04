@@ -1,4 +1,4 @@
-package cn.shenzhenlizuosystemapp.Common.Adapter;
+package cn.shenzhenlizuosystemapp.Common.Adapter.CheckAdapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckLibraryBill;
 import cn.shenzhenlizuosystemapp.R;
 
 public class SelectCheck_FullAdapter extends RecyclerView.Adapter {

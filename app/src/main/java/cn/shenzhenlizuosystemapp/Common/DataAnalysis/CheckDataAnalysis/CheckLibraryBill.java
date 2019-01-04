@@ -1,4 +1,4 @@
-package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
+package cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis;
 
 public class CheckLibraryBill {
     String FGuid;

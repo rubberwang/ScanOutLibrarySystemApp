@@ -1,4 +1,4 @@
-package cn.shenzhenlizuosystemapp.Common.Adapter;
+package cn.shenzhenlizuosystemapp.Common.Adapter.CheckAdapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildCheckTag;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.ChildCheckTag;
 import cn.shenzhenlizuosystemapp.R;
 
 public class ScanResult_CheckRvAdapter extends RecyclerView.Adapter {

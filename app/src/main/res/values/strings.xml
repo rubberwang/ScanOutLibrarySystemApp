@@ -77,6 +77,12 @@
     <string name="QuitCommitLibrary">出库调拨通知单</string>
     <string name="InputCommitLibrary">入库调拨通知单</string>
     <string name="CastAbout">搜索</string>
+    <string name="checkSave">结案</string>
+    <string name="CheckMaterial">盘点物料:</string>
+    <string name="Select">查询</string>
+    <string name="accountNumber">账存数量:</string>
+    <string name="checkNumber">盘点数量:</string>
+    <string name="diffNumber">差异数量:</string>
     <string name="BackMainRV">返回总出库单列表</string>
     <string name="SelectGetLibrary">选择入库通知单</string>
     <string name="OutLibrarySum">出库单号:</string>

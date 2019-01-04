@@ -19,7 +19,7 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.Fragment.Item_CheckLibrary_Fragment;
 import cn.shenzhenlizuosystemapp.Common.Fragment.Select_CheckLibrary_Fragment;
 import cn.shenzhenlizuosystemapp.R;

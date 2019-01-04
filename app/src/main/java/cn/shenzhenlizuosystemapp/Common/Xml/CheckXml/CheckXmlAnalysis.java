@@ -1,4 +1,4 @@
-package cn.shenzhenlizuosystemapp.Common.Xml;
+package cn.shenzhenlizuosystemapp.Common.Xml.CheckXml;
 
 import android.util.Xml;
 
@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.WebBean.CheckAllBean;
 
 public class CheckXmlAnalysis {

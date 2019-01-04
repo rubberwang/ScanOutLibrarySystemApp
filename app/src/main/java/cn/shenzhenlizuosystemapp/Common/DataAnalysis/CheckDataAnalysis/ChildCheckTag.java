@@ -1,4 +1,4 @@
-package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
+package cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis;
 
 public class ChildCheckTag {
 
@@ -6,6 +6,15 @@ public class ChildCheckTag {
     private String Name;
     private String BarcodeNumber;
     private String Value;
+    private String FIsMust;
+
+    public String getFIsMust() {
+        return FIsMust;
+    }
+
+    public void setFIsMust(String FIsMust) {
+        this.FIsMust = FIsMust;
+    }
 
     public void setBarcodeNumber(String barcodeNumber) {
         BarcodeNumber = barcodeNumber;

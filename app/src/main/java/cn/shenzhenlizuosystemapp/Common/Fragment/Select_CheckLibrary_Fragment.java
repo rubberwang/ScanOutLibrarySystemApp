@@ -27,15 +27,15 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.SelectCheck_FullAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.CheckAdapter.SelectCheck_FullAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.UI.CheckLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.WebBean.CheckAllBean;
-import cn.shenzhenlizuosystemapp.Common.Xml.CheckXmlAnalysis;
+import cn.shenzhenlizuosystemapp.Common.Xml.CheckXml.CheckXmlAnalysis;
 import cn.shenzhenlizuosystemapp.R;
 
 public class Select_CheckLibrary_Fragment extends Fragment {
@@ -136,7 +136,7 @@ public class Select_CheckLibrary_Fragment extends Fragment {
                 ViseLog.d("Select适配RV数据错误" + e);
                 tools.showshort(getActivity(), "出库数据加载错误，请重新打开");
             }
-            ViseLog.i("出库单返回数据" + result);
+            ViseLog.i("盘点单返回数据" + result);
         }
 
         //该方法运行在UI线程当中,并且运行在UI线程当中 可以对UI空间进行设置
