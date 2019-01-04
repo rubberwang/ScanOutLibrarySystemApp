@@ -231,8 +231,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/RV_ScanInfoTable"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="7" />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
     
@@ -245,7 +244,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2.7"
+        android:layout_weight="2.5"
         android:background="@color/functionbackground">
 
         <android.support.v7.widget.RecyclerView

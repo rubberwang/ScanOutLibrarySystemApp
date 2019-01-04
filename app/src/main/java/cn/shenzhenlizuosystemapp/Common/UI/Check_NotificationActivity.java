@@ -115,8 +115,6 @@ public class Check_NotificationActivity extends BaseActivity {
                         CheckLibraryBill outLibraryBill = new CheckLibraryBill();
                         outLibraryBill.setFCode(outLibraryBills.get(i).getFCode());
                         outLibraryBill.setFDate(outLibraryBills.get(i).getFDate());
-                        outLibraryBill.setFTransactionType_Name(outLibraryBills.get(i).getFTransactionType_Name());
-                        outLibraryBill.setFTransactionType(outLibraryBills.get(i).getFTransactionType());
                         outLibraryBill.setFStock_Name(outLibraryBills.get(i).getFStock_Name());
                         outLibraryBill.setFStock(outLibraryBills.get(i).getFStock());
                         outLibraryBill.setFGuid(outLibraryBills.get(i).getFGuid());

@@ -83,6 +83,9 @@
     <string name="accountNumber">账存数量:</string>
     <string name="checkNumber">盘点数量:</string>
     <string name="diffNumber">差异数量:</string>
+    <string name="barcodeText">条码文本:</string>
+    <string name="controlType">管控类型:</string>
+    <string name="checkStatus">盘点状态:</string>
     <string name="BackMainRV">返回总出库单列表</string>
     <string name="SelectGetLibrary">选择入库通知单</string>
     <string name="OutLibrarySum">出库单号:</string>

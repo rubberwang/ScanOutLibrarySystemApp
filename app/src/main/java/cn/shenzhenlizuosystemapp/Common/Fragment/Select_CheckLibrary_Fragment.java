@@ -55,7 +55,7 @@ public class Select_CheckLibrary_Fragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.init_select_quitlibrary, container, false);
+        View rootView = inflater.inflate(R.layout.init_select_checklibrary, container, false);
         RV_InitSelectFull = rootView.findViewById(R.id.RV_InitSelectFull);
         tools = new Tools();
         webService = new WebService(this.getActivity());
@@ -98,7 +98,7 @@ public class Select_CheckLibrary_Fragment extends Fragment {
                     checkLibraryBills.clear();
                 }
             } catch (Exception e) {
-                ViseLog.d("SelectOutLibraryGetOutLibraryBillsException " + e);
+                ViseLog.d("SelectCheckLibraryGetOutLibraryBillsException " + e);
             }
             return checkLibraryBills;
         }
@@ -211,10 +211,6 @@ public class Select_CheckLibrary_Fragment extends Fragment {
                     Bill.setFStock(data);
                 } else if (tag.equals("FStock_Name")) {
                     Bill.setFStock_Name(data);
-                } else if (tag.equals("FTransactionType")) {
-                    Bill.setFTransactionType(data);
-                } else if (tag.equals("FTransactionType_Name")) {
-                    Bill.setFTransactionType_Name(data);
                 } else if (tag.equals("FDate")) {
                     Bill.setFDate(data);
                 }

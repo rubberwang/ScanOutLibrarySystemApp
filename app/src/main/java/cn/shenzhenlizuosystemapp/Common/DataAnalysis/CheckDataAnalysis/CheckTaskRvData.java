@@ -7,14 +7,10 @@ public class CheckTaskRvData {
     private String FMaterial_Name;//品名
     private String FModel;//规格
     private String FBaseUnit_Name;//基本单位
-    private String FUnit_Name;
     private String FAccountQty;//账存数量
     private String FCheckQty; //盘点数量
     private String FDiffQty;//差异数量
 
-    public String getFDiffQty(){
-        return FDiffQty;
-    }
 
     public void setFDiffQty(String noSend) {
         FDiffQty = noSend;
@@ -47,7 +43,6 @@ public class CheckTaskRvData {
     public void setFAccountQty(String FAccountQty) {
         this.FAccountQty = FAccountQty;
     }
-
 
     public void setFCheckQty(String FCheckQty) {
         this.FCheckQty = FCheckQty;
@@ -85,11 +80,7 @@ public class CheckTaskRvData {
         return FCheckQty;
     }
 
-    public String getFUnit_Name() {
-        return FUnit_Name;
-    }
-
-    public void setFUnit_Name(String FUnit_Name) {
-        this.FUnit_Name = FUnit_Name;
+    public String getFDiffQty(){
+        return FDiffQty;
     }
 }

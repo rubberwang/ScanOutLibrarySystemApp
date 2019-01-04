@@ -5,6 +5,7 @@ public class CheckLibraryDetail {
     private String FCode;
     private String FStock;
     private String FStock_Name;
+    private String FAllowOtherMaterial;
 
     public void setFGuid(String FGuid) {
         this.FGuid = FGuid;
@@ -38,5 +39,11 @@ public class CheckLibraryDetail {
         return FStock_Name;
     }
 
+    public String getFAllowOtherMaterial() {
+        return FAllowOtherMaterial;
+    }
 
+    public void setFAllowOtherMaterial(String FAllowOtherMaterial) {
+        this.FAllowOtherMaterial = FAllowOtherMaterial;
+    }
 }

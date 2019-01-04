@@ -197,8 +197,6 @@ public class NewQuitLibraryActivity extends BaseActivity {
     }
 
     private void InitClick() {
-//        Et_ScanNumber.setFocusable(false);
-//        Et_ScanNumber.setFocusableInTouchMode(false);
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
 
@@ -681,7 +679,7 @@ public class NewQuitLibraryActivity extends BaseActivity {
                     return childQuitTagList;
                 }
             } catch (Exception e) {
-                ViseLog.i("InputTagMode Exception =  " + e);
+                ViseLog.i("QuitTagMode Exception =  " + e);
             }
             return null;
         }
@@ -812,7 +810,7 @@ public class NewQuitLibraryActivity extends BaseActivity {
                             String SetFThisAuxQty = String.valueOf(Sum);
                             quitTaskRvDataList.get(RV_ScanInfoTableIndex).setFThisAuxQty(SetFThisAuxQty);
 
-                            //为最后生成入库单保存数据array
+                            //为最后生成出库单保存数据array
                             float NewNoPut = Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty()) - (Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty()) +
                                     Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty()));
                             String SetNoInput = String.valueOf(NewNoPut);
@@ -823,8 +821,6 @@ public class NewQuitLibraryActivity extends BaseActivity {
                             }
                             scanTask_quit_rvAdapter.notifyDataSetChanged();
                             Is_QuitNumber_Mode = false;
-                            //childQuitTagList.clear();
-                            //scanResult_Quit_rvAdapter.notifyDataSetChanged();
                         } else {
                             tools.ShowDialog(MContect, "提交数量不能大于未收数量");
                         }
@@ -832,7 +828,7 @@ public class NewQuitLibraryActivity extends BaseActivity {
                         tools.ShowDialog(MContect, "此条码已经扫描过了");
                     }
                 } else {
-                    tools.ShowDialog(MContect, "入库数量为空或小于0");
+                    tools.ShowDialog(MContect, "出库数量为空或小于0");
                 }
             }
         } catch (Exception e) {

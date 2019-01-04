@@ -89,11 +89,7 @@ public class CheckXmlAnalysis {
                             checkInfoBeans.setFStock(parser.nextText());
                         } else if (name.equalsIgnoreCase("FStock_Name")) {
                             checkInfoBeans.setFStock_Name(parser.nextText());
-                        } else if (name.equalsIgnoreCase("FTransactionType")) {
-                            checkInfoBeans.setFTransactionType(parser.nextText());
-                        } else if (name.equalsIgnoreCase("FTransactionType_Name")) {
-                            checkInfoBeans.setFTransactionType_Name(parser.nextText());
-                        } else if (name.equalsIgnoreCase("FDate")) {
+                        }  else if (name.equalsIgnoreCase("FDate")) {
                             checkInfoBeans.setFDate(parser.nextText());
                         }
                         break;

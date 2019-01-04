@@ -50,7 +50,6 @@ public class SelectCheck_FullAdapter extends RecyclerView.Adapter {
         try {
             ((ViewHoders) holder).TV_BillSum.setText(datas.get(position).getFCode());
             ((ViewHoders) holder).TV_WarehouseName.setText(datas.get(position).getFStock_Name());
-            ((ViewHoders) holder).TV_CheckType.setText(datas.get(position).getFTransactionType_Name());
             ((ViewHoders) holder).TV_CreateTime.setText(datas.get(position).getFDate());
             if (mOnItemClickLitener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -75,14 +74,12 @@ public class SelectCheck_FullAdapter extends RecyclerView.Adapter {
 
         private TextView TV_BillSum;
         private TextView TV_WarehouseName;
-        private TextView TV_CheckType;
         private TextView TV_CreateTime;
 
         public ViewHoders(View itemView) {
             super(itemView);
             TV_BillSum = (TextView) itemView.findViewById(R.id.TV_BillSum);
             TV_WarehouseName = (TextView) itemView.findViewById(R.id.TV_WarehouseName);
-            TV_CheckType = (TextView) itemView.findViewById(R.id.TV_CheckType);
             TV_CreateTime = (TextView) itemView.findViewById(R.id.TV_CreateTime);
         }
     }

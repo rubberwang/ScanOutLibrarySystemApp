@@ -14,11 +14,13 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-//import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarCodeHeadBean;
-//import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarcodeXmlBean;
+import cn.shenzhenlizuosystemapp.Common.Base.Tools;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarCodeHeadBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarcodeXmlBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckLibraryDetail;
-//import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubBodyBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckSubBodyBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckTaskRvData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckSubBody;
 import cn.shenzhenlizuosystemapp.Common.WebBean.CheckLibraryAllInfo;
 
 public class CheckLibraryXmlAnalysis {
@@ -93,13 +95,25 @@ public class CheckLibraryXmlAnalysis {
                         if (name.equalsIgnoreCase("Head")) {
                             InputDetailXmls = new CheckLibraryDetail();
                         } else if (name.equalsIgnoreCase("FCode")) {
-                            InputDetailXmls.setFCode(parser.nextText());
+                            if (Tools.IsObjectNull(InputDetailXmls)){
+                                InputDetailXmls.setFCode(parser.nextText());
+                            }
                         } else if (name.equalsIgnoreCase("FStock")) {
-                            InputDetailXmls.setFStock(parser.nextText());
+                            if (Tools.IsObjectNull(InputDetailXmls)) {
+                                InputDetailXmls.setFStock(parser.nextText());
+                            }
                         } else if (name.equalsIgnoreCase("FStock_Name")) {
-                            InputDetailXmls.setFStock_Name(parser.nextText());
+                            if (Tools.IsObjectNull(InputDetailXmls)) {
+                                InputDetailXmls.setFStock_Name(parser.nextText());
+                            }
                         } else if (name.equalsIgnoreCase("FGuid")) {
-                            InputDetailXmls.setFGuid(parser.nextText());
+                            if (Tools.IsObjectNull(InputDetailXmls)) {
+                                InputDetailXmls.setFGuid(parser.nextText());
+                            }
+                        }else if (name.equalsIgnoreCase("FAllowOtherMaterial")) {
+                            if (Tools.IsObjectNull(InputDetailXmls)) {
+                                InputDetailXmls.setFAllowOtherMaterial(parser.nextText());
+                            }
                         }
                         break;
                     case XmlPullParser.END_TAG:
@@ -117,7 +131,7 @@ public class CheckLibraryXmlAnalysis {
             return InputDetailXmlList;
         } catch (Exception e) {
             e.printStackTrace();
-            ViseLog.i("GetInputDetailXml Exception = " + e);
+            ViseLog.i("GetCheckDetailXml Exception = " + e);
         }
         return null;
     }
@@ -191,6 +205,71 @@ public class CheckLibraryXmlAnalysis {
         } catch (Exception e) {
             e.printStackTrace();
             ViseLog.i("Body Exception = " + e);
+        }
+        return null;
+    }
+
+    public List<CheckSubBody> GetSubBodyInfo(InputStream inputStream) {
+        CheckSubBody inputTaskRvDatas = new CheckSubBody();
+        List<CheckSubBody> inputTaskRvDataList = null;
+        XmlPullParser parser = Xml.newPullParser();
+        try {
+            parser.setInput(inputStream, "UTF-8");
+            int eventType = parser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                    case XmlPullParser.START_DOCUMENT:
+                        inputTaskRvDataList = new ArrayList<CheckSubBody>();
+                        break;
+                    case XmlPullParser.START_TAG:
+                        String name = parser.getName();
+                        if (name.equalsIgnoreCase("SubBody")) {
+                            inputTaskRvDatas = new CheckSubBody();
+                        } else if (name.equalsIgnoreCase("FGuid")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFGuid(parser.nextText());
+                            }
+                        } else if (name.equalsIgnoreCase("FBarcodeLib")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFBarcodeLib(parser.nextText());
+                            }
+                        } else if (name.equalsIgnoreCase("FBarcodeLib_Name")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFBarcodeLib_Name(parser.nextText());
+                            }
+                        }  else if (name.equalsIgnoreCase("FCheckStockStatus")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFCheckStockStatus(parser.nextText());
+                            }
+                        }  else if (name.equalsIgnoreCase("FAccountQty")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFAccountQty(parser.nextText());
+                            }
+                        } else if (name.equalsIgnoreCase("FCheckQty")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFCheckQty(parser.nextText());
+                            }
+                        } else if (name.equalsIgnoreCase("FDiffQty")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFDiffQty(parser.nextText());
+                            }
+                        }
+                        break;
+                    case XmlPullParser.END_TAG:
+                        if (parser.getName().equalsIgnoreCase("SubBody")
+                                && inputTaskRvDatas != null) {
+                            inputTaskRvDataList.add(inputTaskRvDatas);
+                            inputTaskRvDatas = null;
+                        }
+                        break;
+                }
+                eventType = parser.next();
+            }
+            inputStream.close();
+            return inputTaskRvDataList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            ViseLog.i("SubBody Exception = " + e);
         }
         return null;
     }
@@ -303,9 +382,9 @@ public class CheckLibraryXmlAnalysis {
             ViseLog.i("GetBarCodeBody Exception = " + e);
         }
         return null;
-    }
+    }*/
 
-    public String   CreateInputXmlStr(String FGuid, String FStockID,String FStockCellID, List<InputSubBodyBean> inputSubBodyBeanList) {
+    public String   CreateCheckXmlStr(String FGuid, String FStockID,String FStockCellID, List<CheckSubBodyBean> inputSubBodyBeanList) {
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             StringWriter stringWriter = new StringWriter();
@@ -327,7 +406,7 @@ public class CheckLibraryXmlAnalysis {
                 serializer.text(FStockCellID);
                 serializer.endTag(null, "FStockCellID");
                 serializer.endTag(null, "BillHead");
-                for (InputSubBodyBean inputSubBodyBean : inputSubBodyBeanList) {
+                for (CheckSubBodyBean inputSubBodyBean : inputSubBodyBeanList) {
                     serializer.startTag(null, "SubBody");
                     serializer.startTag(null, "FBillBodyID");
                     serializer.text(inputSubBodyBean.getFBillBodyID());
@@ -354,5 +433,5 @@ public class CheckLibraryXmlAnalysis {
             }
         }
         return "";
-    }*/
+    }
 }

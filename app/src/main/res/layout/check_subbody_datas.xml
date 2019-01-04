@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/SelectSumLibraryItem"
+    android:id="@+id/SelectOutLibraryItem"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:layout_marginTop="10dp"
+    android:layout_height="48dp"
+    android:layout_marginTop="1dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -19,11 +19,11 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/LibraryCode"
+            android:text="@string/accountNumber"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/TV_BillSum"
+            android:id="@+id/TV_AccountQty"
             style="@style/SelectItemContentText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -37,11 +37,11 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/OutLibraryTime"
+            android:text="@string/checkStatus"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/TV_CreateTime"
+            android:id="@+id/TV_CheckStatus"
             style="@style/SelectItemContentText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -49,10 +49,7 @@
             android:gravity="center_vertical"
             android:textSize="13sp" />
 
-
     </LinearLayout>
-
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,17 +58,18 @@
         android:orientation="horizontal">
 
 
+
         <TextView
             style="@style/SelectItemText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/OutLibraryWarehouse"
+            android:text="@string/checkNumber"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/TV_WarehouseName"
+            android:id="@+id/TV_FCheckQty"
             style="@style/SelectItemContentText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -80,11 +78,26 @@
             android:textSize="13sp" />
 
         <TextView
+            style="@style/SelectItemText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2.5"/>
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/diffNumber"
+            android:textSize="12sp" />
 
+        <TextView
+            android:id="@+id/TV_FDiffQty"
+            style="@style/SelectItemContentText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:gravity="center_vertical"
+            android:textSize="13sp"
+            android:textColor="@color/ToastRed"/>
 
     </LinearLayout>
+
+
 
 </LinearLayout>

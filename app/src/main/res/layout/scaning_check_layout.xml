@@ -51,7 +51,7 @@
                     style="@style/ScanInputLibraryText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="8"
+                    android:layout_weight="15"
                     android:textSize="14sp" />
 
 
@@ -220,15 +220,39 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5.5"
+        android:layout_weight="4.7"
         android:orientation="vertical">
 
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/RV_ScanInfoTable"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="7" />
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="1dp"
+        android:layout_weight="0.1"
+        android:background="@color/Black"
+        android:orientation="vertical">
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.8"
+        android:orientation="vertical">
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/RV_SubBodyInfoTable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
@@ -240,7 +264,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_weight="2.5"
         android:background="@color/functionbackground">
 
         <android.support.v7.widget.RecyclerView
