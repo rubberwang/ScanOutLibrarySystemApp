@@ -141,7 +141,7 @@
                         android:id="@+id/Sp_Material"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/border"
+                        android:background="@drawable/edittext_background"
                         android:overlapAnchor="false"
                         android:spinnerMode="dropdown"
                         android:theme="@style/SpnStyle">
@@ -183,7 +183,7 @@
                         android:id="@+id/Sp_Label"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/border"
+                        android:background="@drawable/edittext_background"
                         android:overlapAnchor="false"
                         android:spinnerMode="dropdown"
                         android:theme="@style/SpnStyle">

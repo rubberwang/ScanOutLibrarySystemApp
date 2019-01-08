@@ -20,6 +20,7 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarcodeXmlBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckBodyMaterial;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckBodyStocks;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckLibraryDetail;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckStockBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckSubBodyBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckTaskRvData;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckSubBody;
@@ -304,9 +305,9 @@ public class CheckLibraryXmlAnalysis {
         return null;
     }
 
-    public List<CheckBodyStocks> GetCheckBodyStocks(InputStream inputStream) {
-        CheckBodyStocks InputDetailXmls = new CheckBodyStocks();
-        List<CheckBodyStocks> CheckBodyStocksXmlList = null;
+    public List<CheckStockBean> GetCheckBodyStocks(InputStream inputStream) {
+        CheckStockBean InputDetailXmls = new CheckStockBean();
+        List<CheckStockBean> CheckBodyStocksXmlList = null;
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setInput(inputStream, "UTF-8");
@@ -314,19 +315,19 @@ public class CheckLibraryXmlAnalysis {
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
-                        CheckBodyStocksXmlList = new ArrayList<CheckBodyStocks>();
+                        CheckBodyStocksXmlList = new ArrayList<CheckStockBean>();
                         break;
                     case XmlPullParser.START_TAG:
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("StockCells")) {
-                            InputDetailXmls = new CheckBodyStocks();
+                            InputDetailXmls = new CheckStockBean();
                         } else if (name.equalsIgnoreCase("FStockCell")) {
                             if (Tools.IsObjectNull(InputDetailXmls)){
-                                InputDetailXmls.setFStockCell(parser.nextText());
+                                InputDetailXmls.setFGuid(parser.nextText());
                             }
                         } else if (name.equalsIgnoreCase("FStockCell_Name")) {
                             if (Tools.IsObjectNull(InputDetailXmls)) {
-                                InputDetailXmls.setFStockCell_Name(parser.nextText());
+                                InputDetailXmls.setFName(parser.nextText());
                             }
                         }
                         break;

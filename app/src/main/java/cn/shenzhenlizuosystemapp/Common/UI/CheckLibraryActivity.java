@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -60,9 +61,11 @@ import cn.shenzhenlizuosystemapp.Common.Port.CheckBarCodeCheckPort;
 import cn.shenzhenlizuosystemapp.Common.Port.EditSumPort;
 import cn.shenzhenlizuosystemapp.Common.Port.CheckBillCreate;
 import cn.shenzhenlizuosystemapp.Common.Port.LockResultPort;
+import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.CheckMaterialAdapter;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.CheckStockAdapter;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.CheckMaterialModeAdapter;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.CheckSubBodyStocksAdapter;
+import cn.shenzhenlizuosystemapp.Common.TreeFormList.TreeListActivity;
 import cn.shenzhenlizuosystemapp.Common.View.EditSumDialog;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
@@ -102,17 +105,11 @@ public class CheckLibraryActivity extends BaseActivity {
     private List<CheckStockBean> stockBeans = null;
     private List<CheckStockBean> stockBeanList = null;
     private List<CheckMaterialModeBean> materialModeBeanList = new ArrayList<CheckMaterialModeBean>();
-    //private List<CheckSubBodyBean> QuitSubmitList = new ArrayList<CheckSubBodyBean>();
-    //private List<CheckLibraryDetail> checkHeadList;
-//    private List<CheckTaskRvData> checkBodyList;
-//    private List<CheckSubBody> checkSubBodyBeanList;
-//    private List<CheckLibraryDetail> checkHeadList = new ArrayList<CheckLibraryDetail>();
-//    private List<CheckTaskRvData> checkBodyList = new ArrayList<CheckTaskRvData>();
-//    private List<CheckSubBody> checkSubBodyBeanList = new ArrayList<CheckSubBody>();
     private List<String> CheckFGuid = new ArrayList<String>();
     private List<CheckSubBody> checkSubbodyRvDataList2 = null;
-    private List<CheckBodyStocks> SubBodyStocksList = null;
+    private List<CheckStockBean> SubBodyStocksList = null;
     private List<CheckBodyMaterial> SubBodyMaterialList = null;
+    private List<CheckBodyMaterial> SubBodyMaterial = null;
 
 
     //类
@@ -132,17 +129,20 @@ public class CheckLibraryActivity extends BaseActivity {
     private Spinner Sp_house;
     private Spinner spinnerScannerDevices;
     private Spinner Sp_QuitHouseSpace;
+    private Spinner Sp_Material;
     private TextView TV_BusType;
     private TextView TV_Unit;
     private TextView TV_Scaning;
     private TextView TV_Cancel;
     private TextView TV_Sumbit;
+    private TextView TV_Save;
     private RecyclerView RV_GetInfoTable;
     private RecyclerView RV_ScanInfoTable;
     private RecyclerView RV_SubBodyInfoTable;
     private Spinner Sp_Label;
     private MyProgressDialog myProgressDialog;
     private EditText ET_SuckUp;
+    private ImageButton BT_CheckMaterial;
 
     private int GetSpinnerPos(List<CheckStockBean> Datas, String value) {
         for (int i = 0; i < Datas.size(); i++) {
@@ -182,6 +182,8 @@ public class CheckLibraryActivity extends BaseActivity {
         Drawable drawable = getResources().getDrawable(R.drawable.circularbead_gray);
         TV_Sumbit.setBackground(drawable);
         TV_Sumbit.setTextColor(getResources().getColor(R.color.Black));
+        TV_Save.setBackground(drawable);
+        TV_Save.setTextColor(getResources().getColor(R.color.Black));
         editSumPort = new EditSumPort() {
             @Override
             public void OnEnSure(String Sum) {
@@ -212,11 +214,14 @@ public class CheckLibraryActivity extends BaseActivity {
         RV_SubBodyInfoTable = $(R.id.RV_SubBodyInfoTable);
         spinnerScannerDevices = $(R.id.spinnerScannerDevices);
         Sp_QuitHouseSpace = $(R.id.Sp_QuitHouseSpace);
+        Sp_Material = $(R.id.Sp_Material);
         TV_Cancel = $(R.id.TV_Cancel);
         TV_Sumbit = $(R.id.TV_Sumbit);
+        TV_Save = $(R.id.TV_Save);
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
         Sp_Label = $(R.id.Sp_Label);
         ET_SuckUp = $(R.id.ET_SuckUp);
+        BT_CheckMaterial = $(R.id.BT_CheckMaterial);
     }
 
     private void InitClick() {
@@ -300,7 +305,40 @@ public class CheckLibraryActivity extends BaseActivity {
                 }
             }
         });
+
+        BT_CheckMaterial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CheckLibraryActivity.this,TreeListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        TV_Save.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                if (IsSave) {
+                    tools.ShowOnClickDialog(MContect, "确认结案吗？", new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View view) {
+                            CreateBillData();
+                            tools.DisappearDialog();
+                        }
+                    }, new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View view) {
+                            tools.DisappearDialog();
+                        }
+                    }, false);
+                }
+            }
+        });
     }
+
+
 
     /***
      * 标签模版列表适配
@@ -459,11 +497,11 @@ public class CheckLibraryActivity extends BaseActivity {
                 String StocksCell = webService.GetStocksCell(ConnectStr.ConnectionToString, stockBeans.get(pos).getFGuid());
                 InputStream inStockCell = new ByteArrayInputStream(StocksCell.getBytes("UTF-8"));
                 List<CheckAdapterReturn> stock_returns = CheckAnalysisReturnsXml.getSingleton().GetReturn(inStockCell);
-                if (stock_returns.get(0).getFStatus().equals("1")) {
+                if (false) {
                     InputStream In_Info = new ByteArrayInputStream(stock_returns.get(0).getFInfo().getBytes("UTF-8"));
                     stockBeanList = CheckStockXmlAnalysis.getSingleton().GetXmlStockInfo(In_Info);
                 } else {
-                    stockBeanList.clear();
+                    stockBeanList = SubBodyStocksList;
                 }
                 inStockCell.close();
             } catch (Exception e) {
@@ -477,6 +515,50 @@ public class CheckLibraryActivity extends BaseActivity {
                 CheckStockAdapter QuitStockAdapter = new CheckStockAdapter(result, CheckLibraryActivity.this);
                 Sp_QuitHouseSpace.setAdapter(QuitStockAdapter);
                 Sp_QuitHouseSpace.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        if (SpQuitHouseSpaceIndex != i) {
+                            SpQuitHouseSpaceIndex = i;
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+                    }
+                });
+            }
+        }
+    }
+
+    private class AsyncGetMaterialCell extends AsyncTask<String, Void, List<CheckBodyMaterial>> {
+
+        private int pos = 0;
+
+//        AsyncGetMaterialCell(int pos) {
+//            this.pos = pos;
+//        }
+
+        @Override
+        protected List<CheckBodyMaterial> doInBackground(String... params) {
+            SubBodyMaterial = new ArrayList<>();
+            try {
+
+                if (false) {
+                    SubBodyMaterial = SubBodyMaterialList;
+                } else {
+                    SubBodyMaterial = SubBodyMaterialList;
+                }
+            } catch (Exception e) {
+                ViseLog.i("AsyncGetStocksCellException = " + e.getMessage());
+            }
+            return SubBodyMaterial;
+        }
+
+        protected void onPostExecute(List<CheckBodyMaterial> result) {
+            if (result.size() >= 0) {
+                CheckMaterialAdapter QuitStockAdapter = new CheckMaterialAdapter(result, CheckLibraryActivity.this);
+                Sp_Material.setAdapter(QuitStockAdapter);
+                Sp_Material.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         if (SpQuitHouseSpaceIndex != i) {
@@ -561,9 +643,6 @@ public class CheckLibraryActivity extends BaseActivity {
                     }else {
 
                     }
-//                    if (stockBeans.size() >= 0) {
-//                        InitSp(stockBeans, result.get(0).getFStock_Name());
-//                    }
                     TV_DeliverGoodsNumber.setText(result.get(0).getFCode());
                     HeadID = result.get(0).getFGuid();
                     IsAllow = result.get(0).getFAllowOtherMaterial();
@@ -756,6 +835,7 @@ public class CheckLibraryActivity extends BaseActivity {
                     InputStream is_info = new ByteArrayInputStream(list_return.get(0).getFInfo().getBytes("UTF-8"));
                     childQuitTagList = CheckTagModeAnalysis.getSingleton().GetTagMode(is_info);
                     is_info.close();
+                    childQuitTagList.get(0).getGuid();
                     return childQuitTagList;
                 } else {
                     return childQuitTagList;
@@ -810,6 +890,10 @@ public class CheckLibraryActivity extends BaseActivity {
                                 InputStream IsBarCodeInfoBody = new ByteArrayInputStream(Info.getBytes("UTF-8"));
                                 List<BarCodeHeadBean> BarCodeInfoHeadList = CheckLibraryXmlAnalysis.getSingleton().GetBarCodeHead(IsBarCodeInfoHead);
                                 List<BarcodeXmlBean> barcodeXmlBeanList = CheckLibraryXmlAnalysis.getSingleton().GetBarCodeBody(IsBarCodeInfoBody);
+                                //BarcodeLib
+
+                                //判断条码解析出来的条码库ID是否存在在子分录集合中是否存在，没有的话添加
+
                                 if (BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_SEQUENCE.toLowerCase())) {
                                     Is_QuitNumber_Mode = true;
                                     PutResultArray(barcodeXmlBeanList);
@@ -836,6 +920,10 @@ public class CheckLibraryActivity extends BaseActivity {
                                     ShowEditSumDialog(NoQuitLibrary());
                                     ViseLog.i("通用号 FBarcodeLib =" + FBarcodeLib);
                                 }
+                                //更新子分录
+
+                                //根据子分录数量汇总分录
+
                             } else {
                                 tools.ShowDialog(MContect, Info.substring(2, Info.length()));
                             }
@@ -873,22 +961,24 @@ public class CheckLibraryActivity extends BaseActivity {
                             }
                             Sp_house.setEnabled(false);
                             Sp_QuitHouseSpace.setEnabled(false);
+                            Sp_Material.setEnabled(false);
                             Drawable Borderhouse = getResources().getDrawable(R.drawable.border);
                             Sp_house.setBackground(Borderhouse);
                             Drawable BorderInputHouseSpace = getResources().getDrawable(R.drawable.border);
                             Sp_QuitHouseSpace.setBackground(BorderInputHouseSpace);
+                            Sp_Material.setBackground(BorderInputHouseSpace);
 
                             IsSave = true;
                             Drawable drawable_purple = getResources().getDrawable(R.drawable.circularbead_purple);
                             TV_Sumbit.setBackground(drawable_purple);
                             TV_Sumbit.setTextColor(getResources().getColor(R.color.White));
+                            TV_Save.setBackground(drawable_purple);
+                            TV_Save.setTextColor(getResources().getColor(R.color.White));
 
 //                            CheckSubBody checkSubBody = new CheckSubBody();
 //                            checkSubBody.setFGuid(FGUID);
 //                            checkSubBody.setFBillBodyID(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
-//                            checkSubBody.setFBarcodeLib(FBarcodeLib);
-//                            checkSubBody.setFRowIndex(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFRowIndex());
-//                            //subBodyBean.setInputLibrarySum(QuitSum);
+//                            subBodyBean.setInputLibrarySum(QuitSum);
 //                            checkSubBodyBeanList.add(checkSubBody);
 
                             float Sum = Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getFCheckQty()) +
