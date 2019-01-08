@@ -18,9 +18,7 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarCodeHeadBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarcodeXmlBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitSubBodyBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitSubmitDataBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitTaskRvData;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.SubBody;
 import cn.shenzhenlizuosystemapp.Common.WebBean.QuitLibraryAllInfo;
 
 public class QuitLibraryXmlAnalysis {

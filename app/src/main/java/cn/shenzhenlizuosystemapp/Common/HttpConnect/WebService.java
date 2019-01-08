@@ -18,7 +18,7 @@ import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 
 public class WebService {
     private SharedPreferences sharedPreferences;
-    private static  String  LastNameSpaceAddress ="http://www.lzbarcode.com/";
+    private static String LastNameSpaceAddress = "http://www.lzbarcode.com/";
     private String urlAddress;
     private static WebService webService;
 
@@ -32,8 +32,8 @@ public class WebService {
         }
         return webService;
     }
-    
-//"http://192.168.1.6:809/DCS/WebService/DBS.WebAPI.asmx";
+
+    //"http://192.168.1.6:809/DCS/WebService/DBS.WebAPI.asmx";
     public WebService(Context context) {
         Tools tools = new Tools();
         sharedPreferences = tools.InitSharedPreferences(context);
@@ -45,12 +45,13 @@ public class WebService {
         }
         ViseLog.i("初始WebServer IP = " + urlAddress);
     }
+
     public String getLastUrlAddress() {
         return urlAddress;
     }
 
 
-    public String getProject()throws IOException, XmlPullParserException, ClassCastException {
+    public String getProject() throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetProjects");
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
@@ -58,14 +59,14 @@ public class WebService {
         envelope.bodyOut = soapObject;
         envelope.dotNet = true;
         envelope.setOutputSoapObject(soapObject);
-        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress );
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
         httpTransportSE.call("http://www.lzbarcode.com/GetProjects", envelope);
         Object object = (Object) envelope.getResponse();
         String Result = object.toString();
         return Result;
     }
 
-    public String LoginIn(String ProjectID, String UserName,String Password) throws IOException, XmlPullParserException, ClassCastException {
+    public String LoginIn(String ProjectID, String UserName, String Password) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "Login");
         soapObject.addProperty("ProjectID", ProjectID);
         soapObject.addProperty("UserName", UserName);
@@ -99,7 +100,7 @@ public class WebService {
         return Result;
     }
 
-    public String GetWareHouseData(String ConnectionToString,String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
+    public String GetWareHouseData(String ConnectionToString, String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetInStockNoticeBill");
         soapObject.addProperty("ConnectionID", ConnectionToString);
         soapObject.addProperty("BillID", BillGuid);
@@ -131,7 +132,7 @@ public class WebService {
         return Result;
     }
 
-    public String GetQuitWareHouseData (String ConnectionToString,String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
+    public String GetQuitWareHouseData(String ConnectionToString, String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetOutStockNoticeBill");
         soapObject.addProperty("ConnectionID", ConnectionToString);
         soapObject.addProperty("BillID", BillGuid);
@@ -163,7 +164,7 @@ public class WebService {
         return Result;
     }
 
-    public String GetCheckWareHouseData(String ConnectionToString,String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
+    public String GetCheckWareHouseData(String ConnectionToString, String BillGuid) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetCheckStockBill");
         soapObject.addProperty("ConnectionID", ConnectionToString);
         soapObject.addProperty("BillID", BillGuid);
@@ -180,14 +181,14 @@ public class WebService {
         return Result;
     }
 
-    public String GetBarcodeAnalyze(String ConnectionID,String MaterialID,String LabelTempletID,String Barcodes,boolean AllowAddNew) throws IOException, XmlPullParserException, ClassCastException {
+    public String GetBarcodeAnalyze(String ConnectionID, String MaterialID, String LabelTempletID, String Barcodes, boolean AllowAddNew) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "BarcodeAnalyze");
         soapObject.addProperty("ConnectionID", ConnectionID);
         soapObject.addProperty("MaterialID", MaterialID);
         soapObject.addProperty("LabelTempletID", LabelTempletID);
         soapObject.addProperty("Barcodes", Barcodes);
         soapObject.addProperty("AllowAddNew", AllowAddNew);
-        
+
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
         envelope.bodyOut = soapObject;
@@ -216,7 +217,7 @@ public class WebService {
         return Result;
     }
 
-    public String GetStocksCell(String ConnectionToString,String StockGuid) throws IOException, XmlPullParserException, ClassCastException {
+    public String GetStocksCell(String ConnectionToString, String StockGuid) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetStocksCell");
         soapObject.addProperty("ConnectionID", ConnectionToString);
         soapObject.addProperty("StockID", StockGuid);
@@ -234,7 +235,7 @@ public class WebService {
     }
 
 
-    public String GetMaterialLabelTemplet(String ConnectionID,String MaterialID) throws IOException, XmlPullParserException, ClassCastException {
+    public String GetMaterialLabelTemplet(String ConnectionID, String MaterialID) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetMaterialLabelTemplet");
         soapObject.addProperty("ConnectionID", ConnectionID);
         soapObject.addProperty("MaterialID", MaterialID);
@@ -251,7 +252,7 @@ public class WebService {
         return Result;
     }
 
-    public String GetLabelTempletBarcodes(String ConnectionID,String LabelTempletID) throws IOException, XmlPullParserException, ClassCastException {
+    public String GetLabelTempletBarcodes(String ConnectionID, String LabelTempletID) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetLabelTempletBarcodes");
         soapObject.addProperty("ConnectionID", ConnectionID);
         soapObject.addProperty("LabelTempletID", LabelTempletID);
@@ -268,7 +269,7 @@ public class WebService {
         return Result;
     }
 
-    public String LockedBillBody(String ConnectionID,String BillBodyID) throws IOException, XmlPullParserException, ClassCastException {
+    public String LockedBillBody(String ConnectionID, String BillBodyID) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "LockedBillBody");
         soapObject.addProperty("ConnectionID", ConnectionID);
         soapObject.addProperty("BillBodyID", BillBodyID);
@@ -288,7 +289,7 @@ public class WebService {
     public String ClearLockedBillBody(String ConnectionID) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "ClearLockedBillBody");
         soapObject.addProperty("ConnectionID", ConnectionID);
-        
+
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
         envelope.bodyOut = soapObject;
@@ -301,7 +302,7 @@ public class WebService {
         return Result;
     }
 
-    public String CreatInStockBill(String ConnectionID,String UserID,String XmlData) throws IOException, XmlPullParserException, ClassCastException {
+    public String CreatInStockBill(String ConnectionID, String UserID, String XmlData) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "CreatInStockBill");
         soapObject.addProperty("ConnectionID", ConnectionID);
         soapObject.addProperty("UserCode", UserID);
@@ -319,7 +320,7 @@ public class WebService {
         return Result;
     }
 
-    public String CreatQuitStockBill(String ConnectionID,String UserID,String XmlData) throws IOException, XmlPullParserException, ClassCastException {
+    public String CreatQuitStockBill(String ConnectionID, String UserID, String XmlData) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "CreatOutStockBill");
         soapObject.addProperty("ConnectionID", ConnectionID);
         soapObject.addProperty("UserCode", UserID);
@@ -337,7 +338,7 @@ public class WebService {
         return Result;
     }
 
-    public String CreateCheckStockBill(String ConnectionID,String UserID,String XmlData) throws IOException, XmlPullParserException, ClassCastException {
+    public String CreateCheckStockBill(String ConnectionID, String UserID, String XmlData) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "UpdateCheckStockBill");
         soapObject.addProperty("ConnectionID", ConnectionID);
         soapObject.addProperty("UserCode", UserID);
@@ -354,7 +355,7 @@ public class WebService {
         String Result = object.toString();
         return Result;
     }
-    
+
     public String UnLockedBillBody(String ConnectionID) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "UnLockedBillBody");
         soapObject.addProperty("ConnectionID", ConnectionID);
@@ -371,11 +372,11 @@ public class WebService {
         return Result;
     }
 
-    public String GetAdjustStockNoticeBillsList (String ConnectionID,String AdjustStockType) throws IOException, XmlPullParserException, ClassCastException {
+    public String GetAdjustStockNoticeBillsList(String ConnectionID, String AdjustStockType) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetAdjustStockNoticeBillsList");
         soapObject.addProperty("ConnectionID", ConnectionID);
         soapObject.addProperty("AdjustStockType", AdjustStockType);
-        
+
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
         envelope.bodyOut = soapObject;
@@ -388,7 +389,7 @@ public class WebService {
         return Result;
     }
 
-    public String GetAdjustStockNoticeBill(String ConnectionID,String BillID,String AdjustStockType) throws IOException, XmlPullParserException, ClassCastException {
+    public String GetAdjustStockNoticeBill(String ConnectionID, String BillID, String AdjustStockType) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetAdjustStockNoticeBill");
         soapObject.addProperty("ConnectionID", ConnectionID);
         soapObject.addProperty("BillID", BillID);
@@ -405,8 +406,8 @@ public class WebService {
         String Result = object.toString();
         return Result;
     }
-    
-    public String CreatAdjustStockBill(String ConnectionID,String UserCode,String XmlData) throws IOException, XmlPullParserException, ClassCastException {
+
+    public String CreatAdjustStockBill(String ConnectionID, String UserCode, String XmlData) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "CreatAdjustStockBill");
         soapObject.addProperty("ConnectionID", ConnectionID);
         soapObject.addProperty("UserCode", UserCode);
@@ -423,6 +424,21 @@ public class WebService {
         String Result = object.toString();
         return Result;
     }
-    
+
+    public String GetMaterialTree(String ConnectionID) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetMaterialTree");
+        soapObject.addProperty("ConnectionID", ConnectionID);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/GetMaterialTree", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
 }
 

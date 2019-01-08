@@ -92,16 +92,11 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".Common.UI.OutAllot.OutAllotNotificationActivity"
-            android:label="@string/OutAllotNotification"
+            android:name=".Common.TreeFormList.TreeListActivity"
+            android:label="@string/DircetAllotNotification"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-
-        <activity
-            android:name=".Common.UI.OutAllot.OutAllotActivity"
-            android:label="@string/OutAllotScan"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+        
 
         <receiver android:name=".Common.BroadcastReceiver.ReceiveData_Recevier">
             <intent-filter>

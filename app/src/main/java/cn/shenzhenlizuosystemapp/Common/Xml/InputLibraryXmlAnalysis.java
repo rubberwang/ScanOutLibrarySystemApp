@@ -18,9 +18,7 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarCodeHeadBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarcodeXmlBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubBodyBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubmitDataBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.SubBody;
 import cn.shenzhenlizuosystemapp.Common.WebBean.InputLibraryAllInfo;
 
 public class InputLibraryXmlAnalysis {

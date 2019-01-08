@@ -216,7 +216,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginBottom="2dp"
                         android:layout_marginRight="6dp"
-                        android:background="@drawable/border"
+                        android:background="@drawable/edittext_background"
                         android:overlapAnchor="false"
                         android:spinnerMode="dropdown"
                         android:theme="@style/SpnStyle">

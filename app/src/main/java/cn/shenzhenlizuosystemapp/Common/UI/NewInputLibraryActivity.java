@@ -5,7 +5,6 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,12 +25,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Random;
 
 import cn.shenzhenlizuosystemapp.Common.Adapter.ScanResult_InputRvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Adapter.ScanTask_InputRvAdapter;
@@ -40,7 +36,6 @@ import cn.shenzhenlizuosystemapp.Common.AsyncGetData.InputBillCreateTask;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.InputBodyLockTask;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.UnlockTask;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
-import cn.shenzhenlizuosystemapp.Common.Base.Myapplication;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.Base.ZebarTools;
@@ -52,7 +47,6 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildTag;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubBodyBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputSubmitDataBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.MaterialModeBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
@@ -61,7 +55,6 @@ import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.Port.BarCodeCheckPort;
 import cn.shenzhenlizuosystemapp.Common.Port.EditSumPort;
 import cn.shenzhenlizuosystemapp.Common.Port.InputBillCreate;
-import cn.shenzhenlizuosystemapp.Common.Port.InputTagModePort;
 import cn.shenzhenlizuosystemapp.Common.Port.LockResultPort;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.InputStockAdapter;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.MaterialModeAdapter;
@@ -197,8 +190,6 @@ public class NewInputLibraryActivity extends BaseActivity {
     }
 
     private void InitClick() {
-//        Et_ScanNumber.setFocusable(false);
-//        Et_ScanNumber.setFocusableInTouchMode(false);
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
 
