@@ -2,15 +2,18 @@ package cn.shenzhenlizuosystemapp.Common.AsyncGetData.CheckTask;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.AdapterView;
 
 import com.vise.log.ViseLog;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckAdapterReturn;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.Port.CheckBarCodeCheckPort;
 import cn.shenzhenlizuosystemapp.Common.Xml.CheckXml.CheckAnalysisReturnsXml;
@@ -22,6 +25,7 @@ public class CheckBarCodeCheckTask extends AsyncTask<String, Void, String> {
     private String MaterialID;
     private String LabelTempletID;
     private String Barcodes;
+    private boolean IS;
 
     public CheckBarCodeCheckTask(CheckBarCodeCheckPort barCodeCheckPort, WebService webService, String MaterialID
             , String LabelTempletID, String Barcodes) {
@@ -30,14 +34,15 @@ public class CheckBarCodeCheckTask extends AsyncTask<String, Void, String> {
         this.MaterialID = MaterialID;
         this.LabelTempletID = LabelTempletID;
         this.Barcodes = Barcodes;
+        this.IS = IS;
     }
 
 
     @Override
     protected String doInBackground(String... params) {
         try {
-            ViseLog.i("BarCodeCheckTask parms = " + ConnectStr.ConnectionToString + "," + MaterialID + "," + LabelTempletID + "," + Barcodes + "," + true);
-            String StatuResStr = webService.GetBarcodeAnalyze(ConnectStr.ConnectionToString,MaterialID, LabelTempletID, Barcodes, false);
+            ViseLog.i("BarCodeCheckTask parms = " + ConnectStr.ConnectionToString + "," + MaterialID + "," + LabelTempletID + "," + Barcodes + "," + IS);
+            String StatuResStr = webService.GetBarcodeAnalyze(ConnectStr.ConnectionToString,MaterialID, LabelTempletID, Barcodes, IS);
             ViseLog.i("QuitBarCodeCheckTask QuitStatuResStr = " + StatuResStr);
             InputStream Is_statu = new ByteArrayInputStream(StatuResStr.getBytes("UTF-8"));
             List<CheckAdapterReturn> statureslist = CheckAnalysisReturnsXml.getSingleton().GetReturn(Is_statu);

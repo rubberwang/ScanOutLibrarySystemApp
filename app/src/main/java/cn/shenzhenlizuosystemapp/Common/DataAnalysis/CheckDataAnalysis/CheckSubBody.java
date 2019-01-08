@@ -1,10 +1,13 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis;
 
 public class CheckSubBody {
-    private String FGuid;
-    private String FBillBodyID;
-    private String FBarcodeLib;
+    private String FGuid;//子分录ID
+    private String FBillBodyID;//分录ID，等于body分录ID
+    private String FRowIndex;//子分录行号
+    private String FBarcodeLib;//条码库
     private String FBarcodeLib_Name;//条码文本
+    private String FBarcodeType;//管控类型ID
+    private String FBarcodeType_Name;//管控类型名称
     private String FAccountQty;//账存数量
     private String FCheckQty; //盘点数量
     private String FDiffQty;//差异数量
@@ -72,5 +75,29 @@ public class CheckSubBody {
 
     public void setFCheckStockStatus(String FCheckStockStatus) {
         this.FCheckStockStatus = FCheckStockStatus;
+    }
+
+    public String getFRowIndex() {
+        return FRowIndex;
+    }
+
+    public void setFRowIndex(String FRowIndex) {
+        this.FRowIndex = FRowIndex;
+    }
+
+    public String getFBarcodeType() {
+        return FBarcodeType;
+    }
+
+    public void setFBarcodeType(String FBarcodeType) {
+        this.FBarcodeType = FBarcodeType;
+    }
+
+    public String getFBarcodeType_Name() {
+        return FBarcodeType_Name;
+    }
+
+    public void setFBarcodeType_Name(String FBarcodeType_Name) {
+        this.FBarcodeType_Name = FBarcodeType_Name;
     }
 }

@@ -17,6 +17,8 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarCodeHeadBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarcodeXmlBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckBodyMaterial;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckBodyStocks;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckSubBodyBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckTaskRvData;
@@ -114,6 +116,10 @@ public class CheckLibraryXmlAnalysis {
                             if (Tools.IsObjectNull(InputDetailXmls)) {
                                 InputDetailXmls.setFAllowOtherMaterial(parser.nextText());
                             }
+                        } else if (name.equalsIgnoreCase("FDate")) {
+                            if (Tools.IsObjectNull(InputDetailXmls)) {
+                                InputDetailXmls.setFDate(parser.nextText());
+                            }
                         }
                         break;
                     case XmlPullParser.END_TAG:
@@ -156,7 +162,11 @@ public class CheckLibraryXmlAnalysis {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFGuid(parser.nextText());
                             }
-                        } else if (name.equalsIgnoreCase("FMaterial")) {
+                        } else if (name.equalsIgnoreCase("FRowIndex")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFRowIndex(parser.nextText());
+                            }
+                        }else if (name.equalsIgnoreCase("FMaterial")) {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFMaterial(parser.nextText());
                             }
@@ -172,7 +182,11 @@ public class CheckLibraryXmlAnalysis {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFModel(parser.nextText());
                             }
-                        } else if (name.equalsIgnoreCase("FBaseUnit_Name")) {
+                        } else if (name.equalsIgnoreCase("FBaseUnit")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFBaseUnit(parser.nextText());
+                            }
+                        }else if (name.equalsIgnoreCase("FBaseUnit_Name")) {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFBaseUnit_Name(parser.nextText());
                             }
@@ -229,7 +243,11 @@ public class CheckLibraryXmlAnalysis {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFGuid(parser.nextText());
                             }
-                        } else if (name.equalsIgnoreCase("FBarcodeLib")) {
+                        } else if (name.equalsIgnoreCase("FRowIndex")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFRowIndex(parser.nextText());
+                            }
+                        }else if (name.equalsIgnoreCase("FBarcodeLib")) {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFBarcodeLib(parser.nextText());
                             }
@@ -237,7 +255,15 @@ public class CheckLibraryXmlAnalysis {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFBarcodeLib_Name(parser.nextText());
                             }
-                        }  else if (name.equalsIgnoreCase("FCheckStockStatus")) {
+                        }  else if (name.equalsIgnoreCase("FBarcodeType")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFBarcodeType(parser.nextText());
+                            }
+                        } else if (name.equalsIgnoreCase("FBarcodeType_Name")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFBarcodeType_Name(parser.nextText());
+                            }
+                        }else if (name.equalsIgnoreCase("FCheckStockStatus")) {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFCheckStockStatus(parser.nextText());
                             }
@@ -252,6 +278,10 @@ public class CheckLibraryXmlAnalysis {
                         } else if (name.equalsIgnoreCase("FDiffQty")) {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFDiffQty(parser.nextText());
+                            }
+                        }else if (name.equalsIgnoreCase("FBillBodyID")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFBillBodyID(parser.nextText());
                             }
                         }
                         break;
@@ -274,7 +304,99 @@ public class CheckLibraryXmlAnalysis {
         return null;
     }
 
-    /*public List<BarCodeHeadBean> GetBarCodeHead(InputStream inputStream) {
+    public List<CheckBodyStocks> GetCheckBodyStocks(InputStream inputStream) {
+        CheckBodyStocks InputDetailXmls = new CheckBodyStocks();
+        List<CheckBodyStocks> CheckBodyStocksXmlList = null;
+        XmlPullParser parser = Xml.newPullParser();
+        try {
+            parser.setInput(inputStream, "UTF-8");
+            int eventType = parser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                    case XmlPullParser.START_DOCUMENT:
+                        CheckBodyStocksXmlList = new ArrayList<CheckBodyStocks>();
+                        break;
+                    case XmlPullParser.START_TAG:
+                        String name = parser.getName();
+                        if (name.equalsIgnoreCase("StockCells")) {
+                            InputDetailXmls = new CheckBodyStocks();
+                        } else if (name.equalsIgnoreCase("FStockCell")) {
+                            if (Tools.IsObjectNull(InputDetailXmls)){
+                                InputDetailXmls.setFStockCell(parser.nextText());
+                            }
+                        } else if (name.equalsIgnoreCase("FStockCell_Name")) {
+                            if (Tools.IsObjectNull(InputDetailXmls)) {
+                                InputDetailXmls.setFStockCell_Name(parser.nextText());
+                            }
+                        }
+                        break;
+                    case XmlPullParser.END_TAG:
+                        if (parser.getName().equalsIgnoreCase("StockCells")
+                                && InputDetailXmls != null) {
+                            CheckBodyStocksXmlList.add(InputDetailXmls);
+                            InputDetailXmls = null;
+                            ViseLog.i("SubBody Stocks");
+                        }
+                        break;
+                }
+                eventType = parser.next();
+            }
+            inputStream.close();
+            return CheckBodyStocksXmlList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            ViseLog.i("GetCheckBodyStocks Exception = " + e);
+        }
+        return null;
+    }
+
+    public List<CheckBodyMaterial> GetCheckBodyMaterial(InputStream inputStream) {
+        CheckBodyMaterial InputDetailXmls = new CheckBodyMaterial();
+        List<CheckBodyMaterial> CheckBodyStocksXmlList = null;
+        XmlPullParser parser = Xml.newPullParser();
+        try {
+            parser.setInput(inputStream, "UTF-8");
+            int eventType = parser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                    case XmlPullParser.START_DOCUMENT:
+                        CheckBodyStocksXmlList = new ArrayList<CheckBodyMaterial>();
+                        break;
+                    case XmlPullParser.START_TAG:
+                        String name = parser.getName();
+                        if (name.equalsIgnoreCase("Materials")) {
+                            InputDetailXmls = new CheckBodyMaterial();
+                        } else if (name.equalsIgnoreCase("FMaterial")) {
+                            if (Tools.IsObjectNull(InputDetailXmls)){
+                                InputDetailXmls.setFMaterial(parser.nextText());
+                            }
+                        } else if (name.equalsIgnoreCase("FMaterial_Name")) {
+                            if (Tools.IsObjectNull(InputDetailXmls)) {
+                                InputDetailXmls.setFMaterial_Name(parser.nextText());
+                            }
+                        }
+                        break;
+                    case XmlPullParser.END_TAG:
+                        if (parser.getName().equalsIgnoreCase("Materials")
+                                && InputDetailXmls != null) {
+                            CheckBodyStocksXmlList.add(InputDetailXmls);
+                            InputDetailXmls = null;
+                            ViseLog.i("SubBody Material");
+                        }
+                        break;
+                }
+                eventType = parser.next();
+            }
+            inputStream.close();
+            return CheckBodyStocksXmlList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            ViseLog.i("GetCheckBodyMaterial Exception = " + e);
+        }
+        return null;
+    }
+
+    public List<BarCodeHeadBean> GetBarCodeHead(InputStream inputStream) {
         BarCodeHeadBean barCodeHeadBean = new BarCodeHeadBean();
         List<BarCodeHeadBean> barCodeHeadBeanList = null;
         XmlPullParser parser = Xml.newPullParser();
@@ -382,9 +504,9 @@ public class CheckLibraryXmlAnalysis {
             ViseLog.i("GetBarCodeBody Exception = " + e);
         }
         return null;
-    }*/
+    }
 
-    public String   CreateCheckXmlStr(String FGuid, String FStockID,String FStockCellID, List<CheckSubBodyBean> inputSubBodyBeanList) {
+    public String   CreateCheckXmlStr(List<CheckLibraryDetail> checkHeadList,List<CheckTaskRvData> checkBodyList, List<CheckSubBody> checkSubBodyBeanList) {
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             StringWriter stringWriter = new StringWriter();
@@ -393,30 +515,125 @@ public class CheckLibraryXmlAnalysis {
                 serializer.setOutput(stringWriter);
                 serializer.startDocument("UTF-8", true);
                 serializer.startTag(null, "NewDataSet");
-                serializer.startTag(null, "BillHead");
-                serializer.startTag(null, "FGuid");
-                serializer.text(FGuid);
-                serializer.endTag(null, "FGuid");
-                
-                serializer.startTag(null, "FStockID");
-                serializer.text(FStockID);
-                serializer.endTag(null, "FStockID");
-                
-                serializer.startTag(null, "FStockCellID");
-                serializer.text(FStockCellID);
-                serializer.endTag(null, "FStockCellID");
-                serializer.endTag(null, "BillHead");
-                for (CheckSubBodyBean inputSubBodyBean : inputSubBodyBeanList) {
+                for (CheckLibraryDetail checkLibraryDetail : checkHeadList) {
+                    serializer.startTag(null, "Head");
+
+                    serializer.startTag(null, "FGuid");
+                    serializer.text(checkLibraryDetail.getFGuid());
+                    serializer.endTag(null, "FGuid");
+
+                    serializer.startTag(null, "FCode");
+                    serializer.text(checkLibraryDetail.getFCode());
+                    serializer.endTag(null, "FCode");
+
+                    serializer.startTag(null, "FDate");
+                    serializer.text(checkLibraryDetail.getFDate());
+                    serializer.endTag(null, "FDate");
+
+                    serializer.startTag(null, "FStock");
+                    serializer.text(checkLibraryDetail.getFStock());
+                    serializer.endTag(null, "FStock");
+
+                    serializer.startTag(null, "FStock_Name");
+                    serializer.text(checkLibraryDetail.getFStock_Name());
+                    serializer.endTag(null, "FStock_Name");
+
+                    serializer.startTag(null, "FAllowOtherMaterial");
+                    serializer.text(checkLibraryDetail.getFAllowOtherMaterial());
+                    serializer.endTag(null, "FAllowOtherMaterial");
+
+                    serializer.endTag(null, "Head");
+                }
+
+                for (CheckTaskRvData checkTaskRvData : checkBodyList) {
+                    serializer.startTag(null, "Body");
+
+                    serializer.startTag(null, "FGuid");
+                    serializer.text(checkTaskRvData.getFGuid());
+                    serializer.endTag(null, "FGuid");
+
+                    serializer.startTag(null, "FRowIndex");
+                    serializer.text(checkTaskRvData.getFRowIndex());
+                    serializer.endTag(null, "FRowIndex");
+
+                    serializer.startTag(null, "FMaterial");
+                    serializer.text(checkTaskRvData.getFMaterial());
+                    serializer.endTag(null, "FMaterial");
+
+                    serializer.startTag(null, "FMaterial_Code");
+                    serializer.text(checkTaskRvData.getFMaterial_Code());
+                    serializer.endTag(null, "FMaterial_Code");
+
+                    serializer.startTag(null, "FMaterial_Name");
+                    serializer.text(checkTaskRvData.getFMaterial_Name());
+                    serializer.endTag(null, "FMaterial_Name");
+
+                    serializer.startTag(null, "FModel");
+                    serializer.text(checkTaskRvData.getFModel());
+                    serializer.endTag(null, "FModel");
+
+                    serializer.startTag(null, "FBaseUnit");
+                    serializer.text(checkTaskRvData.getFBaseUnit());
+                    serializer.endTag(null, "FBaseUnit");
+
+                    serializer.startTag(null, "FBaseUnit_Name");
+                    serializer.text(checkTaskRvData.getFBaseUnit_Name());
+                    serializer.endTag(null, "FBaseUnit_Name");
+
+                    serializer.startTag(null, "FAccountQty");
+                    serializer.text(checkTaskRvData.getFAccountQty());
+                    serializer.endTag(null, "FAccountQty");
+
+                    serializer.startTag(null, "FCheckQty");
+                    serializer.text(checkTaskRvData.getFCheckQty());
+                    serializer.endTag(null, "FCheckQty");
+
+                    serializer.startTag(null, "FDiffQty");
+                    serializer.text(checkTaskRvData.getFDiffQty());
+                    serializer.endTag(null, "FDiffQty");
+
+                    serializer.endTag(null, "Body");
+                }
+
+                for (CheckSubBody checkSubBody : checkSubBodyBeanList) {
                     serializer.startTag(null, "SubBody");
+
+                    serializer.startTag(null, "FGuid");
+                    serializer.text(checkSubBody.getFGuid());
+                    serializer.endTag(null, "FGuid");
+
+                    serializer.startTag(null, "FRowIndex");
+                    serializer.text(checkSubBody.getFRowIndex());
+                    serializer.endTag(null, "FRowIndex");
+
                     serializer.startTag(null, "FBillBodyID");
-                    serializer.text(inputSubBodyBean.getFBillBodyID());
+                    serializer.text(checkSubBody.getFBillBodyID());
                     serializer.endTag(null, "FBillBodyID");
+
                     serializer.startTag(null, "FBarcodeLib");
-                    serializer.text(inputSubBodyBean.getFBarcodeLib());
+                    serializer.text(checkSubBody.getFBarcodeLib());
                     serializer.endTag(null, "FBarcodeLib");
-                    serializer.startTag(null, "FAuxQty");
-                    serializer.text(inputSubBodyBean.getInputLibrarySum());
-                    serializer.endTag(null, "FAuxQty");
+
+                    serializer.startTag(null, "FBarcodeLib_Name");
+                    serializer.text(checkSubBody.getFBarcodeLib_Name());
+                    serializer.endTag(null, "FBarcodeLib_Name");
+
+                    serializer.startTag(null, "FAccountQty");
+                    serializer.text(checkSubBody.getFAccountQty());
+                    serializer.endTag(null, "FAccountQty");
+
+                    serializer.startTag(null, "FCheckQty");
+                    serializer.text(checkSubBody.getFCheckQty());
+                    serializer.endTag(null, "FCheckQty");
+
+                    serializer.startTag(null, "FDiffQty");
+                    serializer.text(checkSubBody.getFDiffQty());
+                    serializer.endTag(null, "FDiffQty");
+
+                    serializer.startTag(null, "FCheckStockStatus");
+                    serializer.text(checkSubBody.getFCheckStockStatus());
+                    serializer.endTag(null, "FCheckStockStatus");
+
                     serializer.endTag(null, "SubBody");
                 }
                 serializer.endTag(null, "NewDataSet");

@@ -60,6 +60,7 @@ public class Subbody_CheckRvAdapter extends RecyclerView.Adapter {
             ((ViewHoders) holder).TV_AccountQty.setText(datas.get(position).getFAccountQty());
             ((ViewHoders) holder).TV_FCheckQty.setText(datas.get(position).getFCheckQty());
             ((ViewHoders) holder).TV_FDiffQty.setText(datas.get(position).getFDiffQty());
+            ((ViewHoders) holder).TV_barcodeName.setText(datas.get(position).getFBarcodeLib_Name());
 
             if (selected == position) {
                 holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.Thin_Bule));
@@ -92,6 +93,7 @@ public class Subbody_CheckRvAdapter extends RecyclerView.Adapter {
         private TextView TV_AccountQty;
         private TextView TV_FCheckQty;
         private TextView TV_FDiffQty;
+        private TextView TV_barcodeName;
 
         public ViewHoders(View itemView) {
             super(itemView);
@@ -99,6 +101,7 @@ public class Subbody_CheckRvAdapter extends RecyclerView.Adapter {
             TV_AccountQty = (TextView) itemView.findViewById(R.id.TV_AccountQty);
             TV_FCheckQty = (TextView) itemView.findViewById(R.id.TV_FCheckQty);
             TV_FDiffQty = (TextView) itemView.findViewById(R.id.TV_FDiffQty);
+            TV_barcodeName = (TextView) itemView.findViewById(R.id.TV_barcodeName);
         }
     }
 

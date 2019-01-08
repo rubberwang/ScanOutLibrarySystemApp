@@ -1,16 +1,28 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis;
 
+import java.util.List;
+
 public class CheckTaskRvData {
     private String FGuid;
+    private String FRowIndex;//分录行号
     private String FMaterial;
     private String FMaterial_Code; //物料编号
     private String FMaterial_Name;//品名
     private String FModel;//规格
+    private String FBaseUnit;//单位ID
     private String FBaseUnit_Name;//基本单位
     private String FAccountQty;//账存数量
     private String FCheckQty; //盘点数量
     private String FDiffQty;//差异数量
+    private List<CheckSubBody> checkSubBody;
 
+    public void setCheckSubBody(List<CheckSubBody> checkSubBody) {
+        this.checkSubBody = checkSubBody;
+    }
+
+    public List<CheckSubBody> getCheckSubBody() {
+        return checkSubBody;
+    }
 
     public void setFDiffQty(String noSend) {
         FDiffQty = noSend;
@@ -82,5 +94,21 @@ public class CheckTaskRvData {
 
     public String getFDiffQty(){
         return FDiffQty;
+    }
+
+    public String getFRowIndex() {
+        return FRowIndex;
+    }
+
+    public void setFRowIndex(String FRowIndex) {
+        this.FRowIndex = FRowIndex;
+    }
+
+    public String getFBaseUnit() {
+        return FBaseUnit;
+    }
+
+    public void setFBaseUnit(String FBaseUnit) {
+        this.FBaseUnit = FBaseUnit;
     }
 }

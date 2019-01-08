@@ -10,6 +10,9 @@ import java.io.InputStream;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckLibraryDetail;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckSubBody;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckTaskRvData;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckAdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckSubBodyBean;
@@ -22,22 +25,22 @@ import cn.shenzhenlizuosystemapp.Common.Xml.CheckXml.CheckLibraryXmlAnalysis;
 public class CheckBillCreateTask extends AsyncTask<String, Void, String> {
 
     private WebService webService = null;
-    private String BodyID = "";
-    private CheckBillCreate quitBillCreate;
-    private MyProgressDialog myProgressDialog;
-    private String FStockID;
-    private String FStockCallID;
-    private List<CheckSubBodyBean> quitSubBodyBeanList;
 
-    public CheckBillCreateTask(String FGuid, String FStockID, String FStockCallID, List<CheckSubBodyBean> quitSubBodyBeanList, WebService webService
-            , MyProgressDialog myProgressDialog, CheckBillCreate quitBillCreate) {
+    private CheckBillCreate checkBillCreate;
+    private MyProgressDialog myProgressDialog;
+    private List<CheckLibraryDetail> checkHeadList;
+    private List<CheckTaskRvData> checkBodyList;
+    private List<CheckSubBody> checkSubBodyBeanList;
+
+    public CheckBillCreateTask(List<CheckLibraryDetail> checkHeadList, List<CheckTaskRvData> checkBodyList, List<CheckSubBody> checkSubBodyBeanList, WebService webService
+            , MyProgressDialog myProgressDialog, CheckBillCreate checkBillCreate) {
         this.webService = webService;
-        this.BodyID = FGuid;
-        this.quitBillCreate = quitBillCreate;
+        this.checkHeadList = checkHeadList;
+        this.checkBodyList = checkBodyList;
+        this.checkBillCreate = checkBillCreate;
         this.myProgressDialog = myProgressDialog;
-        this.quitSubBodyBeanList = quitSubBodyBeanList;
-        this.FStockID = FStockID;
-        this.FStockCallID = FStockCallID;
+        this.checkSubBodyBeanList = checkSubBodyBeanList;
+
     }
 
     @Override
@@ -50,10 +53,10 @@ public class CheckBillCreateTask extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         try {
-            String DetailedListXml = CheckLibraryXmlAnalysis.getSingleton().CreateCheckXmlStr(BodyID, FStockID, FStockCallID, quitSubBodyBeanList);
-            ViseLog.i("入库最后上传XML = " + DetailedListXml + "," + BodyID + FStockID);
+            String DetailedListXml = CheckLibraryXmlAnalysis.getSingleton().CreateCheckXmlStr(checkHeadList,checkBodyList,checkSubBodyBeanList);
+            ViseLog.i("盘点最后上传XML = " + DetailedListXml);
             String StatuResult = webService.CreateCheckStockBill(ConnectStr.ConnectionToString, ConnectStr.USERNAME, DetailedListXml);
-            ViseLog.i("入库最后Result = " + StatuResult);
+            ViseLog.i("盘点最后Result = " + StatuResult);
             InputStream Is_StatusResult = new ByteArrayInputStream(StatuResult.getBytes("UTF-8"));
             List<CheckAdapterReturn> adapterReturnList = CheckAnalysisReturnsXml.getSingleton().GetReturn(Is_StatusResult);
             if (adapterReturnList.get(0).getFStatus().equals("1")) {
@@ -62,7 +65,7 @@ public class CheckBillCreateTask extends AsyncTask<String, Void, String> {
                 return "EX" + adapterReturnList.get(0).getFInfo();
             }
         } catch (Exception e) {
-            ViseLog.i("QuitBillCreateTask Exception = " + e);
+            ViseLog.i("CheckBillCreateTask Exception = " + e);
             return "";
         }
     }
@@ -70,8 +73,8 @@ public class CheckBillCreateTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         if (!TextUtils.isEmpty(result)) {
             myProgressDialog.dismiss();
-            ViseLog.i("QuitBillCreateTask OnResult" + result);
-            quitBillCreate.onResult(result);
+            ViseLog.i("CheckBillCreateTask OnResult" + result);
+            checkBillCreate.onResult(result);
         }
     }
 }

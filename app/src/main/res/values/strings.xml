@@ -81,6 +81,7 @@
     <string name="CheckMaterial">盘点物料:</string>
     <string name="Select">查询</string>
     <string name="accountNumber">账存数量:</string>
+    <string name="barcodeName">条码文本:</string>
     <string name="checkNumber">盘点数量:</string>
     <string name="diffNumber">差异数量:</string>
     <string name="barcodeText">条码文本:</string>
