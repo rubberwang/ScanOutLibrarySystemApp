@@ -440,5 +440,22 @@ public class WebService {
         String Result = object.toString();
         return Result;
     }
+
+    public String GetMaterial(String ConnectionID,String MateriaTreeID) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetMaterial");
+        soapObject.addProperty("ConnectionID", ConnectionID);
+        soapObject.addProperty("MateriaTreeID", MateriaTreeID);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/GetMaterial", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
 }
 

@@ -56,6 +56,7 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckTask
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckMaterialModeBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckStockBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckStock_Return;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TreeMBean;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.Port.CheckBarCodeCheckPort;
 import cn.shenzhenlizuosystemapp.Common.Port.EditSumPort;
@@ -122,6 +123,7 @@ public class CheckLibraryActivity extends BaseActivity {
     private Subbody_CheckRvAdapter subbody_CheckRvAdapter;
     private EditSumPort editSumPort;
     private CheckSubBodyStocksAdapter checkSubBodyStocksAdapter;
+    private TreeMBean treeMBean;
 
     //控件
     private TextView Back;
@@ -176,6 +178,10 @@ public class CheckLibraryActivity extends BaseActivity {
         quitLibraryObServer = new QuitLibraryObServer();
         getLifecycle().addObserver(quitLibraryObServer);
         webService = WebService.getSingleton(MContect);
+        if (Tools.IsObjectNull((TreeMBean) getIntent().getSerializableExtra("M"))){
+            treeMBean = (TreeMBean) getIntent().getSerializableExtra("M");
+            ViseLog.i("treeMBean.getFName() = " + treeMBean.getFName());
+        }
         InitClick();
         GetQuitLibraryBillsAsyncTask getQuitLibraryBillsAsyncTask = new GetQuitLibraryBillsAsyncTask();
         getQuitLibraryBillsAsyncTask.execute();
@@ -309,7 +315,7 @@ public class CheckLibraryActivity extends BaseActivity {
         BT_CheckMaterial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CheckLibraryActivity.this,TreeListActivity.class);
+                Intent intent = new Intent(CheckLibraryActivity.this, TreeListActivity.class);
                 startActivity(intent);
             }
         });
@@ -337,7 +343,6 @@ public class CheckLibraryActivity extends BaseActivity {
             }
         });
     }
-
 
 
     /***
@@ -383,40 +388,40 @@ public class CheckLibraryActivity extends BaseActivity {
 //                if (Integer.parseInt(quitTaskRvDataList.get(position).getFAccountQty().split("\\.")[0]) <= Integer.parseInt(quitTaskRvDataList.get(position).getFCheckQty().split("\\.")[0])) {
 //                    tools.ShowDialog(MContect, "这张单已扫描完成");
 //                } else {
-                    if (!Is_QuitNumber_Mode) {
-                        if (scanTask_quit_rvAdapter.getselection() != position) {
-                            LockResultPort lockResultPort = new LockResultPort() {
-                                @Override
-                                public void onStatusResult(String res) {
-                                    myProgressDialog.dismiss();
-                                    if (res.equals("Success")) {
-                                        if (RV_ScanInfoTableIndex != position) {
-                                            RV_ScanInfoTableIndex = position;
-                                        }
-                                        quitTaskRvDataList = SumList(quitTaskRvDataList, checkSubbodyRvDataList, position);
-                                        checkSubbodyRvDataList2 = quitTaskRvDataList.get(position).getCheckSubBody();
-                                        GetMaterialMode getMaterialMode = new GetMaterialMode();
-                                        getMaterialMode.execute(quitTaskRvDataList.get(position).getFMaterial());
-                                        scanTask_quit_rvAdapter.setSelection(position);
-                                        scanTask_quit_rvAdapter.notifyDataSetChanged();//选中
-                                    } else {
-                                        tools.ShowDialog(MContect, res);
+                if (!Is_QuitNumber_Mode) {
+                    if (scanTask_quit_rvAdapter.getselection() != position) {
+                        LockResultPort lockResultPort = new LockResultPort() {
+                            @Override
+                            public void onStatusResult(String res) {
+                                myProgressDialog.dismiss();
+                                if (res.equals("Success")) {
+                                    if (RV_ScanInfoTableIndex != position) {
+                                        RV_ScanInfoTableIndex = position;
                                     }
+                                    quitTaskRvDataList = SumList(quitTaskRvDataList, checkSubbodyRvDataList, position);
+                                    checkSubbodyRvDataList2 = quitTaskRvDataList.get(position).getCheckSubBody();
+                                    GetMaterialMode getMaterialMode = new GetMaterialMode();
+                                    getMaterialMode.execute(quitTaskRvDataList.get(position).getFMaterial());
+                                    scanTask_quit_rvAdapter.setSelection(position);
+                                    scanTask_quit_rvAdapter.notifyDataSetChanged();//选中
+                                } else {
+                                    tools.ShowDialog(MContect, res);
                                 }
-                            };
-                            CheckBodyLockTask quitBodyLockTask = new CheckBodyLockTask(lockResultPort, webService, quitTaskRvDataList.get(position).getFGuid(), myProgressDialog);
-                            quitBodyLockTask.execute();
-                        } else {
-                            childQuitTagList.clear();
-                            scanResult_Quit_rvAdapter.notifyDataSetChanged();
-                            scanTask_quit_rvAdapter.setSelection(-1);
-                            scanTask_quit_rvAdapter.notifyDataSetChanged();//取消选中
-                            checkSubbodyRvDataList2.clear();
-                            subbody_CheckRvAdapter.notifyDataSetChanged();
-                        }
+                            }
+                        };
+                        CheckBodyLockTask quitBodyLockTask = new CheckBodyLockTask(lockResultPort, webService, quitTaskRvDataList.get(position).getFGuid(), myProgressDialog);
+                        quitBodyLockTask.execute();
                     } else {
-                        tools.ShowDialog(MContect, "检测到有扫描数据，请先清空或提交");
+                        childQuitTagList.clear();
+                        scanResult_Quit_rvAdapter.notifyDataSetChanged();
+                        scanTask_quit_rvAdapter.setSelection(-1);
+                        scanTask_quit_rvAdapter.notifyDataSetChanged();//取消选中
+                        checkSubbodyRvDataList2.clear();
+                        subbody_CheckRvAdapter.notifyDataSetChanged();
                     }
+                } else {
+                    tools.ShowDialog(MContect, "检测到有扫描数据，请先清空或提交");
+                }
 
             }
 
@@ -638,9 +643,9 @@ public class CheckLibraryActivity extends BaseActivity {
                     if (quitTaskRvDataList.size() >= 0) {
                         InitScanRecycler();
                     }
-                    if (stockBeans.size() >= 0){
+                    if (stockBeans.size() >= 0) {
                         InitSp(stockBeans, result.get(0).getFStock_Name());
-                    }else {
+                    } else {
 
                     }
                     TV_DeliverGoodsNumber.setText(result.get(0).getFCode());
@@ -1058,7 +1063,7 @@ public class CheckLibraryActivity extends BaseActivity {
                 }
             }
         };
-        CheckBillCreateTask checkBillCreateTask = new CheckBillCreateTask(inputLibraryBills,quitTaskRvDataList,checkSubbodyRvDataList, webService, myProgressDialog, checkBillCreate);
+        CheckBillCreateTask checkBillCreateTask = new CheckBillCreateTask(inputLibraryBills, quitTaskRvDataList, checkSubbodyRvDataList, webService, myProgressDialog, checkBillCreate);
         checkBillCreateTask.execute();
 
     }

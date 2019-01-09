@@ -19,15 +19,12 @@ public class TreeHelper {
      * @throws IllegalAccessException
      */
     public static List<Node> getSortedNodes(List<Node> datas, int defaultExpandLevel) {
-        List<Node> result = new ArrayList<Node>();
-        // 设置Node间父子关系
-        List<Node> nodes = convetData2Node(datas);
-        // 拿到根节点
-        List<Node> rootNodes = getRootNodes(nodes);
-        // 排序以及设置Node间关系
+        List<Node> result = new ArrayList<Node>();  
+        List<Node> nodes = convetData2Node(datas);  // 设置Node间父子关系
+        List<Node> rootNodes = getRootNodes(nodes); // 拿到根节点
         for (Node node : rootNodes) {
             addNode(result, node, defaultExpandLevel, 1);
-        }
+        }// 排序以及设置Node间关系
         return result;
     }
 
@@ -101,8 +98,8 @@ public class TreeHelper {
      * 把一个节点上的所有的内容都挂上去
      * 通过递归的方式，把一个节点上的所有的子节点等都按顺序放入
      */
-    private static <T> void addNode(List<Node> nodes, Node<T> node,
-                                    int defaultExpandLeval, int currentLevel) {
+    private static <T> void addNode(List<Node> nodes, Node<T> node, int defaultExpandLeval, int currentLevel) {
+        
         nodes.add(node);
 
         if (defaultExpandLeval >= currentLevel) {

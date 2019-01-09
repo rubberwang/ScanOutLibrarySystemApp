@@ -143,4 +143,8 @@
     <string name="InAllotNotification">调拨入库通知</string>
     <string name="OutAllotScan">调拨出库扫描</string>
     <string name="InAllotScan">调拨入库扫描</string>
+    <string name="SelectMGrouping">选择物料分组</string>
+    <string name="NextStep">下一步</string>
+    <string name="SelectM">选择物料</string>
+    <string name="MName">物料名称</string>
 </resources>

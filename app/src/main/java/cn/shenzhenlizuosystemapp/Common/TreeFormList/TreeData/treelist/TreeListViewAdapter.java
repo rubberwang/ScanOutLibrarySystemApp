@@ -80,9 +80,7 @@ public abstract class TreeListViewAdapter extends BaseAdapter {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 expandOrCollapse(position);
-
                 if (onTreeNodeClickListener != null) {
                     onTreeNodeClickListener.onClick(mNodes.get(position), position);
                 }
@@ -170,7 +168,7 @@ public abstract class TreeListViewAdapter extends BaseAdapter {
     }
 
 
-    /**
+    /** 
      * 设置多选
      *
      * @param node

@@ -61,6 +61,8 @@ public class Node<T> {
      */
     private boolean isChecked;
 
+    private int selected = -1;
+
     public Node() {
     }
 
@@ -106,6 +108,14 @@ public class Node<T> {
         return children.size() == 0;
     }
 
+    public void setSelection(int position) {
+        this.selected = position;
+    }
+
+    public int getselection() {
+        return selected;
+    }
+
     /**
      * 获取当前的级别level
      */
@@ -126,7 +136,6 @@ public class Node<T> {
             }
         }
     }
-
 
     public String getId() {
         return id;
@@ -175,7 +184,6 @@ public class Node<T> {
     public void setName(String name) {
         this.name = name;
     }
-
 
     public void setLevel(int level) {
         this.level = level;

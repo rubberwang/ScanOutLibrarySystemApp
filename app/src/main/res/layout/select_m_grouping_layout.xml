@@ -14,16 +14,15 @@
             android:id="@+id/BarText"
             style="@style/AppCustomBarText"
             android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:text="@string/SelectMGrouping" />
-
+            android:paddingLeft="50dp"
+            android:text="@string/SelectM" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/LV_TreeFrom"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/RV_Seleect_M_Grouping"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
+        android:layout_margin="4dp"
         android:layout_weight="8" />
 
     <LinearLayout
