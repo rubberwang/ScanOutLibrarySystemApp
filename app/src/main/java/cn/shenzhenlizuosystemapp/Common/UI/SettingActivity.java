@@ -6,6 +6,8 @@ import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Image;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -18,26 +20,31 @@ import android.widget.Toast;
 
 import com.vise.log.ViseLog;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.ClearUnlockTask;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.UnlockTask;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
+import cn.shenzhenlizuosystemapp.Common.Fragment.MES_Fragment;
+import cn.shenzhenlizuosystemapp.Common.Fragment.S_PrivateYunFragment;
+import cn.shenzhenlizuosystemapp.Common.Fragment.S_PublicYunFragment;
+import cn.shenzhenlizuosystemapp.Common.Fragment.WMS_Fragment;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.Port.UnlockPort;
+import cn.shenzhenlizuosystemapp.Common.TabAdapter.MainPagerAdapter;
+import cn.shenzhenlizuosystemapp.Common.TabAdapter.TabItemInfo;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.R;
 
 public class SettingActivity extends BaseActivity {
 
     private TextView Back;
-    private Button SaveIPAddress_Bt;
-    private EditText IP_ET;
-    private EditText ET_InputPrinterIP;
-    private EditText ET_InputPrinterPort;
-    private CheckBox IsScanInput;
-    private TextView TV_UnLockAll;
+    private TabLayout S_Tab_MainTab;
+    private ViewPager S_VP_ViewPage;
     private MyProgressDialog myProgressDialog;
 
     private Tools tools;
@@ -53,102 +60,27 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        tools = new Tools();
-        sharedPreferences = tools.InitSharedPreferences(this);
-        serverIPSettingObServer = new ServerIPSettingObServer();
-        getLifecycle().addObserver(serverIPSettingObServer);//Lifecycle管理Activity生命周期
-        DetectionSp();
-        CursorMovement();
-        SaveIPAddress_Bt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
-                    return;
-                }
-                lastClickTime = System.currentTimeMillis();
-                SaveIPAddresss();
-            }
-        });
+        List<TabItemInfo> tabItems = new LinkedList<>();
+        tabItems.add(new TabItemInfo(S_PrivateYunFragment.class, R.string.PrivateYun, R.drawable.private_yun));
+        tabItems.add(new TabItemInfo(S_PublicYunFragment.class, R.string.PublicYun, R.drawable.public_yun));
 
-        Back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
-                    return;
-                }
-                lastClickTime = System.currentTimeMillis();
-                ViewManager.getInstance().finishActivity(SettingActivity.this);//直接移除栈
+        MainPagerAdapter pagerAdapter = new MainPagerAdapter(this, getSupportFragmentManager(), tabItems);
+        S_VP_ViewPage.setAdapter(pagerAdapter);
+        S_Tab_MainTab.setupWithViewPager(S_VP_ViewPage);
+        for (int i = 0; i < S_Tab_MainTab.getTabCount(); i++) {
+            TabLayout.Tab tab = S_Tab_MainTab.getTabAt(i);
+            if (tab != null) {
+                tab.setCustomView(pagerAdapter.getTabView(i));
             }
-        });
-        IsScanInput.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    tools.PutStringData("IsScanInput", "true", sharedPreferences);
-                } else {
-                    tools.PutStringData("IsScanInput", "false", sharedPreferences);
-                }
-            }
-        });
-        TV_UnLockAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                myProgressDialog.ShowPD("正在清除...");
-                UnlockPort unlockPort = new UnlockPort() {
-                    @Override
-                    public void onResult(String res) {
-                        if (res.equals("success")) {
-                            tools.ShowDialog(SettingActivity.this, "清除成功");
-                            myProgressDialog.dismiss();
-                        } else {
-                            tools.ShowDialog(SettingActivity.this, "清除失败:" + res);
-                            myProgressDialog.dismiss();
-                        }
-                    }
-                };
-                ClearUnlockTask clearUnlockTask = new ClearUnlockTask(WebService.getSingleton(SettingActivity.this),unlockPort);
-                clearUnlockTask.execute();
-            }
-        });
-        IsScanInput.setChecked(ConnectStr.ISSHOWNONEXECUTION);
+        }
     }
 
     @Override
     public void initView() {
         Back = $(R.id.Back);
-        SaveIPAddress_Bt = $(R.id.SaveIPAddress_Bt);
-        IP_ET = $(R.id.IP_ET);
-        ET_InputPrinterIP = $(R.id.ET_InputPrinterIP);
-        ET_InputPrinterPort = $(R.id.ET_InputPrinterPort);
-        IsScanInput = $(R.id.IsScanInput);
-        TV_UnLockAll = $(R.id.TV_UnLockAll);
+        S_Tab_MainTab = $(R.id.S_Tab_MainTab);
+        S_VP_ViewPage = $(R.id.S_VP_ViewPage);
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
-    }
-
-    private void DetectionSp() {
-        if (!TextUtils.isEmpty(tools.GetStringData(sharedPreferences, "ServerIPAddress"))) {
-            IP_ET.setText(tools.GetStringData(sharedPreferences, "ServerIPAddress"));
-        }
-        if (!TextUtils.isEmpty(tools.GetStringData(sharedPreferences, "PrintIPAddress"))) {
-            ET_InputPrinterIP.setText(tools.GetStringData(sharedPreferences, "PrintIPAddress"));
-        }
-        if (!TextUtils.isEmpty(tools.GetStringData(sharedPreferences, "ServerIPPort"))) {
-            ET_InputPrinterPort.setText(tools.GetStringData(sharedPreferences, "ServerIPPort"));
-        }
-    }
-
-    private void SaveIPAddresss() {
-        if (!TextUtils.isEmpty(IP_ET.getText().toString()) && !TextUtils.isEmpty(ET_InputPrinterIP.getText().toString())
-                && !TextUtils.isEmpty(ET_InputPrinterPort.getText().toString())) {
-            tools.PutStringData("PrintIPAddress", ET_InputPrinterIP.getText().toString(), sharedPreferences);
-            tools.PutStringData("ServerIPAddress", IP_ET.getText().toString(), sharedPreferences);
-            tools.PutStringData("ServerIPPort", ET_InputPrinterPort.getText().toString(), sharedPreferences);
-            tools.show(this, "保存成功");
-            ViseLog.i("ET_InputPrinterIP = " + ET_InputPrinterIP.getText().toString());
-            ViewManager.getInstance().finishActivity(SettingActivity.this);//直接移除栈
-        } else {
-            tools.show(this, "请输入地址后再次点击保存");
-        }
     }
 
     class ServerIPSettingObServer implements LifecycleObserver {
@@ -184,12 +116,4 @@ public class SettingActivity extends BaseActivity {
         ViewManager.getInstance().finishActivity(SettingActivity.this);//直接移除栈
     }
 
-    private void CursorMovement() {
-        if (!TextUtils.isEmpty(IP_ET.getText().toString())) {
-            IP_ET.setSelection(IP_ET.getText().toString().length());
-        }
-        if (!TextUtils.isEmpty(ET_InputPrinterIP.getText().toString())) {
-            ET_InputPrinterIP.setSelection(ET_InputPrinterIP.getText().toString().length());
-        }
-    }
 }

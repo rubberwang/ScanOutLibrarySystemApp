@@ -16,7 +16,7 @@
     <string name="ExitApp">退出APP</string>
     <string name="EditIP">请输入服务器IP地址</string>
     <string name="SaveSetting">保存设置</string>
-    <string name="ServerIPInput">后台服务器</string>
+    <string name="ServerIPInput">服务器</string>
     <string name="Yes">是</string>
     <string name="No">否</string>
     <string name="MES">生产作业</string>
@@ -147,4 +147,13 @@
     <string name="NextStep">下一步</string>
     <string name="SelectM">选择物料</string>
     <string name="MName">物料名称</string>
+    <string name="PortNumber">端口号</string>
+    <string name="PleasePortNumber">请输入端口号</string>
+    <string name="VIPUser">会员账号</string>
+    <string name="VIPPassWord">会员密码</string>
+    <string name="PleaseVIPUser">请输入会员账号</string>
+    <string name="PleaseVIPPassWord">请输入会员密码</string>
+    <string name="SelectService">选择服务器</string>
+    <string name="PrivateYun">私有云</string>
+    <string name="PublicYun">公有云</string>
 </resources>

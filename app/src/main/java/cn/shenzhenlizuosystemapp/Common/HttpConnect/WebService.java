@@ -15,6 +15,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 
 public class WebService {
     private SharedPreferences sharedPreferences;
@@ -37,11 +38,13 @@ public class WebService {
     public WebService(Context context) {
         Tools tools = new Tools();
         sharedPreferences = tools.InitSharedPreferences(context);
-        if (TextUtils.isEmpty(tools.GetStringData(sharedPreferences, "ServerIPAddress"))) {
+        if (TextUtils.isEmpty(tools.GetStringData(sharedPreferences, ConnectStr.F_Private_IP_Address)) &&
+                TextUtils.isEmpty(tools.GetStringData(sharedPreferences, ConnectStr.F_Private_Port_Address))) {
             urlAddress = "";
         } else {
-            urlAddress = tools.GetStringData(sharedPreferences, "ServerIPAddress");
-            urlAddress = "http://" + urlAddress + "/DCS/WebService/DBS.WebAPI.asmx";
+            urlAddress = tools.GetStringData(sharedPreferences, ConnectStr.F_Private_IP_Address);
+            String Port = tools.GetStringData(sharedPreferences, ConnectStr.F_Private_Port_Address);
+            urlAddress = "http://" + urlAddress + ":" + Port + "/DCS/WebService/DBS.WebAPI.asmx";
         }
         ViseLog.i("初始WebServer IP = " + urlAddress);
     }
@@ -441,7 +444,7 @@ public class WebService {
         return Result;
     }
 
-    public String GetMaterial(String ConnectionID,String MateriaTreeID) throws IOException, XmlPullParserException, ClassCastException {
+    public String GetMaterial(String ConnectionID, String MateriaTreeID) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetMaterial");
         soapObject.addProperty("ConnectionID", ConnectionID);
         soapObject.addProperty("MateriaTreeID", MateriaTreeID);

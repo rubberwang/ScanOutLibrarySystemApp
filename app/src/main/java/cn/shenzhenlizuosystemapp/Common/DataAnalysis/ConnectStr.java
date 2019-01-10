@@ -9,4 +9,10 @@ public class ConnectStr {
     public static String BARCODE_SEQUENCE = "33A50386-F167-4913-95C8-B7AE69B8CB55";//序列号
     public static String BARCODE_BATCH = "870D2737-81F0-4B66-A28E-C6A815BDA404";//批次码
     public static String BARCODE_COMMON = "ea72cde0-2356-4d12-afa8-b4eee73c66a0";//通用码
+    public static String F_Private_IP_Address = "F_Private_IP_Address";
+    public static String F_Private_Port_Address = "F_Private_Port_Address";
+    public static String F_Public_User = "F_Public_User";
+    public static String F_Public_PassWord = "F_Public_PassWord";
+    public static String F_Public_Service = "F_Public_Service";
+    public static String Perpetual_URL = "http://member.dyrj.net/DCS/WebService/RootAPI.asmx";
 }
