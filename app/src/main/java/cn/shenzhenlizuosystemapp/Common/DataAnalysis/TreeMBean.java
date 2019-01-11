@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 public class TreeMBean implements Serializable {
     private String FGuid;
-    private String FCode;
-    private String FName;
-    private String FModel;
+    private String FCode;//物料编号
+    private String FName;//物料名称
+    private String FModel;//品名规格
     private String FBaseUnit;
-    private String FBaseUnit_Name;
+    private String FBaseUnit_Name;//单位
 
     public void setFGuid(String FGuid) {
         this.FGuid = FGuid;

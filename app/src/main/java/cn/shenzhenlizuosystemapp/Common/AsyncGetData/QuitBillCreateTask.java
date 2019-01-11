@@ -15,7 +15,6 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitSubBodyBean;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.Port.QuitBillCreate;
-import cn.shenzhenlizuosystemapp.Common.Port.LockResultPort;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.Xml.QuitAnalysisReturnsXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.QuitLibraryXmlAnalysis;

@@ -61,7 +61,7 @@ public class SettingActivity extends BaseActivity {
     @Override
     public void initData() {
         List<TabItemInfo> tabItems = new LinkedList<>();
-        tabItems.add(new TabItemInfo(S_PrivateYunFragment.class, R.string.PrivateYun, R.drawable.private_yun));
+        tabItems.add(new TabItemInfo(S_PrivateYunFragment.class, R.string.PrivateYun,R.drawable.private_yun));
         tabItems.add(new TabItemInfo(S_PublicYunFragment.class, R.string.PublicYun, R.drawable.public_yun));
 
         MainPagerAdapter pagerAdapter = new MainPagerAdapter(this, getSupportFragmentManager(), tabItems);

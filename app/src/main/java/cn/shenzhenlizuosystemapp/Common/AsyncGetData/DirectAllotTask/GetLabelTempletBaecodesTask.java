@@ -7,16 +7,12 @@ import com.vise.log.ViseLog;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildTag;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.Port.GetLabelTempletBaecodesPort;
-import cn.shenzhenlizuosystemapp.Common.Port.TagModePort;
-import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisMaterialModeXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputTagModeAnalysis;
 

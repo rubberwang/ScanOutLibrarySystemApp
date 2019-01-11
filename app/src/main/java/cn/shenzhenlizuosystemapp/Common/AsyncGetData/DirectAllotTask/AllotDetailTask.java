@@ -13,7 +13,6 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.Port.AllotDetailPort;
-import cn.shenzhenlizuosystemapp.Common.Port.BarCodeCheckPort;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
 
 public  class AllotDetailTask extends AsyncTask<String, Void, String> {

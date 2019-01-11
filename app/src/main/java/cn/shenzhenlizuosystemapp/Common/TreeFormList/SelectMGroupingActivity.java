@@ -12,21 +12,16 @@ import com.vise.log.ViseLog;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.Adapter.ScanTask_InputRvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Adapter.SelectM_ItemAdapter;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.GetMaterialTreeTask.GetM;
-import cn.shenzhenlizuosystemapp.Common.AsyncGetData.InputBodyLockTask;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TreeMBean;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.Port.LockResultPort;
 import cn.shenzhenlizuosystemapp.Common.UI.CheckLibraryActivity;
-import cn.shenzhenlizuosystemapp.Common.UI.NewInputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.Xml.TreeFromData.MAnalysis;
@@ -40,6 +35,7 @@ public class SelectMGroupingActivity extends BaseActivity {
     private SelectM_ItemAdapter selectM_itemAdapter;
 
     private String MID = "";
+    private String FID = "";
     private List<TreeMBean> treeMBeanList;
 
     private TextView Back;
@@ -56,6 +52,7 @@ public class SelectMGroupingActivity extends BaseActivity {
     @Override
     public void initData() {
         MID = getIntent().getStringExtra("MID");
+        FID = getIntent().getStringExtra("ID");
         tools = Tools.getTools();
         MContext = new WeakReference<>(SelectMGroupingActivity.this).get();
         myProgressDialog = new MyProgressDialog(MContext, R.style.CustomDialog);
@@ -92,11 +89,15 @@ public class SelectMGroupingActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if ( Tools.IsObjectNull(treeMBeanList.get(selectM_itemAdapter.getselection()))&&selectM_itemAdapter.getselection() >= 0){
+                    ViewManager.getInstance().finishActivity(CheckLibraryActivity.class);
                     Intent intent = new Intent(SelectMGroupingActivity.this, CheckLibraryActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     intent.putExtra("M", treeMBeanList.get(selectM_itemAdapter.getselection()));
-                    startActivity(intent);
+                    intent.putExtra("FGUID",FID);
                     ViewManager.getInstance().finishActivity(SelectMGroupingActivity.this);
                     ViewManager.getInstance().finishActivity(TreeListActivity.class);
+                    startActivity(intent);
+
                 }else {
                     tools.ShowDialog(MContext,"必须选择物料在点下一步");
                 }

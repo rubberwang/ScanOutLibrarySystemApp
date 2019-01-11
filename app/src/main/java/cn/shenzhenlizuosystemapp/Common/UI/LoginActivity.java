@@ -35,7 +35,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
-import cn.shenzhenlizuosystemapp.Common.Base.DeviceUtils;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
@@ -328,10 +327,11 @@ public class LoginActivity extends BaseActivity {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         public void ON_PAUSE() {
-            if (Tools.IsObjectNull(itemData) && Tools.IsObjectNull(loginAdapter)) {
-                itemData.clear();
-                loginAdapter.notifyDataSetChanged();
-            }
+//            if (Tools.IsObjectNull(itemData) && Tools.IsObjectNull(loginAdapter)) {
+//                itemData.clear();
+//                loginAdapter.notifyDataSetChanged();
+//            }
+            ViewManager.getInstance().finishActivity(LoginActivity.this);
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)

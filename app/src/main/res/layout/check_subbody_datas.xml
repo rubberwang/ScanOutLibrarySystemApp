@@ -65,11 +65,11 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/checkStatus"
+            android:text="@string/checkNumber"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/TV_CheckStatus"
+            android:id="@+id/TV_FCheckQty"
             style="@style/SelectItemContentText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -84,26 +84,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
-
-
-
-        <TextView
-            style="@style/SelectItemText"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@string/checkNumber"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/TV_FCheckQty"
-            style="@style/SelectItemContentText"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:gravity="center_vertical"
-            android:textSize="13sp" />
 
         <TextView
             style="@style/SelectItemText"
@@ -123,6 +103,26 @@
             android:gravity="center_vertical"
             android:textSize="13sp"
             android:textColor="@color/ToastRed"/>
+
+
+        <TextView
+            style="@style/SelectItemText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/checkStatus"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/TV_CheckStatus"
+            style="@style/SelectItemContentText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:gravity="center_vertical"
+            android:textSize="13sp" />
+
 
     </LinearLayout>
 

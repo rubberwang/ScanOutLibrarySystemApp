@@ -1,42 +1,28 @@
 package cn.shenzhenlizuosystemapp.Common.TreeFormList;
 
-import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.vise.log.ViseLog;
-import com.vise.log.inner.Tree;
-
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.GetMaterialTreeTask.GetTree;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TreeParent;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TreeSon;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.TreeFormList.TreeData.adapter.ListViewAdapter;
 import cn.shenzhenlizuosystemapp.Common.TreeFormList.TreeData.treelist.Node;
 import cn.shenzhenlizuosystemapp.Common.TreeFormList.TreeData.treelist.OnTreeNodeClickListener;
-import cn.shenzhenlizuosystemapp.Common.UI.Check_NotificationActivity;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.Xml.TreeFromData.TreeAnalysis;
 import cn.shenzhenlizuosystemapp.R;
@@ -58,6 +44,8 @@ public class TreeListActivity extends BaseActivity {
     private TreeListActivity MContect = null;
     private Tools tools = null;
 
+    private String ID;
+
     @Override
     protected int inflateLayout() {
         return R.layout.tree_from_layout;
@@ -66,6 +54,7 @@ public class TreeListActivity extends BaseActivity {
     @Override
     public void initData() {
         tools = Tools.getTools();
+        ID = getIntent().getStringExtra("GUID");
         MContect = new WeakReference<>(TreeListActivity.this).get();
         webService = WebService.getSingleton(TreeListActivity.this);
         myProgressDialog.ShowPD("加载中...");
@@ -134,6 +123,7 @@ public class TreeListActivity extends BaseActivity {
                 if (Tools.IsObjectNull(AtPresentNode)) {
                     Intent intent = new Intent(TreeListActivity.this, SelectMGroupingActivity.class);
                     intent.putExtra("MID", AtPresentNode.getId());
+                    intent.putExtra("ID",ID);
                     startActivity(intent);
                 } else {
                     tools.ShowDialog(MContect, "至少选择一个物料分组在点下一步");

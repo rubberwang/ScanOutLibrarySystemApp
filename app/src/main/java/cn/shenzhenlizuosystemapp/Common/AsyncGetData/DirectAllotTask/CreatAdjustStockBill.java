@@ -13,7 +13,6 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CreateAdjustStockBean;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.Port.AllotDetailPort;
 import cn.shenzhenlizuosystemapp.Common.Port.CreatAdjustStockBillPort;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.DirectAllor.DirectAllotLibraryXmlAnalysis;

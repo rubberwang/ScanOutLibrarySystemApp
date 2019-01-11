@@ -341,12 +341,12 @@ public class WebService {
         return Result;
     }
 
-    public String CreateCheckStockBill(String ConnectionID, String UserID, String XmlData) throws IOException, XmlPullParserException, ClassCastException {
+    public String CreateCheckStockBill(String ConnectionID, String UserID, String XmlData,String IsClosed) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "UpdateCheckStockBill");
         soapObject.addProperty("ConnectionID", ConnectionID);
         soapObject.addProperty("UserCode", UserID);
         soapObject.addProperty("XmlData", XmlData);
-
+        soapObject.addProperty("IsClosed", IsClosed);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
         envelope.bodyOut = soapObject;

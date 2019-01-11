@@ -15,7 +15,6 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckSubB
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckTaskRvData;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckAdapterReturn;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckSubBodyBean;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.Port.CheckBillCreate;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
@@ -31,16 +30,17 @@ public class CheckBillCreateTask extends AsyncTask<String, Void, String> {
     private List<CheckLibraryDetail> checkHeadList;
     private List<CheckTaskRvData> checkBodyList;
     private List<CheckSubBody> checkSubBodyBeanList;
+    private String IsClosed;
 
     public CheckBillCreateTask(List<CheckLibraryDetail> checkHeadList, List<CheckTaskRvData> checkBodyList, List<CheckSubBody> checkSubBodyBeanList, WebService webService
-            , MyProgressDialog myProgressDialog, CheckBillCreate checkBillCreate) {
+            , MyProgressDialog myProgressDialog, CheckBillCreate checkBillCreate,String IsClosed) {
         this.webService = webService;
         this.checkHeadList = checkHeadList;
         this.checkBodyList = checkBodyList;
         this.checkBillCreate = checkBillCreate;
         this.myProgressDialog = myProgressDialog;
         this.checkSubBodyBeanList = checkSubBodyBeanList;
-
+        this.IsClosed = IsClosed;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class CheckBillCreateTask extends AsyncTask<String, Void, String> {
         try {
             String DetailedListXml = CheckLibraryXmlAnalysis.getSingleton().CreateCheckXmlStr(checkHeadList,checkBodyList,checkSubBodyBeanList);
             ViseLog.i("盘点最后上传XML = " + DetailedListXml);
-            String StatuResult = webService.CreateCheckStockBill(ConnectStr.ConnectionToString, ConnectStr.USERNAME, DetailedListXml);
+            String StatuResult = webService.CreateCheckStockBill(ConnectStr.ConnectionToString, ConnectStr.USERNAME, DetailedListXml, IsClosed);
             ViseLog.i("盘点最后Result = " + StatuResult);
             InputStream Is_StatusResult = new ByteArrayInputStream(StatuResult.getBytes("UTF-8"));
             List<CheckAdapterReturn> adapterReturnList = CheckAnalysisReturnsXml.getSingleton().GetReturn(Is_StatusResult);

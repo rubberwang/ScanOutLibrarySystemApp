@@ -41,7 +41,7 @@ public class CheckMaterialAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = LayoutInflater.from(context).inflate(R.layout.check_spinner, null);
         TextView textView = view.findViewById(R.id.TV_CheckSpinner);
-        textView.setText(data.get(i).getFMaterial_Name());
+        textView.setText(data.get(i).getFName());
         return view;
     }
 }

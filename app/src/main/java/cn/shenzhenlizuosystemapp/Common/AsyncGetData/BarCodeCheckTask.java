@@ -2,27 +2,18 @@ package cn.shenzhenlizuosystemapp.Common.AsyncGetData;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.AdapterView;
 
 import com.vise.log.ViseLog;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ChildTag;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.StockBean;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.Port.BarCodeCheckPort;
-import cn.shenzhenlizuosystemapp.Common.Port.InputTagModePort;
-import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.InputStockAdapter;
-import cn.shenzhenlizuosystemapp.Common.UI.NewInputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
-import cn.shenzhenlizuosystemapp.Common.Xml.InputTagModeAnalysis;
 
 public class BarCodeCheckTask extends AsyncTask<String, Void, String> {
 

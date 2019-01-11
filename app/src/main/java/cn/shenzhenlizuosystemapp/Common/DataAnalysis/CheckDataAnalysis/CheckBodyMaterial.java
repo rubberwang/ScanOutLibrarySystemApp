@@ -1,22 +1,58 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis;
 
 public class CheckBodyMaterial {
-    private String FMaterial;
-    private String FMaterial_Name;
+    private String FGuid;
+    private String FCode;
+    private String FName;
+    private String FModel;
+    private String FBaseUnit;
+    private String FBaseUnit_Name;
 
-    public String getFMaterial() {
-        return FMaterial;
+    public String getFCode() {
+        return FCode;
     }
 
-    public void setFMaterial(String FMaterial) {
-        this.FMaterial = FMaterial;
+    public void setFCode(String FCode) {
+        this.FCode = FCode;
     }
 
-    public String getFMaterial_Name() {
-        return FMaterial_Name;
+    public String getFModel() {
+        return FModel;
     }
 
-    public void setFMaterial_Name(String FMaterial_Name) {
-        this.FMaterial_Name = FMaterial_Name;
+    public void setFModel(String FModel) {
+        this.FModel = FModel;
+    }
+
+    public String getFBaseUnit() {
+        return FBaseUnit;
+    }
+
+    public void setFBaseUnit(String FBaseUnit) {
+        this.FBaseUnit = FBaseUnit;
+    }
+
+    public String getFBaseUnit_Name() {
+        return FBaseUnit_Name;
+    }
+
+    public void setFBaseUnit_Name(String FBaseUnit_Name) {
+        this.FBaseUnit_Name = FBaseUnit_Name;
+    }
+
+    public String getFGuid() {
+        return FGuid;
+    }
+
+    public void setFGuid(String FGuid) {
+        this.FGuid = FGuid;
+    }
+
+    public String getFName() {
+        return FName;
+    }
+
+    public void setFName(String FName) {
+        this.FName = FName;
     }
 }

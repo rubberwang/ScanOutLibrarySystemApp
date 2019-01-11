@@ -321,11 +321,11 @@ public class CheckLibraryXmlAnalysis {
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("StockCells")) {
                             InputDetailXmls = new CheckStockBean();
-                        } else if (name.equalsIgnoreCase("FStockCell")) {
+                        } else if (name.equalsIgnoreCase("FGuid")) {
                             if (Tools.IsObjectNull(InputDetailXmls)){
                                 InputDetailXmls.setFGuid(parser.nextText());
                             }
-                        } else if (name.equalsIgnoreCase("FStockCell_Name")) {
+                        } else if (name.equalsIgnoreCase("FName")) {
                             if (Tools.IsObjectNull(InputDetailXmls)) {
                                 InputDetailXmls.setFName(parser.nextText());
                             }
@@ -367,13 +367,29 @@ public class CheckLibraryXmlAnalysis {
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("Materials")) {
                             InputDetailXmls = new CheckBodyMaterial();
-                        } else if (name.equalsIgnoreCase("FMaterial")) {
+                        } else if (name.equalsIgnoreCase("FGuid")) {
                             if (Tools.IsObjectNull(InputDetailXmls)){
-                                InputDetailXmls.setFMaterial(parser.nextText());
+                                InputDetailXmls.setFGuid(parser.nextText());
                             }
-                        } else if (name.equalsIgnoreCase("FMaterial_Name")) {
+                        } else if (name.equalsIgnoreCase("FCode")) {
+                            if (Tools.IsObjectNull(InputDetailXmls)){
+                                InputDetailXmls.setFCode(parser.nextText());
+                            }
+                        }else if (name.equalsIgnoreCase("FName")) {
                             if (Tools.IsObjectNull(InputDetailXmls)) {
-                                InputDetailXmls.setFMaterial_Name(parser.nextText());
+                                InputDetailXmls.setFName(parser.nextText());
+                            }
+                        }else if (name.equalsIgnoreCase("FModel")) {
+                            if (Tools.IsObjectNull(InputDetailXmls)){
+                                InputDetailXmls.setFModel(parser.nextText());
+                            }
+                        } else if (name.equalsIgnoreCase("FBaseUnit")) {
+                            if (Tools.IsObjectNull(InputDetailXmls)){
+                                InputDetailXmls.setFBaseUnit(parser.nextText());
+                            }
+                        }else if (name.equalsIgnoreCase("FBaseUnit_Name")) {
+                            if (Tools.IsObjectNull(InputDetailXmls)) {
+                                InputDetailXmls.setFBaseUnit_Name(parser.nextText());
                             }
                         }
                         break;

@@ -13,7 +13,6 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.TreeFormList.M_OnRes;
-import cn.shenzhenlizuosystemapp.Common.TreeFormList.TreeOnRes;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
 
 public class GetM extends AsyncTask<String, Void, String> {
