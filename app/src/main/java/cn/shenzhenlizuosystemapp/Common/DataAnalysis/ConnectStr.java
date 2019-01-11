@@ -1,6 +1,7 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
 
 public class ConnectStr {
+    
     public static String ConnectionToString = "";//连接字符串？
     public static String USERNAME = "";//登录用户名
     public static boolean ISSHOWNONEXECUTION = false;//是否过滤已扫描完成的单

@@ -48,4 +48,20 @@ public class PerpetualWebService {
         String Result = object.toString();
         return Result;
     }
+
+    public String GetCloudServer(String ServerID) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetCloudServer");
+        soapObject.addProperty(ServerID, ServerID);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(ConnectStr.Perpetual_URL);
+        httpTransportSE.call("http://dyrj.net/GetCloudServer", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
 }

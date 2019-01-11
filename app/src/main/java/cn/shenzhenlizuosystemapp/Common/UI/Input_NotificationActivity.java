@@ -176,12 +176,12 @@ public class Input_NotificationActivity extends BaseActivity {
                     });
                     ViseLog.d("搜索成功");
                 } else {
-                    tools.showshort(MContect, "搜索错误请重新搜索");
+                    tools.ShowDialog(MContect, "搜索错误请重新搜索");
                     ViseLog.d("搜索失败");
                 }
             } catch (Exception e) {
                 ViseLog.d("搜索错误" + e);
-                tools.showshort(MContect, "搜索错误请重新搜索");
+                tools.ShowDialog(MContect, "搜索错误请重新搜索");
             }
             ViseLog.i("搜索结果" + result);
         }

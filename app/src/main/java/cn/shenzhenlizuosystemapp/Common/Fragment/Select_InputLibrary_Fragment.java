@@ -134,7 +134,7 @@ public class Select_InputLibrary_Fragment extends Fragment {
                 }
             } catch (Exception e) {
                 ViseLog.d("Select适配RV数据错误" + e);
-                tools.showshort(getActivity(), "出库数据加载错误，请重新打开");
+                tools.ShowDialog(getActivity(), "出库数据加载错误，请重新打开" + e.getMessage());
             }
             ViseLog.i("出库单返回数据" + result);
         }

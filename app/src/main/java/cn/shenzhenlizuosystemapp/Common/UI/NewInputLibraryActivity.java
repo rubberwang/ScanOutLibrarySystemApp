@@ -194,8 +194,8 @@ public class NewInputLibraryActivity extends BaseActivity {
             @Override
 
             public void onClick(View v) {
-                if (Tools.IsObjectNull(childTagList)){
-                    if (childTagList.size()>0){
+                if (Tools.IsObjectNull(childTagList)) {
+                    if (childTagList.size() > 0) {
                         tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
 
                             @Override
@@ -210,10 +210,10 @@ public class NewInputLibraryActivity extends BaseActivity {
                                 tools.DisappearDialog();
                             }
                         }, false);
-                    }else {
+                    } else {
                         ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
                     }
-                }else {
+                } else {
                     ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
                 }
             }
@@ -223,8 +223,8 @@ public class NewInputLibraryActivity extends BaseActivity {
 
             @Override
             public void onClick(View view) {
-                if (Tools.IsObjectNull(childTagList)){
-                    if (childTagList.size()>0){
+                if (Tools.IsObjectNull(childTagList)) {
+                    if (childTagList.size() > 0) {
                         tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
 
                             @Override
@@ -239,10 +239,10 @@ public class NewInputLibraryActivity extends BaseActivity {
                                 tools.DisappearDialog();
                             }
                         }, false);
-                    }else {
+                    } else {
                         ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
                     }
-                }else {
+                } else {
                     ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
                 }
             }
@@ -298,47 +298,55 @@ public class NewInputLibraryActivity extends BaseActivity {
         scanTask_Input_rvAdapter.setOnItemClickLitener(new ScanTask_InputRvAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, final int position) {
-                if (Integer.parseInt(inputTaskRvDataList.get(position).getFAuxQty().split("\\.")[0]) <= Integer.parseInt(inputTaskRvDataList.get(position).getFThisAuxQty().split("\\.")[0]) +
-                        Integer.parseInt(inputTaskRvDataList.get(position).getFExecutedAuxQty().split("\\.")[0])) {
-                    tools.ShowDialog(MContect, "这张单已扫描完成");
-                } else {
-                    if (!Is_InputNumber_Mode) {
-                        if (scanTask_Input_rvAdapter.getselection() != position) {
-                            LockResultPort lockResultPort = new LockResultPort() {
-                                @Override
-                                public void onStatusResult(String res) {
-                                    myProgressDialog.dismiss();
-                                    if (res.equals("Success")) {
-                                        if (RV_ScanInfoTableIndex != position) {
-                                            RV_ScanInfoTableIndex = position;
-                                        }
-                                        GetMaterialMode getMaterialMode = new GetMaterialMode();
-                                        getMaterialMode.execute(inputTaskRvDataList.get(position).getFMaterial());
-                                        scanTask_Input_rvAdapter.setSelection(position);
-                                        scanTask_Input_rvAdapter.notifyDataSetChanged();//选中
-                                    } else {
-                                        tools.ShowDialog(MContect, res);
-                                    }
-                                }
-                            };
-                            InputBodyLockTask inputBodyLockTask = new InputBodyLockTask(lockResultPort, webService, inputTaskRvDataList.get(position).getFGuid(), myProgressDialog);
-                            inputBodyLockTask.execute();
-                        } else {
-                            childTagList.clear();
-                            scanResult_Input_rvAdapter.notifyDataSetChanged();
-                            scanTask_Input_rvAdapter.setSelection(-1);
-                            scanTask_Input_rvAdapter.notifyDataSetChanged();//取消选中
-                        }
-                    } else {
-                        tools.ShowDialog(MContect, "检测到有扫描数据，请先清空或提交");
-                    }
-                }
+                ScanTaskItemClick(position);
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
             }
         });
+        if (Tools.IsObjectNull(scanTask_Input_rvAdapter)) {
+            ScanTaskItemClick(0);
+            scanTask_Input_rvAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void ScanTaskItemClick(final int position) {
+        if (Integer.parseInt(inputTaskRvDataList.get(position).getFAuxQty().split("\\.")[0]) <= Integer.parseInt(inputTaskRvDataList.get(position).getFThisAuxQty().split("\\.")[0]) +
+                Integer.parseInt(inputTaskRvDataList.get(position).getFExecutedAuxQty().split("\\.")[0])) {
+            tools.ShowDialog(MContect, "这张单已扫描完成");
+        } else {
+            if (!Is_InputNumber_Mode) {
+                if (scanTask_Input_rvAdapter.getselection() != position) {
+                    LockResultPort lockResultPort = new LockResultPort() {
+                        @Override
+                        public void onStatusResult(String res) {
+                            myProgressDialog.dismiss();
+                            if (res.equals("Success")) {
+                                if (RV_ScanInfoTableIndex != position) {
+                                    RV_ScanInfoTableIndex = position;
+                                }
+                                GetMaterialMode getMaterialMode = new GetMaterialMode();
+                                getMaterialMode.execute(inputTaskRvDataList.get(position).getFMaterial());
+                                scanTask_Input_rvAdapter.setSelection(position);
+                                scanTask_Input_rvAdapter.notifyDataSetChanged();//选中
+                            } else {
+                                tools.ShowDialog(MContect, res);
+                            }
+                        }
+                    };
+                    InputBodyLockTask inputBodyLockTask = new InputBodyLockTask(lockResultPort, webService, inputTaskRvDataList.get(position).getFGuid(), myProgressDialog);
+                    inputBodyLockTask.execute();
+                } else {
+                    childTagList.clear();
+                    scanResult_Input_rvAdapter.notifyDataSetChanged();
+                    scanTask_Input_rvAdapter.setSelection(-1);
+                    scanTask_Input_rvAdapter.notifyDataSetChanged();//取消选中
+                }
+            } else {
+                tools.ShowDialog(MContect, "检测到有扫描数据，请先清空或提交");
+            }
+        }
     }
 
     private void InitSp(List<StockBean> stockBeans, String StockName) {
@@ -558,8 +566,8 @@ public class NewInputLibraryActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (Tools.IsObjectNull(childTagList)){
-            if (childTagList.size()>0){
+        if (Tools.IsObjectNull(childTagList)) {
+            if (childTagList.size() > 0) {
                 tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
 
                     @Override
@@ -574,10 +582,10 @@ public class NewInputLibraryActivity extends BaseActivity {
                         tools.DisappearDialog();
                     }
                 }, false);
-            }else {
+            } else {
                 ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
             }
-        }else {
+        } else {
             ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
         }
     }
@@ -755,7 +763,7 @@ public class NewInputLibraryActivity extends BaseActivity {
                     }
                 };
                 BarCodeCheckTask barCodeCheckTask = new BarCodeCheckTask(barCodeCheckPort, webService, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(),
-                        materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data,true);
+                        materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data, true);
                 barCodeCheckTask.execute();
             } else {
                 if (!TextUtils.isEmpty(msg.data)) {
@@ -770,60 +778,72 @@ public class NewInputLibraryActivity extends BaseActivity {
 
     public void SubmitData(String InputSum) {
         try {
-            if (Is_InputNumber_Mode) {
-                if (!TextUtils.isEmpty(InputSum) && Tools.StringOfFloat(InputSum) > 0) {
-                    if (CheckGuid(CheckFGuid, FBarcodeLib)) {
-                        IsSerialNumber = true;
-                        if (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getNoInput()) >= Tools.StringOfFloat(InputSum)) {
-                            if (IsAddSerialNumber) {
-                                CheckFGuid.add(FBarcodeLib);
-                                IsAddSerialNumber = false;
+            if (inputTaskRvDataList.size() > 0) {
+                if (Is_InputNumber_Mode) {
+                    if (!TextUtils.isEmpty(InputSum) && Tools.StringOfFloat(InputSum) > 0) {
+                        if (CheckGuid(CheckFGuid, FBarcodeLib)) {
+                            IsSerialNumber = true;
+                            if (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getNoInput()) >= Tools.StringOfFloat(InputSum)) {
+                                if (IsAddSerialNumber) {
+                                    CheckFGuid.add(FBarcodeLib);
+                                    IsAddSerialNumber = false;
+                                }
+                                Sp_house.setEnabled(false);
+                                Sp_InputHouseSpace.setEnabled(false);
+                                Drawable Borderhouse = getResources().getDrawable(R.drawable.border);
+                                Sp_house.setBackground(Borderhouse);
+                                Drawable BorderInputHouseSpace = getResources().getDrawable(R.drawable.border);
+                                Sp_InputHouseSpace.setBackground(BorderInputHouseSpace);
+
+                                IsSave = true;
+                                Drawable drawable_purple = getResources().getDrawable(R.drawable.circularbead_purple);
+                                TV_Sumbit.setBackground(drawable_purple);
+                                TV_Sumbit.setTextColor(getResources().getColor(R.color.White));
+
+                                InputSubBodyBean subBodyBean = new InputSubBodyBean();
+                                subBodyBean.setFBillBodyID(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
+                                subBodyBean.setFBarcodeLib(FBarcodeLib);
+                                subBodyBean.setInputLibrarySum(InputSum);
+                                InputSubmitList.add(subBodyBean);
+
+                                float Sum = Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty()) +
+                                        Tools.StringOfFloat(InputSum);
+                                String SetFThisAuxQty = String.valueOf(Sum);
+                                inputTaskRvDataList.get(RV_ScanInfoTableIndex).setFThisAuxQty(SetFThisAuxQty);
+
+                                //为最后生成入库单保存数据array
+                                float NewNoPut = Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty()) - (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty()) +
+                                        Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty()));
+                                String SetNoInput = String.valueOf(NewNoPut);
+                                inputTaskRvDataList.get(RV_ScanInfoTableIndex).setNoInput(SetNoInput);
+
+                                if (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getNoInput()) <= 0) {
+                                    scanTask_Input_rvAdapter.setSelection(-1);
+                                    scanTask_Input_rvAdapter.notifyDataSetChanged();
+                                }
+                                Is_InputNumber_Mode = false;
+                                if (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getNoInput()) == 0) {
+                                    inputTaskRvDataList.remove(RV_ScanInfoTableIndex);
+                                    if (inputTaskRvDataList.size() > RV_ScanInfoTableIndex) {
+                                        ScanTaskItemClick(RV_ScanInfoTableIndex);
+                                    }
+                                }
+                                scanTask_Input_rvAdapter.notifyDataSetChanged();
+                            } else {
+                                Is_InputNumber_Mode = false;
+                                tools.ShowDialog(MContect, "提交数量不能大于未收数量");
                             }
-                            Sp_house.setEnabled(false);
-                            Sp_InputHouseSpace.setEnabled(false);
-                            Drawable Borderhouse = getResources().getDrawable(R.drawable.border);
-                            Sp_house.setBackground(Borderhouse);
-                            Drawable BorderInputHouseSpace = getResources().getDrawable(R.drawable.border);
-                            Sp_InputHouseSpace.setBackground(BorderInputHouseSpace);
-
-                            IsSave = true;
-                            Drawable drawable_purple = getResources().getDrawable(R.drawable.circularbead_purple);
-                            TV_Sumbit.setBackground(drawable_purple);
-                            TV_Sumbit.setTextColor(getResources().getColor(R.color.White));
-
-                            InputSubBodyBean subBodyBean = new InputSubBodyBean();
-                            subBodyBean.setFBillBodyID(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFGuid());
-                            subBodyBean.setFBarcodeLib(FBarcodeLib);
-                            subBodyBean.setInputLibrarySum(InputSum);
-                            InputSubmitList.add(subBodyBean);
-
-                            float Sum = Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty()) +
-                                    Tools.StringOfFloat(InputSum);
-                            String SetFThisAuxQty = String.valueOf(Sum);
-                            inputTaskRvDataList.get(RV_ScanInfoTableIndex).setFThisAuxQty(SetFThisAuxQty);
-
-                            //为最后生成入库单保存数据array
-                            float NewNoPut = Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFAuxQty()) - (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFExecutedAuxQty()) +
-                                    Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFThisAuxQty()));
-                            String SetNoInput = String.valueOf(NewNoPut);
-                            inputTaskRvDataList.get(RV_ScanInfoTableIndex).setNoInput(SetNoInput);
-
-                            if (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getNoInput()) <= 0) {
-                                scanTask_Input_rvAdapter.setSelection(-1);
-                            }
-                            scanTask_Input_rvAdapter.notifyDataSetChanged();
-                            Is_InputNumber_Mode = false;
-//                            childTagList.clear();
-//                            scanResult_Input_rvAdapter.notifyDataSetChanged();
                         } else {
-                            tools.ShowDialog(MContect, "提交数量不能大于未收数量");
+                            Is_InputNumber_Mode = false;
+                            tools.ShowDialog(MContect, "此条码已经扫描过了");
                         }
                     } else {
-                        tools.ShowDialog(MContect, "此条码已经扫描过了");
+                        Is_InputNumber_Mode = false;
+                        tools.ShowDialog(MContect, "入库数量为空或小于0");
                     }
-                } else {
-                    tools.ShowDialog(MContect, "入库数量为空或小于0");
                 }
+            } else {
+                tools.ShowDialog(MContect, "任务全部扫描完成，请点击提交");
             }
         } catch (Exception e) {
             ViseLog.i("SubmitData Exception = " + e);
@@ -856,7 +876,6 @@ public class NewInputLibraryActivity extends BaseActivity {
     }
 
     private void CreateBillData() {
-
         InputBillCreate inputBillCreate = new InputBillCreate() {
             @Override
             public void onResult(String Info) {
@@ -867,10 +886,14 @@ public class NewInputLibraryActivity extends BaseActivity {
                         @Override
                         public void onClick(View view) {
                             tools.DisappearDialog();
-                            finish();
-                            Intent intent = new Intent(NewInputLibraryActivity.this, NewInputLibraryActivity.class);
-                            intent.putExtra("FGUID", tools.GetStringData(tools.InitSharedPreferences(NewInputLibraryActivity.this), "NewInputLibraryActivityFGUID"));
-                            startActivity(intent);
+                            if (inputTaskRvDataList.size()>0){
+                                finish();
+                                Intent intent = new Intent(NewInputLibraryActivity.this, NewInputLibraryActivity.class);
+                                intent.putExtra("FGUID", tools.GetStringData(tools.InitSharedPreferences(NewInputLibraryActivity.this), "NewInputLibraryActivityFGUID"));
+                                startActivity(intent);
+                            }else {
+                                finish();
+                            }
                         }
                     }, new View.OnClickListener() {
                         @Override
