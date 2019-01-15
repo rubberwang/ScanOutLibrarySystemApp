@@ -31,6 +31,7 @@ public class UnlockTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
         try {
             String ResStatus = webService.UnLockedBillBody(ConnectStr.ConnectionToString);
+            ViseLog.i("InputBodyLockTask Exception = " + ConnectStr.ConnectionToString);
             InputStream Is_Status = new ByteArrayInputStream(ResStatus.getBytes("UTF-8"));
             List<AdapterReturn> adapterReturnList = AnalysisReturnsXml.getSingleton().GetReturn(Is_Status);
             if (adapterReturnList.get(0).getFStatus().equals("1")) {

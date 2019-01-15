@@ -50,7 +50,7 @@ public class ScanTask_CheckRvAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         try {
             ((ViewHoders) holder).TV_Material_Code.setText(datas.get(position).getFMaterial_Code());
-            ((ViewHoders) holder).TV_Model.setText(datas.get(position).getFModel() + "" + datas.get(position).getFMaterial_Name());
+            ((ViewHoders) holder).TV_Model.setText(datas.get(position).getFMaterial_Name()+ " "+datas.get(position).getFModel());
             ((ViewHoders) holder).TV_BaseUnit_Name.setText(datas.get(position).getFBaseUnit_Name());
             ((ViewHoders) holder).TV_AccountQty.setText(datas.get(position).getFAccountQty());
             ((ViewHoders) holder).TV_FCheckQty.setText(datas.get(position).getFCheckQty());
