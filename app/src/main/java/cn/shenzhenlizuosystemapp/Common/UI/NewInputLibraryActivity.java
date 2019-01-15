@@ -409,7 +409,7 @@ public class NewInputLibraryActivity extends BaseActivity {
 
         private int pos = 0;
 
-        AsyncGetStocksCell(int pos) {
+        private AsyncGetStocksCell(int pos) {
             this.pos = pos;
         }
 
@@ -886,12 +886,12 @@ public class NewInputLibraryActivity extends BaseActivity {
                         @Override
                         public void onClick(View view) {
                             tools.DisappearDialog();
-                            if (inputTaskRvDataList.size()>0){
+                            if (inputTaskRvDataList.size() > 0) {
                                 finish();
                                 Intent intent = new Intent(NewInputLibraryActivity.this, NewInputLibraryActivity.class);
                                 intent.putExtra("FGUID", tools.GetStringData(tools.InitSharedPreferences(NewInputLibraryActivity.this), "NewInputLibraryActivityFGUID"));
                                 startActivity(intent);
-                            }else {
+                            } else {
                                 finish();
                             }
                         }

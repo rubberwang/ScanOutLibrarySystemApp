@@ -86,6 +86,30 @@ public class S_PublicYunFragment extends Fragment implements YunPort {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        CursorLocation();
+    }
+    
+    private void CursorLocation() {
+        if (!TextUtils.isEmpty(ET_U.getText().toString())) {
+            ET_P.setFocusable(true);
+            ET_P.setFocusableInTouchMode(true);
+            ET_P.requestFocus();
+            if (!TextUtils.isEmpty(ET_P.getText())) {
+                ET_P.setSelection(ET_P.getText().toString().length());
+                ViseLog.i("ET_P.gettext.length = " + ET_P.getText().toString().length());
+            }
+        } else {
+            ET_U.setFocusable(true);
+            ET_U.setFocusableInTouchMode(true);
+            ET_U.requestFocus();
+            ViseLog.i("ET_U.gettext.length = " + ET_U.getText().toString().length());
+        }
+    }
+
+
     private void CheckIsSaveData() {
         if (Tools.IsObjectNull(sharedPreferences)) {
             if (!TextUtils.isEmpty(tools.GetStringData(sharedPreferences, ConnectStr.F_Public_User))) {
@@ -102,6 +126,25 @@ public class S_PublicYunFragment extends Fragment implements YunPort {
 
 
     private void InitEvent() {
+        ET_U.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!TextUtils.isEmpty(ET_P.getText().toString())) {
+                    ET_P.setText("");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         ET_P.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -244,4 +287,5 @@ public class S_PublicYunFragment extends Fragment implements YunPort {
     public void Private() {
 
     }
+
 }

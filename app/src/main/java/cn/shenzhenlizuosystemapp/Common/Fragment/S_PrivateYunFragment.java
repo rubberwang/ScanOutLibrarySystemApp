@@ -31,7 +31,6 @@ public class S_PrivateYunFragment extends Fragment implements YunPort {
 
     private static EditText ET_IP;
     private static EditText ET_Port;
-    private View TextView;
 
     public static S_PrivateYunFragment newInstance() {
         S_PrivateYunFragment fragment = new S_PrivateYunFragment();
@@ -49,17 +48,34 @@ public class S_PrivateYunFragment extends Fragment implements YunPort {
         View rootView = inflater.inflate(R.layout.f_privite_yun_setting, container, false);
         ET_IP = rootView.findViewById(R.id.ET_IP);
         ET_Port = rootView.findViewById(R.id.ET_Port);
-        TextView = rootView.findViewById(R.id.TextView);
         tools = Tools.getTools();
         sharedPreferences = tools.InitSharedPreferences(getActivity());
         CheckIsSaveData();
-        TextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Private();
-            }
-        });
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        CursorLocation();
+    }
+
+    private void CursorLocation() {
+        if (!TextUtils.isEmpty(ET_IP.getText().toString())) {
+            ET_Port.setFocusable(true);
+            ET_Port.setFocusableInTouchMode(true);
+            ET_Port.requestFocus();
+            if (!TextUtils.isEmpty(ET_Port.getText())) {
+                ET_Port.setSelection(ET_Port.getText().toString().length());
+                ViseLog.i("ET_Port.gettext.length = "+ET_Port.getText().toString().length());
+            }
+        } else {
+            ET_IP.setFocusable(true);
+            ET_IP.setFocusableInTouchMode(true);
+            ET_IP.requestFocus();
+            ET_IP.setSelection(ET_IP.getText().toString().length());
+            ViseLog.i("ET_IP.gettext.length = "+ET_IP.getText().toString().length());
+        }
     }
 
     private void CheckIsSaveData() {
@@ -72,12 +88,6 @@ public class S_PrivateYunFragment extends Fragment implements YunPort {
             if (!TextUtils.isEmpty(tools.GetStringData(sharedPreferences, ConnectStr.F_Private_Port_Address))) {
                 ET_Port.setText(tools.GetStringData(sharedPreferences, ConnectStr.F_Private_Port_Address));
             }
-        }
-        if (!TextUtils.isEmpty(ET_IP.getText().toString())) {
-            ET_IP.setSelection(ET_IP.getText().length());
-        }
-        if (!TextUtils.isEmpty(ET_Port.getText().toString())) {
-            ET_Port.setSelection(ET_Port.getText().length());
         }
     }
 
