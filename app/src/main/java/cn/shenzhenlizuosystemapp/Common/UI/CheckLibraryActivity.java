@@ -69,6 +69,7 @@ import cn.shenzhenlizuosystemapp.Common.TreeFormList.TreeListActivity;
 import cn.shenzhenlizuosystemapp.Common.View.EditSumDialog;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
+import cn.shenzhenlizuosystemapp.Common.View.ShowResultListDialog;
 import cn.shenzhenlizuosystemapp.Common.WebBean.CheckLibraryAllInfo;
 import cn.shenzhenlizuosystemapp.Common.Xml.CheckXml.CheckAnalysisMaterialModeXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.CheckXml.CheckAnalysisReturnsXml;
@@ -95,6 +96,7 @@ public class CheckLibraryActivity extends BaseActivity {
     private boolean IsSerialNumber = true;//是否连续扫描
     private boolean IsAddSerialNumber = false;
     private boolean IsSave = false;
+    private boolean isInitial = true;
 
     //数组
     private List<ChildCheckTag> checkBarCodeAnalyzeList = null;//条码解析列表
@@ -110,7 +112,7 @@ public class CheckLibraryActivity extends BaseActivity {
     private List<CheckBodyMaterial> SubBodyMaterialList = null;//盘点物料列表
     private List<CheckBodyMaterial> SubBodyMaterial = null;
     private List<String> CheckM = new ArrayList<>();
-
+    private List<String> SubBodyMaterialCheckList = new ArrayList<>();
 
     //类
     private Context MContect;
@@ -198,8 +200,8 @@ public class CheckLibraryActivity extends BaseActivity {
             @Override
             public void OnEnSure(String Sum) {
                 if (true) {
-                    EditSumDialog.getSingleton().Dismiss();
                     SubmitData(Sum);
+                    ShowResultListDialog.getSingleton().Dismiss();
                     InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputManager.toggleSoftInput(0, 0);
                 }
@@ -388,47 +390,37 @@ public class CheckLibraryActivity extends BaseActivity {
         RV_BodyInfoTable.setLayoutManager(ScanTaskL);
         scanTask_check_rvAdapter = new ScanTask_CheckRvAdapter(this, checkBodyDataList);
         RV_BodyInfoTable.setAdapter(scanTask_check_rvAdapter);
+
         if (Tools.IsObjectNull(treeMBean)) {
-            int i=0;
-            while (i<checkBodyDataList.size()){
-//                if (checkBodyDataList.get(i).getFMaterial().equals(treeMBean.getFGuid())){
-//                    ViseLog.i("匹配到已有的物料");
-//                    MoveToPosition(ScanTaskL, RV_BodyInfoTable, i);
-//                    scanTask_check_rvAdapter.notifyDataSetChanged();
-//                }else {
-                    ViseLog.i("没有找到物料");
-                    ViseLog.i("treeMBean.getFName() = " + treeMBean.getFName());
-                    CheckTaskRvData checkTaskRvData = new CheckTaskRvData();
-                    CheckBodyMaterial checkBodyMaterial = new CheckBodyMaterial();
-                    List<CheckTaskRvData> checkTaskRvDataArrayList = new ArrayList<CheckTaskRvData>();
-                    List<CheckBodyMaterial> MaterialList = new ArrayList<CheckBodyMaterial>();
-                    String BodyGuid = new CreateGuid().toString();//随机生成分录Guid；
-                    checkTaskRvData.setFGuid(BodyGuid);
-                    checkTaskRvData.setFMaterial(treeMBean.getFGuid());
-                    checkTaskRvData.setFMaterial_Code(treeMBean.getFCode());
-                    checkTaskRvData.setFMaterial_Name(treeMBean.getFName());
-                    checkTaskRvData.setFModel(treeMBean.getFModel());
-                    checkTaskRvData.setFBaseUnit(treeMBean.getFBaseUnit());
-                    checkTaskRvData.setFBaseUnit_Name(treeMBean.getFBaseUnit_Name());
-                    checkTaskRvData.setFAccountQty("0");
-                    checkTaskRvData.setFCheckQty("0");
-                    checkTaskRvData.setFDiffQty("0");
-                    checkTaskRvDataArrayList.add(checkTaskRvData);
-                    checkBodyDataList.add(checkTaskRvDataArrayList.get(0));
-                    scanTask_check_rvAdapter.notifyDataSetChanged();
+            int i = 0;
+            ViseLog.i("没有找到物料");
+            ViseLog.i("treeMBean.getFName() = " + treeMBean.getFName());
+            CheckTaskRvData checkTaskRvData = new CheckTaskRvData();
+            CheckBodyMaterial checkBodyMaterial = new CheckBodyMaterial();
+            List<CheckTaskRvData> checkTaskRvDataArrayList = new ArrayList<CheckTaskRvData>();
+            List<CheckBodyMaterial> MaterialList = new ArrayList<CheckBodyMaterial>();
+            String BodyGuid = new CreateGuid().toString();//随机生成分录Guid；
+            checkTaskRvData.setFGuid(BodyGuid);
+            checkTaskRvData.setFMaterial(treeMBean.getFGuid());
+            checkTaskRvData.setFMaterial_Code(treeMBean.getFCode());
+            checkTaskRvData.setFMaterial_Name(treeMBean.getFName());
+            checkTaskRvData.setFModel(treeMBean.getFModel());
+            checkTaskRvData.setFBaseUnit(treeMBean.getFBaseUnit());
+            checkTaskRvData.setFBaseUnit_Name(treeMBean.getFBaseUnit_Name());
+            checkTaskRvData.setFAccountQty("0");
+            checkTaskRvData.setFCheckQty("0");
+            checkTaskRvData.setFDiffQty("0");
+            checkTaskRvDataArrayList.add(checkTaskRvData);
+            checkBodyDataList.add(checkTaskRvDataArrayList.get(0));
+            scanTask_check_rvAdapter.notifyDataSetChanged();
 
-                    checkBodyMaterial.setFName(treeMBean.getFName());
-                    MaterialList.add(checkBodyMaterial);
-                    SubBodyMaterialList.add(MaterialList.get(0));//在盘点物料里面添加显示选择的物料名
-//                }
-//                i++;
-            }
-
+            checkBodyMaterial.setFName(treeMBean.getFName());
+            MaterialList.add(checkBodyMaterial);
+            SubBodyMaterialList.add(MaterialList.get(0));//在盘点物料里面添加显示选择的物料名
         } else {
             ViseLog.i("TreeMBean == null");
         }
         scanTask_check_rvAdapter.setOnItemClickLitener(new ScanTask_CheckRvAdapter.OnItemClickLitener() {
-
             @Override
             public void onItemClick(View view, final int position) {
                 RvBodyItemClick(position);
@@ -548,7 +540,7 @@ public class CheckLibraryActivity extends BaseActivity {
             return SubBodyMaterial;
         }
 
-        protected void onPostExecute(List<CheckBodyMaterial> result) {
+        protected void onPostExecute(final List<CheckBodyMaterial> result) {
             if (result.size() >= 0) {
                 QuitStockAdapter = new CheckMaterialAdapter(result, CheckLibraryActivity.this);
                 Sp_Material.setAdapter(QuitStockAdapter);
@@ -557,14 +549,21 @@ public class CheckLibraryActivity extends BaseActivity {
                 Sp_Material.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        if (SpCheckHouseSpaceIndex != i) {
-                            SpCheckHouseSpaceIndex = i;
-                        }
-                        for (int j = 0; j < checkBodyDataList.size(); j++) {
-                            if (SubBodyMaterialList.get(i).getFName().equals(checkBodyDataList.get(j).getFMaterial_Name())) {
-                                MoveToPosition(ScanTaskL, RV_BodyInfoTable, j);
-                                //scanTask_check_rvAdapter.setSelection(j);
-                                scanTask_check_rvAdapter.notifyDataSetChanged();
+                        if (isInitial) {
+                            isInitial = false;
+                            return;
+                        } else {
+                            if (SpCheckHouseSpaceIndex != i) {
+                                SpCheckHouseSpaceIndex = i;
+                            }
+                            for (int pos = 0; pos < checkBodyDataList.size(); pos++) {
+                                ViseLog.i("result GUid = " + result.get(i).getFGuid());
+                                if (checkBodyDataList.get(pos).getFMaterial().equals(result.get(i).getFGuid())) {
+                                    MoveToPosition(ScanTaskL, RV_BodyInfoTable, pos);
+                                    RvBodyItemClick(pos);
+                                    scanTask_check_rvAdapter.notifyDataSetChanged();
+                                    ViseLog.i("checkBodyDataList checkBodyDataList checkBodyDataList checkBodyDataList");
+                                }
                             }
                         }
                     }
@@ -950,7 +949,7 @@ public class CheckLibraryActivity extends BaseActivity {
     }
 
     public void SubmitData(String QuitSum) {
-        int SubBodySum;
+        float SubBodySum;
         SubBodySum = 0;
         int pos = 0;
         try {
@@ -976,31 +975,32 @@ public class CheckLibraryActivity extends BaseActivity {
                             TV_Save.setBackground(drawable_purple);
                             TV_Save.setTextColor(getResources().getColor(R.color.White));
 
-                            //累加子分录的盘点数量CheckQty
-//                            for (int i = 0; i < checkSubBodyDataList.size(); i++) {
-//                                if (checkSubBodyDataList.get(i).getFBarcodeLib().equals(checkBarCodeAnalyzeList.get(0).getGuid())) {
-//                                    pos = i;
-//                                }
-//                                SubBodySum += Integer.parseInt(checkSubBodyDataList.get(i).getFCheckQty());
-//                            }
-//                            String SetSubBodySum = String.valueOf(SubBodySum);
-                            //更新分录和子分录的盘点数量
-                            float Sum = Tools.StringOfFloat(checkBodyDataList.get(RV_ScanInfoTableIndex).getFCheckQty()) + Tools.StringOfFloat(QuitSum);
-                            String SetFThisAuxQty = String.valueOf(Sum);
-                            checkSubBodyDataList.get(RV_ScanInfoTableIndex).setFCheckQty(SetFThisAuxQty);
-
-                            float SumBody = Tools.StringOfFloat(checkSubBodyDataList.get(RV_ScanInfoTableIndex).getFCheckQty());
-                            String SetFThisAux = String.valueOf(SumBody);
-                            checkBodyDataList.get(RV_ScanInfoTableIndex).setFCheckQty(SetFThisAux);
-
-                            //为最后生成入库单保存数据array
-                            float NewNoPut = Tools.StringOfFloat(checkSubBodyDataList.get(RV_ScanInfoTableIndex).getFCheckQty()) - (Tools.StringOfFloat(checkSubBodyDataList.get(RV_ScanInfoTableIndex).getFAccountQty()));
-                            String SetNoInput = String.valueOf(NewNoPut);
-                            checkSubBodyDataList.get(RV_ScanInfoTableIndex).setFDiffQty(SetNoInput);
-
-                            float SubNewPut = Tools.StringOfFloat(checkBodyDataList.get(RV_ScanInfoTableIndex).getFCheckQty()) - (Tools.StringOfFloat(checkBodyDataList.get(RV_ScanInfoTableIndex).getFAccountQty()));
-                            String SetSubNewInput = String.valueOf(SubNewPut);
-                            checkBodyDataList.get(RV_ScanInfoTableIndex).setFDiffQty(SetSubNewInput);
+//                            累加子分录的盘点数量CheckQty
+                            for (int i = 0; i < checkSubBodyDataList.size(); i++) {
+                                if (checkSubBodyDataList.get(i).getFBarcodeLib_Name().equals(checkBarCodeAnalyzeList.get(0).getValue())) {
+                                    checkSubBodyDataList.get(i).setFCheckQty(QuitSum);
+                                }
+                                SubBodySum += Tools.StringOfFloat(checkSubBodyDataList.get(i).getFCheckQty());
+                            }
+                            ViseLog.i("SubBodySum = " + String.valueOf(SubBodySum));
+                            subbody_CheckRvAdapter.notifyDataSetChanged();
+//                            //更新分录和子分录的盘点数量
+//                            float Sum = Tools.StringOfFloat(checkBodyDataList.get(RV_ScanInfoTableIndex).getFCheckQty()) + Tools.StringOfFloat(QuitSum);
+//                            String SetFThisAuxQty = String.valueOf(Sum);
+//                            checkSubBodyDataList.get(RV_ScanInfoTableIndex).setFCheckQty(SetFThisAuxQty);
+//
+//                            float SumBody = Tools.StringOfFloat(checkSubBodyDataList.get(RV_ScanInfoTableIndex).getFCheckQty());
+//                            String SetFThisAux = String.valueOf(SumBody);
+//                            checkBodyDataList.get(RV_ScanInfoTableIndex).setFCheckQty(SetFThisAux);
+//
+//                            //为最后生成入库单保存数据array
+//                            float NewNoPut = Tools.StringOfFloat(checkSubBodyDataList.get(RV_ScanInfoTableIndex).getFCheckQty()) - (Tools.StringOfFloat(checkSubBodyDataList.get(RV_ScanInfoTableIndex).getFAccountQty()));
+//                            String SetNoInput = String.valueOf(NewNoPut);
+//                            checkSubBodyDataList.get(RV_ScanInfoTableIndex).setFDiffQty(SetNoInput);
+//
+//                            float SubNewPut = Tools.StringOfFloat(checkBodyDataList.get(RV_ScanInfoTableIndex).getFCheckQty()) - (Tools.StringOfFloat(checkBodyDataList.get(RV_ScanInfoTableIndex).getFAccountQty()));
+//                            String SetSubNewInput = String.valueOf(SubNewPut);
+//                            checkBodyDataList.get(RV_ScanInfoTableIndex).setFDiffQty(SetSubNewInput);
 
                             if (true) {
                                 //scanTask_check_rvAdapter.notifyDataSetChanged();
@@ -1124,7 +1124,7 @@ public class CheckLibraryActivity extends BaseActivity {
     }
 
     private void ShowEditSumDialog(String Sum) {
-        EditSumDialog.getSingleton().Show(MContect, checkBodyDataList.get(RV_ScanInfoTableIndex).getFMaterial_Code(), editSumPort, new View.OnClickListener() {
+        ShowResultListDialog.getSingleton().Show(MContect, checkBodyDataList.get(RV_ScanInfoTableIndex).getFMaterial_Code(), editSumPort, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 EditSumDialog.getSingleton().Dismiss();
@@ -1132,7 +1132,7 @@ public class CheckLibraryActivity extends BaseActivity {
                 InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.toggleSoftInput(0, 0);
             }
-        }, Sum, checkBodyDataList.get(RV_ScanInfoTableIndex).getFBaseUnit_Name());
+        }, Sum, checkBodyDataList.get(RV_ScanInfoTableIndex).getFBaseUnit_Name(), checkBarCodeAnalyzeList);
     }
 
     private void CleanData() {
@@ -1155,11 +1155,11 @@ public class CheckLibraryActivity extends BaseActivity {
     private List<CheckTaskRvData> SumList(List<CheckTaskRvData> taskRvData, List<CheckSubBody> checkSubBodies, int pos) {
         List<CheckSubBody> subBodies = new ArrayList<>();
 
-            for (int i = 0; i < checkSubBodies.size(); i++) {
-                if (taskRvData.get(pos).getFGuid().equals(checkSubBodies.get(i).getFBillBodyID())) {
-                    subBodies.add(checkSubBodies.get(i));
-                }
+        for (int i = 0; i < checkSubBodies.size(); i++) {
+            if (taskRvData.get(pos).getFGuid().equals(checkSubBodies.get(i).getFBillBodyID())) {
+                subBodies.add(checkSubBodies.get(i));
             }
+        }
         if (subBodies.size() > 0) {
             taskRvData.get(pos).setCheckSubBody(subBodies);
         }
@@ -1190,12 +1190,11 @@ public class CheckLibraryActivity extends BaseActivity {
                             if (RV_ScanInfoTableIndex != position) {
                                 RV_ScanInfoTableIndex = position;
                             }
-                            if (!checkSubBodyDataList.get(position).getFGuid().equals("")){
+                            if (!checkSubBodyDataList.get(position).getFGuid().equals("")) {
                                 checkBodyDataList = SumList(checkBodyDataList, checkSubBodyDataList, position);//调用SumList方法，筛选子分录数据
                                 checkSubBodyList = checkBodyDataList.get(position).getCheckSubBody();//添加筛选的子分录数据
-                            }else {
+                            } else {
                                 if (Tools.IsObjectNull(treeMBean)) {
-
                                     CheckSubBody checkSubBodyData = new CheckSubBody();
                                     List<CheckSubBody> checkSubBodyDataArrayList = new ArrayList<CheckSubBody>();
                                     String guid = new CreateGuid().toString();
@@ -1207,36 +1206,35 @@ public class CheckLibraryActivity extends BaseActivity {
                                     checkSubBodyData.setFDiffQty("0");
                                     checkSubBodyDataArrayList.add(checkSubBodyData);
                                     checkSubBodyDataList.add(checkSubBodyDataArrayList.get(0));
-                                    //subbody_CheckRvAdapter.notifyDataSetChanged();
                                 }
                             }
-
                             GetMaterialMode getMaterialMode = new GetMaterialMode();
                             getMaterialMode.execute(checkBodyDataList.get(position).getFMaterial());
                             scanTask_check_rvAdapter.setSelection(position);
                             scanTask_check_rvAdapter.notifyDataSetChanged();//刷新选中
-
                             if (SubBodyMaterialList.size() > 0) {
                                 for (int i = 0; i < SubBodyMaterialList.size(); i++) {
                                     CheckM.add(SubBodyMaterialList.get(i).getFName());
                                 }
                             }
-
-                            if (!CheckM.contains(checkBodyDataList.get(position).getFMaterial_Name())) {
-                                CheckM.add(checkBodyDataList.get(position).getFMaterial_Name());
-                                CheckBodyMaterial checkBodyMaterial = new CheckBodyMaterial();
-                                checkBodyMaterial.setFName(checkBodyDataList.get(position).getFMaterial_Name() + " " + checkBodyDataList.get(position).getFModel());//取出分录选中的物料名
-                                SubBodyMaterialList.add(checkBodyMaterial);//把分录物料list加入单头物料list
-                                AsyncGetMaterialCell asyncGetMaterialCell = new AsyncGetMaterialCell(position, checkBodyDataList.get(position).getFMaterial_Name() + " " + checkBodyDataList.get(position).getFModel());
-                                asyncGetMaterialCell.execute();
-                            } else {
-                                for (int i = 0; i < SubBodyMaterialList.size(); i++) {
-                                    if (SubBodyMaterialList.get(i).getFName().equals(checkBodyDataList.get(position).getFMaterial_Name())) {
-                                        AsyncGetMaterialCell asyncGetMaterialCell = new AsyncGetMaterialCell(position, SubBodyMaterialList.get(i).getFName());
-                                        asyncGetMaterialCell.execute();
-                                    }
-                                }
+                            if(Tools.IsObjectNull(subbody_CheckRvAdapter)){
+                                subbody_CheckRvAdapter.notifyDataSetChanged();
                             }
+//                            if (!CheckM.contains(checkBodyDataList.get(position).getFMaterial_Name())) {
+//                                CheckM.add(checkBodyDataList.get(position).getFMaterial_Name());
+//                                CheckBodyMaterial checkBodyMaterial = new CheckBodyMaterial();
+//                                checkBodyMaterial.setFName(checkBodyDataList.get(position).getFMaterial_Name() + " " + checkBodyDataList.get(position).getFModel());//取出分录选中的物料名
+//                                SubBodyMaterialList.add(checkBodyMaterial);//把分录物料list加入单头物料list
+//                                AsyncGetMaterialCell asyncGetMaterialCell = new AsyncGetMaterialCell(position, checkBodyDataList.get(position).getFMaterial_Name() + " " + checkBodyDataList.get(position).getFModel());
+//                                asyncGetMaterialCell.execute();
+//                            } else {
+//                                for (int i = 0; i < SubBodyMaterialList.size(); i++) {
+//                                    if (SubBodyMaterialList.get(i).getFName().equals(checkBodyDataList.get(position).getFMaterial_Name())) {
+//                                        AsyncGetMaterialCell asyncGetMaterialCell = new AsyncGetMaterialCell(position, SubBodyMaterialList.get(i).getFName());
+//                                        asyncGetMaterialCell.execute();
+//                                    }
+//                                }
+//                            }
 
                         } else {
                             tools.ShowDialog(MContect, res);
@@ -1249,11 +1247,21 @@ public class CheckLibraryActivity extends BaseActivity {
                 if (Tools.IsObjectNull(checkBarCodeAnalyzeList)) {
                     checkBarCodeAnalyzeList.clear();
                 }
-                scanResult_CheckRvAdapter.notifyDataSetChanged();
-                scanTask_check_rvAdapter.setSelection(-1);
-                scanTask_check_rvAdapter.notifyDataSetChanged();//分录行取消选中、刷新
-                checkSubBodyList.clear();
-                subbody_CheckRvAdapter.notifyDataSetChanged();
+                if (Tools.IsObjectNull(scanResult_CheckRvAdapter)) {
+                    scanResult_CheckRvAdapter.notifyDataSetChanged();
+                }
+                if (Tools.IsObjectNull(scanTask_check_rvAdapter)) {
+                    scanTask_check_rvAdapter.setSelection(-1);
+                }
+                if (Tools.IsObjectNull(scanTask_check_rvAdapter)) {
+                    scanTask_check_rvAdapter.notifyDataSetChanged();
+                }
+                if (Tools.IsObjectNull(checkSubBodyList)) {
+                    checkSubBodyList.clear();
+                }
+                if (Tools.IsObjectNull(subbody_CheckRvAdapter)) {
+                    subbody_CheckRvAdapter.notifyDataSetChanged();
+                }
             }
         } else {
             tools.ShowDialog(MContect, "检测到有扫描数据，请先清空或提交");

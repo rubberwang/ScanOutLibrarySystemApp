@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,30 +18,35 @@ import android.widget.TextView;
 
 import com.vise.log.ViseLog;
 
+import java.util.List;
+
+import cn.shenzhenlizuosystemapp.Common.Adapter.CheckAdapter.ScanResult_CheckRvAdapter;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.ChildCheckTag;
 import cn.shenzhenlizuosystemapp.Common.Port.EditSumPort;
 import cn.shenzhenlizuosystemapp.R;
 
-public class EditSumDialog {
+public class ShowResultListDialog {
 
-    private volatile static EditSumDialog editSumDialog;
+    private volatile static ShowResultListDialog editSumDialog;
     private boolean Is_Show = false;
-    private static Dialog dialog = null;
+    private Dialog dialog = null;
     private TextView Tv_ErrorHint;
     private EditText Ed_Sum;
 
-    public static EditSumDialog getSingleton() {
+    public static ShowResultListDialog getSingleton() {
         if (editSumDialog == null) {
-            synchronized (EditSumDialog.class) {
+            synchronized (ShowResultListDialog.class) {
                 if (editSumDialog == null) {
-                    editSumDialog = new EditSumDialog();
+                    editSumDialog = new ShowResultListDialog();
                 }
             }
         }
         return editSumDialog;
     }
 
-    public void Show(final Context context, String Code, final EditSumPort editSumPort, View.OnClickListener Cancel, String DefaultSum, String SumUnit) {
+    public void Show(final Context context, String Code, final EditSumPort editSumPort, View.OnClickListener Cancel, String DefaultSum, String SumUnit
+            , List<ChildCheckTag> childCheckTagList) {
         if (editSumPort != null) {
             if (!Is_Show) {
                 Is_Show = true;
@@ -47,6 +54,8 @@ public class EditSumDialog {
                 dialog = new Dialog(context);
                 dialog.setContentView(view);
                 TextView Tv_TheCurrentMaterialCode = view.findViewById(R.id.Tv_TheCurrentMaterialCode);
+                RecyclerView RV_GetInfoTable1 = view.findViewById(R.id.RV_GetInfoTable1);
+                InitRecycler(childCheckTagList, RV_GetInfoTable1, context);
                 Ed_Sum = view.findViewById(R.id.Ed_Sum);
                 TextView TV_Ensure = view.findViewById(R.id.TV_Ensure);
                 TextView TV_Cancel = view.findViewById(R.id.TV_Cancel);
@@ -125,6 +134,16 @@ public class EditSumDialog {
             //调用系统输入法
             InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.showSoftInput(editText, 0);
+        }
+    }
+
+    private void InitRecycler(List<ChildCheckTag> childCheckTagList, RecyclerView recyclerView, Context context) {
+        if (Tools.IsObjectNull(childCheckTagList) && Tools.IsObjectNull(recyclerView)) {
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+            layoutManager.setOrientation(layoutManager.VERTICAL);
+            recyclerView.setLayoutManager(layoutManager);
+            ScanResult_CheckRvAdapter scanResult_CheckRvAdapter = new ScanResult_CheckRvAdapter(context, childCheckTagList);
+            recyclerView.setAdapter(scanResult_CheckRvAdapter);
         }
     }
 
