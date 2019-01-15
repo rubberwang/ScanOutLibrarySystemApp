@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    android:layout_height="180dp"
+    android:layout_width="360dp"
+    android:layout_height="300dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/Ly_Clear"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.8"
+        android:layout_weight="0.5"
         android:background="@color/GrayWhite"
-        android:orientation="horizontal">
+        >
 
         <TextView
             android:layout_width="0dp"
@@ -27,8 +27,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        android:orientation="horizontal">
+        android:layout_weight="0.5"
+        >
 
         <TextView
             android:layout_width="0dp"
@@ -53,13 +53,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9"
+        android:layout_weight="4"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.7"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <TextView
@@ -93,7 +93,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.3"
+            android:layout_weight="2.5"
+            android:background="@color/functionbackground">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/RV_GetInfoTable1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+               />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
             android:orientation="horizontal">
 
             <TextView
@@ -110,7 +124,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.7"
+            android:layout_weight="1.4"
             android:orientation="horizontal">
 
             <TextView
@@ -145,7 +159,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.2"
         android:orientation="vertical">
 
     </LinearLayout>

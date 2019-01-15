@@ -76,8 +76,8 @@ public class EditSumDialog {
                 int screenHeight = dm.heightPixels;
                 ViseLog.i("屏幕宽高" + screenWidth + "  " + screenHeight);
                 if (screenWidth > 710 && screenHeight > 1100) {
-                    lp.width = 640; // 宽度
-                    lp.height = 420; // 高度
+                    lp.width = 680; // 宽度
+                    lp.height = 700; // 高度
                 } else {
                     lp.width = 440; // 宽度
                     lp.height = 320; // 高度

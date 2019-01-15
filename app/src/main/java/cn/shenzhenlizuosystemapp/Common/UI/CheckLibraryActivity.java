@@ -129,14 +129,13 @@ public class CheckLibraryActivity extends BaseActivity {
     //控件
     private TextView Back;
     private TextView TV_DeliverGoodsNumber;//通知单号
-    private Spinner Sp_house;
+    private TextView TV_house;
     private Spinner spinnerScannerDevices;
     private Spinner Sp_CheckHouseSpace;
     private Spinner Sp_Material;
     private TextView TV_Cancel;
     private TextView TV_Sumbit;
     private TextView TV_Save;
-    private TextView TV_house;
     private RecyclerView RV_ResultInfoTable;//存放条码解析list view
     private RecyclerView RV_BodyInfoTable;//存放分录list view
     private RecyclerView RV_SubBodyInfoTable;//存放子分录list view
@@ -183,8 +182,6 @@ public class CheckLibraryActivity extends BaseActivity {
         FGUID = intent.getStringExtra("FGUID");
         tools = Tools.getTools();
         tools.PutStringData("CheckLibraryActivityFGUID", FGUID, tools.InitSharedPreferences(MContect));//获取通知单Guid
-//        tools.PutStringData("FAllowOtherMaterial",checkHeadDataList.get(0).getFAllowOtherMaterial(),tools.InitSharedPreferences(MContect));
-//        tools.PutStringData("MaterialGuid",SubBodyMaterialList.get(0).getFGuid(),tools.InitSharedPreferences(MContect));
         checkLibraryObServer = new CheckLibraryObServer();
         getLifecycle().addObserver(checkLibraryObServer);
         webService = WebService.getSingleton(MContect);
@@ -217,7 +214,7 @@ public class CheckLibraryActivity extends BaseActivity {
     public void initView() {
         Back = $(R.id.Back);
         TV_DeliverGoodsNumber = $(R.id.TV_DeliverGoodsNumber);
-        Sp_house = $(R.id.Sp_house);
+        TV_house = $(R.id.TV_house);
         RV_ResultInfoTable = $(R.id.RV_GetInfoTable);
         RV_BodyInfoTable = $(R.id.RV_ScanInfoTable);
         RV_SubBodyInfoTable = $(R.id.RV_SubBodyInfoTable);
@@ -358,8 +355,8 @@ public class CheckLibraryActivity extends BaseActivity {
      * ***/
     private void InitRecycler() {
         if (Tools.IsObjectNull(checkBarCodeAnalyzeList)) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(CheckLibraryActivity.this);
-            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            layoutManager.setOrientation(layoutManager.VERTICAL);
             RV_ResultInfoTable.setLayoutManager(layoutManager);
             scanResult_CheckRvAdapter = new ScanResult_CheckRvAdapter(this, checkBarCodeAnalyzeList);
             RV_ResultInfoTable.setAdapter(scanResult_CheckRvAdapter);
@@ -392,29 +389,41 @@ public class CheckLibraryActivity extends BaseActivity {
         scanTask_check_rvAdapter = new ScanTask_CheckRvAdapter(this, checkBodyDataList);
         RV_BodyInfoTable.setAdapter(scanTask_check_rvAdapter);
         if (Tools.IsObjectNull(treeMBean)) {
-            ViseLog.i("treeMBean.getFName() = " + treeMBean.getFName());
-            CheckTaskRvData checkTaskRvData = new CheckTaskRvData();
-            CheckBodyMaterial checkBodyMaterial = new CheckBodyMaterial();
-            List<CheckTaskRvData> checkTaskRvDataArrayList = new ArrayList<CheckTaskRvData>();
-            List<CheckBodyMaterial> MaterialList = new ArrayList<CheckBodyMaterial>();
-            //checkTaskRvData.setFGuid(treeMBean.getFGuid());
-            checkTaskRvData.setFMaterial_Code(treeMBean.getFCode());
-            checkTaskRvData.setFMaterial_Name(treeMBean.getFName());
-            checkTaskRvData.setFModel(treeMBean.getFModel());
-            checkTaskRvData.setFBaseUnit(treeMBean.getFBaseUnit());
-            checkTaskRvData.setFBaseUnit_Name(treeMBean.getFBaseUnit_Name());
-            checkTaskRvData.setFAccountQty("0");
-            checkTaskRvData.setFCheckQty("0");
-            checkTaskRvData.setFDiffQty("0");
-            checkTaskRvDataArrayList.add(checkTaskRvData);
-            checkBodyDataList.add(checkTaskRvDataArrayList.get(0));
+            int i=0;
+            while (i<checkBodyDataList.size()){
+//                if (checkBodyDataList.get(i).getFMaterial().equals(treeMBean.getFGuid())){
+//                    ViseLog.i("匹配到已有的物料");
+//                    MoveToPosition(ScanTaskL, RV_BodyInfoTable, i);
+//                    scanTask_check_rvAdapter.notifyDataSetChanged();
+//                }else {
+                    ViseLog.i("没有找到物料");
+                    ViseLog.i("treeMBean.getFName() = " + treeMBean.getFName());
+                    CheckTaskRvData checkTaskRvData = new CheckTaskRvData();
+                    CheckBodyMaterial checkBodyMaterial = new CheckBodyMaterial();
+                    List<CheckTaskRvData> checkTaskRvDataArrayList = new ArrayList<CheckTaskRvData>();
+                    List<CheckBodyMaterial> MaterialList = new ArrayList<CheckBodyMaterial>();
+                    String BodyGuid = new CreateGuid().toString();//随机生成分录Guid；
+                    checkTaskRvData.setFGuid(BodyGuid);
+                    checkTaskRvData.setFMaterial(treeMBean.getFGuid());
+                    checkTaskRvData.setFMaterial_Code(treeMBean.getFCode());
+                    checkTaskRvData.setFMaterial_Name(treeMBean.getFName());
+                    checkTaskRvData.setFModel(treeMBean.getFModel());
+                    checkTaskRvData.setFBaseUnit(treeMBean.getFBaseUnit());
+                    checkTaskRvData.setFBaseUnit_Name(treeMBean.getFBaseUnit_Name());
+                    checkTaskRvData.setFAccountQty("0");
+                    checkTaskRvData.setFCheckQty("0");
+                    checkTaskRvData.setFDiffQty("0");
+                    checkTaskRvDataArrayList.add(checkTaskRvData);
+                    checkBodyDataList.add(checkTaskRvDataArrayList.get(0));
+                    scanTask_check_rvAdapter.notifyDataSetChanged();
 
-            scanTask_check_rvAdapter.setSelection(checkBodyDataList.size() + 1);
-            scanTask_check_rvAdapter.notifyDataSetChanged();
+                    checkBodyMaterial.setFName(treeMBean.getFName());
+                    MaterialList.add(checkBodyMaterial);
+                    SubBodyMaterialList.add(MaterialList.get(0));//在盘点物料里面添加显示选择的物料名
+//                }
+//                i++;
+            }
 
-            checkBodyMaterial.setFName(treeMBean.getFName());
-            MaterialList.add(checkBodyMaterial);
-            SubBodyMaterialList.add(MaterialList.get(0));//在盘点物料里面添加显示选择的物料名
         } else {
             ViseLog.i("TreeMBean == null");
         }
@@ -429,36 +438,6 @@ public class CheckLibraryActivity extends BaseActivity {
             public void onItemLongClick(View view, int position) {
             }
         });
-    }
-
-    /**
-     * 出库初始化适配
-     *
-     * @param stockBeans
-     * @param StockName
-     */
-    private void InitSp(List<CheckStockBean> stockBeans, String StockName) {
-        if (stockBeans.size() >= 0) {
-            CheckStockAdapter QuitStockAdapter = new CheckStockAdapter(stockBeans, CheckLibraryActivity.this);
-            Sp_house.setAdapter(QuitStockAdapter);
-            int Pos = GetSpinnerPos(stockBeans, StockName);
-            Sp_house.setSelection(Pos);
-            Sp_house.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    if (SpHouseIndex != i) {
-                        SpHouseIndex = i;
-                    }
-                    AsyncGetStocksCell asyncGetStocksCell = new AsyncGetStocksCell(i);
-                    asyncGetStocksCell.execute();
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-            });
-        }
     }
 
     /**
@@ -500,17 +479,12 @@ public class CheckLibraryActivity extends BaseActivity {
      */
     private class AsyncGetStocksCell extends AsyncTask<String, Void, List<CheckStockBean>> {
 
-        private int pos = 0;
-
-        AsyncGetStocksCell(int pos) {
-            this.pos = pos;
-        }
 
         @Override
         protected List<CheckStockBean> doInBackground(String... params) {
             stockBeanList = new ArrayList<>();
             try {
-                String StocksCell = webService.GetStocksCell(ConnectStr.ConnectionToString, stockBeans.get(pos).getFGuid());
+                String StocksCell = webService.GetStocksCell(ConnectStr.ConnectionToString, checkHeadDataList.get(0).getFStock());
                 InputStream inStockCell = new ByteArrayInputStream(StocksCell.getBytes("UTF-8"));
                 List<CheckAdapterReturn> stock_returns = CheckAnalysisReturnsXml.getSingleton().GetReturn(inStockCell);
                 if (SubBodyStocksList.size() > 0) {
@@ -642,16 +616,6 @@ public class CheckLibraryActivity extends BaseActivity {
                     SubBodyinfoStr.close();
                     SubBodyStocks.close();
                     SubBodyMaterial.close();
-                    Stocks = webService.GetStocks(ConnectStr.ConnectionToString);
-                    in_Stocks = new ByteArrayInputStream(Stocks.getBytes("UTF-8"));
-                    List<CheckStock_Return> stock_returnList = CheckStockXmlAnalysis.getSingleton().GetXmlStockReturn(in_Stocks);
-                    if (stock_returnList.get(0).getFStatus().equals("1")) {
-                        InputStream In_StockInfo = new ByteArrayInputStream(stock_returnList.get(0).getFInfo().getBytes("UTF-8"));
-                        stockBeans = CheckStockXmlAnalysis.getSingleton().GetXmlStockInfo(In_StockInfo);
-                    } else {
-                        stockBeans.clear();
-                    }
-                    ViseLog.i("Stocks = " + Stocks);
                     return checkHeadDataList;
                 } else {
                     checkHeadDataList.clear();
@@ -671,13 +635,12 @@ public class CheckLibraryActivity extends BaseActivity {
                         InitScanRecycler();
                     }
                     if (stockBeans.size() >= 0) {
-                        InitSp(stockBeans, result.get(0).getFStock_Name());
-                    } else {
-
+                        AsyncGetStocksCell asyncGetStocksCell = new AsyncGetStocksCell();
+                        asyncGetStocksCell.execute();
                     }
                     AsyncGetMaterialCell asyncGetMaterialCell = new AsyncGetMaterialCell(0, "");
                     asyncGetMaterialCell.execute();
-                    //TV_house.setText(result.get(0).getFStock_Name());
+                    TV_house.setText(result.get(0).getFStock_Name());
                     TV_DeliverGoodsNumber.setText(result.get(0).getFCode());
                     HeadID = result.get(0).getFGuid();
                     IsAllow = result.get(0).getFAllowOtherMaterial();
@@ -1000,11 +963,8 @@ public class CheckLibraryActivity extends BaseActivity {
                                 CheckFGuid.add(FBarcodeLib);
                                 IsAddSerialNumber = false;
                             }
-                            Sp_house.setEnabled(false);
                             Sp_CheckHouseSpace.setEnabled(false);
                             Sp_Material.setEnabled(false);
-                            Drawable Borderhouse = getResources().getDrawable(R.drawable.border);
-                            Sp_house.setBackground(Borderhouse);
                             Drawable BorderInputHouseSpace = getResources().getDrawable(R.drawable.border);
                             Sp_CheckHouseSpace.setBackground(BorderInputHouseSpace);
                             Sp_Material.setBackground(BorderInputHouseSpace);
