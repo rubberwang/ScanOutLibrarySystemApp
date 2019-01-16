@@ -27,14 +27,20 @@ import java.util.Arrays;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Adapter.Wms_RvAdapter;
+import cn.shenzhenlizuosystemapp.Common.AsyncGetData.ClearDataTask;
+import cn.shenzhenlizuosystemapp.Common.AsyncGetData.ClearUnlockTask;
+import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.WmsSelectData;
+import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.ImageTool.TransformationUtils;
+import cn.shenzhenlizuosystemapp.Common.Port.UnlockPort;
 import cn.shenzhenlizuosystemapp.Common.TreeFormList.TreeListActivity;
 import cn.shenzhenlizuosystemapp.Common.UI.DirectAllot.AllotNotificationActivity;
 import cn.shenzhenlizuosystemapp.Common.UI.Input_NotificationActivity;
 
 import cn.shenzhenlizuosystemapp.Common.UI.Quit_NotificationActivity;
 import cn.shenzhenlizuosystemapp.Common.UI.Check_NotificationActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.SettingActivity;
 import cn.shenzhenlizuosystemapp.Common.View.*;
 import cn.shenzhenlizuosystemapp.Common.Base.Myapplication;
 import cn.shenzhenlizuosystemapp.R;
@@ -47,12 +53,15 @@ public class WMS_Fragment extends Fragment implements OnBannerListener {
     private RecyclerView Rv_WmsModuleSelect;
     private TextView Back;
     private Banner WMS_Banner;
+    private MyProgressDialog myProgressDialog;
 
     private ArrayList<WmsSelectData> List_wmsSelectData;
-    private String[] Describe = {"入库作业", "出库作业", "直接调拨", "盘点作业", "调拨出库", "调拨入库"};
-    private int[] R_Img = {R.drawable.gethouse, R.drawable.puthouse, R.drawable.changehouse, R.drawable.pdacheck, R.drawable.changeput, R.drawable.changeget};
+    private String[] Describe = {"入库作业", "出库作业", "直接调拨", "盘点作业", "调拨出库", "调拨入库", "清空单据锁", "清空扫描数据"};
+    private int[] R_Img = {R.drawable.gethouse, R.drawable.puthouse, R.drawable.changehouse, R.drawable.pdacheck, R.drawable.changeput, R.drawable.changeget
+            , R.drawable.unlock_img, R.drawable.clear_data};
     private ArrayList<Integer> BannerPathList;
     private ArrayList<String> BannerTitleList;
+    private Tools tools;
 
     public static MES_Fragment newInstance() {
         MES_Fragment fragment = new MES_Fragment();
@@ -78,7 +87,9 @@ public class WMS_Fragment extends Fragment implements OnBannerListener {
         Rv_WmsModuleSelect = rootView.findViewById(R.id.Rv_WmsModuleSelect);
         WMS_Banner = rootView.findViewById(R.id.B_WMS);
         Back = rootView.findViewById(R.id.Back);
+        myProgressDialog = new MyProgressDialog(getActivity(), R.style.CustomDialog);
         List_wmsSelectData = new ArrayList<>();
+        tools = Tools.getTools();
         InitRecycler();
         InitClick();
         InitBanner();
@@ -162,6 +173,14 @@ public class WMS_Fragment extends Fragment implements OnBannerListener {
                         startActivity(intent);
                         break;
                     }
+                    case 6: {
+                        ClearUnlock();
+                        break;
+                    }
+                    case 7: {
+                        EnsureDialog();
+                        break;
+                    }
                 }
             }
 
@@ -169,6 +188,57 @@ public class WMS_Fragment extends Fragment implements OnBannerListener {
             public void onItemLongClick(View view, int position) {
             }
         });
+    }
+
+    private void EnsureDialog() {
+        tools.ShowOnClickDialog(getActivity(), "确定清除扫描数据吗？", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClearData();
+                tools.DisappearDialog();
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tools.DisappearDialog();
+            }
+        },false);
+    }
+
+    private void ClearUnlock() {
+        myProgressDialog.ShowPD("正在清除单据锁...");
+        UnlockPort unlockPort = new UnlockPort() {
+            @Override
+            public void onResult(String res) {
+                if (res.equals("success")) {
+                    tools.ShowDialog(getActivity(), "清除成功");
+                    myProgressDialog.dismiss();
+                } else {
+                    tools.ShowDialog(getActivity(), "清除失败:" + res);
+                    myProgressDialog.dismiss();
+                }
+            }
+        };
+        ClearUnlockTask clearUnlockTask = new ClearUnlockTask(WebService.getSingleton(getActivity()), unlockPort);
+        clearUnlockTask.execute();
+    }
+
+    private void ClearData() {
+        myProgressDialog.ShowPD("正在清除扫描数据...");
+        UnlockPort unlockPort = new UnlockPort() {
+            @Override
+            public void onResult(String res) {
+                if (res.equals("success")) {
+                    tools.ShowDialog(getActivity(), "清除成功");
+                    myProgressDialog.dismiss();
+                } else {
+                    tools.ShowDialog(getActivity(), "清除失败:" + res);
+                    myProgressDialog.dismiss();
+                }
+            }
+        };
+        ClearDataTask clearUnlockTask = new ClearDataTask(WebService.getSingleton(getActivity()), unlockPort);
+        clearUnlockTask.execute();
     }
 
     @Override

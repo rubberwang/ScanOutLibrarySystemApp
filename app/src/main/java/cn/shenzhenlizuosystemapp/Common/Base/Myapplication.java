@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.R;
 
 
@@ -40,8 +41,8 @@ public class Myapplication extends Application {
         ViseLog.plant(new LogcatTree());//添加打印日志信息到Logcat的树
         tools = Tools.getTools();
         sharedPreferences = tools.InitSharedPreferences(BaseApplication);
-        if (!TextUtils.isEmpty(tools.GetStringData(sharedPreferences, "LinkMode"))) {
-            LinkWayMode = tools.GetStringData(sharedPreferences, "LinkMode");
+        if (!TextUtils.isEmpty(tools.GetStringData(sharedPreferences, ConnectStr.LINKMODE))) {
+            LinkWayMode = tools.GetStringData(sharedPreferences, ConnectStr.LINKMODE);
         }
     }
 

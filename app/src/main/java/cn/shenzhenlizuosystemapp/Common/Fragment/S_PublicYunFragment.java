@@ -41,16 +41,16 @@ import cn.shenzhenlizuosystemapp.R;
 public class S_PublicYunFragment extends Fragment implements YunPort {
 
     public static final String ARGS_PAGE = "S_PublicYunFragment";
-    private static SharedPreferences sharedPreferences;
-    private static Tools tools;
-    private static PerpetualWebService perpetualWebService;
+    private SharedPreferences sharedPreferences;
+    private Tools tools;
+    private PerpetualWebService perpetualWebService;
 
-    private static EditText ET_U;
-    private static EditText ET_P;
-    private static Spinner Sp_SelectService;
-    private static List<Setting_PublicDataBean> setting_publicDataBeanList;
+    private EditText ET_U;
+    private EditText ET_P;
+    private Spinner Sp_SelectService;
+    private List<Setting_PublicDataBean> setting_publicDataBeanList;
 
-    private static int Sp_SelectServiceIndex = -1;
+    private int Sp_SelectServiceIndex = -1;
 
     private int GetSpinnerPos(List<Setting_PublicDataBean> Datas, String value) {
         for (int i = 0; i < Datas.size(); i++) {
@@ -91,7 +91,7 @@ public class S_PublicYunFragment extends Fragment implements YunPort {
         super.onResume();
         CursorLocation();
     }
-    
+
     private void CursorLocation() {
         if (!TextUtils.isEmpty(ET_U.getText().toString())) {
             ET_P.setFocusable(true);
@@ -278,7 +278,7 @@ public class S_PublicYunFragment extends Fragment implements YunPort {
             tools.PutStringData(ConnectStr.F_Public_Service, setting_publicDataBeanList.get(Sp_SelectServiceIndex).getFGuid(), sharedPreferences);
         }
         if (!TextUtils.isEmpty(ET_P.getText().toString()) && !TextUtils.isEmpty(ET_U.getText().toString()) && setting_publicDataBeanList.size() > 0) {
-            tools.PutStringData("LinkMode", "Public", sharedPreferences);
+            tools.PutStringData(ConnectStr.LINKMODE, "Public", sharedPreferences);
             Myapplication.LinkWayMode = "Public";
         }
     }

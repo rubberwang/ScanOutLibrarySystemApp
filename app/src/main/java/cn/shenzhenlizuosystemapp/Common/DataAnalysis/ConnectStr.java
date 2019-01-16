@@ -1,7 +1,7 @@
 package cn.shenzhenlizuosystemapp.Common.DataAnalysis;
 
 public class ConnectStr {
-    
+
     public static String ConnectionToString = "";//连接字符串？
     public static String USERNAME = "";//登录用户名
     public static boolean ISSHOWNONEXECUTION = false;//是否过滤已扫描完成的单
@@ -15,5 +15,6 @@ public class ConnectStr {
     public static String F_Public_User = "F_Public_User";
     public static String F_Public_PassWord = "F_Public_PassWord";
     public static String F_Public_Service = "F_Public_Service";
+    public static String LINKMODE = "LINK_MODE";
     public static String Perpetual_URL = "http://member.dyrj.net/DCS/WebService/RootAPI.asmx";
 }

@@ -15,6 +15,8 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -45,13 +47,15 @@ import cn.shenzhenlizuosystemapp.R;
 public class SettingActivity extends BaseActivity {
 
     private TextView Back;
-    private TextView TV_UnLockAll;
-    private TextView TV_LinkMode;
     private Button SaveIPAddress_Bt;
     private MyProgressDialog myProgressDialog;
     private LinearLayout Ly_Private;
     private LinearLayout Ly_Public;
     private Fragment F_Common;
+    private CheckBox CB_Public;
+    private CheckBox CB_Private;
+    private CheckBox IsScanInput;
+    private TextView TV_LinkMode;
 
     private Tools tools;
     private SharedPreferences sharedPreferences;
@@ -71,15 +75,11 @@ public class SettingActivity extends BaseActivity {
     public void initData() {
         tools = Tools.getTools();
         if (Myapplication.LinkWayMode.equals("Private")) {
-            TabIndex = 0;
             InitFragment(1);
-            TV_LinkMode.setVisibility(View.VISIBLE);
-            TV_LinkMode.setText("当前连接模式为:私有云");
         } else if (Myapplication.LinkWayMode.equals("Public")) {
-            TabIndex = 1;
             InitFragment(0);
-            TV_LinkMode.setVisibility(View.VISIBLE);
-            TV_LinkMode.setText("当前连接模式为:公有云");
+        } else {
+            InitFragment(0);
         }
         InitClick();
     }
@@ -87,11 +87,13 @@ public class SettingActivity extends BaseActivity {
     @Override
     public void initView() {
         Back = $(R.id.Back);
-        TV_UnLockAll = $(R.id.TV_UnLockAll);
-        TV_LinkMode = $(R.id.TV_LinkMode);
         SaveIPAddress_Bt = $(R.id.SaveIPAddress_Bt);
         Ly_Private = $(R.id.Ly_Private);
         Ly_Public = $(R.id.Ly_Public);
+        CB_Public = $(R.id.CB_Public);
+        CB_Private = $(R.id.CB_Private);
+        TV_LinkMode = $(R.id.TV_LinkMode);
+        IsScanInput = $(R.id.IsScanInput);
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
     }
 
@@ -99,12 +101,18 @@ public class SettingActivity extends BaseActivity {
         Drawable PitchOnDrawable = getResources().getDrawable(R.drawable.btn_bg_thin_bule);
         Drawable CloseDrawable = getResources().getDrawable(R.drawable.toast);
         if (is == 1) {
+            TabIndex = 0;
+            TV_LinkMode.setText("当前接入方式为：私有云");
+            CB_Private.setChecked(true);
             Ly_Public.setBackground(CloseDrawable);
             Ly_Private.setBackground(PitchOnDrawable);
             s_privateYunFragment = S_PrivateYunFragment.newInstance();
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.F_Common, s_privateYunFragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
         } else {
+            TabIndex = 1;
+            TV_LinkMode.setText("当前接入方式为：公有云");
+            CB_Public.setChecked(true);
             Ly_Private.setBackground(CloseDrawable);
             Ly_Public.setBackground(PitchOnDrawable);
             s_publicYunFragment = S_PublicYunFragment.newInstance();
@@ -141,44 +149,59 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void InitClick() {
+        CB_Public.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    if (CB_Private.isChecked()) {
+                        CB_Private.setChecked(false);
+                    }
+                    InitFragment(0);
+                }
+            }
+        });
+        CB_Private.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    if (CB_Public.isChecked()) {
+                        CB_Public.setChecked(false);
+                    }
+                    InitFragment(1);
+                }
+            }
+        });
+        IsScanInput.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    tools.PutStringData("IsScanInput", "true", sharedPreferences);
+                } else {
+                    tools.PutStringData("IsScanInput", "false", sharedPreferences);
+                }
+            }
+        });
+
+        Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ViewManager.getInstance().finishActivity(SettingActivity.this);//直接移除栈
+            }
+        });
         Ly_Private.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (TabIndex == 0){
-                    InitFragment(1);
-                }
+                InitFragment(1);
             }
         });
 
         Ly_Public.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (TabIndex != 0){
-                    InitFragment(0);
-                }
+                InitFragment(0);
             }
         });
 
-        TV_UnLockAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                myProgressDialog.ShowPD("正在清除...");
-                UnlockPort unlockPort = new UnlockPort() {
-                    @Override
-                    public void onResult(String res) {
-                        if (res.equals("success")) {
-                            tools.ShowDialog(SettingActivity.this, "清除成功");
-                            myProgressDialog.dismiss();
-                        } else {
-                            tools.ShowDialog(SettingActivity.this, "清除失败:" + res);
-                            myProgressDialog.dismiss();
-                        }
-                    }
-                };
-                ClearUnlockTask clearUnlockTask = new ClearUnlockTask(WebService.getSingleton(SettingActivity.this), unlockPort);
-                clearUnlockTask.execute();
-            }
-        });
         SaveIPAddress_Bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

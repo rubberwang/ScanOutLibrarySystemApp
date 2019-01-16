@@ -25,12 +25,12 @@ import cn.shenzhenlizuosystemapp.R;
 
 public class S_PrivateYunFragment extends Fragment implements YunPort {
 
-    public static final String ARGS_PAGE = "S_PrivateYunFragment";
-    private static SharedPreferences sharedPreferences;
-    private static Tools tools;
+    public  final String ARGS_PAGE = "S_PrivateYunFragment";
+    private  SharedPreferences sharedPreferences;
+    private  Tools tools;
 
-    private static EditText ET_IP;
-    private static EditText ET_Port;
+    private  EditText ET_IP;
+    private  EditText ET_Port;
 
     public static S_PrivateYunFragment newInstance() {
         S_PrivateYunFragment fragment = new S_PrivateYunFragment();
@@ -106,7 +106,7 @@ public class S_PrivateYunFragment extends Fragment implements YunPort {
             tools.PutStringData(ConnectStr.F_Private_Port_Address, ET_Port.getText().toString().trim(), sharedPreferences);
         }
         if (!TextUtils.isEmpty(ET_IP.getText().toString()) && !TextUtils.isEmpty(ET_Port.getText().toString())) {
-            tools.PutStringData("LinkMode", "Private", sharedPreferences);
+            tools.PutStringData(ConnectStr.LINKMODE, "Private", sharedPreferences);
             Myapplication.LinkWayMode = "Private";
         }
     }
