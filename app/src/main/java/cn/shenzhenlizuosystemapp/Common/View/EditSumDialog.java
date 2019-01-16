@@ -43,7 +43,7 @@ public class EditSumDialog {
         if (editSumPort != null) {
             if (!Is_Show) {
                 Is_Show = true;
-                View view = LayoutInflater.from(context).inflate(R.layout.save_number_dialog, null, false);
+                View view = LayoutInflater.from(context).inflate(R.layout.submit_number_dialog, null, false);
                 dialog = new Dialog(context);
                 dialog.setContentView(view);
                 TextView Tv_TheCurrentMaterialCode = view.findViewById(R.id.Tv_TheCurrentMaterialCode);
@@ -76,8 +76,8 @@ public class EditSumDialog {
                 int screenHeight = dm.heightPixels;
                 ViseLog.i("屏幕宽高" + screenWidth + "  " + screenHeight);
                 if (screenWidth > 710 && screenHeight > 1100) {
-                    lp.width = 680; // 宽度
-                    lp.height = 700; // 高度
+                    lp.width = 600; // 宽度
+                    lp.height = 500; // 高度
                 } else {
                     lp.width = 440; // 宽度
                     lp.height = 320; // 高度
