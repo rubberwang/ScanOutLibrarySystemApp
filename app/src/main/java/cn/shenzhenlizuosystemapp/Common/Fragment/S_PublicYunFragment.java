@@ -274,7 +274,7 @@ public class S_PublicYunFragment extends Fragment implements YunPort {
         if (!TextUtils.isEmpty(ET_U.getText().toString().trim())) {
             tools.PutStringData(ConnectStr.F_Public_User, ET_U.getText().toString(), sharedPreferences);
         }
-        if (setting_publicDataBeanList.size() > 0) {
+        if (setting_publicDataBeanList.size() > 0&&Tools.IsObjectNull(setting_publicDataBeanList)) {
             tools.PutStringData(ConnectStr.F_Public_Service, setting_publicDataBeanList.get(Sp_SelectServiceIndex).getFGuid(), sharedPreferences);
         }
         if (!TextUtils.isEmpty(ET_P.getText().toString()) && !TextUtils.isEmpty(ET_U.getText().toString()) && setting_publicDataBeanList.size() > 0) {

@@ -74,12 +74,16 @@ public class SettingActivity extends BaseActivity {
     @Override
     public void initData() {
         tools = Tools.getTools();
+        sharedPreferences = tools.InitSharedPreferences(this);
         if (Myapplication.LinkWayMode.equals("Private")) {
             InitFragment(1);
         } else if (Myapplication.LinkWayMode.equals("Public")) {
             InitFragment(0);
         } else {
             InitFragment(0);
+        }
+        if (tools.GetStringData(sharedPreferences, "IsScanInput").equals("true")) {
+            IsScanInput.setChecked(true);
         }
         InitClick();
     }

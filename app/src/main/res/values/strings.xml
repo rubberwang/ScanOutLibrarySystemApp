@@ -133,7 +133,7 @@
     <string name="DirectAllotNotification_FOutStockName">调出仓库:</string>
     <string name="DirectAllotNotification_FInStockName">调入仓库:</string>
     <string name="PleaseInputSum">请输入数量:</string>
-    <string name="TheCurrentMaterialCode">料号:</string>
+    <string name="TheCurrentMaterialCode">物料编号:</string>
     <string name="ShouldAllot">应调数量:</string>
     <string name="AlreadyAllot">已调数量:</string>
     <string name="ThisAllot">本次调货:</string>
@@ -156,4 +156,6 @@
     <string name="SelectService">选择服务器</string>
     <string name="PrivateYun">私有云</string>
     <string name="PublicYun">公有云</string>
+    <string name="Batch">批 次 号:</string>
+    <string name="ProductNameMode">品称规格:</string>
 </resources>

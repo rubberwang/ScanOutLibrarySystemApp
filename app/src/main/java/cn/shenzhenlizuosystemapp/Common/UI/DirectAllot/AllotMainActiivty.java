@@ -58,6 +58,7 @@ import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.MaterialModeAdapter;
 import cn.shenzhenlizuosystemapp.Common.View.EditSumDialog;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
+import cn.shenzhenlizuosystemapp.Common.Xml.BatchCodeXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputLibraryXmlAnalysis;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.DirectAllotTask.GetLabelTempletBaecodesTask;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.DirectAllotTask.GetTagModeTask;
@@ -105,6 +106,7 @@ public class AllotMainActiivty extends BaseActivity {
     private boolean IsAddSerialNumber = false;
     private boolean IsSave = false;
     private String Type;
+    private String Batch = "";
 
     private List<CreateAdjustStockBean> InputSubmitList = new ArrayList<CreateAdjustStockBean>();
     private List<String> CheckFGuid = new ArrayList<String>();
@@ -156,12 +158,12 @@ public class AllotMainActiivty extends BaseActivity {
             @Override
             public void OnEnSure(String Sum) {
                 if (Tools.StringOfFloat(Sum) <= Tools.StringOfFloat(directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFNotAllotQty()) && Tools.StringOfFloat(Sum) > 0) {
-                    EditSumDialog.getSingleton().Dismiss();
+                    EditSumDialog.getSingleton(AllotMainActiivty.this).Dismiss();
                     SubmitData(Sum);
                     InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputManager.toggleSoftInput(0, 0);
                 } else {
-                    EditSumDialog.getSingleton().ShowErrorInfo("输入数据有误");
+                    EditSumDialog.getSingleton(AllotMainActiivty.this).ShowErrorInfo("输入数据有误");
                 }
             }
         };
@@ -227,7 +229,7 @@ public class AllotMainActiivty extends BaseActivity {
         public void ON_PAUSE() {
             UnlockTask unlockTask = new UnlockTask(webService);
             unlockTask.execute();
-            EditSumDialog.getSingleton().Dismiss();
+            EditSumDialog.getSingleton(AllotMainActiivty.this).Dismiss();
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -267,8 +269,8 @@ public class AllotMainActiivty extends BaseActivity {
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Tools.IsObjectNull(ChildTagList)){
-                    if (ChildTagList.size()>0){
+                if (Tools.IsObjectNull(ChildTagList)) {
+                    if (ChildTagList.size() > 0) {
                         tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
 
                             @Override
@@ -283,10 +285,10 @@ public class AllotMainActiivty extends BaseActivity {
                                 tools.DisappearDialog();
                             }
                         }, false);
-                    }else {
+                    } else {
                         ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
                     }
-                }else {
+                } else {
                     ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
                 }
             }
@@ -295,8 +297,8 @@ public class AllotMainActiivty extends BaseActivity {
         TV_DirectAllotCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Tools.IsObjectNull(ChildTagList)){
-                    if (ChildTagList.size()>0){
+                if (Tools.IsObjectNull(ChildTagList)) {
+                    if (ChildTagList.size() > 0) {
                         tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
 
                             @Override
@@ -311,10 +313,10 @@ public class AllotMainActiivty extends BaseActivity {
                                 tools.DisappearDialog();
                             }
                         }, false);
-                    }else {
+                    } else {
                         ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
                     }
-                }else {
+                } else {
                     ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
                 }
             }
@@ -623,8 +625,10 @@ public class AllotMainActiivty extends BaseActivity {
                                 ViseLog.i("Info = " + Info);
                                 InputStream IsBarCodeInfoHead = new ByteArrayInputStream(Info.getBytes("UTF-8"));
                                 InputStream IsBarCodeInfoBody = new ByteArrayInputStream(Info.getBytes("UTF-8"));
+                                InputStream BatchBody = new ByteArrayInputStream(Info.getBytes("UTF-8"));
                                 List<BarCodeHeadBean> BarCodeInfoHeadList = InputLibraryXmlAnalysis.getSingleton().GetBarCodeHead(IsBarCodeInfoHead);
                                 List<BarcodeXmlBean> barcodeXmlBeanList = InputLibraryXmlAnalysis.getSingleton().GetBarCodeBody(IsBarCodeInfoBody);
+                                Batch = BatchCodeXml.getSingleton().GETBatchCode(BatchBody);
                                 if (BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_SEQUENCE.toLowerCase())) {
                                     Is_ExistScanValue = true;
                                     PutResultArray(barcodeXmlBeanList);
@@ -663,8 +667,16 @@ public class AllotMainActiivty extends BaseActivity {
                         }
                     }
                 };
+                String IS = "";
+                if (Type.equals("0")) {
+                    IS = "-1";
+                } else if (Type.equals("-1")) {
+                    IS = "-1";
+                } else if (Type.equals("1")) {
+                    IS = "1";
+                }
                 BarCodeCheckTask barCodeCheckTask = new BarCodeCheckTask(barCodeCheckPort, webService, directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFMaterial(),
-                        MaterialModeBeanList.get(Sp_DirectAllotLabelIndex).getFGuid(), data, false);
+                        MaterialModeBeanList.get(Sp_DirectAllotLabelIndex).getFGuid(), data, IS);
                 barCodeCheckTask.execute();
             } else {
                 if (!TextUtils.isEmpty(msg.data)) {
@@ -818,15 +830,16 @@ public class AllotMainActiivty extends BaseActivity {
     }
 
     private void ShowEditSumDialog(String Sum) {
-        EditSumDialog.getSingleton().Show(MContect, directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFMaterial_Code(), editSumPort, new View.OnClickListener() {
+        EditSumDialog.getSingleton(AllotMainActiivty.this).Show(MContect, directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFMaterial_Code(), editSumPort, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditSumDialog.getSingleton().Dismiss();
+                EditSumDialog.getSingleton(AllotMainActiivty.this).Dismiss();
                 CleanData();
                 InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.toggleSoftInput(0, 0);
             }
-        }, Sum, directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFUnit_Name());
+        }, Sum, directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFUnit_Name(), Batch, directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFMaterial_Name() +
+                directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFModel());
     }
 
     private void CleanData() {
@@ -840,8 +853,8 @@ public class AllotMainActiivty extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (Tools.IsObjectNull(ChildTagList)){
-            if (ChildTagList.size()>0){
+        if (Tools.IsObjectNull(ChildTagList)) {
+            if (ChildTagList.size() > 0) {
                 tools.ShowOnClickDialog(MContect, "确定取消本次扫描吗？扫描所有数据全部被清空", new View.OnClickListener() {
 
                     @Override
@@ -856,10 +869,10 @@ public class AllotMainActiivty extends BaseActivity {
                         tools.DisappearDialog();
                     }
                 }, false);
-            }else {
+            } else {
                 ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
             }
-        }else {
+        } else {
             ViewManager.getInstance().finishActivity(AllotMainActiivty.this);
         }
     }

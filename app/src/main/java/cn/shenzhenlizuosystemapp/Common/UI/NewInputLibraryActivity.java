@@ -36,6 +36,7 @@ import cn.shenzhenlizuosystemapp.Common.AsyncGetData.InputBillCreateTask;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.InputBodyLockTask;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.UnlockTask;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
+import cn.shenzhenlizuosystemapp.Common.Base.SoftKeyBoardListener;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.Base.ZebarTools;
@@ -64,6 +65,7 @@ import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.WebBean.InputLibraryAllInfo;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisMaterialModeXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.BatchCodeXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputLibraryXmlAnalysis;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputStockXmlAnalysis;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputTagModeAnalysis;
@@ -86,6 +88,7 @@ public class NewInputLibraryActivity extends BaseActivity {
     private boolean IsSerialNumber = true;
     private boolean IsAddSerialNumber = false;
     private boolean IsSave = false;
+    private String Batch = "";
 
     //数组
     private List<ChildTag> childTagList = null;
@@ -157,12 +160,12 @@ public class NewInputLibraryActivity extends BaseActivity {
             @Override
             public void OnEnSure(String Sum) {
                 if (Tools.StringOfFloat(Sum) <= Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getNoInput()) && Tools.StringOfFloat(Sum) > 0) {
-                    EditSumDialog.getSingleton().Dismiss();
+                    EditSumDialog.getSingleton(NewInputLibraryActivity.this).Dismiss();
                     SubmitData(Sum);
                     InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputManager.toggleSoftInput(0, 0);
                 } else {
-                    EditSumDialog.getSingleton().ShowErrorInfo("输入数据有误");
+                    EditSumDialog.getSingleton(NewInputLibraryActivity.this).ShowErrorInfo("输入数据有误");
                 }
             }
         };
@@ -270,6 +273,18 @@ public class NewInputLibraryActivity extends BaseActivity {
                 }
             }
         });
+
+        SoftKeyBoardListener.setListener(NewInputLibraryActivity.this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+
+            }
+        });
     }
 
     /***
@@ -338,8 +353,12 @@ public class NewInputLibraryActivity extends BaseActivity {
                     InputBodyLockTask inputBodyLockTask = new InputBodyLockTask(lockResultPort, webService, inputTaskRvDataList.get(position).getFGuid(), myProgressDialog);
                     inputBodyLockTask.execute();
                 } else {
-                    childTagList.clear();
-                    scanResult_Input_rvAdapter.notifyDataSetChanged();
+                    if (Tools.IsObjectNull(childTagList)) {
+                        childTagList.clear();
+                    }
+                    if (Tools.IsObjectNull(scanResult_Input_rvAdapter)) {
+                        scanResult_Input_rvAdapter.notifyDataSetChanged();
+                    }
                     scanTask_Input_rvAdapter.setSelection(-1);
                     scanTask_Input_rvAdapter.notifyDataSetChanged();//取消选中
                 }
@@ -392,7 +411,7 @@ public class NewInputLibraryActivity extends BaseActivity {
         public void ON_PAUSE() {
             UnlockTask unlockTask = new UnlockTask(webService);
             unlockTask.execute();
-            EditSumDialog.getSingleton().Dismiss();
+            EditSumDialog.getSingleton(NewInputLibraryActivity.this).Dismiss();
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -724,8 +743,11 @@ public class NewInputLibraryActivity extends BaseActivity {
                                 ViseLog.i("Info = " + Info);
                                 InputStream IsBarCodeInfoHead = new ByteArrayInputStream(Info.getBytes("UTF-8"));
                                 InputStream IsBarCodeInfoBody = new ByteArrayInputStream(Info.getBytes("UTF-8"));
+                                InputStream BatchBody = new ByteArrayInputStream(Info.getBytes("UTF-8"));
                                 List<BarCodeHeadBean> BarCodeInfoHeadList = InputLibraryXmlAnalysis.getSingleton().GetBarCodeHead(IsBarCodeInfoHead);
                                 List<BarcodeXmlBean> barcodeXmlBeanList = InputLibraryXmlAnalysis.getSingleton().GetBarCodeBody(IsBarCodeInfoBody);
+                                Batch = BatchCodeXml.getSingleton().GETBatchCode(BatchBody);
+                                ViseLog.i("Batch = " + Batch);
                                 if (BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_SEQUENCE.toLowerCase())) {
                                     Is_InputNumber_Mode = true;
                                     PutResultArray(barcodeXmlBeanList);
@@ -763,7 +785,7 @@ public class NewInputLibraryActivity extends BaseActivity {
                     }
                 };
                 BarCodeCheckTask barCodeCheckTask = new BarCodeCheckTask(barCodeCheckPort, webService, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial(),
-                        materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data, true);
+                        materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data, "1");
                 barCodeCheckTask.execute();
             } else {
                 if (!TextUtils.isEmpty(msg.data)) {
@@ -926,15 +948,16 @@ public class NewInputLibraryActivity extends BaseActivity {
     }
 
     private void ShowEditSumDialog(String Sum) {
-        EditSumDialog.getSingleton().Show(MContect, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial_Code(), editSumPort, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditSumDialog.getSingleton().Dismiss();
-                CleanData();
-                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.toggleSoftInput(0, 0);
-            }
-        }, Sum, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFUnit_Name());
+        EditSumDialog.getSingleton(NewInputLibraryActivity.this).Show(MContect, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial_Code(), editSumPort, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        EditSumDialog.getSingleton(NewInputLibraryActivity.this).Dismiss();
+                        CleanData();
+                        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputManager.toggleSoftInput(0, 0);
+                    }
+                }, Sum, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFUnit_Name()
+                , Batch, inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFMaterial_Name() + inputTaskRvDataList.get(RV_ScanInfoTableIndex).getFModel());
     }
 
     private void CleanData() {

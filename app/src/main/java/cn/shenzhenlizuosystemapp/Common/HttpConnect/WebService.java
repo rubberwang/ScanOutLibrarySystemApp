@@ -184,7 +184,7 @@ public class WebService {
         return Result;
     }
 
-    public String GetBarcodeAnalyze(String ConnectionID, String MaterialID, String LabelTempletID, String Barcodes, boolean AllowAddNew) throws IOException, XmlPullParserException, ClassCastException {
+    public String GetBarcodeAnalyze(String ConnectionID, String MaterialID, String LabelTempletID, String Barcodes, String AllowAddNew) throws IOException, XmlPullParserException, ClassCastException {
         SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "BarcodeAnalyze");
         soapObject.addProperty("ConnectionID", ConnectionID);
         soapObject.addProperty("MaterialID", MaterialID);

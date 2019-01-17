@@ -1,8 +1,10 @@
 package cn.shenzhenlizuosystemapp.Common.View;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import com.vise.log.ViseLog;
 
+import cn.shenzhenlizuosystemapp.Common.Base.SoftKeyBoardListener;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Port.EditSumPort;
 import cn.shenzhenlizuosystemapp.R;
@@ -27,19 +30,25 @@ public class EditSumDialog {
     private static Dialog dialog = null;
     private TextView Tv_ErrorHint;
     private EditText Ed_Sum;
+    private Activity activity;
 
-    public static EditSumDialog getSingleton() {
+    public static EditSumDialog getSingleton(Activity activity) {
         if (editSumDialog == null) {
             synchronized (EditSumDialog.class) {
                 if (editSumDialog == null) {
-                    editSumDialog = new EditSumDialog();
+                    editSumDialog = new EditSumDialog(activity);
                 }
             }
         }
         return editSumDialog;
     }
 
-    public void Show(final Context context, String Code, final EditSumPort editSumPort, View.OnClickListener Cancel, String DefaultSum, String SumUnit) {
+    public EditSumDialog(Activity activity) {
+        this.activity = activity;
+    }
+    
+    public void Show(final Context context, String Code, final EditSumPort editSumPort, View.OnClickListener Cancel, String DefaultSum, String SumUnit
+            , String BatchStr, String ProductNameMode) {
         if (editSumPort != null) {
             if (!Is_Show) {
                 Is_Show = true;
@@ -51,6 +60,10 @@ public class EditSumDialog {
                 TextView TV_Ensure = view.findViewById(R.id.TV_Ensure);
                 TextView TV_Cancel = view.findViewById(R.id.TV_Cancel);
                 TextView Tv_SumUnit = view.findViewById(R.id.Tv_SumUnit);
+                TextView Tv_Batch = view.findViewById(R.id.Tv_Batch);
+                TextView Tv_ProductNameMode = view.findViewById(R.id.Tv_ProductNameMode);
+                Tv_Batch.setText(BatchStr);
+                Tv_ProductNameMode.setText(ProductNameMode);
                 Tv_ErrorHint = view.findViewById(R.id.Tv_ErrorHint);
                 Tv_TheCurrentMaterialCode.setText(Code);
                 Tv_SumUnit.setText(SumUnit);
@@ -70,14 +83,15 @@ public class EditSumDialog {
                 });
                 TV_Cancel.setOnClickListener(Cancel);
                 Window dialogWindow = dialog.getWindow();
-                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                final WindowManager.LayoutParams lp = dialogWindow.getAttributes();
                 DisplayMetrics dm = context.getResources().getDisplayMetrics();
                 int screenWidth = dm.widthPixels;
                 int screenHeight = dm.heightPixels;
-                ViseLog.i("屏幕宽高" + screenWidth + "  " + screenHeight);
+//                Rect r = new Rect();
+//                activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
                 if (screenWidth > 710 && screenHeight > 1100) {
-                    lp.width = 600; // 宽度
-                    lp.height = 500; // 高度
+                    lp.width = 720; // 宽度
+                    lp.height = 600; // 高度
                 } else {
                     lp.width = 440; // 宽度
                     lp.height = 320; // 高度

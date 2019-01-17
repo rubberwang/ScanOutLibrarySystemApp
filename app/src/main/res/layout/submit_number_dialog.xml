@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    android:layout_height="180dp"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/Ly_Clear"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"
-        android:background="@color/GrayWhite"
-        >
+        android:layout_weight="1"
+        android:background="@color/GrayWhite">
 
         <TextView
             android:layout_width="0dp"
@@ -18,7 +17,7 @@
             android:layout_weight="9"
             android:background="@color/thin"
             android:paddingLeft="7dp"
-            android:paddingTop="2dp"
+            android:paddingTop="5dp"
             android:text="@string/PleaseInputSum"
             android:textColor="@color/White" />
 
@@ -27,13 +26,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"
-        >
+        android:layout_weight="0.8">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.4"
+            android:layout_weight="4"
             android:gravity="center_vertical"
             android:paddingLeft="7dp"
             android:text="@string/TheCurrentMaterialCode" />
@@ -42,11 +40,61 @@
             android:id="@+id/Tv_TheCurrentMaterialCode"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="7"
+            android:layout_weight="6"
             android:gravity="center_vertical"
             android:paddingLeft="3dp"
             android:textColor="@color/ToastRed"
-            android:textSize="11dp" />
+            android:textSize="13dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:gravity="center_vertical"
+            android:paddingLeft="7dp"
+            android:text="@string/Batch" />
+
+        <TextView
+            android:id="@+id/Tv_Batch"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:gravity="center_vertical"
+            android:paddingLeft="3dp"
+            android:textColor="@color/ToastRed"
+            android:textSize="13dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:gravity="center_vertical"
+            android:paddingLeft="7dp"
+            android:text="@string/ProductNameMode" />
+
+        <TextView
+            android:id="@+id/Tv_ProductNameMode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:gravity="center_vertical"
+            android:paddingLeft="3dp"
+            android:textColor="@color/ToastRed"
+            android:textSize="13dp" />
 
     </LinearLayout>
 
@@ -65,7 +113,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.6"
+                android:layout_weight="2"
                 android:gravity="center_vertical"
                 android:paddingLeft="7dp"
                 android:text="@string/ScanNumber" />
@@ -75,7 +123,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="6dp"
-                android:layout_weight="7"
+                android:layout_weight="5"
                 android:background="@drawable/edittext_background"
                 android:inputType="number"
                 android:paddingLeft="3dp" />
@@ -84,17 +132,16 @@
                 android:id="@+id/Tv_SumUnit"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.6"
+                android:layout_weight="3"
                 android:gravity="center_vertical"
                 android:paddingLeft="3dp" />
 
         </LinearLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.4"
             android:orientation="horizontal">
 
             <TextView

@@ -22,7 +22,7 @@ public class CheckBarCodeCheckTask extends AsyncTask<String, Void, String> {
     private String MaterialID;
     private String LabelTempletID;
     private String Barcodes;
-    private boolean IS;
+    private String IS;
 
     public CheckBarCodeCheckTask(CheckBarCodeCheckPort barCodeCheckPort, WebService webService, String MaterialID
             , String LabelTempletID, String Barcodes) {
