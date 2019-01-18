@@ -17,9 +17,9 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotLibraryBill;
-import cn.shenzhenlizuosystemapp.Common.Fragment.Item_DirectAllot_Fragment;
-import cn.shenzhenlizuosystemapp.Common.Fragment.Select_DirectAllot_Fragment;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotDataAnalysis.DirectAllotLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.Fragment.DirectAllotFragment.Item_DirectAllot_Fragment;
+import cn.shenzhenlizuosystemapp.Common.Fragment.DirectAllotFragment.Select_DirectAllot_Fragment;
 import cn.shenzhenlizuosystemapp.R;
 
 public class AllotNotificationActivity extends BaseActivity {

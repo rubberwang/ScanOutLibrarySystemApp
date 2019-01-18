@@ -5,14 +5,9 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,28 +15,13 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.engine.Resource;
-import com.vise.log.ViseLog;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import cn.shenzhenlizuosystemapp.Common.AsyncGetData.ClearUnlockTask;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Myapplication;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
-import cn.shenzhenlizuosystemapp.Common.Fragment.S_PrivateYunFragment;
-import cn.shenzhenlizuosystemapp.Common.Fragment.S_PublicYunFragment;
-import cn.shenzhenlizuosystemapp.Common.Fragment.Select_CheckLibrary_Fragment;
-import cn.shenzhenlizuosystemapp.Common.Fragment.Select_InputLibrary_Fragment;
-import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.Port.UnlockPort;
-import cn.shenzhenlizuosystemapp.Common.TabAdapter.MainPagerAdapter;
-import cn.shenzhenlizuosystemapp.Common.TabAdapter.TabItemInfo;
+import cn.shenzhenlizuosystemapp.Common.Fragment.SettingFragment.S_PrivateYunFragment;
+import cn.shenzhenlizuosystemapp.Common.Fragment.SettingFragment.S_PublicYunFragment;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
-import cn.shenzhenlizuosystemapp.Common.View.NoScrollViewPager;
 import cn.shenzhenlizuosystemapp.R;
 
 public class SettingActivity extends BaseActivity {

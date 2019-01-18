@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckLibraryBill;
-import cn.shenzhenlizuosystemapp.Common.WebBean.CheckAllBean;
+import cn.shenzhenlizuosystemapp.Common.WebBean.CheckBean.CheckAllBean;
 
 public class CheckXmlAnalysis {
     private volatile static CheckXmlAnalysis checkXmlAnalysis;

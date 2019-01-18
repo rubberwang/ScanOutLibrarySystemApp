@@ -8,8 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TreeMBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TreeParent;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Tree.TreeMBean;
 
 public class MAnalysis {
     private volatile static MAnalysis mAnalysis;

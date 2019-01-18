@@ -9,12 +9,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputDataAnalysis.AdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.Port.GetLabelTempletBaecodesPort;
-import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
-import cn.shenzhenlizuosystemapp.Common.Xml.InputTagModeAnalysis;
+import cn.shenzhenlizuosystemapp.Common.Port.DirectAllotPort.GetLabelTempletBaecodesPort;
+import cn.shenzhenlizuosystemapp.Common.Xml.InputXml.AnalysisReturnsXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.InputXml.InputTagModeAnalysis;
 
 public class GetLabelTempletBaecodesTask extends AsyncTask<String, Void, String> {
 

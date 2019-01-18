@@ -12,9 +12,7 @@ import com.vise.log.ViseLog;
 
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.AsyncGetData.GetMaterialTreeTask.GetM;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputTaskRvData;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TreeMBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Tree.TreeMBean;
 import cn.shenzhenlizuosystemapp.R;
 
 public class SelectM_ItemAdapter extends RecyclerView.Adapter {

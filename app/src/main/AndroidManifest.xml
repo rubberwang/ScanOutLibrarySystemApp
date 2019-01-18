@@ -36,31 +36,31 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".Common.UI.NewQuitLibraryActivity"
+            android:name=".Common.UI.QuitActivity.NewQuitLibraryActivity"
             android:label="@string/OutLibrary"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".Common.UI.Quit_NotificationActivity"
+            android:name=".Common.UI.QuitActivity.Quit_NotificationActivity"
             android:label="@string/SelectOutLibrary"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".Common.UI.Input_NotificationActivity"
+            android:name=".Common.UI.InputActivity.Input_NotificationActivity"
             android:label="@string/SelectInputLibrary"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".Common.UI.NewInputLibraryActivity"
+            android:name=".Common.UI.InputActivity.NewInputLibraryActivity"
             android:label="@string/SelectGetLibrary"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".Common.UI.Check_NotificationActivity"
+            android:name=".Common.UI.CheckActivity.Check_NotificationActivity"
             android:label="@string/SelectSumLibrary"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
@@ -72,7 +72,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".Common.UI.CheckLibraryActivity"
+            android:name=".Common.UI.CheckActivity.CheckLibraryActivity"
             android:label="@string/Check"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
@@ -102,7 +102,7 @@
             android:label="@string/SelectM"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        
+
         <receiver android:name=".Common.BroadcastReceiver.ReceiveData_Recevier">
             <intent-filter>
                 <action android:name="cn.shenzhenlizuosystemapp.action"></action>

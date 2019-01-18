@@ -18,7 +18,7 @@ import cn.shenzhenlizuosystemapp.Common.AsyncGetData.GetMaterialTreeTask.GetTree
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TreeParent;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Tree.TreeParent;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.TreeFormList.TreeData.adapter.ListViewAdapter;
 import cn.shenzhenlizuosystemapp.Common.TreeFormList.TreeData.treelist.Node;

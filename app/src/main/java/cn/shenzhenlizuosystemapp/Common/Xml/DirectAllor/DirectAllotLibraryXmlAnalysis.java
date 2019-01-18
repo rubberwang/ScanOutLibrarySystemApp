@@ -15,12 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CreateAdjustStockBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotDetail;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotTaskRvData;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotLibraryBill;
-import cn.shenzhenlizuosystemapp.Common.Port.DirectPortDetailBodyXmlPort;
-import cn.shenzhenlizuosystemapp.Common.Port.DirectPortDetailHeadXmlPort;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotDataAnalysis.CreateAdjustStockBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotDataAnalysis.DirectAllotDetail;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotDataAnalysis.DirectAllotTaskRvData;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.DirectAllotDataAnalysis.DirectAllotLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.Port.DirectAllotPort.DirectPortDetailBodyXmlPort;
+import cn.shenzhenlizuosystemapp.Common.Port.DirectAllotPort.DirectPortDetailHeadXmlPort;
 
 public class DirectAllotLibraryXmlAnalysis {
     private volatile static DirectAllotLibraryXmlAnalysis directAllotLibraryXmlAnalysis;

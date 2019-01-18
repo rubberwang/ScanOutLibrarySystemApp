@@ -23,8 +23,6 @@ import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Adapter.Wms_RvAdapter;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.ClearDataTask;
@@ -32,20 +30,14 @@ import cn.shenzhenlizuosystemapp.Common.AsyncGetData.ClearUnlockTask;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.WmsSelectData;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.ImageTool.TransformationUtils;
 import cn.shenzhenlizuosystemapp.Common.Port.UnlockPort;
-import cn.shenzhenlizuosystemapp.Common.TreeFormList.TreeListActivity;
 import cn.shenzhenlizuosystemapp.Common.UI.DirectAllot.AllotNotificationActivity;
-import cn.shenzhenlizuosystemapp.Common.UI.Input_NotificationActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.InputActivity.Input_NotificationActivity;
 
-import cn.shenzhenlizuosystemapp.Common.UI.Quit_NotificationActivity;
-import cn.shenzhenlizuosystemapp.Common.UI.Check_NotificationActivity;
-import cn.shenzhenlizuosystemapp.Common.UI.SettingActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.QuitActivity.Quit_NotificationActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.CheckActivity.Check_NotificationActivity;
 import cn.shenzhenlizuosystemapp.Common.View.*;
-import cn.shenzhenlizuosystemapp.Common.Base.Myapplication;
 import cn.shenzhenlizuosystemapp.R;
-
-import static cn.shenzhenlizuosystemapp.Common.Base.Myapplication.myapplication;
 
 public class WMS_Fragment extends Fragment implements OnBannerListener {
 

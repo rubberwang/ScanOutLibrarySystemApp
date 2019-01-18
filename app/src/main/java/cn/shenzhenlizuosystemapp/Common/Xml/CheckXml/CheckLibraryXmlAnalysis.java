@@ -15,16 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarCodeHeadBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.BarcodeXmlBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputDataAnalysis.BarCodeHeadBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputDataAnalysis.BarcodeXmlBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckBodyMaterial;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckBodyStocks;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckLibraryDetail;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckStockBean;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckSubBodyBean;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckTaskRvData;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckSubBody;
-import cn.shenzhenlizuosystemapp.Common.WebBean.CheckLibraryAllInfo;
+import cn.shenzhenlizuosystemapp.Common.WebBean.CheckBean.CheckLibraryAllInfo;
 
 public class CheckLibraryXmlAnalysis {
 
@@ -248,7 +246,15 @@ public class CheckLibraryXmlAnalysis {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFRowIndex(parser.nextText());
                             }
-                        }else if (name.equalsIgnoreCase("FBarcodeLib")) {
+                        } else if (name.equalsIgnoreCase("FStockCell")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFStockCell(parser.nextText());
+                            }
+                        } else if (name.equalsIgnoreCase("FStockCell_Name")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFStockCell_Name(parser.nextText());
+                            }
+                        } else if (name.equalsIgnoreCase("FBarcodeLib")) {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFBarcodeLib(parser.nextText());
                             }
@@ -321,11 +327,11 @@ public class CheckLibraryXmlAnalysis {
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("StockCells")) {
                             InputDetailXmls = new CheckStockBean();
-                        } else if (name.equalsIgnoreCase("FGuid")) {
+                        } else if (name.equalsIgnoreCase("FStockCell")) {
                             if (Tools.IsObjectNull(InputDetailXmls)){
                                 InputDetailXmls.setFGuid(parser.nextText());
                             }
-                        } else if (name.equalsIgnoreCase("FName")) {
+                        } else if (name.equalsIgnoreCase("FStockCell_Name")) {
                             if (Tools.IsObjectNull(InputDetailXmls)) {
                                 InputDetailXmls.setFName(parser.nextText());
                             }
@@ -441,7 +447,7 @@ public class CheckLibraryXmlAnalysis {
                                 FBarcodeType = true;
                             } else if (FCode.equals("FQty")) {
                                 FQty = true;
-                            } else if (FCode.equals("FGuid")) {
+                            } else if (FCode.equals("FGuid")) {//条码解析出来的guid，对应子分录的FBarcodeLib
                                 FGuid = true;
                             }
                         } else if (name.equalsIgnoreCase("FContent")) {

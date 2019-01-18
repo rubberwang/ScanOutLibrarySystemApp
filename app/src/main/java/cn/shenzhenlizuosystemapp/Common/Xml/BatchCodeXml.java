@@ -8,7 +8,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitSubmitDataBean;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.QuitDataAnalysis.QuitSubmitDataBean;
+import cn.shenzhenlizuosystemapp.Common.Xml.InputXml.GetInputChildTag;
 
 public class BatchCodeXml {
     private volatile static BatchCodeXml batchCodeXml;

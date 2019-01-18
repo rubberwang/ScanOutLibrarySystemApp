@@ -9,11 +9,11 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.AdapterReturn;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputDataAnalysis.AdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.TreeFormList.M_OnRes;
-import cn.shenzhenlizuosystemapp.Common.Xml.AnalysisReturnsXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.InputXml.AnalysisReturnsXml;
 
 public class GetM extends AsyncTask<String, Void, String> {
 

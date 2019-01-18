@@ -4,6 +4,8 @@ public class CheckSubBody {
     private String FGuid;//子分录ID
     private String FBillBodyID;//分录ID，等于body分录ID
     private String FRowIndex;//子分录行号
+    private String FStockCell;//仓位ID
+    private String FStockCell_Name;//仓位
     private String FBarcodeLib;//条码库
     private String FBarcodeLib_Name;//条码文本
     private String FBarcodeType;//管控类型ID
@@ -99,5 +101,21 @@ public class CheckSubBody {
 
     public void setFBarcodeType_Name(String FBarcodeType_Name) {
         this.FBarcodeType_Name = FBarcodeType_Name;
+    }
+
+    public String getFStockCell() {
+        return FStockCell;
+    }
+
+    public void setFStockCell(String FStockCell) {
+        this.FStockCell = FStockCell;
+    }
+
+    public String getFStockCell_Name() {
+        return FStockCell_Name;
+    }
+
+    public void setFStockCell_Name(String FStockCell_Name) {
+        this.FStockCell_Name = FStockCell_Name;
     }
 }

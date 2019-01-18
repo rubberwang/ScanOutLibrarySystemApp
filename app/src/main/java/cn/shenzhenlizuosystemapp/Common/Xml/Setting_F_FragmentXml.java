@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.shenzhenlizuosystemapp.Common.WebBean.QuitAllBean;
 import cn.shenzhenlizuosystemapp.Common.WebBean.Setting_PublicDataBean;
 
 public class Setting_F_FragmentXml {

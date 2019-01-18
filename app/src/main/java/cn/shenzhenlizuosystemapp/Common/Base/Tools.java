@@ -3,7 +3,6 @@ package cn.shenzhenlizuosystemapp.Common.Base;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;

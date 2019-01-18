@@ -7,7 +7,7 @@ import org.xmlpull.v1.XmlPullParser;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import cn.shenzhenlizuosystemapp.Common.DataAnalysis.TreeParent;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Tree.TreeParent;
 
 public class TreeAnalysis {
     private volatile static TreeAnalysis treeAnalysis;

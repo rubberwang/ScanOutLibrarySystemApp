@@ -12,7 +12,7 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckAdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
-import cn.shenzhenlizuosystemapp.Common.Port.CheckBarCodeCheckPort;
+import cn.shenzhenlizuosystemapp.Common.Port.CheckPort.CheckBarCodeCheckPort;
 import cn.shenzhenlizuosystemapp.Common.Xml.CheckXml.CheckAnalysisReturnsXml;
 
 public class CheckBarCodeCheckTask extends AsyncTask<String, Void, String> {
@@ -25,7 +25,7 @@ public class CheckBarCodeCheckTask extends AsyncTask<String, Void, String> {
     private String IS;
 
     public CheckBarCodeCheckTask(CheckBarCodeCheckPort barCodeCheckPort, WebService webService, String MaterialID
-            , String LabelTempletID, String Barcodes) {
+            , String LabelTempletID, String Barcodes,String IS) {
         this.barCodeCheckPort = barCodeCheckPort;
         this.webService = webService;
         this.MaterialID = MaterialID;

@@ -52,11 +52,10 @@ public class Subbody_CheckRvAdapter extends RecyclerView.Adapter {
             if (datas.get(position).getFCheckStockStatus().equalsIgnoreCase("124164D2-6B47-4614-8B0D-9212A459D1E2")){
                 ((ViewHoders) holder).TV_CheckStatus.setText("盘亏");
             }else if (datas.get(position).getFCheckStockStatus().equalsIgnoreCase("108A8304-083C-4370-AE5C-D2E43C91CE21")){
-                ((ViewHoders) holder).TV_CheckStatus.setText("未盘");
-            }else {
+                ((ViewHoders) holder).TV_CheckStatus.setText("匹配");
+            }else if(datas.get(position).getFCheckStockStatus().equalsIgnoreCase("49E79140-94CA-4B43-988A-D3E2FE5BDEC6")){
                 ((ViewHoders) holder).TV_CheckStatus.setText("盘盈");
             }
-            //((ViewHoders) holder).TV_CheckStatus.setText(datas.get(position).getFCheckStockStatus());
             ((ViewHoders) holder).TV_AccountQty.setText(datas.get(position).getFAccountQty());
             ((ViewHoders) holder).TV_FCheckQty.setText(datas.get(position).getFCheckQty());
             ((ViewHoders) holder).TV_FDiffQty.setText(datas.get(position).getFDiffQty());

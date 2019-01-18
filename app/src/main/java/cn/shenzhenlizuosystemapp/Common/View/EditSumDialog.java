@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +63,11 @@ public class EditSumDialog {
                 TextView Tv_SumUnit = view.findViewById(R.id.Tv_SumUnit);
                 TextView Tv_Batch = view.findViewById(R.id.Tv_Batch);
                 TextView Tv_ProductNameMode = view.findViewById(R.id.Tv_ProductNameMode);
-                Tv_Batch.setText(BatchStr);
+                if (!TextUtils.isEmpty(BatchStr)){
+                    Tv_Batch.setText(BatchStr);
+                }else {
+                    Tv_Batch.setVisibility(View.GONE);
+                }
                 Tv_ProductNameMode.setText(ProductNameMode);
                 Tv_ErrorHint = view.findViewById(R.id.Tv_ErrorHint);
                 Tv_TheCurrentMaterialCode.setText(Code);
