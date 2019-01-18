@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.vise.log.ViseLog;
 
+import java.lang.reflect.Method;
+
 import cn.shenzhenlizuosystemapp.R;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -202,5 +204,18 @@ public class Tools {
             e.printStackTrace();
         }
         return 0;
+    }
+
+
+    public String getSerialNumber(){
+        String serial = null;
+        try {
+            Class<?> c =Class.forName("android.os.SystemProperties");
+            Method get =c.getMethod("get", String.class);
+            serial = (String)get.invoke(c, "ro.serialno");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return serial;
     }
 }

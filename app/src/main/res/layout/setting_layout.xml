@@ -107,8 +107,7 @@
                 android:id="@+id/CB_Private"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.8" 
-                />
+                android:layout_weight="0.8" />
         </LinearLayout>
 
         <LinearLayout
@@ -149,6 +148,19 @@
         android:layout_width="match_parent"
         android:layout_height="260dp"
         android:orientation="vertical"></FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/TV_SN"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/Black" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

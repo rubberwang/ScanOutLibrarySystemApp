@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -36,6 +37,7 @@ public class SettingActivity extends BaseActivity {
     private CheckBox CB_Private;
     private CheckBox IsScanInput;
     private TextView TV_LinkMode;
+    private TextView TV_SN;
 
     private Tools tools;
     private SharedPreferences sharedPreferences;
@@ -65,6 +67,11 @@ public class SettingActivity extends BaseActivity {
         if (tools.GetStringData(sharedPreferences, "IsScanInput").equals("true")) {
             IsScanInput.setChecked(true);
         }
+        if (!TextUtils.isEmpty(tools.getSerialNumber())) {
+            TV_SN.setText("设备SN号 ： " + tools.getSerialNumber());
+        } else {
+            TV_SN.setText("未能获取到SN号");
+        }
         InitClick();
     }
 
@@ -78,6 +85,7 @@ public class SettingActivity extends BaseActivity {
         CB_Private = $(R.id.CB_Private);
         TV_LinkMode = $(R.id.TV_LinkMode);
         IsScanInput = $(R.id.IsScanInput);
+        TV_SN = $(R.id.TV_SN);
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
     }
 

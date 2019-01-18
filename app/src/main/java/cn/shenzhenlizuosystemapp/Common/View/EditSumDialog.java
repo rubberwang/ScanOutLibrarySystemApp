@@ -15,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.vise.log.ViseLog;
@@ -47,7 +48,7 @@ public class EditSumDialog {
     public EditSumDialog(Activity activity) {
         this.activity = activity;
     }
-    
+
     public void Show(final Context context, String Code, final EditSumPort editSumPort, View.OnClickListener Cancel, String DefaultSum, String SumUnit
             , String BatchStr, String ProductNameMode) {
         if (editSumPort != null) {
@@ -63,10 +64,11 @@ public class EditSumDialog {
                 TextView Tv_SumUnit = view.findViewById(R.id.Tv_SumUnit);
                 TextView Tv_Batch = view.findViewById(R.id.Tv_Batch);
                 TextView Tv_ProductNameMode = view.findViewById(R.id.Tv_ProductNameMode);
-                if (!TextUtils.isEmpty(BatchStr)){
+                if (!TextUtils.isEmpty(BatchStr)) {
                     Tv_Batch.setText(BatchStr);
-                }else {
-                    Tv_Batch.setVisibility(View.GONE);
+                } else {
+                    LinearLayout Ly_Batch = view.findViewById(R.id.Ly_Batch);
+                    Ly_Batch.setVisibility(View.GONE);
                 }
                 Tv_ProductNameMode.setText(ProductNameMode);
                 Tv_ErrorHint = view.findViewById(R.id.Tv_ErrorHint);
