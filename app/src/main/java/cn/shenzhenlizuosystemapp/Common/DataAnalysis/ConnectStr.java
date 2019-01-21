@@ -17,4 +17,5 @@ public class ConnectStr {
     public static String F_Public_Service = "F_Public_Service";
     public static String LINKMODE = "LINK_MODE";
     public static String Perpetual_URL = "http://member.dyrj.net/DCS/WebService/RootAPI.asmx";
+    public static boolean ISMaterialExist = false;
 }

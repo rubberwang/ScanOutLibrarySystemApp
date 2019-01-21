@@ -1,5 +1,6 @@
 package cn.shenzhenlizuosystemapp.Common.TreeFormList;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,7 @@ import cn.shenzhenlizuosystemapp.Common.AsyncGetData.GetMaterialTreeTask.GetM;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.Tree.TreeMBean;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.UI.CheckActivity.CheckLibraryActivity;
@@ -89,15 +91,18 @@ public class SelectMGroupingActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if ( Tools.IsObjectNull(treeMBeanList.get(selectM_itemAdapter.getselection()))&&selectM_itemAdapter.getselection() >= 0){
-                    ViewManager.getInstance().finishActivity(CheckLibraryActivity.class);
-                    Intent intent = new Intent(SelectMGroupingActivity.this, CheckLibraryActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    intent.putExtra("M", treeMBeanList.get(selectM_itemAdapter.getselection()));
-                    intent.putExtra("FGUID",FID);
-                    ViewManager.getInstance().finishActivity(SelectMGroupingActivity.this);
-                    ViewManager.getInstance().finishActivity(TreeListActivity.class);
-                    startActivity(intent);
-
+                    if (ConnectStr.ISMaterialExist = true){
+                        tools.ShowDialog(MContext, "该物料不允许添加！");
+                    }else {
+                        ViewManager.getInstance().finishActivity(CheckLibraryActivity.class);
+                        Intent intent = new Intent(SelectMGroupingActivity.this, CheckLibraryActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        intent.putExtra("M", treeMBeanList.get(selectM_itemAdapter.getselection()));
+                        intent.putExtra("FGUID",FID);
+                        ViewManager.getInstance().finishActivity(SelectMGroupingActivity.this);
+                        ViewManager.getInstance().finishActivity(TreeListActivity.class);
+                        startActivity(intent);
+                    }
                 }else {
                     tools.ShowDialog(MContext,"必须选择物料在点下一步");
                 }

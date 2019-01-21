@@ -633,6 +633,14 @@ public class CheckLibraryXmlAnalysis {
                     serializer.text(checkSubBody.getFBillBodyID());
                     serializer.endTag(null, "FBillBodyID");
 
+                    serializer.startTag(null, "FStockCell");
+                    serializer.text(checkSubBody.getFStockCell());
+                    serializer.endTag(null, "FStockCell");
+
+                    serializer.startTag(null, "FStockCell_Name");
+                    serializer.text(checkSubBody.getFStockCell_Name());
+                    serializer.endTag(null, "FStockCell_Name");
+
                     serializer.startTag(null, "FBarcodeLib");
                     serializer.text(checkSubBody.getFBarcodeLib());
                     serializer.endTag(null, "FBarcodeLib");
