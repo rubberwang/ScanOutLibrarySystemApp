@@ -5,17 +5,25 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vise.log.ViseLog;
 
@@ -39,6 +47,7 @@ import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.SoftKeyBoardListener;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
+import cn.shenzhenlizuosystemapp.Common.Base.WindowTools;
 import cn.shenzhenlizuosystemapp.Common.Base.ZebarTools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputDataAnalysis.AdapterReturn;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputDataAnalysis.BarCodeHeadBean;
@@ -93,6 +102,7 @@ public class NewInputLibraryActivity extends BaseActivity {
     //数组
     private List<ChildTag> childTagList = null;
     private List<InputTaskRvData> inputTaskRvDataList = null;
+    private List<InputTaskRvData> Xg_inputTaskRvDataList = new ArrayList<>();
     private List<StockBean> stockBeans = null;
     private List<StockBean> stockBeanList = null;
     private List<MaterialModeBean> materialModeBeanList = new ArrayList<MaterialModeBean>();
@@ -119,6 +129,7 @@ public class NewInputLibraryActivity extends BaseActivity {
     private TextView TV_Scaning;
     private TextView TV_Cancel;
     private TextView TV_Sumbit;
+    private TextView TV_Modification;
     private RecyclerView RV_GetInfoTable;
     private RecyclerView RV_ScanInfoTable;
     private Spinner Sp_Label;
@@ -190,6 +201,7 @@ public class NewInputLibraryActivity extends BaseActivity {
         myProgressDialog = new MyProgressDialog(this, R.style.CustomDialog);
         Sp_Label = $(R.id.Sp_Label);
         ET_SuckUp = $(R.id.ET_SuckUp);
+        TV_Modification = $(R.id.TV_Modification);
     }
 
     private void InitClick() {
@@ -219,6 +231,13 @@ public class NewInputLibraryActivity extends BaseActivity {
                 } else {
                     ViewManager.getInstance().finishActivity(NewInputLibraryActivity.this);
                 }
+            }
+        });
+
+        TV_Modification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CheckJurisdiction();
             }
         });
 
@@ -519,6 +538,7 @@ public class NewInputLibraryActivity extends BaseActivity {
         @Override
         protected void onPostExecute(final List<InputLibraryDetail> result) {
             try {
+                myProgressDialog.dismiss();
                 if (result.size() >= 0) {
                     if (inputTaskRvDataList.size() >= 0) {
                         InitScanRecycler();
@@ -531,9 +551,9 @@ public class NewInputLibraryActivity extends BaseActivity {
                     TV_Unit.setText(result.get(0).getFPartner_Name());
                     HeadID = result.get(0).getFGuid();
                 }
-                myProgressDialog.dismiss();
             } catch (Exception e) {
                 ViseLog.d("Input Bill Result Exception" + e.getMessage());
+                tools.ShowDialog(MContect, "数据消失加载异常");
             }
             ViseLog.i("Input Bill Result = " + result);
         }
@@ -839,6 +859,8 @@ public class NewInputLibraryActivity extends BaseActivity {
                                 String SetNoInput = String.valueOf(NewNoPut);
                                 inputTaskRvDataList.get(RV_ScanInfoTableIndex).setNoInput(SetNoInput);
 
+                                Xg_inputTaskRvDataList.add(inputTaskRvDataList.get(RV_ScanInfoTableIndex));
+
                                 if (Tools.StringOfFloat(inputTaskRvDataList.get(RV_ScanInfoTableIndex).getNoInput()) <= 0) {
                                     scanTask_Input_rvAdapter.setSelection(-1);
                                     scanTask_Input_rvAdapter.notifyDataSetChanged();
@@ -967,5 +989,40 @@ public class NewInputLibraryActivity extends BaseActivity {
         scanTask_Input_rvAdapter.setSelection(-1);
         scanTask_Input_rvAdapter.notifyDataSetChanged();
         ViseLog.i("Click CleanData");
+    }
+
+    private void CheckJurisdiction() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //版本大于6.0则需要判断是否获取了overlays权限
+            if (!Settings.canDrawOverlays(MContect)) {  
+                startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName())), 1);
+            } else {
+                try {
+                    WindowTools.getWindowTools(MContect).OpenWindow(Xg_inputTaskRvDataList);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    tools.ShowDialog(MContect, "修改数据窗体加载异常");
+                    ViseLog.i("Window异常 = " + e);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 1: {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (Settings.canDrawOverlays(this)) {
+                        //若用户开启了overlay权限,则打开window
+                        WindowTools.getWindowTools(MContect).OpenWindow(Xg_inputTaskRvDataList);
+                    } else {
+                        Toast.makeText(this, "不开启overlay权限", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+            }
+        }
     }
 }

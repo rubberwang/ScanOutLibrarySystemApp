@@ -158,4 +158,5 @@
     <string name="PublicYun">公有云</string>
     <string name="Batch">批 次 号:</string>
     <string name="ProductNameMode">品称规格:</string>
+    <string name="ModificationScanData">扫码清单</string>
 </resources>

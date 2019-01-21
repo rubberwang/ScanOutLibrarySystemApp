@@ -234,7 +234,7 @@
             android:layout_height="match_parent" />
 
     </LinearLayout>
-    
+
     <EditText
         android:id="@+id/ET_SuckUp"
         android:layout_width="1px"
@@ -273,6 +273,19 @@
             android:text="@string/Save"
             android:textColor="@color/White"
             android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/TV_Modification"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:layout_weight="1.5"
+            android:background="@drawable/circularbead_gray"
+            android:gravity="center"
+            android:text="@string/ModificationScanData"
+            android:textColor="@color/White"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <TextView

@@ -111,26 +111,30 @@ public class Select_InputLibrary_Fragment extends Fragment {
         protected void onPostExecute(final List<InputLibraryBill> result) {
             try {
                 PD.dismiss();
-                if (result.size() >= 0) {
-                    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                    recyclerView.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
-                    recyclerView.setLayoutManager(layoutManager);
-                    SelectInput_FullAdapter adapter = new SelectInput_FullAdapter(getActivity(), result);
-                    recyclerView.setAdapter(adapter);
-                    adapter.setOnItemClickLitener(new SelectInput_FullAdapter.OnItemClickLitener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                            Intent intent = new Intent(getActivity(), NewInputLibraryActivity.class);
-                            intent.putExtra("FGUID", result.get(position).getFGuid());
-                            ViseLog.i("FGUID" + result.get(position).getFGuid());
-                            startActivity(intent);
-                        }
+                if (Tools.IsObjectNull(result)){
+                    if (result.size() >= 0) {
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                        recyclerView.addItemDecoration(new RvLinearManageDivider(getActivity(), LinearLayoutManager.VERTICAL));
+                        recyclerView.setLayoutManager(layoutManager);
+                        SelectInput_FullAdapter adapter = new SelectInput_FullAdapter(getActivity(), result);
+                        recyclerView.setAdapter(adapter);
+                        adapter.setOnItemClickLitener(new SelectInput_FullAdapter.OnItemClickLitener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Intent intent = new Intent(getActivity(), NewInputLibraryActivity.class);
+                                intent.putExtra("FGUID", result.get(position).getFGuid());
+                                ViseLog.i("FGUID" + result.get(position).getFGuid());
+                                startActivity(intent);
+                            }
 
-                        @Override
-                        public void onItemLongClick(View view, int position) {
-                        }
-                    });
+                            @Override
+                            public void onItemLongClick(View view, int position) {
+                            }
+                        });
+                    }
+                }else {
+                    tools.ShowDialog(getActivity(), "出库数据加载异常");
                 }
             } catch (Exception e) {
                 ViseLog.d("Select适配RV数据错误" + e);
