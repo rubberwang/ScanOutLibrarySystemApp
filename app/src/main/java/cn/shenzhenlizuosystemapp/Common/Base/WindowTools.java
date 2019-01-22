@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.shenzhenlizuosystemapp.Common.Adapter.InputAdapter.ScanTask_InputRvAdapter;
+import cn.shenzhenlizuosystemapp.Common.Adapter.WindowAdapter.Xg_Rv_WindowAdapter;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputDataAnalysis.InputTaskRvData;
+import cn.shenzhenlizuosystemapp.Common.Port.WindowResData;
 import cn.shenzhenlizuosystemapp.Common.UI.InputActivity.NewInputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.R;
@@ -35,7 +37,7 @@ public class WindowTools {
     private WindowManager windowManager;
     private RecyclerView Rv_XG;
     private static List<InputTaskRvData> inputTaskRvDataList = new ArrayList<>();
-    private ScanTask_InputRvAdapter XGAdapter;
+    private Xg_Rv_WindowAdapter XGAdapter;
 
     public static WindowTools getWindowTools(Context activity) {
         if (windowTools == null) {
@@ -52,7 +54,7 @@ public class WindowTools {
         this.activity = activity;
     }
 
-    public void OpenWindow(List<InputTaskRvData> inputTaskRvDataList) {
+    public void OpenWindow(List<InputTaskRvData> inputTaskRvDataList, final WindowResData windowRes) {
         try {
             WindowTools.inputTaskRvDataList = inputTaskRvDataList;
             //获取WindowManager实例
@@ -70,7 +72,7 @@ public class WindowTools {
                 params.height = 1500; // 高度
                 ViseLog.i("屏幕宽高 > 900 > 1600");
             } else {
-                params.width = 660; // 宽度
+                params.width = 720; // 宽度
                 params.height = 1060; // 高度
                 ViseLog.i("屏幕宽高 < 900 < 1600");
             }
@@ -92,6 +94,7 @@ public class WindowTools {
             Iv_Cancle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    windowRes.Return(GetResData());
                     Cancle();
                 }
             });
@@ -99,7 +102,8 @@ public class WindowTools {
             windowView.setOnKeyListener(new View.OnKeyListener() {
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK)
-                        Cancle();
+                        windowRes.Return(GetResData());
+                    Cancle();
                     return false;
                 }
             });
@@ -115,9 +119,9 @@ public class WindowTools {
             ScanTaskL.setOrientation(ScanTaskL.VERTICAL);
             recyclerView.addItemDecoration(new RvLinearManageDivider(activity, LinearLayoutManager.VERTICAL));
             recyclerView.setLayoutManager(ScanTaskL);
-            XGAdapter = new ScanTask_InputRvAdapter(activity, inputTaskRvDataList);
+            XGAdapter = new Xg_Rv_WindowAdapter(activity, inputTaskRvDataList);
             recyclerView.setAdapter(XGAdapter);
-            XGAdapter.setOnItemClickLitener(new ScanTask_InputRvAdapter.OnItemClickLitener() {
+            XGAdapter.setOnItemClickLitener(new Xg_Rv_WindowAdapter.OnItemClickLitener() {
                 @Override
                 public void onItemClick(View view, final int position) {
 
@@ -128,6 +132,10 @@ public class WindowTools {
                 }
             });
         }
+    }
+
+    public List<InputTaskRvData> GetResData() {
+        return XGAdapter.GetData();
     }
 
     public void Cancle() {

@@ -66,6 +66,7 @@ import cn.shenzhenlizuosystemapp.Common.Port.InputPort.BarCodeCheckPort;
 import cn.shenzhenlizuosystemapp.Common.Port.EditSumPort;
 import cn.shenzhenlizuosystemapp.Common.Port.InputPort.InputBillCreate;
 import cn.shenzhenlizuosystemapp.Common.Port.LockResultPort;
+import cn.shenzhenlizuosystemapp.Common.Port.WindowResData;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.InputSpinnerAdapter.InputStockAdapter;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.DirectAllotSpinnerAdapter.MaterialModeAdapter;
 import cn.shenzhenlizuosystemapp.Common.View.EditSumDialog;
@@ -410,7 +411,6 @@ public class NewInputLibraryActivity extends BaseActivity {
             });
         }
     }
-
 
     class InputLibraryObServer implements LifecycleObserver {
         @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -994,12 +994,25 @@ public class NewInputLibraryActivity extends BaseActivity {
     private void CheckJurisdiction() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //版本大于6.0则需要判断是否获取了overlays权限
-            if (!Settings.canDrawOverlays(MContect)) {  
+            if (!Settings.canDrawOverlays(MContect)) {
                 startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getPackageName())), 1);
             } else {
                 try {
-                    WindowTools.getWindowTools(MContect).OpenWindow(Xg_inputTaskRvDataList);
+                    WindowResData windowResData = new WindowResData() {
+                        @Override
+                        public void Return(List<InputTaskRvData> ResData) {
+                            if ( Tools.IsObjectNull(ResData)){
+                                if (ResData.size() > 0 ) {
+                                    for (InputTaskRvData inputTaskRvData : ResData) {
+                                        inputTaskRvDataList.add(inputTaskRvData);
+                                    }
+                                    scanTask_Input_rvAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    };
+                    WindowTools.getWindowTools(MContect).OpenWindow(Xg_inputTaskRvDataList, windowResData);
                 } catch (Exception e) {
                     e.printStackTrace();
                     tools.ShowDialog(MContect, "修改数据窗体加载异常");
@@ -1016,11 +1029,24 @@ public class NewInputLibraryActivity extends BaseActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (Settings.canDrawOverlays(this)) {
                         //若用户开启了overlay权限,则打开window
-                        WindowTools.getWindowTools(MContect).OpenWindow(Xg_inputTaskRvDataList);
+                        WindowResData windowResData = new WindowResData() {
+                            @Override 
+                            public void Return(List<InputTaskRvData> ResData) {
+                                if ( Tools.IsObjectNull(ResData)){
+                                    if (ResData.size() > 0 ) {
+                                        for (InputTaskRvData inputTaskRvData : ResData) {
+                                            inputTaskRvDataList.add(inputTaskRvData);
+                                        }
+                                        scanTask_Input_rvAdapter.notifyDataSetChanged();
+                                    }
+                                }
+                            }
+                        };
+                        WindowTools.getWindowTools(MContect).OpenWindow(Xg_inputTaskRvDataList, windowResData);
                     } else {
-                        Toast.makeText(this, "不开启overlay权限", Toast.LENGTH_SHORT).show();
+                        tools.ShowDialog(MContect, "权限未开启");
                     }
-                }
+                }   
                 break;
             }
         }

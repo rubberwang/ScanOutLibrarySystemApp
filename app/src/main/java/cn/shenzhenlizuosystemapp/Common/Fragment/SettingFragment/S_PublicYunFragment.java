@@ -264,18 +264,21 @@ public class S_PublicYunFragment extends Fragment implements YunPort {
 
     @Override
     public void Public() {
-        if (!TextUtils.isEmpty(ET_P.getText().toString().trim())) {
-            tools.PutStringData(ConnectStr.F_Public_PassWord, ET_P.getText().toString(), sharedPreferences);
-        }
-        if (!TextUtils.isEmpty(ET_U.getText().toString().trim())) {
-            tools.PutStringData(ConnectStr.F_Public_User, ET_U.getText().toString(), sharedPreferences);
-        }
-        if (setting_publicDataBeanList.size() > 0&&Tools.IsObjectNull(setting_publicDataBeanList)) {
-            tools.PutStringData(ConnectStr.F_Public_Service, setting_publicDataBeanList.get(Sp_SelectServiceIndex).getFGuid(), sharedPreferences);
-        }
-        if (!TextUtils.isEmpty(ET_P.getText().toString()) && !TextUtils.isEmpty(ET_U.getText().toString()) && setting_publicDataBeanList.size() > 0) {
-            tools.PutStringData(ConnectStr.LINKMODE, "Public", sharedPreferences);
-            Myapplication.LinkWayMode = "Public";
+        if (Tools.IsObjectNull(setting_publicDataBeanList)) {
+            if (!TextUtils.isEmpty(ET_P.getText().toString().trim())) {
+                tools.PutStringData(ConnectStr.F_Public_PassWord, ET_P.getText().toString(), sharedPreferences);
+            }
+            if (!TextUtils.isEmpty(ET_U.getText().toString().trim())) {
+                tools.PutStringData(ConnectStr.F_Public_User, ET_U.getText().toString(), sharedPreferences);
+            }
+
+            if (setting_publicDataBeanList.size() > 0) {
+                tools.PutStringData(ConnectStr.F_Public_Service, setting_publicDataBeanList.get(Sp_SelectServiceIndex).getFGuid(), sharedPreferences);
+            }
+            if (!TextUtils.isEmpty(ET_P.getText().toString()) && !TextUtils.isEmpty(ET_U.getText().toString()) && setting_publicDataBeanList.size() > 0) {
+                tools.PutStringData(ConnectStr.LINKMODE, "Public", sharedPreferences);
+                Myapplication.LinkWayMode = "Public";
+            }
         }
     }
 
@@ -285,3 +288,4 @@ public class S_PublicYunFragment extends Fragment implements YunPort {
     }
 
 }
+      
