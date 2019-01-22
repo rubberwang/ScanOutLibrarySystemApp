@@ -90,8 +90,6 @@ public class CheckLibraryActivity extends BaseActivity {
     private String IsAllow = "";//是否允许选择物料
     private boolean IsSerialNumber = true;//是否连续扫描
     private boolean IsSave = false;
-    private boolean isInitial = true;
-    private float subChek = 0;
 
     //数组
     private List<ChildCheckTag> checkBarCodeAnalyzeList = null;//条码解析列表
@@ -105,7 +103,6 @@ public class CheckLibraryActivity extends BaseActivity {
     private List<CheckStockBean> SubBodyStocksList = null;//子分录物料仓位列表
     private List<CheckMaterialModeBean> materialModeBeanList = new ArrayList<CheckMaterialModeBean>();//标签模板
     private List<CheckBodyMaterial> SubBodyMaterialList = null;//盘点物料列表
-    private List<CheckBodyMaterial> SubBodyMaterial = null;
 
     //类
     private Context MContect;
@@ -422,6 +419,7 @@ public class CheckLibraryActivity extends BaseActivity {
             checkTaskRvData.setFAccountQty("0.0");
             checkTaskRvData.setFCheckQty("0.0");
             checkTaskRvData.setFDiffQty("0.0");
+            checkTaskRvData.setFRowIndex(String.valueOf(checkBodyDataList.size()+1.0));
             checkTaskRvDataArrayList.add(checkTaskRvData);
             if (IsAllow.equals("0")) {//如果不允许添加物料
                 for (int j = 0; j < SubBodyMaterialList.size(); j++) {
@@ -441,12 +439,12 @@ public class CheckLibraryActivity extends BaseActivity {
                         MoveToPosition(ScanTaskL, RV_BodyInfoTable, pos);//移动到该物料
                         RvBodyItemClick(pos);//点击事件
                         checkBodyMaterial.setFName(treeMBean.getFName());
-                        MaterialList.add(checkBodyMaterial);
-                        SubBodyMaterialList.add(MaterialList.get(0));//在盘点物料里面添加显示选择的物料名
+                        //MaterialList.add(checkBodyMaterial);
+                        //SubBodyMaterialList.add(MaterialList.get(0));//在盘点物料里面添加显示选择的物料名
                         ConnectStr.ISMaterialExist = true;
                     }
                 }
-                if (!checkBodyDataList.get(m).getFMaterial().equals(treeMBean.getFGuid())) {
+                if (!checkBodyDataList.get(m).getFMaterial().equals(treeMBean.getFGuid())) {//如果不存在此物料
                     n = checkBodyDataList.size();
                     checkBodyDataList.add(checkTaskRvDataArrayList.get(0));//添加该物料
                     checkBodyMaterial.setFName(treeMBean.getFName());
@@ -456,7 +454,6 @@ public class CheckLibraryActivity extends BaseActivity {
                     //MaterialList.add(checkBodyMaterial);
                     //SubBodyMaterialList.add(MaterialList.get(0));//在盘点物料里面添加显示选择的物料名
                     scanTask_check_rvAdapter.notifyDataSetChanged();
-                    //subbody_CheckRvAdapter.notifyDataSetChanged();
                     ConnectStr.ISMaterialExist = true;
 
                 }
@@ -701,7 +698,6 @@ public class CheckLibraryActivity extends BaseActivity {
             List<CheckAdapterReturn> adapterReturnList;
             try {
                 ModeXml = webService.GetMaterialLabelTemplet(ConnectStr.ConnectionToString, checkBodyDataList.get(RV_ScanInfoTableIndex).getFMaterial());
-                //ModeXml = webService.GetMaterialLabelTemplet(ConnectStr.ConnectionToString, treeMBean.getFGuid());
                 InputStream IS_ModeXml = new ByteArrayInputStream(ModeXml.getBytes("UTF-8"));
                 adapterReturnList = CheckAnalysisReturnsXml.getSingleton().GetReturn(IS_ModeXml);
                 IS_ModeXml.close();
@@ -944,31 +940,27 @@ public class CheckLibraryActivity extends BaseActivity {
                                     }
 
                                     if (!ISExist) {
-                                        int h = checkSubBodyDataList.size() + 1;
                                         CheckSubBody checkSubBodyData = new CheckSubBody();
-                                        List<CheckSubBody> checkSubBodyDataArrayList = new ArrayList<CheckSubBody>();
                                         String guid = new CreateGuid().toString();
                                         checkSubBodyData.setFGuid(guid);
                                         checkSubBodyData.setFBillBodyID(checkBodyDataList.get(RV_ScanInfoTableIndex).getFGuid());
-                                        checkSubBodyData.setFRowIndex(String.valueOf(h));
                                         checkSubBodyData.setFStockCell(stockBeanList.get(SpCheckHouseSpaceIndex).getFGuid());
                                         checkSubBodyData.setFStockCell_Name(stockBeanList.get(SpCheckHouseSpaceIndex).getFName());
                                         checkSubBodyData.setFBarcodeLib(FBarcodeLib);
                                         checkSubBodyData.setFBarcodeType("33A50386-F167-4913-95C8-B7AE69B8CB55");
                                         checkSubBodyData.setFBarcodeLib_Name(barcodeXmlBeanList.get(3).getFBarcodeContent() + "|" + barcodeXmlBeanList.get(0).getFBarcodeContent());
-                                        checkSubBodyData.setFRowIndex(String.valueOf(checkSubBodyDataList.size()));
+                                        checkSubBodyData.setFRowIndex(String.valueOf(1.0));
                                         checkSubBodyData.setFCheckQty("1.0");
                                         checkSubBodyData.setFAccountQty("0.0");
                                         checkSubBodyData.setFDiffQty("1.0");
                                         checkSubBodyData.setFCheckStockStatus("49E79140-94CA-4B43-988A-D3E2FE5BDEC6");
                                         checkSubBodyData.setFBarcodeType_Name("序列号");
-                                        checkSubBodyDataArrayList.add(checkSubBodyData);
-                                        checkSubBodyList = new ArrayList<CheckSubBody>();
                                         if (!checkBodyDataList.get(RV_ScanInfoTableIndex).getFAccountQty().equals("0.0")) {
                                             checkSubBodyList.add(checkSubBodyData);
-                                            checkSubBodyDataList.add(checkSubBodyDataArrayList.get(0));
+                                            checkSubBodyDataList.add(checkSubBodyData);
                                             subbody_CheckRvAdapter.notifyDataSetChanged();
                                         } else {
+                                            checkSubBodyList = new ArrayList<CheckSubBody>();
                                             checkSubBodyList.add(checkSubBodyData);
                                             checkSubBodyDataList.add(checkSubBodyData);
                                             if (Tools.IsObjectNull(checkSubBodyList)) {
