@@ -108,8 +108,8 @@ public class LoginActivity extends BaseActivity {
                 lastClickTime = System.currentTimeMillis();
                 if (b) {
                     if (TextUtils.isEmpty(Edit_PassWord.getText().toString()) || TextUtils.isEmpty(Edit_UserName.getText().toString())) {
-                        tools.show(LoginActivity.this, "请输入用户名 密码后在勾选保存");
-                        IsPassWord_CB.setChecked(false);
+                        //tools.show(LoginActivity.this, "请输入用户名 密码后在勾选保存");
+                        //IsPassWord_CB.setChecked(false);
                     } else {
                         IsUserName_CB.setChecked(true);
                     }
@@ -127,8 +127,8 @@ public class LoginActivity extends BaseActivity {
                 lastClickTime = System.currentTimeMillis();
                 if (b) {
                     if (TextUtils.isEmpty(Edit_UserName.getText().toString())) {
-                        tools.show(LoginActivity.this, "请输入用户名后在勾选保存");
-                        IsUserName_CB.setChecked(false);
+                        //tools.show(LoginActivity.this, "请输入用户名后在勾选保存");
+                        //IsUserName_CB.setChecked(false);
                     } else {
 
                     }
@@ -452,10 +452,10 @@ public class LoginActivity extends BaseActivity {
                         break;
                     }
                     case 2: {
-                        tools.PutStringData("User", "", sharedPreferences);
-                        tools.PutStringData("Paw", "", sharedPreferences);
-                        IsUserName_CB.setChecked(false);
-                        IsPassWord_CB.setChecked(false);
+                        tools.PutStringData("User", Edit_UserName.getText().toString(), sharedPreferences);
+                        tools.PutStringData("Paw", Edit_PassWord.getText().toString(), sharedPreferences);
+                        //IsUserName_CB.setChecked(false);
+                        //IsPassWord_CB.setChecked(false);
                         myProgressDialog.dismiss();
                         IsNetWork = true;
                         tools.ShowDialog(LoginActivity.this, msg.getData().getString("LoginException"));

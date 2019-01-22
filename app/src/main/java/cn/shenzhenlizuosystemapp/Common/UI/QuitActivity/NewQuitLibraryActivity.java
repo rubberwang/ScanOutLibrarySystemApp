@@ -36,6 +36,7 @@ import cn.shenzhenlizuosystemapp.Common.AsyncGetData.QuitTask.QuitBillCreateTask
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.QuitTask.QuitBodyLockTask;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.UnlockTask;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
+import cn.shenzhenlizuosystemapp.Common.Base.SoftKeyBoardListener;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.Base.ZebarTools;
@@ -62,9 +63,9 @@ import cn.shenzhenlizuosystemapp.Common.View.EditSumDialog;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.WebBean.QuitBean.QuitLibraryAllInfo;
-import cn.shenzhenlizuosystemapp.Common.Xml.BatchCodeXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.QuitXml.QuitAnalysisMaterialModeXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputXml.AnalysisReturnsXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.BatchCodeXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.QuitXml.QuitLibraryXmlAnalysis;
 import cn.shenzhenlizuosystemapp.Common.Xml.QuitXml.QuitStockXmlAnalysis;
 import cn.shenzhenlizuosystemapp.Common.Xml.QuitXml.QuitTagModeAnalysis;
@@ -272,6 +273,18 @@ public class NewQuitLibraryActivity extends BaseActivity {
                 }
             }
         });
+
+        SoftKeyBoardListener.setListener(NewQuitLibraryActivity.this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+
+            }
+        });
     }
 
     /***
@@ -300,47 +313,59 @@ public class NewQuitLibraryActivity extends BaseActivity {
         scanTask_quit_rvAdapter.setOnItemClickLitener(new ScanTask_QuitRvAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, final int position) {
-                if (Integer.parseInt(quitTaskRvDataList.get(position).getFAuxQty().split("\\.")[0]) <= Integer.parseInt(quitTaskRvDataList.get(position).getFThisAuxQty().split("\\.")[0]) +
-                        Integer.parseInt(quitTaskRvDataList.get(position).getFExecutedAuxQty().split("\\.")[0])) {
-                    tools.ShowDialog(MContect, "这张单已扫描完成");
-                } else {
-                    if (!Is_QuitNumber_Mode) {
-                        if (scanTask_quit_rvAdapter.getselection() != position) {
-                            LockResultPort lockResultPort = new LockResultPort() {
-                                @Override
-                                public void onStatusResult(String res) {
-                                    myProgressDialog.dismiss();
-                                    if (res.equals("Success")) {
-                                        if (RV_ScanInfoTableIndex != position) {
-                                            RV_ScanInfoTableIndex = position;
-                                        }
-                                        GetMaterialMode getMaterialMode = new GetMaterialMode();
-                                        getMaterialMode.execute(quitTaskRvDataList.get(position).getFMaterial());
-                                        scanTask_quit_rvAdapter.setSelection(position);
-                                        scanTask_quit_rvAdapter.notifyDataSetChanged();//选中
-                                    } else {
-                                        tools.ShowDialog(MContect, res);
-                                    }
-                                }
-                            };
-                            QuitBodyLockTask quitBodyLockTask = new QuitBodyLockTask(lockResultPort, webService, quitTaskRvDataList.get(position).getFGuid(), myProgressDialog);
-                            quitBodyLockTask.execute();
-                        } else {
-                            childQuitTagList.clear();
-                            scanResult_Quit_rvAdapter.notifyDataSetChanged();
-                            scanTask_quit_rvAdapter.setSelection(-1);
-                            scanTask_quit_rvAdapter.notifyDataSetChanged();//取消选中
-                        }
-                    } else {
-                        tools.ShowDialog(MContect, "检测到有扫描数据，请先清空或提交");
-                    }
-                }
+                ScanTaskItemClick(position);
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
             }
         });
+        if (Tools.IsObjectNull(scanTask_quit_rvAdapter)) {
+            ScanTaskItemClick(0);
+            scanTask_quit_rvAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void ScanTaskItemClick(final int position) {
+        if (Integer.parseInt(quitTaskRvDataList.get(position).getFAuxQty().split("\\.")[0]) <= Integer.parseInt(quitTaskRvDataList.get(position).getFThisAuxQty().split("\\.")[0]) +
+                Integer.parseInt(quitTaskRvDataList.get(position).getFExecutedAuxQty().split("\\.")[0])) {
+            tools.ShowDialog(MContect, "这张单已扫描完成");
+        } else {
+            if (!Is_QuitNumber_Mode) {
+                if (scanTask_quit_rvAdapter.getselection() != position) {
+                    LockResultPort lockResultPort = new LockResultPort() {
+                        @Override
+                        public void onStatusResult(String res) {
+                            myProgressDialog.dismiss();
+                            if (res.equals("Success")) {
+                                if (RV_ScanInfoTableIndex != position) {
+                                    RV_ScanInfoTableIndex = position;
+                                }
+                                GetMaterialMode getMaterialMode = new GetMaterialMode();
+                                getMaterialMode.execute(quitTaskRvDataList.get(position).getFMaterial());
+                                        scanTask_quit_rvAdapter.setSelection(position);
+                                        scanTask_quit_rvAdapter.notifyDataSetChanged();//选中
+                            } else {
+                               tools.ShowDialog(MContect, res);
+                            }
+                        }
+                    };
+                            QuitBodyLockTask quitBodyLockTask = new QuitBodyLockTask(lockResultPort, webService, quitTaskRvDataList.get(position).getFGuid(), myProgressDialog);
+                            quitBodyLockTask.execute();
+                } else {
+                    if (Tools.IsObjectNull(childQuitTagList)) {
+                        childQuitTagList.clear();
+                    }
+                    if (Tools.IsObjectNull(scanResult_Quit_rvAdapter)) {
+                        scanResult_Quit_rvAdapter.notifyDataSetChanged();
+                    }
+                            scanTask_quit_rvAdapter.setSelection(-1);
+                            scanTask_quit_rvAdapter.notifyDataSetChanged();//取消选中
+                }
+            } else {
+                tools.ShowDialog(MContect, "检测到有扫描数据，请先清空或提交");
+            }
+        }
     }
 
     private void InitSp(List<QuitStockBean> stockBeans, String StockName) {
@@ -722,6 +747,7 @@ public class NewQuitLibraryActivity extends BaseActivity {
                                 List<BarCodeHeadBean> BarCodeInfoHeadList = QuitLibraryXmlAnalysis.getSingleton().GetBarCodeHead(IsBarCodeInfoHead);
                                 List<BarcodeXmlBean> barcodeXmlBeanList = QuitLibraryXmlAnalysis.getSingleton().GetBarCodeBody(IsBarCodeInfoBody);
                                 Batch = BatchCodeXml.getSingleton().GETBatchCode(BatchBody);
+                                ViseLog.i("Batch = " + Batch);
                                 if (BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_SEQUENCE.toLowerCase())) {
                                     Is_QuitNumber_Mode = true;
                                     PutResultArray(barcodeXmlBeanList);
@@ -762,7 +788,6 @@ public class NewQuitLibraryActivity extends BaseActivity {
                         materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data);
                 barCodeCheckTask.execute();
             } else {
-//            tools.ShowDialog(MContect, "请选择单据分路");
                 if (!TextUtils.isEmpty(msg.data)) {
                     int pos = GetSpinnerPos(stockBeanList, msg.data);
                     if (pos != -1) {
@@ -775,6 +800,7 @@ public class NewQuitLibraryActivity extends BaseActivity {
 
     public void SubmitData(String QuitSum) {
         try {
+            if (quitTaskRvDataList.size() > 0) {
             if (Is_QuitNumber_Mode) {
                 if (!TextUtils.isEmpty(QuitSum) && Tools.StringOfFloat(QuitSum) > 0) {
                     if (CheckGuid(CheckFGuid, FBarcodeLib)) {
@@ -818,17 +844,30 @@ public class NewQuitLibraryActivity extends BaseActivity {
                             }
                             scanTask_quit_rvAdapter.notifyDataSetChanged();
                             Is_QuitNumber_Mode = false;
+                            if (Tools.StringOfFloat(quitTaskRvDataList.get(RV_ScanInfoTableIndex).getNoSend()) == 0) {
+                                quitTaskRvDataList.remove(RV_ScanInfoTableIndex);
+                                if (quitTaskRvDataList.size() > RV_ScanInfoTableIndex) {
+                                    ScanTaskItemClick(RV_ScanInfoTableIndex);
+                                }
+                            }
+                            scanTask_quit_rvAdapter.notifyDataSetChanged();
                         } else {
+                            Is_QuitNumber_Mode = false;
                             tools.ShowDialog(MContect, "提交数量不能大于未收数量");
                         }
                     } else {
+                        Is_QuitNumber_Mode = false;
                         tools.ShowDialog(MContect, "此条码已经扫描过了");
                     }
                 } else {
+                    Is_QuitNumber_Mode = false;
                     tools.ShowDialog(MContect, "出库数量为空或小于0");
                 }
             }
-        } catch (Exception e) {
+        }else{
+            tools.ShowDialog(MContect, "任务全部扫描完成，请点击提交");
+        }
+    }catch (Exception e) {
             ViseLog.i("SubmitData Exception = " + e);
             tools.ShowDialog(MContect, "提交错误：" + e.getMessage());
         }
@@ -859,7 +898,6 @@ public class NewQuitLibraryActivity extends BaseActivity {
     }
 
     private void CreateBillData() {
-
         QuitBillCreate inputBillCreate = new QuitBillCreate() {
             @Override
             public void onResult(String Info) {
@@ -870,10 +908,14 @@ public class NewQuitLibraryActivity extends BaseActivity {
                         @Override
                         public void onClick(View view) {
                             tools.DisappearDialog();
+                            if (quitTaskRvDataList.size() > 0) {
                             finish();
                             Intent intent = new Intent(NewQuitLibraryActivity.this, NewQuitLibraryActivity.class);
                             intent.putExtra("FGUID", tools.GetStringData(tools.InitSharedPreferences(NewQuitLibraryActivity.this), "NewQuitLibraryActivityFGUID"));
                             startActivity(intent);
+                            } else {
+                                finish();
+                            }
                         }
                     }, new View.OnClickListener() {
                         @Override
@@ -885,7 +927,7 @@ public class NewQuitLibraryActivity extends BaseActivity {
             }
         };
         QuitBillCreateTask inputBillCreateTask = new QuitBillCreateTask(HeadID, stockBeans.get(SpHouseIndex).getFGuid()
-                , stockBeanList.get(SpQuitHouseSpaceIndex).getFGuid(), QuitSubmitList, webService, myProgressDialog, inputBillCreate);
+, stockBeanList.get(SpQuitHouseSpaceIndex).getFGuid(), QuitSubmitList, webService, myProgressDialog, inputBillCreate);
         inputBillCreateTask.execute();
 
     }

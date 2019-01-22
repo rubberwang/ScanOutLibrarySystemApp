@@ -91,7 +91,7 @@ public class SelectMGroupingActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if ( Tools.IsObjectNull(treeMBeanList.get(selectM_itemAdapter.getselection()))&&selectM_itemAdapter.getselection() >= 0){
-                    if (ConnectStr.ISMaterialExist = true){
+                    if (ConnectStr.ISMaterialExist = false){
                         tools.ShowDialog(MContext, "该物料不允许添加！");
                     }else {
                         ViewManager.getInstance().finishActivity(CheckLibraryActivity.class);

@@ -51,7 +51,7 @@
                     style="@style/ScanInputLibraryText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="8"
+                    android:layout_weight="7.5"
                     android:textSize="14sp" />
 
                 <TextView
@@ -66,7 +66,7 @@
                     style="@style/ScanInputLibraryText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="5.5"
+                    android:layout_weight="6"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -89,7 +89,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="8">
+                    android:layout_weight="7.5">
 
                     <Spinner
                         android:id="@+id/Sp_house"
@@ -115,7 +115,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="5.5">
+                    android:layout_weight="6">
 
                     <Spinner
                         android:id="@+id/Sp_QuitHouseSpace"

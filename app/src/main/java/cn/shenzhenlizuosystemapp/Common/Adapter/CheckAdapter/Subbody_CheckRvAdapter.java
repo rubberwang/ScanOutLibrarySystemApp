@@ -12,6 +12,7 @@ import com.vise.log.ViseLog;
 
 import java.util.List;
 
+import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckSubBody;
 import cn.shenzhenlizuosystemapp.R;
 
@@ -83,7 +84,11 @@ public class Subbody_CheckRvAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return datas.size();
+        if (Tools.IsObjectNull(datas)){
+            return datas.size();
+        }else {
+            return 0;
+        }
     }
 
     class ViewHoders extends RecyclerView.ViewHolder {

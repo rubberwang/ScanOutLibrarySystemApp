@@ -327,11 +327,11 @@ public class CheckLibraryXmlAnalysis {
                         String name = parser.getName();
                         if (name.equalsIgnoreCase("StockCells")) {
                             InputDetailXmls = new CheckStockBean();
-                        } else if (name.equalsIgnoreCase("FStockCell")) {
+                        } else if (name.equalsIgnoreCase("FGuid")) {
                             if (Tools.IsObjectNull(InputDetailXmls)){
                                 InputDetailXmls.setFGuid(parser.nextText());
                             }
-                        } else if (name.equalsIgnoreCase("FStockCell_Name")) {
+                        } else if (name.equalsIgnoreCase("FName")) {
                             if (Tools.IsObjectNull(InputDetailXmls)) {
                                 InputDetailXmls.setFName(parser.nextText());
                             }
