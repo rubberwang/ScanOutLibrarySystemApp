@@ -79,17 +79,16 @@ import cn.shenzhenlizuosystemapp.R;
 public class CheckLibraryActivity extends BaseActivity {
 
     //标识符
-    private String FGUID = "";
+    private String FGUID = "";//通知单Guid
     private int RV_ScanInfoTableIndex = 0;//分录列表下标
     private int SpCheckHouseSpaceIndex = 0;//仓位下标
     private int Sp_LabelModeIndex = 0;//标签模板列表下标
     private boolean Is_CheckNumber_Mode = false;
-    private String FBarcodeLib = "";
-    private int RefreshStatu = 1;
-    private boolean Is_Single = false;
+    private boolean Is_Single = false;//是否单条码模式
     private String IsAllow = "";//是否允许选择物料
     private boolean IsSerialNumber = true;//是否连续扫描
-    private boolean IsSave = false;
+    private boolean IsSave = false;//是否保存
+    private String FBarcodeLib = "";//条码解析的条码库
 
     //数组
     private List<ChildCheckTag> checkBarCodeAnalyzeList = null;//条码解析列表
@@ -98,7 +97,7 @@ public class CheckLibraryActivity extends BaseActivity {
     private List<CheckSubBody> checkSubBodyDataList = null;//子分录列表
     private List<CheckSubBody> checkSubBodyList = null;
     private List<CheckSubBody> checkSubBodyList1 = new ArrayList<CheckSubBody>();
-    private List<BarCodeHeadBean> BarCodeInfoHeadList = null;
+    private List<BarCodeHeadBean> BarCodeInfoHeadList = null;//条码解析单头
     private List<CheckStockBean> stockBeanList = null;//仓位列表
     private List<CheckStockBean> SubBodyStocksList = null;//子分录物料仓位列表
     private List<CheckMaterialModeBean> materialModeBeanList = new ArrayList<CheckMaterialModeBean>();//标签模板
@@ -108,10 +107,9 @@ public class CheckLibraryActivity extends BaseActivity {
     private Context MContect;
     private Tools tools = null;
     private WebService webService;
-    private ScanResult_CheckRvAdapter scanResult_CheckRvAdapter;//扫描解析结果适配
     private ScanTask_CheckRvAdapter scanTask_check_rvAdapter;//分录适配
     private Subbody_CheckRvAdapter subbody_CheckRvAdapter;//子分录适配
-    private EditSumPort editSumPort;
+    private EditSumPort editSumPort;//输入数量弹窗
     private LinearLayoutManager ScanTaskL;
 
     //控件
@@ -123,7 +121,6 @@ public class CheckLibraryActivity extends BaseActivity {
     private TextView TV_Cancel;
     private TextView TV_Sumbit;
     private TextView TV_Save;
-    private RecyclerView RV_ResultInfoTable;//存放条码解析list view
     private RecyclerView RV_BodyInfoTable;//存放分录list view
     private RecyclerView RV_SubBodyInfoTable;//存放子分录list view
     private Spinner Sp_Label;
@@ -179,7 +176,6 @@ public class CheckLibraryActivity extends BaseActivity {
         Back = $(R.id.Back);
         TV_DeliverGoodsNumber = $(R.id.TV_DeliverGoodsNumber);
         TV_house = $(R.id.TV_house);
-        RV_ResultInfoTable = $(R.id.RV_GetInfoTable1);
         RV_BodyInfoTable = $(R.id.RV_ScanInfoTable);
         RV_SubBodyInfoTable = $(R.id.RV_SubBodyInfoTable);
         Sp_CheckHouseSpace = $(R.id.Sp_CheckHouseSpace);
@@ -500,7 +496,7 @@ public class CheckLibraryActivity extends BaseActivity {
         }
 
         protected void onPostExecute(List<CheckStockBean> result) {
-            if (result.size() >= 0) {
+            if (result.size() > 0) {
                 CheckStockAdapter QuitStockAdapter = new CheckStockAdapter(result, CheckLibraryActivity.this);
                 Sp_CheckHouseSpace.setAdapter(QuitStockAdapter);
                 Sp_CheckHouseSpace.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -786,6 +782,7 @@ public class CheckLibraryActivity extends BaseActivity {
         }
 
         protected void onPostExecute(List<ChildCheckTag> result) {
+             int RefreshStatu = 1;
             if (Tools.IsObjectNull(checkBarCodeAnalyzeList)) {
                 checkBarCodeAnalyzeList.clear();
             }
@@ -795,7 +792,6 @@ public class CheckLibraryActivity extends BaseActivity {
                     RefreshStatu = 2;
                     InitSubBodyRecycler();
                 } else {
-                    scanResult_CheckRvAdapter = new ScanResult_CheckRvAdapter(MContect, checkBarCodeAnalyzeList);
                     subbody_CheckRvAdapter = new Subbody_CheckRvAdapter(MContect, checkSubBodyList);
                     RV_SubBodyInfoTable.setAdapter(subbody_CheckRvAdapter);
                 }
@@ -815,7 +811,7 @@ public class CheckLibraryActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(disposeCheckTaskRvDataList.get(index).getFCheckQty()) && !TextUtils.isEmpty(disposeCheckTaskRvDataList.get(index).getFAccountQty())) {
                     float AuxQty = Tools.StringOfFloat(disposeCheckTaskRvDataList.get(index).getFAccountQty());
                     float ExecutedAuxQty = Tools.StringOfFloat(disposeCheckTaskRvDataList.get(index).getFCheckQty());
-                    //NoSendQty = String.valueOf(ExecutedAuxQty - AuxQty);
+                    NoSendQty = String.valueOf(ExecutedAuxQty - AuxQty);
                 }
                 if (Tools.StringOfFloat(NoSendQty) <= 0) {
                     removeList.add(disposeCheckTaskRvDataList.get(index));

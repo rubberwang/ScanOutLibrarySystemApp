@@ -36,6 +36,7 @@ import cn.shenzhenlizuosystemapp.Common.AsyncGetData.DirectAllotTask.CreatAdjust
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.InputTask.InputBodyLockTask;
 import cn.shenzhenlizuosystemapp.Common.AsyncGetData.UnlockTask;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
+import cn.shenzhenlizuosystemapp.Common.Base.SoftKeyBoardListener;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
 import cn.shenzhenlizuosystemapp.Common.Base.ZebarTools;
@@ -55,6 +56,7 @@ import cn.shenzhenlizuosystemapp.Common.Port.EditSumPort;
 import cn.shenzhenlizuosystemapp.Common.Port.DirectAllotPort.GetLabelTempletBaecodesPort;
 import cn.shenzhenlizuosystemapp.Common.Port.LockResultPort;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.DirectAllotSpinnerAdapter.MaterialModeAdapter;
+import cn.shenzhenlizuosystemapp.Common.UI.InputActivity.NewInputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.EditSumDialog;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
@@ -321,6 +323,17 @@ public class AllotMainActiivty extends BaseActivity {
                 }
             }
         });
+        SoftKeyBoardListener.setListener(AllotMainActiivty.this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+
+            }
+        });
     }
 
     private void GetAllotDetail() {
@@ -381,6 +394,20 @@ public class AllotMainActiivty extends BaseActivity {
         scanTask_directAllotRvAdapter.setOnItemClickLitener(new ScanTask_DirectAllotRvAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, final int position) {
+                ScanTaskItemClick(position);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+            }
+        });
+        if (Tools.IsObjectNull(scanTask_directAllotRvAdapter)) {
+            ScanTaskItemClick(0);
+            scanTask_directAllotRvAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void ScanTaskItemClick(final int position) {
                 if (Tools.StringOfFloat(directAllotTaskRvDataList.get(position).getFAuxQty()) <= Tools.StringOfFloat(directAllotTaskRvDataList.get(position).getFThisAuxQty()) +
                         Tools.StringOfFloat(directAllotTaskRvDataList.get(position).getFExecutedAuxQty())) {
                     tools.ShowDialog(MContect, "这张单已扫描完成");
@@ -406,8 +433,12 @@ public class AllotMainActiivty extends BaseActivity {
                             InputBodyLockTask inputBodyLockTask = new InputBodyLockTask(lockResultPort, webService, directAllotTaskRvDataList.get(position).getFGuid(), myProgressDialog);
                             inputBodyLockTask.execute();
                         } else {
-                            ChildTagList.clear();
-                            scanResult_Input_rvAdapter.notifyDataSetChanged();
+                            if (Tools.IsObjectNull(ChildTagList)) {
+                                ChildTagList.clear();
+                            }
+                            if (Tools.IsObjectNull(scanResult_Input_rvAdapter)) {
+                                scanResult_Input_rvAdapter.notifyDataSetChanged();
+                            }
                             scanTask_directAllotRvAdapter.setSelection(-1);
                             scanTask_directAllotRvAdapter.notifyDataSetChanged();//取消选中
                         }
@@ -417,11 +448,6 @@ public class AllotMainActiivty extends BaseActivity {
                 }
             }
 
-            @Override
-            public void onItemLongClick(View view, int position) {
-            }
-        });
-    }
 
     private void InitSotckCellSp() {
         DirectStockCellPort directStockCellPort = new DirectStockCellPort() {
@@ -629,6 +655,7 @@ public class AllotMainActiivty extends BaseActivity {
                                 List<BarCodeHeadBean> BarCodeInfoHeadList = InputLibraryXmlAnalysis.getSingleton().GetBarCodeHead(IsBarCodeInfoHead);
                                 List<BarcodeXmlBean> barcodeXmlBeanList = InputLibraryXmlAnalysis.getSingleton().GetBarCodeBody(IsBarCodeInfoBody);
                                 Batch = BatchCodeXml.getSingleton().GETBatchCode(BatchBody);
+                                ViseLog.i("Batch = " + Batch);
                                 if (BarCodeInfoHeadList.get(1).getFBarcodeType().equals(ConnectStr.BARCODE_SEQUENCE.toLowerCase())) {
                                     Is_ExistScanValue = true;
                                     PutResultArray(barcodeXmlBeanList);
@@ -697,6 +724,7 @@ public class AllotMainActiivty extends BaseActivity {
 
     public void SubmitData(String InputSum) {
         try {
+            if (directAllotTaskRvDataList.size() > 0) {
             if (Is_ExistScanValue) {
                 if (!TextUtils.isEmpty(InputSum) && Tools.StringOfFloat(InputSum) > 0) {
                     if (CheckGuid(CheckFGuid, FBarcodeLib)) {
@@ -738,17 +766,31 @@ public class AllotMainActiivty extends BaseActivity {
                                 scanTask_directAllotRvAdapter.setSelection(-1);
                             }
                             scanTask_directAllotRvAdapter.notifyDataSetChanged();
+
                             Is_ExistScanValue = false;
+                            if (Tools.StringOfFloat(directAllotTaskRvDataList.get(scanTask_directAllotRvIndex).getFNotAllotQty()) == 0) {
+                                directAllotTaskRvDataList.remove(scanTask_directAllotRvIndex);
+                                if (directAllotTaskRvDataList.size() > scanTask_directAllotRvIndex) {
+                                    ScanTaskItemClick(scanTask_directAllotRvIndex);
+                                }
+                            }
+                            scanTask_directAllotRvAdapter.notifyDataSetChanged();
                         } else {
+                            Is_ExistScanValue = false;
                             tools.ShowDialog(MContect, "提交数量不能大于未收数量");
                         }
                     } else {
+                    Is_ExistScanValue = false;
                         tools.ShowDialog(MContect, "此条码已经扫描过了");
                     }
                 } else {
+                Is_ExistScanValue = false;
                     tools.ShowDialog(MContect, "入库数量为空或小于0");
                 }
             }
+        } else {
+            tools.ShowDialog(MContect, "任务全部扫描完成，请点击提交");
+        }
         } catch (Exception e) {
             ViseLog.i("SubmitData Exception = " + e);
             tools.ShowDialog(MContect, "提交错误：" + e.getMessage());
@@ -792,11 +834,15 @@ public class AllotMainActiivty extends BaseActivity {
                         public void onClick(View view) {
                             myProgressDialog.dismiss();
                             tools.DisappearDialog();
+                            if (directAllotTaskRvDataList.size() > 0) {
                             finish();
                             Intent intent = new Intent(AllotMainActiivty.this, AllotMainActiivty.class);
                             intent.putExtra("FGUID", tools.GetStringData(tools.InitSharedPreferences(AllotMainActiivty.this), "AllotMainActiivtyFGUID"));
                             intent.putExtra("Type", tools.GetStringData(tools.InitSharedPreferences(AllotMainActiivty.this), "Type"));
                             startActivity(intent);
+                            } else {
+                                finish();
+                            }
                         }
                     }, new View.OnClickListener() {
                         @Override
