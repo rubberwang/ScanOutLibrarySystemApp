@@ -73,7 +73,7 @@ public class WindowTools {
                 ViseLog.i("屏幕宽高 > 900 > 1600");
             } else {
                 params.width = 720; // 宽度
-                params.height = 1060; // 高度
+                params.height = 1100; // 高度
                 ViseLog.i("屏幕宽高 < 900 < 1600");
             }
             //设置window的显示特性

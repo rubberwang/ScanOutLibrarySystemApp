@@ -286,6 +286,6 @@ public class S_PublicYunFragment extends Fragment implements YunPort {
     public void Private() {
 
     }
-
+    
 }
       

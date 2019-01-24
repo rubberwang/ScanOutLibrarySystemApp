@@ -831,11 +831,12 @@ public class NewInputLibraryActivity extends BaseActivity {
                                     IsAddSerialNumber = false;
                                 }
                                 Sp_house.setEnabled(false);
-                                Sp_InputHouseSpace.setEnabled(false);
                                 Drawable Borderhouse = getResources().getDrawable(R.drawable.border);
                                 Sp_house.setBackground(Borderhouse);
-                                Drawable BorderInputHouseSpace = getResources().getDrawable(R.drawable.border);
-                                Sp_InputHouseSpace.setBackground(BorderInputHouseSpace);
+                                
+//                                Sp_InputHouseSpace.setEnabled(false);
+//                                Drawable BorderInputHouseSpace = getResources().getDrawable(R.drawable.border);
+//                                Sp_InputHouseSpace.setBackground(BorderInputHouseSpace);
 
                                 IsSave = true;
                                 Drawable drawable_purple = getResources().getDrawable(R.drawable.circularbead_purple);

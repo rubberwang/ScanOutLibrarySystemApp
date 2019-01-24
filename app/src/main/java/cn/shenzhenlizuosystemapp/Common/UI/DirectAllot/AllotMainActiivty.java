@@ -737,6 +737,7 @@ public class AllotMainActiivty extends BaseActivity {
 
                             Drawable FInStockCell_border = getResources().getDrawable(R.drawable.border);
                             Sp_DirectAllotNotification_FInStockCell.setBackground(FInStockCell_border);
+                            
                             Drawable FOutStockCell_border = getResources().getDrawable(R.drawable.border);
                             Sp_DirectAllotNotification_FOutStockCell.setBackground(FOutStockCell_border);
 
@@ -825,6 +826,7 @@ public class AllotMainActiivty extends BaseActivity {
         CreatAdjustStockBillPort creatAdjustStockBillPort = new CreatAdjustStockBillPort() {
             @Override
             public void OnResult(String res) {
+                myProgressDialog.dismiss();
                 String ResInfo = res.substring(0, 2);
                 if (ResInfo.equals("EX")) {
                     tools.ShowDialog(MContect, res.substring(2, res.length()));
@@ -832,7 +834,6 @@ public class AllotMainActiivty extends BaseActivity {
                     tools.ShowOnClickDialog(MContect, res, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            myProgressDialog.dismiss();
                             tools.DisappearDialog();
                             if (directAllotTaskRvDataList.size() > 0) {
                             finish();

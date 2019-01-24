@@ -812,11 +812,11 @@ public class NewQuitLibraryActivity extends BaseActivity {
                                 IsAddSerialNumber = false;
                             }
                             Sp_house.setEnabled(false);
-                            Sp_QuitHouseSpace.setEnabled(false);
                             Drawable Borderhouse = getResources().getDrawable(R.drawable.border);
                             Sp_house.setBackground(Borderhouse);
-                            Drawable BorderInputHouseSpace = getResources().getDrawable(R.drawable.border);
-                            Sp_QuitHouseSpace.setBackground(BorderInputHouseSpace);
+//                            Sp_QuitHouseSpace.setEnabled(false);
+//                            Drawable BorderInputHouseSpace = getResources().getDrawable(R.drawable.border);
+//                            Sp_QuitHouseSpace.setBackground(BorderInputHouseSpace);
 
                             IsSave = true;
                             Drawable drawable_purple = getResources().getDrawable(R.drawable.circularbead_purple);
