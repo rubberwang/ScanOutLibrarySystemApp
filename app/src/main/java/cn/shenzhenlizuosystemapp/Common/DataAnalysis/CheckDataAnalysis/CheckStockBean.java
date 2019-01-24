@@ -6,6 +6,7 @@ public class CheckStockBean {
     private String FGuid;
     private String FName;
     private List<CheckSubBody> checkSubBody;
+    private List<CheckTaskRvData> checkTaskRvData;
 
     public String getFGuid() {
         return FGuid;
@@ -29,5 +30,13 @@ public class CheckStockBean {
 
     public void setCheckSubBody(List<CheckSubBody> checkSubBody) {
         this.checkSubBody = checkSubBody;
+    }
+
+    public List<CheckTaskRvData> getCheckTaskRvData() {
+        return checkTaskRvData;
+    }
+
+    public void setCheckTaskRvData(List<CheckTaskRvData> checkTaskRvData) {
+        this.checkTaskRvData = checkTaskRvData;
     }
 }

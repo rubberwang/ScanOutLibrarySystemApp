@@ -17,12 +17,6 @@
         <item name="android:paddingLeft">3dp</item>
     </style>
 
-    <style name="ScanBlueText">
-        <item name="android:textColor">@color/White</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:gravity">center</item>
-    </style>
-
     <style name="AppWelcome" parent="AppTheme">
         <item name="android:windowBackground">@color/toast</item>
     </style>

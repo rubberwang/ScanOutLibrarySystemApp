@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.squareup.leakcanary.LeakCanary;
 import com.vise.log.ViseLog;
 import com.vise.log.inner.LogcatTree;
 
@@ -44,6 +45,10 @@ public class Myapplication extends Application {
         if (!TextUtils.isEmpty(tools.GetStringData(sharedPreferences, ConnectStr.LINKMODE))) {
             LinkWayMode = tools.GetStringData(sharedPreferences, ConnectStr.LINKMODE);
         }
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return;
+        }
+        LeakCanary.install(this);
     }
 
     public static Context getContext() {

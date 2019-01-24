@@ -184,7 +184,6 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, int itemPosition, RecyclerView parent) {
         int spanCount = getSpanCount(parent);
         int childCount = parent.getAdapter().getItemCount();
-        if (childCount>0){
             // 如果是最后一行则不需要绘制底部
             if (isLastRaw(parent, itemPosition, spanCount, childCount)) {
                 //是最后一行  但不是最后一列,  否则 不需要绘制
@@ -198,6 +197,5 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
                 //右边与下面  都需要
                 outRect.set(0, 0, mDividerHeight, mDividerHeight);
             }
-        }
     }
 }

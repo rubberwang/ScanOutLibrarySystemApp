@@ -12,21 +12,12 @@
     <color name="Thin_Bule">#bbe9fa</color>
     <color name="toast">#EBEBEB</color>
     <color name="ToastRed">#D7020D</color>
-    <color name="InfoRelevance">#F2F2F2</color>
     <color name="accomplishColor">#FF6600</color>
     <color name="tabback">#F7F7F7</color>
     <color name="functionbackground">#D7D7D7</color>
-    <color name="LightRed">#D7020D</color>
-    <color name="relevance">#6C6C85</color>
-    <color name="record">#FF9900</color>
-    <color name="SelectItemYellow">#FFFF80</color>
     <color name="Hui">#83838f</color>
     <color name="Purple">#4957A3</color>
     <color name="gray_64">#646464</color>
-    <color name="transparent">#00000000</color>
     <color name="ScanGray">#C9C9C9</color>
-    <color name="AtPresentScanInfo">#1A9ED8</color>
     <color name="GrayWhite">#F2F2F2</color>
-    <color name="ViewColor">#9A9A9A</color>
-    <color name="ScceusGreen">#bcea8e</color>
 </resources>

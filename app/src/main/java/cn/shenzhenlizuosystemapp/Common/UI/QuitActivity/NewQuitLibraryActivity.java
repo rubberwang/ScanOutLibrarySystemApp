@@ -519,6 +519,7 @@ public class NewQuitLibraryActivity extends BaseActivity {
         @Override
         protected void onPostExecute(final List<QuitLibraryDetail> result) {
             try {
+                myProgressDialog.dismiss();
                 if (result.size() >= 0) {
                     if (quitTaskRvDataList.size() >= 0) {
                         InitScanRecycler();
@@ -531,9 +532,9 @@ public class NewQuitLibraryActivity extends BaseActivity {
                     TV_Unit.setText(result.get(0).getFPartner_Name());
                     HeadID = result.get(0).getFGuid();
                 }
-                myProgressDialog.dismiss();
             } catch (Exception e) {
                 ViseLog.d("Input Bill Result Exception" + e.getMessage());
+                tools.ShowDialog(MContect, "数据消失加载异常");
             }
             ViseLog.i("Input Bill Result = " + result);
         }

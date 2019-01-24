@@ -165,7 +165,15 @@ public class CheckLibraryXmlAnalysis {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFRowIndex(parser.nextText());
                             }
-                        }else if (name.equalsIgnoreCase("FMaterial")) {
+                        } else if (name.equalsIgnoreCase("FStockCell")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFStockCell(parser.nextText());
+                            }
+                        } else if (name.equalsIgnoreCase("FStockCell_Name")) {
+                            if (inputTaskRvDatas != null) {
+                                inputTaskRvDatas.setFStockCell_Name(parser.nextText());
+                            }
+                        } else if (name.equalsIgnoreCase("FMaterial")) {
                             if (inputTaskRvDatas != null) {
                                 inputTaskRvDatas.setFMaterial(parser.nextText());
                             }
@@ -578,6 +586,14 @@ public class CheckLibraryXmlAnalysis {
                     serializer.startTag(null, "FRowIndex");
                     serializer.text(checkTaskRvData.getFRowIndex());
                     serializer.endTag(null, "FRowIndex");
+
+                    serializer.startTag(null, "FStockCell");
+                    serializer.text(checkTaskRvData.getFStockCell());
+                    serializer.endTag(null, "FStockCell");
+
+                    serializer.startTag(null, "FStockCell_Name");
+                    serializer.text(checkTaskRvData.getFRowIndex());
+                    serializer.endTag(null, "FStockCell_Name");
 
                     serializer.startTag(null, "FMaterial");
                     serializer.text(checkTaskRvData.getFMaterial());

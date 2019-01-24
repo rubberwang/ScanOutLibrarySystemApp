@@ -5,6 +5,8 @@ import java.util.List;
 public class CheckTaskRvData {
     private String FGuid;
     private String FRowIndex;//分录行号
+    private String FStockCell;
+    private String FStockCell_Name;
     private String FMaterial;
     private String FMaterial_Code; //物料编号
     private String FMaterial_Name;//品名
@@ -110,5 +112,21 @@ public class CheckTaskRvData {
 
     public void setFBaseUnit(String FBaseUnit) {
         this.FBaseUnit = FBaseUnit;
+    }
+
+    public String getFStockCell() {
+        return FStockCell;
+    }
+
+    public void setFStockCell(String FStockCell) {
+        this.FStockCell = FStockCell;
+    }
+
+    public String getFStockCell_Name() {
+        return FStockCell_Name;
+    }
+
+    public void setFStockCell_Name(String FStockCell_Name) {
+        this.FStockCell_Name = FStockCell_Name;
     }
 }
