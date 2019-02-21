@@ -1,6 +1,9 @@
 package cn.shenzhenlizuosystemapp.Common.UI.DirectAllot;
 
 import android.app.ProgressDialog;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
@@ -51,7 +54,7 @@ public class AllotNotificationActivity extends BaseActivity {
         MContect = new WeakReference<>(AllotNotificationActivity.this).get();
         SearchResultList = new ArrayList<>();
         tools = new Tools();
-        InitFragment();
+        getLifecycle().addObserver(new AllotNotificationObServer());
         InitClick();
         switch (Type) {
             case "0": {
@@ -66,6 +69,34 @@ public class AllotNotificationActivity extends BaseActivity {
                 BarText.setText(R.string.InAllotNotification);
                 break;
             }
+        }
+    }
+
+    class AllotNotificationObServer implements LifecycleObserver {
+        @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        public void ON_CREATE() {
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_START)
+        public void ON_START() {
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+        public void ON_RESUME() {
+            InitFragment();
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+        public void ON_PAUSE() {
+
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+        public void ON_STOP() {
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        public void ON_DESTROY() {
         }
     }
 

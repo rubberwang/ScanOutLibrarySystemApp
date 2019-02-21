@@ -45,10 +45,10 @@ public class Myapplication extends Application {
         if (!TextUtils.isEmpty(tools.GetStringData(sharedPreferences, ConnectStr.LINKMODE))) {
             LinkWayMode = tools.GetStringData(sharedPreferences, ConnectStr.LINKMODE);
         }
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        LeakCanary.install(this);
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            return;
+//        }
+//        LeakCanary.install(this);
     }
 
     public static Context getContext() {

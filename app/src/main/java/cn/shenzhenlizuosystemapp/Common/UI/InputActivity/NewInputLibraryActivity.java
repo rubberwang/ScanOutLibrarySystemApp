@@ -1003,8 +1003,8 @@ public class NewInputLibraryActivity extends BaseActivity {
                     WindowResData windowResData = new WindowResData() {
                         @Override
                         public void Return(List<InputTaskRvData> ResData) {
-                            if ( Tools.IsObjectNull(ResData)){
-                                if (ResData.size() > 0 ) {
+                            if (Tools.IsObjectNull(ResData)) {
+                                if (ResData.size() > 0) {
                                     for (InputTaskRvData inputTaskRvData : ResData) {
                                         inputTaskRvDataList.add(inputTaskRvData);
                                     }
@@ -1031,10 +1031,10 @@ public class NewInputLibraryActivity extends BaseActivity {
                     if (Settings.canDrawOverlays(this)) {
                         //若用户开启了overlay权限,则打开window
                         WindowResData windowResData = new WindowResData() {
-                            @Override 
+                            @Override
                             public void Return(List<InputTaskRvData> ResData) {
-                                if ( Tools.IsObjectNull(ResData)){
-                                    if (ResData.size() > 0 ) {
+                                if (Tools.IsObjectNull(ResData)) {
+                                    if (ResData.size() > 0) {
                                         for (InputTaskRvData inputTaskRvData : ResData) {
                                             inputTaskRvDataList.add(inputTaskRvData);
                                         }
@@ -1047,7 +1047,7 @@ public class NewInputLibraryActivity extends BaseActivity {
                     } else {
                         tools.ShowDialog(MContect, "权限未开启");
                     }
-                }   
+                }
                 break;
             }
         }

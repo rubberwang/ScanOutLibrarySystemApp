@@ -1,6 +1,9 @@
 package cn.shenzhenlizuosystemapp.Common.UI.InputActivity;
 
 import android.app.ProgressDialog;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -12,16 +15,21 @@ import android.widget.TextView;
 
 import com.vise.log.ViseLog;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.shenzhenlizuosystemapp.Common.AsyncGetData.UnlockTask;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
+import cn.shenzhenlizuosystemapp.Common.Base.ZebarTools;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputDataAnalysis.InputLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.Fragment.InputFragment.Item_InputLibrary_Fragment;
 import cn.shenzhenlizuosystemapp.Common.Fragment.InputFragment.Select_InputLibrary_Fragment;
+import cn.shenzhenlizuosystemapp.Common.View.EditSumDialog;
 import cn.shenzhenlizuosystemapp.R;
 
 public class Input_NotificationActivity extends BaseActivity {
@@ -51,8 +59,36 @@ public class Input_NotificationActivity extends BaseActivity {
         MContect = new WeakReference<>(Input_NotificationActivity.this).get();
         SearchResultList = new ArrayList<>();
         tools = new Tools();
-        InitFragment();
+        getLifecycle().addObserver(new Input_NotificationObServer());
         InitClick();
+    }
+
+    class Input_NotificationObServer implements LifecycleObserver {
+        @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        public void ON_CREATE() {
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_START)
+        public void ON_START() {
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+        public void ON_RESUME() {
+            InitFragment();
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+        public void ON_PAUSE() {
+
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+        public void ON_STOP() {
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        public void ON_DESTROY() {
+        }
     }
 
     @Override

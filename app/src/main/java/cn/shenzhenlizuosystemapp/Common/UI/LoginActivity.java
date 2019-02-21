@@ -462,13 +462,15 @@ public class LoginActivity extends BaseActivity {
                         break;
                     }
                     case 2: {
-                        tools.PutStringData("User", Edit_UserName.getText().toString(), sharedPreferences);
-                        tools.PutStringData("Paw", Edit_PassWord.getText().toString(), sharedPreferences);
-                        //IsUserName_CB.setChecked(false);
-                        //IsPassWord_CB.setChecked(false);
-                        myProgressDialog.dismiss();
-                        IsNetWork = true;
-                        tools.ShowDialog(LoginActivity.this, msg.getData().getString("LoginException"));
+                        if(Tools.IsObjectNull(tools)){
+                            tools.PutStringData("User", Edit_UserName.getText().toString(), sharedPreferences);
+                            tools.PutStringData("Paw", Edit_PassWord.getText().toString(), sharedPreferences);
+                            //IsUserName_CB.setChecked(false);
+                            //IsPassWord_CB.setChecked(false);
+                            myProgressDialog.dismiss();
+                            IsNetWork = true;
+                            tools.ShowDialog(LoginActivity.this, msg.getData().getString("LoginException"));
+                        }
                         break;
                     }
                     case 3: {
