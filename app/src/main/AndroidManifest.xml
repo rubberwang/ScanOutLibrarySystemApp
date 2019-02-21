@@ -42,6 +42,12 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
+        android:name=".Common.UI.InputActivity.RFIDInputLibraryActivity"
+        android:label="@string/ScanInputLibrary"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
             android:name=".Common.UI.QuitActivity.Quit_NotificationActivity"
             android:label="@string/SelectOutLibrary"
             android:screenOrientation="portrait"

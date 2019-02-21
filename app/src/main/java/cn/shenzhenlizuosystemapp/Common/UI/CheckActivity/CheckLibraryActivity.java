@@ -423,7 +423,6 @@ public class CheckLibraryActivity extends BaseActivity {
             }
         });
         RvBodyItemClick(0);
-        AddTreeList();
     }
 
     /*
@@ -657,6 +656,7 @@ public class CheckLibraryActivity extends BaseActivity {
             try {
                 myProgressDialog.dismiss();
                 if (result.size() > 0) {
+                    AddTreeList();
                     if (checkBodyPartDataList.size() > 0) {
                         InitScanRecycler();
                     }
@@ -1092,8 +1092,7 @@ public class CheckLibraryActivity extends BaseActivity {
     /**
      * 筛选仓位对应的分录集合
      */
-    private List<CheckTaskRvData> GetBodyByStockCellList
-    (List<CheckTaskRvData> taskRvData, String StockCellID) {
+    private List<CheckTaskRvData> GetBodyByStockCellList(List<CheckTaskRvData> taskRvData, String StockCellID) {
         List<CheckTaskRvData> checkTaskList = new ArrayList<>();
         for (int i = 0; i < taskRvData.size(); i++) {
             if (StockCellID.equals(taskRvData.get(i).getFStockCell())) {//找出相匹配的分录和子分录
@@ -1151,8 +1150,10 @@ public class CheckLibraryActivity extends BaseActivity {
                             }
                         };
                         ViseLog.i("RV_ScanInfoTableIndex = " + RV_ScanInfoTableIndex);
-                        CheckBodyLockTask quitBodyLockTask = new CheckBodyLockTask(lockResultPort, webService, checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFGuid(), myProgressDialog);
-                        quitBodyLockTask.execute();
+                        if (Tools.IsObjectNull(checkBodyPartDataList)) {
+                            CheckBodyLockTask quitBodyLockTask = new CheckBodyLockTask(lockResultPort, webService, checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFGuid(), myProgressDialog);
+                            quitBodyLockTask.execute();
+                        }
                     } else {
                         if (Tools.IsObjectNull(checkBarCodeAnalyzeList)) {
                             checkBarCodeAnalyzeList.clear();
@@ -1214,22 +1215,30 @@ public class CheckLibraryActivity extends BaseActivity {
                     }
                 }
             } else {//若允许，添加进去
-                for (int pos = 0; pos < checkBodyPartDataList.size(); pos++) {
-                    if (checkBodyPartDataList.get(pos).getFMaterial().equals(treeMBean.getFGuid())) {//若已存在添加的物料，跳转
-                        m = pos;
-                        MoveToPosition(ScanTaskL, RV_BodyInfoTable, pos);//移动到该物料
-                        RvBodyItemClick(pos);//点击事件
+                    for (int pos = 0; pos < checkBodyPartDataList.size(); pos++) {
+                        if (checkBodyPartDataList.get(pos).getFMaterial().equals(treeMBean.getFGuid())) {//若已存在添加的物料，跳转
+                            m = pos;
+                            MoveToPosition(ScanTaskL, RV_BodyInfoTable, pos);//移动到该物料
+                            RvBodyItemClick(pos);//点击事件
+                            checkBodyMaterial.setFName(treeMBean.getFName());
+                            ConnectStr.ISMaterialExist = true;
+                        }
+                    }
+                    if (checkBodyPartDataList.size()>0){
+                        if (!checkBodyPartDataList.get(m).getFMaterial().equals(treeMBean.getFGuid())) {//如果不存在此物料，添加
+                            checkBodyPartDataList.add(checkTaskRvDataArrayList.get(0));//添加该物料
+                            checkBodyMaterial.setFName(treeMBean.getFName());
+                            MoveToPosition(ScanTaskL, RV_BodyInfoTable, checkBodyPartDataList.size() - 1);//移动到该物料
+                            RvBodyItemClick(checkBodyPartDataList.size() - 1);//点击事件
+                            ConnectStr.ISMaterialExist = true;
+                        }
+                    }else {
+                        checkBodyPartDataList.add(checkTaskRvDataArrayList.get(0));//添加该物料
                         checkBodyMaterial.setFName(treeMBean.getFName());
+                        //MoveToPosition(ScanTaskL, RV_BodyInfoTable, checkBodyPartDataList.size() - 1);//移动到该物料
+                        //RvBodyItemClick(checkBodyPartDataList.size() - 1);//点击事件
                         ConnectStr.ISMaterialExist = true;
                     }
-                }
-                if (!checkBodyPartDataList.get(m).getFMaterial().equals(treeMBean.getFGuid())) {//如果不存在此物料，添加
-                    checkBodyPartDataList.add(checkTaskRvDataArrayList.get(0));//添加该物料
-                    checkBodyMaterial.setFName(treeMBean.getFName());
-                    MoveToPosition(ScanTaskL, RV_BodyInfoTable, checkBodyPartDataList.size() - 1);//移动到该物料
-                    RvBodyItemClick(checkBodyPartDataList.size() - 1);//点击事件
-                    ConnectStr.ISMaterialExist = true;
-                }
             }
         } else {
             ViseLog.i("TreeMBean == null");

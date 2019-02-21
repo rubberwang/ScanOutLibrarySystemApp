@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/text_id"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingTop="10dp"
+        android:textColor="#000000"
+        android:textSize="10sp"
+        android:text="物料编号" />
+    
+    <View 
+        android:layout_width="1.5dp"
+        android:layout_height="match_parent"
+        android:background="#B4B3B3"/>
+
+     <View 
+        android:layout_width="1.5dp"
+        android:layout_height="fill_parent"
+        android:background="#B4B3B3"/>
+
+     <TextView
+        android:id="@+id/text_codeBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingBottom="5dp"
+        android:textColor="#000000"
+        android:paddingTop="10dp"
+        android:textSize="10sp"
+        android:gravity="center"
+        android:text="本次应收" />
+     
+     <View 
+        android:layout_width="1.5dp"
+        android:layout_height="fill_parent"
+        android:background="#B4B3B3"/>
+
+     <TextView
+        android:id="@+id/text_num"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingBottom="5dp"
+        android:paddingTop="10dp"
+        android:textColor="#000000"
+        android:textSize="10sp"
+        android:gravity="center"
+        android:text="本次收货" />
+     
+
+</LinearLayout>
