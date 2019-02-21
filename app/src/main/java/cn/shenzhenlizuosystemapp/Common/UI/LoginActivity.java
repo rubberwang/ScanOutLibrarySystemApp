@@ -6,6 +6,7 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
@@ -37,15 +38,21 @@ import java.util.List;
 import cn.shenzhenlizuosystemapp.Common.Base.BaseActivity;
 import cn.shenzhenlizuosystemapp.Common.Base.Tools;
 import cn.shenzhenlizuosystemapp.Common.Base.ViewManager;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckLibraryBill;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.CheckDataAnalysis.CheckStock_Return;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.LoginResInfo;
+import cn.shenzhenlizuosystemapp.Common.DataAnalysis.RFIDInfo;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.ItemData;
 import cn.shenzhenlizuosystemapp.Common.SpinnerAdapter.LoginAdapter;
 import cn.shenzhenlizuosystemapp.Common.View.MyProgressDialog;
+import cn.shenzhenlizuosystemapp.Common.WebBean.CheckBean.CheckAllBean;
 import cn.shenzhenlizuosystemapp.Common.WebBean.GetProjectResult;
+import cn.shenzhenlizuosystemapp.Common.Xml.CheckXml.CheckXmlAnalysis;
 import cn.shenzhenlizuosystemapp.Common.Xml.GetLoginXml;
 import cn.shenzhenlizuosystemapp.Common.Xml.LoginGetResXml;
+import cn.shenzhenlizuosystemapp.Common.Xml.RFIDXmlAnalysis;
 import cn.shenzhenlizuosystemapp.R;
 
 public class LoginActivity extends BaseActivity {
@@ -77,6 +84,7 @@ public class LoginActivity extends BaseActivity {
     private final String TAG = "MainActivity";
     private String SelectProjectStr = "";
     private List<ItemData> itemData;
+    private List<RFIDInfo>rfidInfos;
     private MyProgressDialog myProgressDialog;
 
     private int GetSpinnerPos(String value) {
@@ -448,6 +456,8 @@ public class LoginActivity extends BaseActivity {
                         tools.PutStringData("Project", SelectProjectStr, sharedPreferences);
                         ConnectStr.USERNAME = Edit_UserName.getText().toString();
                         ConnectStr.ConnectionToString = msg.getData().getString("ConnectString");
+                        GetRFIDResultAsyncTask getRFIDResultAsyncTask = new GetRFIDResultAsyncTask();
+                        getRFIDResultAsyncTask.execute();
                         startActivity(new Intent(LoginActivity.this, MainTabActivity.class));
                         break;
                     }
@@ -509,6 +519,43 @@ public class LoginActivity extends BaseActivity {
         }
         dialogWindow.setAttributes(lp);
         dialog.show();
+    }
+
+    public class GetRFIDResultAsyncTask extends AsyncTask<Integer,Integer,List<RFIDInfo>>{
+
+        protected List<RFIDInfo> doInBackground(Integer... params){
+            String CheckBills = "";
+            try {
+                InputStream in_withcode = null;
+                    CheckBills = httpRequest.GetRFIDTag(ConnectStr.ConnectionToString);
+                ViseLog.i("CheckBills = " + CheckBills);
+                in_withcode = new ByteArrayInputStream(CheckBills.getBytes("UTF-8"));
+                List<CheckStock_Return> ResultXmlList = RFIDXmlAnalysis.getSingleton().GetRFIDXml(in_withcode);
+                in_withcode.close();
+                if (ResultXmlList.get(0).getFStatus().equals("1")) {
+                    InputStream inputInfoStream = new ByteArrayInputStream(ResultXmlList.get(0).getFInfo().getBytes("UTF-8"));
+                    rfidInfos = RFIDXmlAnalysis.getSingleton().GetRFIDInfo(inputInfoStream);
+                    inputInfoStream.close();
+                } else {
+                    rfidInfos.clear();
+                }
+            } catch (Exception e) {
+                ViseLog.d("SelectCheckLibraryGetOutLibraryBillsException " + e);
+            }
+            return rfidInfos;
+        }
+
+        protected void onPostExecute(final List<RFIDInfo> result) {
+            try{
+                if (Tools.IsObjectNull(result)){
+                    ConnectStr.ISRFID = result.get(0).getFValue();
+                }
+            }catch (Exception e){
+                ViseLog.d("返回RFID参数错误" + e);
+            }
+            ViseLog.i("返回RFID参数" + result);
+        }
+
     }
 
 }

@@ -82,6 +82,7 @@ public class CheckLibraryActivity extends BaseActivity {
     //标识符
     private String FGUID = "";//通知单Guid
     private int RV_ScanInfoTableIndex = 0;//分录列表下标
+    private int RV_SubBodyInfoIndex = 0;//子分录列表下标
     private int SpCheckHouseSpaceIndex = 0;//仓位下标
     private int Sp_LabelModeIndex = 0;//标签模板列表下标
     private int Sp_MaterialIndex = 0;
@@ -635,8 +636,6 @@ public class CheckLibraryActivity extends BaseActivity {
                     if (checkBodyAllDataList.size() > 0) {//筛选分录
                         checkBodyPartDataList = GetBodyByStockCellList(checkBodyAllDataList, stockBeanList.get(SpCheckHouseSpaceIndex).getFGuid());
                     }
-                    checkBodyAllDataList = DisposeTaskRvDataList(checkBodyAllDataList);
-                    checkBodyPartDataList = DisposeTaskRvDataList(checkBodyPartDataList);
                     HeadinfoStr.close();
                     BodyinfoStr.close();
                     SubBodyinfoStr.close();
@@ -689,7 +688,11 @@ public class CheckLibraryActivity extends BaseActivity {
         CheckTagModePort checkTagModePort = new CheckTagModePort() {
             @Override
             public void OnTagRes(List<CheckMaterialModeBean> checkMaterialModeBeanList) {
-                materialModeBeanList = checkMaterialModeBeanList;
+                if (Tools.IsObjectNull(checkMaterialModeBeanList)){
+                    materialModeBeanList = checkMaterialModeBeanList;
+                }else {
+                    materialModeBeanList = new ArrayList<>();
+                }
                 CheckMaterialModeAdapter QuitStockAdapter = new CheckMaterialModeAdapter(materialModeBeanList, CheckLibraryActivity.this);
                 Sp_Label.setAdapter(QuitStockAdapter);
                 Sp_Label.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -886,9 +889,16 @@ public class CheckLibraryActivity extends BaseActivity {
                     }
                 };
                 //调用条码解析
-                CheckBarCodeCheckTask barCodeCheckTask = new CheckBarCodeCheckTask(quitbarCodeCheckPort, webService, checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFMaterial(),
-                        materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data, "0");
-                barCodeCheckTask.execute();
+                if (materialModeBeanList.size()>0){
+                    CheckBarCodeCheckTask barCodeCheckTask = new CheckBarCodeCheckTask(quitbarCodeCheckPort, webService, checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFMaterial(),
+                            materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data, "0");
+                    barCodeCheckTask.execute();
+//                    MoveToPosition(ScanTaskL, RV_SubBodyInfoTable, RV_SubBodyInfoIndex);
+//                    subbody_CheckRvAdapter.setSelection(RV_SubBodyInfoIndex);
+//                    subbody_CheckRvAdapter.notifyDataSetChanged();
+                }else {
+                    tools.ShowDialog(MContect,"该物料没有标签模板！");
+                }
             }
         } else {
             tools.ShowDialog(MContect, "检测到有扫描数据，请先清空或保存");
@@ -1131,9 +1141,8 @@ public class CheckLibraryActivity extends BaseActivity {
 //                                    if (GetSpinnerPos(SubBodyMaterialList, checkBodyPartDataList.get(position).getFMaterial()) >=0){
 //                                        Sp_Material.setSelection(GetSpinnerPos(SubBodyMaterialList, checkBodyPartDataList.get(position).getFMaterial()));
 //                                    }
-                                    if (Tools.IsObjectNull(subbody_CheckRvAdapter)) {
-                                        subbody_CheckRvAdapter.notifyDataSetChanged();
-                                    }
+                                    subbody_CheckRvAdapter = new Subbody_CheckRvAdapter(MContect, checkSubBodyList);
+                                    RV_SubBodyInfoTable.setAdapter(subbody_CheckRvAdapter);
                                     scanTask_check_rvAdapter.setSelection(position);
                                     scanTask_check_rvAdapter.notifyDataSetChanged();//刷新选中 
                                 } else {
@@ -1272,7 +1281,12 @@ public class CheckLibraryActivity extends BaseActivity {
         //定位当前分录的子分录
         for (int i = 0; i < checkSubBodyDataList.size(); i++) {
             //循环分录
-            if (checkSubBodyDataList.get(i).getFBarcodeLib().equals(FBarcodeLib)) {//匹配出子分录的物料
+            if (checkSubBodyDataList.get(i).getFBarcodeLib().equals(FBarcodeLib)) {
+                for (int k = 0;k<checkSubBodyList.size();k++){
+                    if (checkSubBodyList.get(k).getFBarcodeLib().equals(FBarcodeLib)){
+                        RV_SubBodyInfoIndex = k;
+                    }
+                }//匹配出子分录的物料
                 ISExist = true;
                 float subCheck = Tools.StringOfFloat("1.0");
                 checkSubBodyDataList.get(i).setFCheckQty(String.valueOf(subCheck));//把当前子分录盘点数量为1.0；
@@ -1290,7 +1304,9 @@ public class CheckLibraryActivity extends BaseActivity {
                 subbody_CheckRvAdapter.notifyDataSetChanged();
 
                 float subBodyCheck = Tools.StringOfFloat(checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFCheckQty());
-                subBodyCheck += SubBodyCheck;
+                if (checkSubBodyDataList.get(i).getFCheckStockStatus().equals("124164D2-6B47-4614-8B0D-9212A459D1E2")){
+                    subBodyCheck += SubBodyCheck;
+                }
                 checkBodyPartDataList.get(RV_ScanInfoTableIndex).setFCheckQty(String.valueOf(subBodyCheck));//计算分录盘点数量
                 float BodyDiff = Tools.StringOfFloat(checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFCheckQty()) - (Tools.StringOfFloat(checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFAccountQty()));
                 String Diff = String.valueOf(BodyDiff);
@@ -1341,6 +1357,7 @@ public class CheckLibraryActivity extends BaseActivity {
             String Diff = String.valueOf(BodyDiff);
             checkBodyPartDataList.get(RV_ScanInfoTableIndex).setFDiffQty(Diff);//计算当前分录差异数量
             scanTask_check_rvAdapter.notifyDataSetChanged();
+            RV_SubBodyInfoIndex = checkSubBodyList.size()+1;
         }
     }
 }

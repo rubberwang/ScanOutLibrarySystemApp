@@ -4,6 +4,7 @@ public class ConnectStr {
 
     public static String ConnectionToString = "";//连接字符串？
     public static String USERNAME = "";//登录用户名
+    public static String ISRFID = "";
     public static boolean ISSHOWNONEXECUTION = false;//是否过滤已扫描完成的单
     public static boolean IS_STOCKMODE = false;
     public static String BarCodeAction = "cn.shenzhenlizuosystemapp.action";//扫描action

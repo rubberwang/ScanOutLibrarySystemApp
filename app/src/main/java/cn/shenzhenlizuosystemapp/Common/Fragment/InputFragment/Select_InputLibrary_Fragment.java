@@ -33,6 +33,7 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 import cn.shenzhenlizuosystemapp.Common.DataAnalysis.InputDataAnalysis.InputLibraryBill;
 import cn.shenzhenlizuosystemapp.Common.HttpConnect.WebService;
 import cn.shenzhenlizuosystemapp.Common.UI.InputActivity.NewInputLibraryActivity;
+import cn.shenzhenlizuosystemapp.Common.UI.InputActivity.RFIDInputLibraryActivity;
 import cn.shenzhenlizuosystemapp.Common.View.RvLinearManageDivider;
 import cn.shenzhenlizuosystemapp.Common.WebBean.InputBean.InputAllBean;
 import cn.shenzhenlizuosystemapp.Common.Xml.InputXml.InputXmlAnalysis;
@@ -122,10 +123,17 @@ public class Select_InputLibrary_Fragment extends Fragment {
                         adapter.setOnItemClickLitener(new SelectInput_FullAdapter.OnItemClickLitener() {
                             @Override
                             public void onItemClick(View view, int position) {
-                                Intent intent = new Intent(getActivity(), NewInputLibraryActivity.class);
-                                intent.putExtra("FGUID", result.get(position).getFGuid());
-                                ViseLog.i("FGUID" + result.get(position).getFGuid());
-                                startActivity(intent);
+                                if (ConnectStr.ISRFID.equals("1")){
+                                    Intent intent = new Intent(getActivity(), RFIDInputLibraryActivity.class);
+                                    intent.putExtra("FGUID", result.get(position).getFGuid());
+                                    ViseLog.i("FGUID" + result.get(position).getFGuid());
+                                    startActivity(intent);
+                                }else {
+                                    Intent intent = new Intent(getActivity(), NewInputLibraryActivity.class);
+                                    intent.putExtra("FGUID", result.get(position).getFGuid());
+                                    ViseLog.i("FGUID" + result.get(position).getFGuid());
+                                    startActivity(intent);
+                                }
                             }
 
                             @Override

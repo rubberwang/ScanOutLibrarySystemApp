@@ -34,7 +34,7 @@ public class WebService {
         return webService;
     }
 
-    //"http://192.168.1.6:809/DCS/WebService/DBS.WebAPI.asmx";
+    //"http://192.168.1.6:8006/DCS/WebService/DBS.WebAPI.asmx";
     public WebService(Context context) {
         Tools tools = new Tools();
         sharedPreferences = tools.InitSharedPreferences(context);
@@ -162,6 +162,21 @@ public class WebService {
         envelope.setOutputSoapObject(soapObject);
         HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
         httpTransportSE.call("http://www.lzbarcode.com/GetCheckStockNoticeBillsList", envelope);
+        Object object = (Object) envelope.getResponse();
+        String Result = object.toString();
+        return Result;
+    }
+
+    public String GetRFIDTag(String ConnectionID) throws IOException, XmlPullParserException, ClassCastException {
+        SoapObject soapObject = new SoapObject(LastNameSpaceAddress, "GetLabelType");
+        soapObject.addProperty("ConnectionID",ConnectionID);
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+        HttpTransportSE httpTransportSE = new HttpTransportSE(urlAddress);
+        httpTransportSE.call("http://www.lzbarcode.com/GetLabelType", envelope);
         Object object = (Object) envelope.getResponse();
         String Result = object.toString();
         return Result;
