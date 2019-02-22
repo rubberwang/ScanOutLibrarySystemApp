@@ -197,6 +197,7 @@ public class SettingActivity extends BaseActivity {
         SaveIPAddress_Bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (TabIndex == 0) {
                     s_privateYunFragment.Private();
                     ViewManager.getInstance().finishActivity(SettingActivity.this);

@@ -656,13 +656,16 @@ public class CheckLibraryActivity extends BaseActivity {
             try {
                 myProgressDialog.dismiss();
                 if (result.size() > 0) {
-                    AddTreeList();
                     if (checkBodyPartDataList.size() > 0) {
+                        InitScanRecycler();
+                        AddTreeList();
+                    }else {
+                        AddTreeList();
                         InitScanRecycler();
                     }
                     InitCheckStockCell();
-                    AsyncGetMaterialCell asyncGetMaterialCell = new AsyncGetMaterialCell();
-                    asyncGetMaterialCell.execute();
+                    //AsyncGetMaterialCell asyncGetMaterialCell = new AsyncGetMaterialCell();
+                    //asyncGetMaterialCell.execute();
                     TV_house.setText(result.get(0).getFStock_Name());
                     TV_DeliverGoodsNumber.setText(result.get(0).getFCode());
                     IsAllow = result.get(0).getFAllowOtherMaterial();
