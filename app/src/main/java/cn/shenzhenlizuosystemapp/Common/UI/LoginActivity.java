@@ -518,8 +518,7 @@ public class LoginActivity extends BaseActivity {
         } else {
             lp.width = 500; // 宽度
             lp.height = 360; // 高度
-        }
-        dialogWindow.setAttributes(lp);
+        }dialogWindow.setAttributes(lp);
         dialog.show();
     }
 
