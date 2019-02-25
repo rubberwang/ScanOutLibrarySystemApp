@@ -52,7 +52,7 @@ public class Select_DirectAllot_Fragment extends Fragment {
         View rootView = inflater.inflate(R.layout.direct_allot_fragment, container, false);
         RV_SelectDirectAllot = rootView.findViewById(R.id.RV_SelectDirectAllot);
         tools = new Tools();
-        webService = new WebService(this.getActivity());
+        webService = WebService.getSingleton(getActivity());
         PD = new ProgressDialog(this.getActivity());
         PD.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         PD.setCancelable(false);

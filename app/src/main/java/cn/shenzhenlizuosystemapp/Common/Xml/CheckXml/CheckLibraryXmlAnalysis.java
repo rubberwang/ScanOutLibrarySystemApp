@@ -303,8 +303,12 @@ public class CheckLibraryXmlAnalysis {
                     case XmlPullParser.END_TAG:
                         if (parser.getName().equalsIgnoreCase("SubBody")
                                 && inputTaskRvDatas != null) {
-                            inputTaskRvDataList.add(inputTaskRvDatas);
-                            inputTaskRvDatas = null;
+                            if (inputTaskRvDatas.getFCheckQty() == null){
+
+                            }else {
+                                inputTaskRvDataList.add(inputTaskRvDatas);
+                                inputTaskRvDatas = null;
+                            }
                         }
                         break;
                 }

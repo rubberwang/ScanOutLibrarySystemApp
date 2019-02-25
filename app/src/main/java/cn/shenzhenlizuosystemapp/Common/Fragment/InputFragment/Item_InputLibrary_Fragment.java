@@ -44,7 +44,7 @@ public class Item_InputLibrary_Fragment extends Fragment {
         View view = inflater.inflate(R.layout.init_select_inputlibrary, container, false);
         RV_CastAbout = view.findViewById(R.id.RV_InitSelectFull);
         tools = new Tools();
-        webService = new WebService(this.getActivity());
+        webService = WebService.getSingleton(getActivity());
         PD = new ProgressDialog(this.getActivity());
         PD.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         PD.setCancelable(false);

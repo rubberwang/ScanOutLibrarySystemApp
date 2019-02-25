@@ -895,9 +895,9 @@ public class CheckLibraryActivity extends BaseActivity {
                                     FBarcodeLib = BarCodeInfoHeadList.get(2).getFGudi();
                                     ViseLog.i("FBarcodeLib = " + FBarcodeLib);
                                     IsSerialNumber = false;
+                                    AddSubBodyList();
                                     SubmitData("1.0");
                                     ViseLog.i("number = 1 序列号");
-                                    AddSubBodyList();
                                 } else if (!TextUtils.isEmpty(BarCodeInfoHeadList.get(3).getFQty())) {
                                     //算法  fqty * FUnitRate / baseqty
                                     float ThisPutSum = Tools.StringOfFloat(BarCodeInfoHeadList.get(3).getFQty());
@@ -928,11 +928,8 @@ public class CheckLibraryActivity extends BaseActivity {
                 //调用条码解析
                 if (materialModeBeanList.size()>0){
                     CheckBarCodeCheckTask barCodeCheckTask = new CheckBarCodeCheckTask(quitbarCodeCheckPort, webService, checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFMaterial(),
-                            materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data, "0");
+                            materialModeBeanList.get(Sp_LabelModeIndex).getFGuid(), data, "1");
                     barCodeCheckTask.execute();
-//                    MoveToPosition(ScanTaskL, RV_SubBodyInfoTable, RV_SubBodyInfoIndex);
-//                    subbody_CheckRvAdapter.setSelection(RV_SubBodyInfoIndex);
-//                    subbody_CheckRvAdapter.notifyDataSetChanged();
                 }else {
                     tools.ShowDialog(MContect,"该物料没有标签模板！");
                 }
@@ -971,7 +968,7 @@ public class CheckLibraryActivity extends BaseActivity {
                         if (checkSubBodyDataList.get(i).getFBarcodeLib().equals(FBarcodeLib)) {
                             float Check = Tools.StringOfFloat(checkSubBodyDataList.get(i).getFCheckQty());
                             float subChek = Tools.StringOfFloat(String.valueOf((QuitSum)));
-                            checkSubBodyDataList.get(i).setFCheckQty(String.valueOf(subChek + Check));//判断条码解析出来的条码库ID是否存在在子分录集合中是否存在，没有的话添加
+                            //checkSubBodyDataList.get(i).setFCheckQty(String.valueOf(subChek + Check));//判断条码解析出来的条码库ID是否存在在子分录集合中是否存在，没有的话添加
 
                             float NewNoPut = Tools.StringOfFloat(checkSubBodyDataList.get(i).getFCheckQty()) - (Tools.StringOfFloat(checkSubBodyDataList.get(i).getFAccountQty()));
                             String SetNoInput = String.valueOf(NewNoPut);
@@ -985,12 +982,12 @@ public class CheckLibraryActivity extends BaseActivity {
                             }
 
                             //更新分录盘点数量
-                            checkBodyPartDataList.get(RV_ScanInfoTableIndex).setFCheckQty(checkSubBodyDataList.get(i).getFCheckQty());
-                            float BodyNoPut = Tools.StringOfFloat(checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFCheckQty()) - (Tools.StringOfFloat(checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFAccountQty()));
-                            String BodyNoInput = String.valueOf(BodyNoPut);
-                            checkBodyPartDataList.get(RV_ScanInfoTableIndex).setFDiffQty(BodyNoInput);
-                            subbody_CheckRvAdapter.notifyDataSetChanged();
-                            scanTask_check_rvAdapter.notifyDataSetChanged();
+//                            checkBodyPartDataList.get(RV_ScanInfoTableIndex).setFCheckQty(checkSubBodyDataList.get(i).getFCheckQty());
+//                            float BodyNoPut = Tools.StringOfFloat(checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFCheckQty()) - (Tools.StringOfFloat(checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFAccountQty()));
+//                            String BodyNoInput = String.valueOf(BodyNoPut);
+//                            checkBodyPartDataList.get(RV_ScanInfoTableIndex).setFDiffQty(BodyNoInput);
+//                            subbody_CheckRvAdapter.notifyDataSetChanged();
+//                            scanTask_check_rvAdapter.notifyDataSetChanged();
                         }
                     }
                 }
@@ -1378,40 +1375,39 @@ public class CheckLibraryActivity extends BaseActivity {
     private void AddSubBodyList() {
         boolean ISExist = false;
         //定位当前分录的子分录
-        if (checkSubBodyDataList.size()>1){
+        if (checkSubBodyDataList.size()>0){
             for (int i = 0; i < checkSubBodyDataList.size(); i++) {
                 //循环分录
                 if (checkSubBodyDataList.get(i).getFBarcodeLib().equals(FBarcodeLib)) {
-                    for (int k = 0;k<checkSubBodyList.size();k++){
-                        if (checkSubBodyList.get(k).getFBarcodeLib().equals(FBarcodeLib)){
-                            RV_SubBodyInfoIndex = k;
+                    if(checkSubBodyDataList.get(i).getFCheckQty().equals("1.0")){
+                        tools.ShowDialog(MContect, "不能重复扫描该序列号！");
+                    }else {
+                        ISExist = true;
+                        float subCheck = Tools.StringOfFloat("1.0");
+                        checkSubBodyDataList.get(i).setFCheckQty(String.valueOf(subCheck));//把当前子分录盘点数量为1.0；
+                        float SubBodyCheck = Tools.StringOfFloat(checkSubBodyDataList.get(i).getFCheckQty());
+                        float subBodyDiff = Tools.StringOfFloat(checkSubBodyDataList.get(i).getFCheckQty()) - (Tools.StringOfFloat(checkSubBodyDataList.get(i).getFAccountQty()));
+                        String subDiff = String.valueOf(subBodyDiff);
+                        checkSubBodyDataList.get(i).setFDiffQty(subDiff);//计算当前子分录差异数量
+                        if (subBodyDiff > 0) {
+                            checkSubBodyDataList.get(i).setFCheckStockStatus("49E79140-94CA-4B43-988A-D3E2FE5BDEC6");//盘盈
+                        } else if (subBodyDiff < 0) {
+                            checkSubBodyDataList.get(i).setFCheckStockStatus("124164D2-6B47-4614-8B0D-9212A459D1E2");//盘亏
+                        } else {
+                            checkSubBodyDataList.get(i).setFCheckStockStatus("108A8304-083C-4370-AE5C-D2E43C91CE21");//匹配
                         }
-                    }//匹配出子分录的物料
-                    ISExist = true;
-                    float subCheck = Tools.StringOfFloat("1.0");
-                    checkSubBodyDataList.get(i).setFCheckQty(String.valueOf(subCheck));//把当前子分录盘点数量为1.0；
-                    float SubBodyCheck = Tools.StringOfFloat(checkSubBodyDataList.get(i).getFCheckQty());
-                    float subBodyDiff = Tools.StringOfFloat(checkSubBodyDataList.get(i).getFCheckQty()) - (Tools.StringOfFloat(checkSubBodyDataList.get(i).getFAccountQty()));
-                    String subDiff = String.valueOf(subBodyDiff);
-                    checkSubBodyDataList.get(i).setFDiffQty(subDiff);//计算当前子分录差异数量
-                    if (subBodyDiff > 0) {
-                        checkSubBodyDataList.get(i).setFCheckStockStatus("49E79140-94CA-4B43-988A-D3E2FE5BDEC6");//盘盈
-                    } else if (subBodyDiff < 0) {
-                        checkSubBodyDataList.get(i).setFCheckStockStatus("124164D2-6B47-4614-8B0D-9212A459D1E2");//盘亏
-                    } else {
-                        checkSubBodyDataList.get(i).setFCheckStockStatus("108A8304-083C-4370-AE5C-D2E43C91CE21");//匹配
-                    }
-                    subbody_CheckRvAdapter.notifyDataSetChanged();
+                        subbody_CheckRvAdapter.notifyDataSetChanged();
 
-                    float subBodyCheck = Tools.StringOfFloat(checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFCheckQty());
-                    if (checkSubBodyDataList.get(i).getFCheckStockStatus().equals("124164D2-6B47-4614-8B0D-9212A459D1E2")){
-                        subBodyCheck += SubBodyCheck;
+                        float subBodyCheck = Tools.StringOfFloat(checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFCheckQty());
+                        if (checkSubBodyDataList.get(i).getFCheckStockStatus().equals("124164D2-6B47-4614-8B0D-9212A459D1E2")){
+                            subBodyCheck += SubBodyCheck;
+                        }
+                        checkBodyPartDataList.get(RV_ScanInfoTableIndex).setFCheckQty(String.valueOf(subBodyCheck));//计算分录盘点数量
+                        float BodyDiff = Tools.StringOfFloat(checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFCheckQty()) - (Tools.StringOfFloat(checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFAccountQty()));
+                        String Diff = String.valueOf(BodyDiff);
+                        checkBodyPartDataList.get(RV_ScanInfoTableIndex).setFDiffQty(Diff);//计算当前分录差异数量
+                        scanTask_check_rvAdapter.notifyDataSetChanged();
                     }
-                    checkBodyPartDataList.get(RV_ScanInfoTableIndex).setFCheckQty(String.valueOf(subBodyCheck));//计算分录盘点数量
-                    float BodyDiff = Tools.StringOfFloat(checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFCheckQty()) - (Tools.StringOfFloat(checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFAccountQty()));
-                    String Diff = String.valueOf(BodyDiff);
-                    checkBodyPartDataList.get(RV_ScanInfoTableIndex).setFDiffQty(Diff);//计算当前分录差异数量
-                    scanTask_check_rvAdapter.notifyDataSetChanged();
                 }
             }
             if (!ISExist) {
@@ -1457,7 +1453,6 @@ public class CheckLibraryActivity extends BaseActivity {
                 String Diff = String.valueOf(BodyDiff);
                 checkBodyPartDataList.get(RV_ScanInfoTableIndex).setFDiffQty(Diff);//计算当前分录差异数量
                 scanTask_check_rvAdapter.notifyDataSetChanged();
-                RV_SubBodyInfoIndex = checkSubBodyList.size()+1;
             }
         }else {
             CheckSubBody checkSubBodyData = new CheckSubBody();
@@ -1502,7 +1497,6 @@ public class CheckLibraryActivity extends BaseActivity {
             String Diff = String.valueOf(BodyDiff);
             checkBodyPartDataList.get(RV_ScanInfoTableIndex).setFDiffQty(Diff);//计算当前分录差异数量
             scanTask_check_rvAdapter.notifyDataSetChanged();
-            RV_SubBodyInfoIndex = checkSubBodyList.size()+1;
         }
 
     }
