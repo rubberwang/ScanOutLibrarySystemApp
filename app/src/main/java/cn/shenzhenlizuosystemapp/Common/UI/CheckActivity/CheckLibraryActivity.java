@@ -1381,6 +1381,7 @@ public class CheckLibraryActivity extends BaseActivity {
                 if (checkSubBodyDataList.get(i).getFBarcodeLib().equals(FBarcodeLib)) {
                     if(checkSubBodyDataList.get(i).getFCheckQty().equals("1.0")){
                         tools.ShowDialog(MContect, "不能重复扫描该序列号！");
+                        ISExist = true;
                     }else {
                         ISExist = true;
                         float subCheck = Tools.StringOfFloat("1.0");
@@ -1419,7 +1420,11 @@ public class CheckLibraryActivity extends BaseActivity {
                 checkSubBodyData.setFStockCell_Name(stockBeanList.get(SpCheckHouseSpaceIndex).getFName());
                 checkSubBodyData.setFBarcodeLib(FBarcodeLib);
                 checkSubBodyData.setFBarcodeType("33A50386-F167-4913-95C8-B7AE69B8CB55");
-                checkSubBodyData.setFBarcodeLib_Name(barcodeXmlBeanList.get(3).getFBarcodeContent() + "|" + barcodeXmlBeanList.get(0).getFBarcodeContent());
+                if (barcodeXmlBeanList.size()>3){
+                    checkSubBodyData.setFBarcodeLib_Name(barcodeXmlBeanList.get(3).getFBarcodeContent() + "|" + barcodeXmlBeanList.get(0).getFBarcodeContent());
+                }else {
+                    checkSubBodyData.setFBarcodeLib_Name(barcodeXmlBeanList.get(barcodeXmlBeanList.size()-1).getFBarcodeContent() + "|" + barcodeXmlBeanList.get(0).getFBarcodeContent());
+                }
                 checkSubBodyData.setFRowIndex(String.valueOf(checkSubBodyDataList.size() + 1.0));
                 checkSubBodyData.setFCheckQty("1.0");
                 checkSubBodyData.setFAccountQty("0.0");
@@ -1463,7 +1468,12 @@ public class CheckLibraryActivity extends BaseActivity {
             checkSubBodyData.setFStockCell_Name(stockBeanList.get(SpCheckHouseSpaceIndex).getFName());
             checkSubBodyData.setFBarcodeLib(FBarcodeLib);
             checkSubBodyData.setFBarcodeType("33A50386-F167-4913-95C8-B7AE69B8CB55");
-            checkSubBodyData.setFBarcodeLib_Name(barcodeXmlBeanList.get(3).getFBarcodeContent() + "|" + barcodeXmlBeanList.get(0).getFBarcodeContent());
+            //checkSubBodyData.setFBarcodeLib_Name(barcodeXmlBeanList.get(3).getFBarcodeContent() + "|" + barcodeXmlBeanList.get(0).getFBarcodeContent());
+            if (barcodeXmlBeanList.size()>3){
+                checkSubBodyData.setFBarcodeLib_Name(barcodeXmlBeanList.get(3).getFBarcodeContent() + "|" + barcodeXmlBeanList.get(0).getFBarcodeContent());
+            }else {
+                checkSubBodyData.setFBarcodeLib_Name(barcodeXmlBeanList.get(barcodeXmlBeanList.size()-1).getFBarcodeContent() + "|" + barcodeXmlBeanList.get(0).getFBarcodeContent());
+            }
             checkSubBodyData.setFRowIndex(String.valueOf(checkSubBodyDataList.size() + 1.0));
             checkSubBodyData.setFCheckQty("1.0");
             checkSubBodyData.setFAccountQty("0.0");

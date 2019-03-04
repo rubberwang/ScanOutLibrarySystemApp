@@ -20,7 +20,7 @@ import cn.shenzhenlizuosystemapp.Common.DataAnalysis.ConnectStr;
 public class WebService {
     private SharedPreferences sharedPreferences;
     private static String LastNameSpaceAddress = "http://www.lzbarcode.com/";
-    private String urlAddress;
+    private static String urlAddress;
     private static WebService webService;
 
     public static WebService getSingleton(Context context) {
@@ -46,6 +46,7 @@ public class WebService {
             String Port = tools.GetStringData(sharedPreferences, ConnectStr.F_Private_Port_Address);
             urlAddress = "http://" + urlAddress + ":" + Port + "/DCS/WebService/DBS.WebAPI.asmx";
         }
+        webService = this;
         ViseLog.i("初始WebServer IP = " + urlAddress);
     }
 
