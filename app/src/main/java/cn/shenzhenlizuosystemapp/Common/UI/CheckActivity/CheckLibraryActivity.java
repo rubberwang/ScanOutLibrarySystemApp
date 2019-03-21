@@ -103,8 +103,8 @@ public class CheckLibraryActivity extends BaseActivity {
     private List<CheckLibraryDetail> checkHeadDataList = null;//单头列表
     private List<CheckTaskRvData> checkBodyAllDataList = null;//分录全集
     private List<CheckTaskRvData> checkBodyPartDataList = new ArrayList<>();//分录子集
-    private List<CheckSubBody> checkSubBodyDataList = null;//子分录全集
-    private List<CheckSubBody> checkSubBodyList = null;//子分录子集
+    private List<CheckSubBody> checkSubBodyDataList = new ArrayList<>();//子分录全集
+    private List<CheckSubBody> checkSubBodyList = new ArrayList<>();//子分录子集
     private List<BarCodeHeadBean> BarCodeInfoHeadList = null;//条码解析单头
     private List<BarcodeXmlBean> barcodeXmlBeanList = null;//条码解析单体
     private List<CheckStockBean> stockBeanList = new ArrayList<>();//显示所有仓位列表
@@ -161,8 +161,9 @@ public class CheckLibraryActivity extends BaseActivity {
         Drawable drawable = getResources().getDrawable(R.drawable.circularbead_gray);//设置背景颜色--灰色
         TV_Sumbit.setBackground(drawable);
         TV_Sumbit.setTextColor(getResources().getColor(R.color.Black));
-        TV_Save.setBackground(drawable);
-        TV_Save.setTextColor(getResources().getColor(R.color.Black));
+        Drawable drawable_purple = getResources().getDrawable(R.drawable.circularbead_purple);
+        TV_Save.setBackground(drawable_purple);
+        TV_Save.setTextColor(getResources().getColor(R.color.White));
         editSumPort = new EditSumPort() {
             @Override
             public void OnEnSure(String Sum) {
@@ -302,7 +303,7 @@ public class CheckLibraryActivity extends BaseActivity {
 
             @Override
             public void onClick(View view) {
-                if (IsSave) {
+                if (checkBodyAllDataList.size()>0) {
                     tools.ShowOnClickDialog(MContect, "确认结案吗？", new View.OnClickListener() {
 
                         @Override
@@ -317,6 +318,8 @@ public class CheckLibraryActivity extends BaseActivity {
                             tools.DisappearDialog();
                         }
                     }, false);
+                }else {
+                    tools.ShowDialog(MContect, "数据为空无法结案！");
                 }
             }
         });
@@ -572,7 +575,7 @@ public class CheckLibraryActivity extends BaseActivity {
                 Sp_Material.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        //AddMaterialList(i);
+                        AddMaterialList(i);
                     }
 
                     @Override
@@ -966,8 +969,8 @@ public class CheckLibraryActivity extends BaseActivity {
                     //累加子分录的盘点数量CheckQty
                     for (int i = 0; i < checkSubBodyDataList.size(); i++) {
                         if (checkSubBodyDataList.get(i).getFBarcodeLib().equals(FBarcodeLib)) {
-                            float Check = Tools.StringOfFloat(checkSubBodyDataList.get(i).getFCheckQty());
-                            float subChek = Tools.StringOfFloat(String.valueOf((QuitSum)));
+                            //float Check = Tools.StringOfFloat(checkSubBodyDataList.get(i).getFCheckQty());
+                            //float subChek = Tools.StringOfFloat(String.valueOf((QuitSum)));
                             //checkSubBodyDataList.get(i).setFCheckQty(String.valueOf(subChek + Check));//判断条码解析出来的条码库ID是否存在在子分录集合中是否存在，没有的话添加
 
                             float NewNoPut = Tools.StringOfFloat(checkSubBodyDataList.get(i).getFCheckQty()) - (Tools.StringOfFloat(checkSubBodyDataList.get(i).getFAccountQty()));
@@ -995,8 +998,6 @@ public class CheckLibraryActivity extends BaseActivity {
                 Drawable drawable_purple = getResources().getDrawable(R.drawable.circularbead_purple);
                 TV_Sumbit.setBackground(drawable_purple);
                 TV_Sumbit.setTextColor(getResources().getColor(R.color.White));
-                TV_Save.setBackground(drawable_purple);
-                TV_Save.setTextColor(getResources().getColor(R.color.White));
                 Is_CheckNumber_Mode = false;
             } else {
                 tools.ShowDialog(MContect, "盘点数量为空或小于0");
@@ -1088,6 +1089,8 @@ public class CheckLibraryActivity extends BaseActivity {
                             Intent intent = new Intent(MContect, CheckLibraryActivity.class);
                             intent.putExtra("FGUID", tools.GetStringData(tools.InitSharedPreferences(CheckLibraryActivity.this), "CheckLibraryActivityFGUID"));
                             startActivity(intent);
+                            Intent intent1 = new Intent(CheckLibraryActivity.this,Check_NotificationActivity.class);
+                            startActivity(intent1);
                         }
                     }, new View.OnClickListener() {
                         @Override
@@ -1192,7 +1195,7 @@ public class CheckLibraryActivity extends BaseActivity {
                                     subbody_CheckRvAdapter = new Subbody_CheckRvAdapter(MContect, checkSubBodyList);
                                     RV_SubBodyInfoTable.setAdapter(subbody_CheckRvAdapter);
                                     scanTask_check_rvAdapter.setSelection(position);
-                                    scanTask_check_rvAdapter.notifyDataSetChanged();//刷新选中 
+                                    scanTask_check_rvAdapter.notifyDataSetChanged();//刷新选中
                                 } else {
                                     tools.ShowDialog(MContect, res);
                                 }
@@ -1323,14 +1326,14 @@ public class CheckLibraryActivity extends BaseActivity {
             checkBodyPartDataList.add(checkTaskRvData);
             if (Tools.IsObjectNull(scanTask_check_rvAdapter)){
                 scanTask_check_rvAdapter.notifyDataSetChanged();
+                MoveToPosition(ScanTaskL, RV_BodyInfoTable, checkBodyPartDataList.size()-1);
+                RvBodyItemClick(checkBodyPartDataList.size()-1);
             }
         } else {
             for (int a = 0; a < checkBodyPartDataList.size(); a++) {
                 if (checkBodyPartDataList.get(a).getFMaterial().equals(SubBodyMaterialList.get(i).getFGuid())) {
-//                    if (!checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFMaterial().equals(SubBodyMaterialList.get(i).getFGuid())){
                     MoveToPosition(ScanTaskL, RV_BodyInfoTable, a);
                     RvBodyItemClick(a);
-//                    }
                 }
             }
         }
@@ -1400,7 +1403,7 @@ public class CheckLibraryActivity extends BaseActivity {
                         subbody_CheckRvAdapter.notifyDataSetChanged();
 
                         float subBodyCheck = Tools.StringOfFloat(checkBodyPartDataList.get(RV_ScanInfoTableIndex).getFCheckQty());
-                        if (checkSubBodyDataList.get(i).getFCheckStockStatus().equals("124164D2-6B47-4614-8B0D-9212A459D1E2")){
+                        if (!checkSubBodyDataList.get(i).getFCheckStockStatus().equals("124164D2-6B47-4614-8B0D-9212A459D1E2")){
                             subBodyCheck += SubBodyCheck;
                         }
                         checkBodyPartDataList.get(RV_ScanInfoTableIndex).setFCheckQty(String.valueOf(subBodyCheck));//计算分录盘点数量
@@ -1468,7 +1471,6 @@ public class CheckLibraryActivity extends BaseActivity {
             checkSubBodyData.setFStockCell_Name(stockBeanList.get(SpCheckHouseSpaceIndex).getFName());
             checkSubBodyData.setFBarcodeLib(FBarcodeLib);
             checkSubBodyData.setFBarcodeType("33A50386-F167-4913-95C8-B7AE69B8CB55");
-            //checkSubBodyData.setFBarcodeLib_Name(barcodeXmlBeanList.get(3).getFBarcodeContent() + "|" + barcodeXmlBeanList.get(0).getFBarcodeContent());
             if (barcodeXmlBeanList.size()>3){
                 checkSubBodyData.setFBarcodeLib_Name(barcodeXmlBeanList.get(3).getFBarcodeContent() + "|" + barcodeXmlBeanList.get(0).getFBarcodeContent());
             }else {
